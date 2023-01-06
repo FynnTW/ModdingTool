@@ -30,5 +30,11 @@ namespace ModdingTool
         {
             EDUParser.parseEDU();
         }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string newtext = modPath.Text.Trim();
+            ModdingTool.EDUParser.eduPath = newtext;
+        }
     }
 }

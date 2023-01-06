@@ -7,7 +7,8 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Button Content="PARSE EDU" HorizontalAlignment="Left" Margin="310,194,0,0" VerticalAlignment="Top" Height="78" Width="211" Click="Button_Click" FontSize="22"/>
+        <Button Content="PARSE EDU" HorizontalAlignment="Left" Margin="310,0,0,0" VerticalAlignment="Center" Height="78" Width="210" Click="Button_Click" FontSize="22"/>
+        <TextBox x:Name="modPath" HorizontalAlignment="Left" Margin="249,80,0,0" TextWrapping="Wrap" Text="Path to mod..." VerticalAlignment="Top" Width="465" TextChanged="TextBox_TextChanged"/>
 
     </Grid>
 </Window>

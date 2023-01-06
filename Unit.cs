@@ -49,6 +49,7 @@ namespace ModdingTool
         private string unit_pri_tech_type;
         private string unit_pri_damage_type;
         private string unit_pri_sound_type;
+        private string unit_pri_fire_type;
         private int unit_pri_att_delay;
         private double unit_pri_skel_factor;
         private string[] unit_pri_attr;
@@ -61,6 +62,7 @@ namespace ModdingTool
         private string unit_sec_tech_type;
         private string unit_sec_damage_type;
         private string unit_sec_sound_type;
+        private string unit_sec_fire_type;
         private int unit_sec_att_delay;
         private double unit_sec_skel_factor;
         private string[] unit_sec_attr;
@@ -73,6 +75,7 @@ namespace ModdingTool
         private string unit_ter_tech_type;
         private string unit_ter_damage_type;
         private string unit_ter_sound_type;
+        private string unit_ter_fire_type;
         private int unit_ter_att_delay;
         private double unit_ter_skel_factor;
         private string[] unit_ter_attr;
@@ -225,6 +228,9 @@ namespace ModdingTool
         public string Unit_accent { get => unit_accent; set => unit_accent = value; }
         public int Unit_spacing_ranks { get => unit_spacing_ranks; set => unit_spacing_ranks = value; }
         public bool Unit_lockMorale { get => unit_lockMorale; set => unit_lockMorale = value; }
+        public string Unit_pri_fire_type { get => unit_pri_fire_type; set => unit_pri_fire_type = value; }
+        public string Unit_sec_fire_type { get => unit_sec_fire_type; set => unit_sec_fire_type = value; }
+        public string Unit_ter_fire_type { get => unit_ter_fire_type; set => unit_ter_fire_type = value; }
 
 
         #endregion

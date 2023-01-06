@@ -14,10 +14,12 @@ namespace ModdingTool
 
         public static List<Unit> allUnits = new List<Unit>();
 
+        public static string eduPath = "D:\\Fynn\\Steam\\steamapps\\common\\Medieval II Total War\\mods\\Divide_and_Conquer";
+
         public static void parseEDU()
         {
 
-            string[] lines = File.ReadAllLines("D:\\Fynn\\Steam\\steamapps\\common\\Medieval II Total War\\mods\\Divide_and_Conquer\\data\\export_descr_unit.txt");
+            string[] lines = File.ReadAllLines(eduPath + "\\data\\export_descr_unit.txt");
 
             Unit newUnit = new Unit();
             bool first = false;
@@ -172,8 +174,17 @@ namespace ModdingTool
                     unit.Unit_pri_tech_type = parts[7];
                     unit.Unit_pri_damage_type = parts[8];
                     unit.Unit_pri_sound_type = parts[9];
-                    unit.Unit_pri_att_delay = int.Parse(parts[10]);
-                    unit.Unit_pri_skel_factor = double.Parse(parts[11]);
+                    if (parts.Length > 12)
+                    {
+                        unit.Unit_pri_fire_type = parts[10];
+                        unit.Unit_pri_att_delay = int.Parse(parts[11]);
+                        unit.Unit_pri_skel_factor = double.Parse(parts[12]);
+                    }
+                    else
+                    {
+                        unit.Unit_pri_att_delay = int.Parse(parts[10]);
+                        unit.Unit_pri_skel_factor = double.Parse(parts[11]);
+                    }
                     break;
                 case "stat_pri_attr":
                     unit.Unit_pri_attr = parts[1..];
@@ -188,8 +199,17 @@ namespace ModdingTool
                     unit.Unit_sec_tech_type = parts[7];
                     unit.Unit_sec_damage_type = parts[8];
                     unit.Unit_sec_sound_type = parts[9];
-                    unit.Unit_sec_att_delay = int.Parse(parts[10]);
-                    unit.Unit_sec_skel_factor = double.Parse(parts[11]);
+                    if (parts.Length > 12)
+                    {
+                        unit.Unit_sec_fire_type = parts[10];
+                        unit.Unit_sec_att_delay = int.Parse(parts[11]);
+                        unit.Unit_sec_skel_factor = double.Parse(parts[12]);
+                    }
+                    else
+                    {
+                        unit.Unit_sec_att_delay = int.Parse(parts[10]);
+                        unit.Unit_sec_skel_factor = double.Parse(parts[11]);
+                    }
                     break;
                 case "stat_sec_attr":
                     unit.Unit_sec_attr = parts[1..];
@@ -204,8 +224,16 @@ namespace ModdingTool
                     unit.Unit_ter_tech_type = parts[7];
                     unit.Unit_ter_damage_type = parts[8];
                     unit.Unit_ter_sound_type = parts[9];
-                    unit.Unit_ter_att_delay = int.Parse(parts[10]);
-                    unit.Unit_ter_skel_factor = double.Parse(parts[11]);
+                    if (parts.Length > 12)
+                    {
+                        unit.Unit_ter_fire_type = parts[10];
+                        unit.Unit_ter_att_delay = int.Parse(parts[11]);
+                        unit.Unit_ter_skel_factor = double.Parse(parts[12]);
+                    } else
+                    {
+                        unit.Unit_ter_att_delay = int.Parse(parts[10]);
+                        unit.Unit_ter_skel_factor = double.Parse(parts[11]);
+                    }
                     break;
                 case "stat_ter_attr":
                     unit.Unit_ter_attr = parts[1..];
