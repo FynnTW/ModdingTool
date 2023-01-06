@@ -14,6 +14,10 @@ namespace ModdingTool
 
         public static List<Unit> allUnits = new List<Unit>();
 
+        public static Dictionary<string, string> unitNames = new Dictionary<string, string>();
+        public static Dictionary<string, string> unitDescr = new Dictionary<string, string>();
+        public static Dictionary<string, string> unitDescrShort = new Dictionary<string, string>();
+
         public static string eduPath = "D:\\Fynn\\Steam\\steamapps\\common\\Medieval II Total War\\mods\\Divide_and_Conquer";
 
         public static void parseEDU()
@@ -47,20 +51,82 @@ namespace ModdingTool
                     if (first)
                     {
                         allUnits.Add(newUnit);
+                        foreach (string faction in newUnit.Unit_ownership)
+                        {
+                            factionParser.allFactions[faction].Unit_ownership.Add(newUnit);
+                        }
                     }
                     first = true;
                     newUnit = new Unit();
                 }
-                if (lineParts.Length > 1 && first)
+                if (first)
                 {
                     assignFields(newUnit, lineParts);
                 }
-                Console.WriteLine(lineParts[0]);
-
-
-
+                //Console.WriteLine(lineParts[0]);
             }
             allUnits.Add(newUnit);
+            foreach (string faction in newUnit.Unit_ownership)
+            {
+                factionParser.allFactions[faction].Unit_ownership.Add(newUnit);
+            }
+        }
+
+        public static void parseEU()
+        {
+            string[] lines = File.ReadAllLines(eduPath + "\\data\\text\\export_units.txt", Encoding.Unicode);
+            unitNames = new Dictionary<string, string>();
+            unitDescr = new Dictionary<string, string>();
+            unitDescrShort = new Dictionary<string, string>();
+            foreach (string line in lines)
+            {
+                if (line.StartsWith('¬'))
+                {
+                    continue;
+                }
+                if (!line.Contains('{') || !line.Contains('}'))
+                {
+                    continue;
+                }
+                string newLine = line.Trim();
+                string[] parts = stringSplitter(newLine);
+                fillDicts(parts);
+
+
+                //Console.WriteLine(line);
+            }
+        }
+
+        public static string[] stringSplitter(string line)
+        {
+            char[] deliminators = { '{', '}' };
+            string[] splitted = line.Split(deliminators, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            return splitted;
+        }
+
+        public static void fillDicts(string[] parts)
+        {
+            String identifier = parts[0];
+
+            string text = "";
+
+            if (parts.Length > 1)
+            {
+                text = parts[1];
+            }
+
+            if (identifier.Contains("_descr_short"))
+            {
+                string[] split = identifier.Split("_descr_short", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                unitDescrShort.Add(split[0], text);
+            } else if (identifier.Contains("_descr"))
+            {
+                string[] split = identifier.Split("_descr", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                unitDescr.Add(split[0], text);
+            } else
+            {
+                unitNames.Add(identifier, text);
+            }
         }
 
         public static void assignFields(Unit unit, string[] parts)
@@ -73,7 +139,11 @@ namespace ModdingTool
                     unit.Unit_type = parts[1].Trim();
                     break;
                 case "dictionary":
-                    unit.Unit_dictionary = parts[1].Trim();
+                    string dict = parts[1];
+                    unit.Unit_dictionary = dict;
+                    unit.Unit_name = unitNames[dict];
+                    unit.Unit_descr = unitDescr[dict];
+                    unit.Unit_descrShort = unitDescrShort[dict];
                     break;
                 case "category":
                     unit.Unit_category = parts[1].Trim();

@@ -10,7 +10,11 @@ namespace ModdingTool
     {
         #region Private fields
         private string unit_type;
-        //private string unit_internalName;
+        private string unit_name;
+        private string unit_descr;
+        private string unit_descrShort;
+        private string unit_card;
+        private string unit_cardInfo;
         private string unit_dictionary;
         private string unit_category;
         private string unit_class;
@@ -123,7 +127,7 @@ namespace ModdingTool
 
         #region Public properties
 
-        //public string Unit_internalName { get => unit_internalName; set => unit_internalName = value; }
+        public string Unit_name { get => unit_name; set => unit_name = value; }
         public string Unit_type { get => unit_type; set => unit_type = value; }
         public string Unit_dictionary { get => unit_dictionary; set => unit_dictionary = value; }
         public string Unit_category { get => unit_category; set => unit_category = value; }
@@ -231,6 +235,9 @@ namespace ModdingTool
         public string Unit_pri_fire_type { get => unit_pri_fire_type; set => unit_pri_fire_type = value; }
         public string Unit_sec_fire_type { get => unit_sec_fire_type; set => unit_sec_fire_type = value; }
         public string Unit_ter_fire_type { get => unit_ter_fire_type; set => unit_ter_fire_type = value; }
+        public string Unit_descr { get => unit_descr; set => unit_descr = value; }
+        public string Unit_descrShort { get => unit_descrShort; set => unit_descrShort = value; }
+        public string Unit_card { get => unit_card; set => unit_card = value; }
 
 
         #endregion

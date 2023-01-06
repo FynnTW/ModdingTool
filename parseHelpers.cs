@@ -45,5 +45,23 @@ namespace ModdingTool
             }
             return lineParts;
         }
+
+        static public bool ToBool(string value)
+        {
+            if (value.Equals("yes"))
+            {
+                return true;
+            } else
+            {
+                return false;
+            }
+        }
+
+        public static string[] stringSplitter(string line)
+        {
+            char[] deliminators = { '{', '}' };
+            string[] splitted = line.Split(deliminators, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            return splitted;
+        }
     }
 }

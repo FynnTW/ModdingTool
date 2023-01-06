@@ -28,6 +28,8 @@ namespace ModdingTool
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            factionParser.parseSMFactions();
+            EDUParser.parseEU();
             EDUParser.parseEDU();
         }
 
@@ -35,6 +37,7 @@ namespace ModdingTool
         {
             string newtext = modPath.Text.Trim();
             ModdingTool.EDUParser.eduPath = newtext;
+            ModdingTool.factionParser.modPath = newtext;
         }
     }
 }
