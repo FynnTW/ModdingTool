@@ -10,6 +10,7 @@ namespace ModdingTool
     {
         private string name;
         private string culture;
+        private Culture cultureLink;
         private string religion;
         private string symbol;
         private string rebel_symbol;
