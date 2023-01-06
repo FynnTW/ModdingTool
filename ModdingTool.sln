@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModdingTool", "ModdingTool.csproj", "{11CA8524-4557-4E75-BCFE-5076F7020A28}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{11CA8524-4557-4E75-BCFE-5076F7020A28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11CA8524-4557-4E75-BCFE-5076F7020A28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11CA8524-4557-4E75-BCFE-5076F7020A28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11CA8524-4557-4E75-BCFE-5076F7020A28}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CE723E31-9225-4A1B-9FFB-C346B6B465B3}
+	EndGlobalSection
+EndGlobal
