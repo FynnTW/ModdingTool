@@ -17,6 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
+using static ModdingTool.Globals;
 
 namespace ModdingTool
 {
@@ -50,9 +51,8 @@ namespace ModdingTool
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            string newtext = modPath.Text.Trim();
-            ModdingTool.EDUParser.eduPath = newtext;
-            ModdingTool.factionParser.modPath = newtext;
+            string newtext = modPathInput.Text.Trim();
+            modPath = newtext;
         }
     }
 }

@@ -45,6 +45,11 @@ namespace ModdingTool
         private string logo;
         private string localizedName;
         private bool spawned_on_event = false;
+        private string spawn_modifier;
+        private string spawn_faction;
+        private bool slave_faction;
+        private bool papal_faction;
+        private string[] periods_unavailable_in_custom_battle;
 
         public string Name { get => name; set => name = value; }
         public string Culture { get => culture; set => culture = value; }
@@ -82,5 +87,10 @@ namespace ModdingTool
         public int Secondary_colourR { get => secondary_colourR; set => secondary_colourR = value; }
         public int Secondary_colourG { get => secondary_colourG; set => secondary_colourG = value; }
         public int Secondary_colourB { get => secondary_colourB; set => secondary_colourB = value; }
+        public string Spawn_modifier { get => spawn_modifier; set => spawn_modifier = value; }
+        public string Spawn_faction { get => spawn_faction; set => spawn_faction = value; }
+        public bool Slave_faction { get => slave_faction; set => slave_faction = value; }
+        public bool Papal_faction { get => papal_faction; set => papal_faction = value; }
+        public string[] Periods_unavailable_in_custom_battle { get => periods_unavailable_in_custom_battle; set => periods_unavailable_in_custom_battle = value; }
     }
 }

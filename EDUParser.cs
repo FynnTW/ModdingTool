@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.TextFormatting;
 using static ModdingTool.parseHelpers;
+using static ModdingTool.Globals;
 using System.Reflection;
 using log4net;
 using log4net.Config;
@@ -14,7 +15,6 @@ namespace ModdingTool
 {
     internal class EDUParser
     {
-        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public static Dictionary<string, Unit> allUnits = new Dictionary<string, Unit>();
 
         private static string unitCardPath = "\\data\\ui\\units";
@@ -24,13 +24,11 @@ namespace ModdingTool
         public static Dictionary<string, string> unitDescr = new Dictionary<string, string>();
         public static Dictionary<string, string> unitDescrShort = new Dictionary<string, string>();
 
-        public static string eduPath = "D:\\Fynn\\Steam\\steamapps\\common\\Medieval II Total War\\mods\\Divide_and_Conquer";
-
         public static void parseEDU()
         {
 
             _log.Info("start parse edu");
-            string[] lines = File.ReadAllLines(eduPath + "\\data\\export_descr_unit.txt");
+            string[] lines = File.ReadAllLines(modPath + "\\data\\export_descr_unit.txt");
 
             Unit newUnit = new Unit();
             bool first = false;
@@ -64,6 +62,7 @@ namespace ModdingTool
                         newUnit.Unit_card = cards[0];
                         newUnit.Unit_cardInfo = cards[1];
                         allUnits.Add(newUnit.Unit_type, newUnit);
+                        _log.Info(newUnit.Unit_type);
                         foreach (string faction in newUnit.Unit_ownership)
                         {
                             factionParser.allFactions[faction].Unit_ownership.Add(newUnit);
@@ -81,15 +80,18 @@ namespace ModdingTool
             }
             newUnit.Edu_index = index;
             allUnits.Add(newUnit.Unit_type, newUnit);
+            _log.Info(newUnit.Unit_type);
             foreach (string faction in newUnit.Unit_ownership)
             {
                 factionParser.allFactions[faction].Unit_ownership.Add(newUnit);
             }
+            _log.Info("end parse edu");
         }
 
         public static void parseEU()
         {
-            string[] lines = File.ReadAllLines(eduPath + "\\data\\text\\export_units.txt", Encoding.Unicode);
+            _log.Info("start parse export_units");
+            string[] lines = File.ReadAllLines(modPath + "\\data\\text\\export_units.txt", Encoding.Unicode);
             unitNames = new Dictionary<string, string>();
             unitDescr = new Dictionary<string, string>();
             unitDescrShort = new Dictionary<string, string>();
@@ -110,6 +112,7 @@ namespace ModdingTool
 
                 //Console.WriteLine(line);
             }
+            _log.Info("end parse export_units");
         }
 
         public static string[] stringSplitter(string line)
@@ -143,7 +146,7 @@ namespace ModdingTool
 
             foreach (string faction in cardSearchFactions)
             {
-                string cardPath = eduPath + unitCardPath + "\\";
+                string cardPath = modPath + unitCardPath + "\\";
                 cardPath += faction;
                 if(!(Directory.Exists(cardPath))) 
                 {
@@ -161,7 +164,7 @@ namespace ModdingTool
             string unitInfoCard = "";
             foreach (string faction in infoCardSearchFactions)
             {
-                string cardInfoPath = eduPath + unitInfoCardPath + "\\";
+                string cardInfoPath = modPath + unitInfoCardPath + "\\";
                 cardInfoPath += faction;
                 if (!(Directory.Exists(cardInfoPath)))
                 {
@@ -190,6 +193,8 @@ namespace ModdingTool
         public static void fillDicts(string[] parts)
         {
             String identifier = parts[0];
+
+            _log.Info(identifier);
 
             string text = "";
 
@@ -477,7 +482,7 @@ namespace ModdingTool
                 case "card_pic_dir":
                     unit.Unit_card_dict = parts[1];
                     break;
-                case "crusade_upkeep_modifier":
+                case "crusading_upkeep_modifier":
                     unit.Unit_crusadeUpkeep = float.Parse(parts[1]);
                     break;
 

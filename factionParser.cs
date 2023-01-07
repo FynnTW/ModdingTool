@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using static ModdingTool.parseHelpers;
+using static ModdingTool.Globals;
+using System.Text.RegularExpressions;
 
 namespace ModdingTool
 {
@@ -16,13 +18,13 @@ namespace ModdingTool
 
         public static Dictionary<string, string> expandedEntries = new Dictionary<string, string>();
 
-        public static string modPath = "D:\\Fynn\\Steam\\steamapps\\common\\Medieval II Total War\\mods\\Divide_and_Conquer";
-
 
         public static void parseSMFactions()
         {
+            BMDBParser.parseBMDB();
             parseExpanded();
             parseCultures();
+            _log.Info("start parse factions");
             string[] lines = File.ReadAllLines(modPath + "\\data\\descr_sm_factions.txt");
 
             Faction faction = new Faction();
@@ -51,6 +53,7 @@ namespace ModdingTool
                     if (first)
                     {
                         allFactions.Add(faction.Name, faction);
+                        _log.Info(faction.Name);
                         allCultures[faction.Culture].Factions.Add(faction.Name, faction);
                     }
                     first = true;
@@ -61,10 +64,13 @@ namespace ModdingTool
 
             }
             allFactions.Add(faction.Name, faction);
+            _log.Info(faction.Name);
             allCultures[faction.Culture].Factions.Add(faction.Name, faction);
+            _log.Info("end parse factions");
         }
         public static void parseCultures()
         {
+            _log.Info("start parse cultures");
             string[] lines = File.ReadAllLines(modPath + "\\data\\descr_cultures.txt");
 
             Culture culture = new Culture();
@@ -93,6 +99,7 @@ namespace ModdingTool
                     if (first)
                     {
                         allCultures.Add(culture.Name, culture);
+                        _log.Info(culture.Name);
                     }
                     first = true;
                     culture = new Culture();
@@ -102,10 +109,13 @@ namespace ModdingTool
 
             }
             allCultures.Add(culture.Name, culture);
+            _log.Info(culture.Name);
+            _log.Info("end parse cultures");
         }
 
         static public void parseExpanded()
         {
+            _log.Info("start parse expanded");
             string[] lines = File.ReadAllLines(modPath + "\\data\\text\\expanded.txt", Encoding.Unicode);
             expandedEntries = new Dictionary<string, string>();
             foreach (string line in lines)
@@ -125,6 +135,7 @@ namespace ModdingTool
 
                 //Console.WriteLine(line);
             }
+            _log.Info("end parse expanded");
         }
 
         public static void fillDict(string[] parts)
@@ -138,6 +149,7 @@ namespace ModdingTool
             {
                 expandedEntries[identifier.ToLower()] = "";
             }
+            _log.Info(identifier.ToLower());
 
         }
 
@@ -178,14 +190,49 @@ namespace ModdingTool
             {
                 case "faction":
                     faction.Name = x;
-                    if (parts.Length > 2 && parts[2].Equals("spawned_on_event"))
+                    if (parts.Length > 2)
                     {
-                        faction.Spawned_on_event = true;
+                        string id = parts[2];
+                        switch (id)
+                        {
+                            case "spawned_on_event":
+                                faction.Spawned_on_event = true;
+                                faction.Spawn_modifier = id;
+                                break;
+                            case "shadowed_by":
+                                faction.Spawn_faction = parts[3];
+                                faction.Spawn_modifier = id;
+                                break;
+                            case "shadowing":
+                                faction.Spawn_faction = parts[3];
+                                faction.Spawn_modifier = id;
+                                break;
+                            case "spawns_on_revolt":
+                                faction.Spawn_faction = parts[3];
+                                faction.Spawn_modifier = id;
+                                break;
+                            case "spawned_by":
+                                faction.Spawn_faction = parts[3];
+                                faction.Spawn_modifier = id;
+                                break;
+                        }
                     }
                     faction.LocalizedName = expandedEntries[x];
                     break;
                 case "culture":
                     faction.Culture = x;
+                    break;
+                case "special_faction_type":
+                    if (x.Equals("slave_faction"))
+                    {
+                        faction.Slave_faction = true;
+                        break;
+                    }
+                    if (x.Equals("papal_faction"))
+                    {
+                        faction.Papal_faction = true;
+                        break;
+                    }
                     break;
                 case "religion":
                     faction.Religion = x;
@@ -223,6 +270,9 @@ namespace ModdingTool
                     break;
                 case "custom_battle_availability":
                     faction.Custom_battle_availability = ToBool(x);
+                    break;
+                case "periods_unavailable_in_custom_battle":
+                    faction.Periods_unavailable_in_custom_battle = parts[1..];
                     break;
                 case "can_sap":
                     faction.Can_sap = ToBool(x);
