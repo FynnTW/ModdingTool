@@ -1,7 +1,10 @@
-﻿using System;
+﻿using log4net.Config;
+using log4net;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
 
 namespace ModdingTool
 {
@@ -21,8 +25,19 @@ namespace ModdingTool
     /// </summary>
     public partial class MainWindow : Window
     {
+
+
+
         public MainWindow()
         {
+
+            string logpath = "D:\\source\\repos\\ModdingTool\\bin\\Debug\\net7.0-windows\\proper.log";
+            if (File.Exists(logpath))
+            {
+                File.Delete(logpath);
+            }
+            var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
+            XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
             InitializeComponent();
         }
 

@@ -14,8 +14,12 @@ namespace ModdingTool
         private string religion;
         private string symbol;
         private string rebel_symbol;
-        private string primary_colour;
-        private string secondary_colour;
+        private int primary_colourR;
+        private int primary_colourG;
+        private int primary_colourB;
+        private int secondary_colourR;
+        private int secondary_colourG;
+        private int secondary_colourB;
         private string loading_logo;
         private string standard_index;
         private string logo_index;
@@ -47,8 +51,6 @@ namespace ModdingTool
         public string Religion { get => religion; set => religion = value; }
         public string Symbol { get => symbol; set => symbol = value; }
         public string Rebel_symbol { get => rebel_symbol; set => rebel_symbol = value; }
-        public string Primary_colour { get => primary_colour; set => primary_colour = value; }
-        public string Secondary_colour { get => secondary_colour; set => secondary_colour = value; }
         public string Loading_logo { get => loading_logo; set => loading_logo = value; }
         public string Standard_index { get => standard_index; set => standard_index = value; }
         public string Logo_index { get => logo_index; set => logo_index = value; }
@@ -74,5 +76,11 @@ namespace ModdingTool
         public string LocalizedName { get => localizedName; set => localizedName = value; }
         public List<Unit> Unit_ownership { get => unit_ownership; set => unit_ownership = value; }
         public bool Spawned_on_event { get => spawned_on_event; set => spawned_on_event = value; }
+        public int Primary_colourR { get => primary_colourR; set => primary_colourR = value; }
+        public int Primary_colourG { get => primary_colourG; set => primary_colourG = value; }
+        public int Primary_colourB { get => primary_colourB; set => primary_colourB = value; }
+        public int Secondary_colourR { get => secondary_colourR; set => secondary_colourR = value; }
+        public int Secondary_colourG { get => secondary_colourG; set => secondary_colourG = value; }
+        public int Secondary_colourB { get => secondary_colourB; set => secondary_colourB = value; }
     }
 }

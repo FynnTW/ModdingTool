@@ -172,6 +172,7 @@ namespace ModdingTool
             String identifier = parts[0];
 
             String x = parts[1];
+            char[] delimitersWhite = { ' ', '\t' };
 
             switch (identifier)
             {
@@ -196,10 +197,14 @@ namespace ModdingTool
                     faction.Rebel_symbol = x;
                     break;
                 case "primary_colour":
-                    faction.Primary_colour = x;
+                    faction.Primary_colourR = int.Parse(x.Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[1]);
+                    faction.Primary_colourG = int.Parse(parts[2].Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[1]);
+                    faction.Primary_colourB = int.Parse(parts[3].Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[1]);
                     break;
                 case "secondary_colour":
-                    faction.Secondary_colour = x;
+                    faction.Secondary_colourR = int.Parse(x.Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[1]);
+                    faction.Secondary_colourG = int.Parse(parts[2].Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[1]);
+                    faction.Secondary_colourB = int.Parse(parts[3].Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[1]);
                     break;
                 case "loading_logo":
                     faction.Loading_logo = x;
@@ -421,6 +426,9 @@ namespace ModdingTool
                     break;
                 case "fort_cost":
                     culture.FortCost = int.Parse(x);
+                    break;
+                case "fort_wall":
+                    culture.FortWalls = x;
                     break;
                 case "fishing_village":
                     culture.FishingVillage = x;

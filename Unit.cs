@@ -35,6 +35,9 @@ namespace ModdingTool
         private string unit_mount;
         private string[] unit_mount_effect;
         private string[] unit_attributes;
+        private bool mercenary_unit = false;
+        private bool general_unit = false;
+        private int edu_index;
         private double unit_spacing_width;
         private double unit_spacing_depth;
         private double unit_spacing_width_loose;
@@ -238,6 +241,10 @@ namespace ModdingTool
         public string Unit_descr { get => unit_descr; set => unit_descr = value; }
         public string Unit_descrShort { get => unit_descrShort; set => unit_descrShort = value; }
         public string Unit_card { get => unit_card; set => unit_card = value; }
+        public bool Mercenary_unit { get => mercenary_unit; set => mercenary_unit = value; }
+        public bool General_unit { get => general_unit; set => general_unit = value; }
+        public int Edu_index { get => edu_index; set => edu_index = value; }
+        public string Unit_cardInfo { get => unit_cardInfo; set => unit_cardInfo = value; }
 
 
         #endregion

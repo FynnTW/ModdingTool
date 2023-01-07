@@ -6,13 +6,19 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.TextFormatting;
 using static ModdingTool.parseHelpers;
+using System.Reflection;
+using log4net;
+using log4net.Config;
 
 namespace ModdingTool
 {
     internal class EDUParser
     {
+        private static readonly ILog _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        public static Dictionary<string, Unit> allUnits = new Dictionary<string, Unit>();
 
-        public static List<Unit> allUnits = new List<Unit>();
+        private static string unitCardPath = "\\data\\ui\\units";
+        private static string unitInfoCardPath = "\\data\\ui\\unit_info";
 
         public static Dictionary<string, string> unitNames = new Dictionary<string, string>();
         public static Dictionary<string, string> unitDescr = new Dictionary<string, string>();
@@ -23,11 +29,14 @@ namespace ModdingTool
         public static void parseEDU()
         {
 
+            _log.Info("start parse edu");
             string[] lines = File.ReadAllLines(eduPath + "\\data\\export_descr_unit.txt");
 
             Unit newUnit = new Unit();
             bool first = false;
-            allUnits = new List<Unit>();
+            allUnits = new Dictionary<string, Unit>();
+
+            int index = 0;
 
             foreach (string line in lines)
             {
@@ -42,7 +51,7 @@ namespace ModdingTool
                 }
                 newline = newline.Trim();
                 string[] lineParts = splitLine(newline);
-                if ( lineParts.Length < 2 )
+                if (lineParts.Length < 2)
                 {
                     continue;
                 }
@@ -50,11 +59,16 @@ namespace ModdingTool
                 {
                     if (first)
                     {
-                        allUnits.Add(newUnit);
+                        newUnit.Edu_index= index;
+                        string[] cards = getCards(newUnit.Unit_dictionary, newUnit.Unit_ownership, newUnit.Unit_card_dict, newUnit.Unit_info_dict, newUnit.Mercenary_unit);
+                        newUnit.Unit_card = cards[0];
+                        newUnit.Unit_cardInfo = cards[1];
+                        allUnits.Add(newUnit.Unit_type, newUnit);
                         foreach (string faction in newUnit.Unit_ownership)
                         {
                             factionParser.allFactions[faction].Unit_ownership.Add(newUnit);
                         }
+                        index++;
                     }
                     first = true;
                     newUnit = new Unit();
@@ -65,7 +79,8 @@ namespace ModdingTool
                 }
                 //Console.WriteLine(lineParts[0]);
             }
-            allUnits.Add(newUnit);
+            newUnit.Edu_index = index;
+            allUnits.Add(newUnit.Unit_type, newUnit);
             foreach (string faction in newUnit.Unit_ownership)
             {
                 factionParser.allFactions[faction].Unit_ownership.Add(newUnit);
@@ -102,6 +117,74 @@ namespace ModdingTool
             char[] deliminators = { '{', '}' };
             string[] splitted = line.Split(deliminators, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
             return splitted;
+        }
+
+        public static string[] getCards(string unit, string[] factions, string card_pic_dir, string info_pic_dir, bool merc)
+        {
+            string unitCard = "";
+            string[] cardSearchFactions = factions;
+            string[] infoCardSearchFactions = factions;
+
+            if (merc)
+            {
+                cardSearchFactions = new string[] { "mercs" };
+                infoCardSearchFactions = new string[] { "merc" };
+            }
+
+            if (card_pic_dir != null)
+            {
+                cardSearchFactions = new string[] { card_pic_dir };
+            }
+            if (info_pic_dir != null)
+            {
+                infoCardSearchFactions = new string[] { info_pic_dir };
+            }
+
+
+            foreach (string faction in cardSearchFactions)
+            {
+                string cardPath = eduPath + unitCardPath + "\\";
+                cardPath += faction;
+                if(!(Directory.Exists(cardPath))) 
+                {
+                    continue;
+                }
+                if (File.Exists(cardPath + "\\#" + unit + ".tga"))
+                {
+                    unitCard = cardPath + "\\#" + unit + ".tga";
+                }
+                else
+                {
+                    _log.Info("no unit card found for unit: " + unit + " in faction: " + faction);
+                }
+            }
+            string unitInfoCard = "";
+            foreach (string faction in infoCardSearchFactions)
+            {
+                string cardInfoPath = eduPath + unitInfoCardPath + "\\";
+                cardInfoPath += faction;
+                if (!(Directory.Exists(cardInfoPath)))
+                {
+                    continue;
+                }
+                if (File.Exists(cardInfoPath + "\\" + unit + "_info.tga"))
+                {
+                    unitInfoCard = cardInfoPath + "\\" + unit + "_info.tga";
+                }
+                else
+                {
+                    _log.Info("no unit info card found for unit: " + unit + " in faction: " + faction);
+                }
+            }
+            if (unitCard.Equals(""))
+            {
+                _log.Info("!!no unit card at all found for unit: " + unit);
+            }
+            if (unitInfoCard.Equals(""))
+            {
+                _log.Info("!!no unit info card at all found for unit: " + unit);
+            }
+            return new string[] { unitCard, unitInfoCard };
         }
 
         public static void fillDicts(string[] parts)
@@ -211,6 +294,18 @@ namespace ModdingTool
                     break;
                 case "attributes":
                     unit.Unit_attributes = parts[1..];
+                    foreach (string attr in unit.Unit_attributes)
+                    {
+                        if (attr.Equals("mercenary_unit"))
+                        {
+                            unit.Mercenary_unit = true;
+                            continue;
+                        } else if (attr.Equals("general_unit"))
+                        {
+                            unit.General_unit = true;
+                            continue;
+                        }
+                    }
                     break;
                 case "move_speed_mod":
                     unit.Unit_moveSpeed = float.Parse(parts[1]);
