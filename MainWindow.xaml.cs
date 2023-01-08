@@ -54,5 +54,11 @@ namespace ModdingTool
             string newtext = modPathInput.Text.Trim();
             modPath = newtext;
         }
+
+        private void openViewer_Click(object sender, RoutedEventArgs e)
+        {
+            unitViewer view = new unitViewer();
+            view.Show();
+        }
     }
 }

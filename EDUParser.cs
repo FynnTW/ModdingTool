@@ -266,17 +266,17 @@ namespace ModdingTool
                     }
                     break;
                 case "officer":
-                    if (unit.Unit_officer1 == null)
+                    if (unit.Unit_officer1.Equals(""))
                     {
                         unit.Unit_officer1 = parts[1].Trim();
                         break;
                     }
-                    if (unit.Unit_officer2 == null)
+                    if (unit.Unit_officer2.Equals(""))
                     {
                         unit.Unit_officer2 = parts[1].Trim();
                         break;
                     }
-                    if (unit.Unit_officer3 == null)
+                    if (unit.Unit_officer3.Equals(""))
                     {
                         unit.Unit_officer3 = parts[1].Trim();
                         break;
