@@ -38,6 +38,14 @@ namespace ModdingTool
             {
                 BattleModel entry = new BattleModel();
                 entry.Name = getString();
+                if (n == 0 && entry.Name.Equals("blank"))
+                {
+                    for (int i = 0;i < 34;i++)
+                    {
+                        pad = getInt();
+                    }
+                    continue;
+                }
                 entry.Scale = getFloat();
                 entry.LodCount= getInt();
                 entry.LodTable = new LOD[entry.LodCount];

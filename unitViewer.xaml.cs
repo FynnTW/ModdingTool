@@ -44,6 +44,8 @@ namespace ModdingTool
             infoCardImage.Source = tgaToImageSource(selectedUnit.Unit_cardInfo);
             unitCardImage.Source = tgaToImageSource(selectedUnit.Unit_card);
             localName.Text = selectedUnit.Unit_name;
+            unitDescr.Text = selectedUnit.Unit_descr;
+            unitShortDescr.Text = selectedUnit.Unit_descr;
             unitCategory.Text = selectedUnit.Unit_category;
             unitClass.Text = selectedUnit.Unit_class;
             unitVoice.Text = selectedUnit.Unit_voice_type;

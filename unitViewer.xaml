@@ -10,23 +10,26 @@
 
     <Grid Margin="0,0,0,-6">
         <Grid.RowDefinitions>
-            <RowDefinition/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0*"/>
-            <ColumnDefinition Width="0*"/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="1.5*"/>
+            <ColumnDefinition Width="2.5*"/>
         </Grid.ColumnDefinitions>
-        <ListView x:Name="unitPicker" ItemsSource="{Binding unitList}" Margin="10,10,1439,45" SelectionChanged="unitPicker_SelectionChanged" Grid.ColumnSpan="3">
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <UniformGrid Columns="1"/>
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-        </ListView>
-        <Image x:Name="infoCardImage" HorizontalAlignment="Left" Height="216" Margin="686,48,0,0" VerticalAlignment="Top" Width="600" Grid.Column="2"/>
+        <DockPanel >
+            <ListView x:Name="unitPicker" ItemsSource="{Binding unitList}" DockPanel.Dock="Left" SelectionChanged="unitPicker_SelectionChanged" Grid.RowSpan="2">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="1"/>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+            </ListView>
+        </DockPanel>
+        <Image x:Name="infoCardImage" HorizontalAlignment="Left" Height="216" VerticalAlignment="Bottom" Width="600" Grid.Column="1"/>
         <Image x:Name="unitCardImage" HorizontalAlignment="Left" Height="234" Margin="1528,10,0,0" VerticalAlignment="Top" Width="190" RenderTransformOrigin="0.495,0.513" Grid.Column="2"/>
-        <TextBlock x:Name="localName" HorizontalAlignment="Left" Height="48" Margin="584,256,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="204" Grid.Column="2" FontSize="36"/>
+        <TextBlock x:Name="localName" HorizontalAlignment="Left" Height="48" Margin="584,256,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="204" Grid.Column="2" FontSize="18"/>
         <TextBlock x:Name="unitDescr" Grid.Column="2" HorizontalAlignment="Left" Height="292" Margin="556,347,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="336" FontSize="16"/>
         <TextBox x:Name="unitShortDescr" Grid.Column="2" HorizontalAlignment="Left" Margin="550,692,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="272" Height="120"/>
         <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="954,277,0,0" TextWrapping="Wrap" Text="Category" VerticalAlignment="Top" Height="24" Width="78"/>
