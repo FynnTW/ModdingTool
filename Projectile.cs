@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ModdingTool
 {
@@ -29,7 +25,7 @@ namespace ModdingTool
         private bool affected_by_rain = false;
         private bool no_ae_on_ram = false;
         private bool fiery = false;
-        private Bounce bounce= new Bounce();
+        private Bounce bounce = new Bounce();
         private int min_angle = 0;
         private int max_angle = 0;
         private int velocityMin = 0;
@@ -92,6 +88,4 @@ namespace ModdingTool
         private string name = "";
         private string distance = "";
     }
-
-
 }

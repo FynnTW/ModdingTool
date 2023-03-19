@@ -1,35 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using static ModdingTool.parseHelpers;
 using static ModdingTool.Globals;
-using System.Text.RegularExpressions;
+using static ModdingTool.parseHelpers;
 
 namespace ModdingTool
 {
     internal class factionParser
     {
-        public static Dictionary<string, Faction> allFactions = new Dictionary<string, Faction>();
-
-        public static Dictionary<string, Culture> allCultures= new Dictionary<string, Culture>();
-
-        public static Dictionary<string, string> expandedEntries = new Dictionary<string, string>();
-
-
         public static void parseSMFactions()
         {
-            BMDBParser.parseBMDB();
+            BmdbParser.ParseBmdb();
             parseExpanded();
             parseCultures();
-            _log.Info("start parse factions");
-            string[] lines = File.ReadAllLines(modPath + "\\data\\descr_sm_factions.txt");
+            Console.WriteLine(@"start parse factions");
+            string[] lines = File.ReadAllLines(ModPath + "\\data\\descr_sm_factions.txt");
 
             Faction faction = new Faction();
             bool first = false;
-            allFactions = new Dictionary<string, Faction>();
+            AllFactions = new Dictionary<string, Faction>();
 
             foreach (string line in lines)
             {
@@ -52,30 +43,29 @@ namespace ModdingTool
                 {
                     if (first)
                     {
-                        allFactions.Add(faction.Name, faction);
-                        _log.Info(faction.Name);
-                        allCultures[faction.Culture].Factions.Add(faction.Name, faction);
+                        AllFactions.Add(faction.Name, faction);
+                        Console.WriteLine(faction.Name);
+                        AllCultures[faction.Culture].Factions.Add(faction.Name, faction);
                     }
                     first = true;
                     faction = new Faction();
                 }
                 assignFields(faction, parts);
-
-
             }
-            allFactions.Add(faction.Name, faction);
-            _log.Info(faction.Name);
-            allCultures[faction.Culture].Factions.Add(faction.Name, faction);
-            _log.Info("end parse factions");
+            AllFactions.Add(faction.Name, faction);
+            Console.WriteLine(faction.Name);
+            AllCultures[faction.Culture].Factions.Add(faction.Name, faction);
+            Console.WriteLine(@"end parse factions");
         }
+
         public static void parseCultures()
         {
-            _log.Info("start parse cultures");
-            string[] lines = File.ReadAllLines(modPath + "\\data\\descr_cultures.txt");
+            Console.WriteLine(@"start parse cultures");
+            string[] lines = File.ReadAllLines(ModPath + "\\data\\descr_cultures.txt");
 
             Culture culture = new Culture();
             bool first = false;
-            allCultures = new Dictionary<string, Culture>();
+            AllCultures = new Dictionary<string, Culture>();
 
             foreach (string line in lines)
             {
@@ -98,26 +88,24 @@ namespace ModdingTool
                 {
                     if (first)
                     {
-                        allCultures.Add(culture.Name, culture);
-                        _log.Info(culture.Name);
+                        AllCultures.Add(culture.Name, culture);
+                        Console.WriteLine(culture.Name);
                     }
                     first = true;
                     culture = new Culture();
                 }
                 assignCultureFields(culture, parts);
-
-
             }
-            allCultures.Add(culture.Name, culture);
-            _log.Info(culture.Name);
-            _log.Info("end parse cultures");
+            AllCultures.Add(culture.Name, culture);
+            Console.WriteLine(culture.Name);
+            Console.WriteLine(@"end parse cultures");
         }
 
-        static public void parseExpanded()
+        public static void parseExpanded()
         {
-            _log.Info("start parse expanded");
-            string[] lines = File.ReadAllLines(modPath + "\\data\\text\\expanded.txt", Encoding.Unicode);
-            expandedEntries = new Dictionary<string, string>();
+            Console.WriteLine(@"start parse expanded");
+            string[] lines = File.ReadAllLines(ModPath + "\\data\\text\\expanded.txt", Encoding.Unicode);
+            ExpandedEntries = new Dictionary<string, string>();
             foreach (string line in lines)
             {
                 if (line.StartsWith('¬'))
@@ -132,10 +120,9 @@ namespace ModdingTool
                 string[] parts = stringSplitter(newLine);
                 fillDict(parts);
 
-
                 //Console.WriteLine(line);
             }
-            _log.Info("end parse expanded");
+            Console.WriteLine(@"end parse expanded");
         }
 
         public static void fillDict(string[] parts)
@@ -144,18 +131,17 @@ namespace ModdingTool
 
             if (parts.Length > 1)
             {
-                expandedEntries[identifier.ToLower()] = parts[1];
-            } else
-            {
-                expandedEntries[identifier.ToLower()] = "";
+                ExpandedEntries[identifier.ToLower()] = parts[1];
             }
-            _log.Info(identifier.ToLower());
-
+            else
+            {
+                ExpandedEntries[identifier.ToLower()] = "";
+            }
+            Console.WriteLine(@identifier.ToLower());
         }
 
         public static string[] lineSplitter(string line)
         {
-
             char[] delimiters = { ',' };
             string[] lineParts = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
             char[] delimitersWhite = { ' ', '\t' };
@@ -166,7 +152,6 @@ namespace ModdingTool
 
         public static string[] lineSplitterCultures(string line)
         {
-
             char[] delimiters = { ',', '}', '{' };
             string[] lineParts = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
             char[] delimitersWhite = { ' ', '\t' };
@@ -199,29 +184,35 @@ namespace ModdingTool
                                 faction.Spawned_on_event = true;
                                 faction.Spawn_modifier = id;
                                 break;
+
                             case "shadowed_by":
                                 faction.Spawn_faction = parts[3];
                                 faction.Spawn_modifier = id;
                                 break;
+
                             case "shadowing":
                                 faction.Spawn_faction = parts[3];
                                 faction.Spawn_modifier = id;
                                 break;
+
                             case "spawns_on_revolt":
                                 faction.Spawn_faction = parts[3];
                                 faction.Spawn_modifier = id;
                                 break;
+
                             case "spawned_by":
                                 faction.Spawn_faction = parts[3];
                                 faction.Spawn_modifier = id;
                                 break;
                         }
                     }
-                    faction.LocalizedName = expandedEntries[x];
+                    faction.LocalizedName = ExpandedEntries[x];
                     break;
+
                 case "culture":
                     faction.Culture = x;
                     break;
+
                 case "special_faction_type":
                     if (x.Equals("slave_faction"))
                     {
@@ -234,93 +225,119 @@ namespace ModdingTool
                         break;
                     }
                     break;
+
                 case "religion":
                     faction.Religion = x;
                     break;
+
                 case "symbol":
                     faction.Symbol = x;
                     break;
+
                 case "rebel_symbol":
                     faction.Rebel_symbol = x;
                     break;
+
                 case "primary_colour":
                     faction.Primary_colourR = int.Parse(x.Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[1]);
                     faction.Primary_colourG = int.Parse(parts[2].Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[1]);
                     faction.Primary_colourB = int.Parse(parts[3].Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[1]);
                     break;
+
                 case "secondary_colour":
                     faction.Secondary_colourR = int.Parse(x.Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[1]);
                     faction.Secondary_colourG = int.Parse(parts[2].Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[1]);
                     faction.Secondary_colourB = int.Parse(parts[3].Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[1]);
                     break;
+
                 case "loading_logo":
                     faction.Loading_logo = x;
                     break;
+
                 case "standard_index":
                     faction.Standard_index = x;
                     break;
+
                 case "logo_index":
                     faction.Logo_index = x;
                     break;
+
                 case "small_logo_index":
                     faction.Small_logo_index = x;
                     break;
+
                 case "triumph_value":
                     faction.Triumph_value = int.Parse(x);
                     break;
+
                 case "custom_battle_availability":
                     faction.Custom_battle_availability = ToBool(x);
                     break;
+
                 case "periods_unavailable_in_custom_battle":
                     faction.Periods_unavailable_in_custom_battle = parts[1..];
                     break;
+
                 case "can_sap":
                     faction.Can_sap = ToBool(x);
                     break;
+
                 case "prefers_naval_invasions":
                     faction.Prefers_naval_invasions = ToBool(x);
                     break;
+
                 case "can_have_princess":
                     faction.Can_have_princess = ToBool(x);
                     break;
+
                 case "disband_to_pools":
                     faction.Disband_to_pools = ToBool(x);
                     break;
+
                 case "can_build_siege_towers":
                     faction.Can_build_siege_towers = ToBool(x);
                     break;
+
                 case "can_transmit_plague":
                     faction.Can_transmit_plague = ToBool(x);
                     break;
+
                 case "has_family_tree":
                     faction.Has_family_tree = x;
                     break;
+
                 case "horde_min_units":
                     faction.Horde_min_units = int.Parse(x);
                     break;
+
                 case "horde_max_units":
                     faction.Horde_max_units = int.Parse(x);
                     break;
+
                 case "horde_max_units_reduction_every_horde":
                     faction.Horde_max_units_reduction_every_horde = int.Parse(x);
                     break;
+
                 case "horde_unit_per_settlement_population":
                     faction.Horde_unit_per_settlement_population = int.Parse(x);
                     break;
+
                 case "horde_min_named_characters":
                     faction.Horde_min_named_characters = int.Parse(x);
                     break;
+
                 case "horde_max_percent_army_stack":
                     faction.Horde_max_percent_army_stack = int.Parse(x);
                     break;
+
                 case "horde_disband_percent_on_settlement_capture":
                     faction.Horde_disband_percent_on_settlement_capture = int.Parse(x);
                     break;
+
                 case "horde_unit":
                     faction.Horde_units.Add(x);
                     break;
             }
-
         }
 
         private static string settlement_level;
@@ -342,182 +359,230 @@ namespace ModdingTool
             {
                 case "culture":
                     culture.Name = x;
-                    culture.LocalizedName = expandedEntries[x.ToLower()];
+                    culture.LocalizedName = ExpandedEntries[x.ToLower()];
                     break;
+
                 case "portrait_mapping":
                     culture.Portrait_mapping = x;
                     break;
+
                 case "rebel_standard_index":
                     culture.Rebel_standard_index = int.Parse(x);
                     break;
+
                 case "village":
                     settlement_level = "village";
                     break;
+
                 case "moot_and_bailey":
                     settlement_level = "moot_and_bailey";
                     break;
+
                 case "town":
                     settlement_level = "town";
                     break;
+
                 case "wooden_castle":
                     settlement_level = "wooden_castle";
                     break;
+
                 case "large_town":
                     settlement_level = "large_town";
                     break;
+
                 case "castle":
                     settlement_level = "castle";
                     break;
+
                 case "city":
                     settlement_level = "city";
                     break;
+
                 case "fortress":
                     settlement_level = "fortress";
                     break;
+
                 case "large_city":
                     settlement_level = "large_city";
                     break;
+
                 case "citadel":
                     settlement_level = "citadel";
                     break;
+
                 case "huge_city":
                     settlement_level = "huge_city";
                     break;
+
                 case "normal":
-                    switch(settlement_level)
+                    switch (settlement_level)
                     {
                         case "village":
                             culture.Village.Model = x;
                             culture.Village.Aerial_base = parts[2];
                             break;
+
                         case "moot_and_bailey":
                             culture.Moot_and_bailey.Model = x;
                             culture.Moot_and_bailey.Aerial_base = parts[2];
                             break;
+
                         case "town":
                             culture.Town.Model = x;
                             culture.Town.Aerial_base = parts[2];
                             break;
+
                         case "wooden_castle":
                             culture.Wooden_castle.Model = x;
                             culture.Wooden_castle.Aerial_base = parts[2];
                             break;
+
                         case "large_town":
                             culture.Large_town.Model = x;
                             culture.Large_town.Aerial_base = parts[2];
                             break;
+
                         case "castle":
                             culture.Castle.Model = x;
                             culture.Castle.Aerial_base = parts[2];
                             break;
+
                         case "city":
                             culture.City.Model = x;
                             culture.City.Aerial_base = parts[2];
                             break;
+
                         case "fortress":
                             culture.Fortress.Model = x;
                             culture.Fortress.Aerial_base = parts[2];
                             break;
+
                         case "large_city":
                             culture.Large_city.Model = x;
                             culture.Large_city.Aerial_base = parts[2];
                             break;
+
                         case "citadel":
                             culture.Citadel.Model = x;
                             culture.Citadel.Aerial_base = parts[2];
                             break;
+
                         case "huge_city":
                             culture.Huge_city.Model = x;
                             culture.Huge_city.Aerial_base = parts[2];
                             break;
                     }
                     break;
+
                 case "card":
-                    switch(settlement_level)
+                    switch (settlement_level)
                     {
                         case "village":
                             culture.Village.Card = x;
                             break;
+
                         case "moot_and_bailey":
                             culture.Moot_and_bailey.Card = x;
                             break;
+
                         case "town":
                             culture.Town.Card = x;
                             break;
+
                         case "wooden_castle":
                             culture.Wooden_castle.Card = x;
                             break;
+
                         case "large_town":
                             culture.Large_town.Card = x;
                             break;
+
                         case "castle":
                             culture.Castle.Card = x;
                             break;
+
                         case "city":
                             culture.City.Card = x;
                             break;
+
                         case "fortress":
                             culture.Fortress.Card = x;
                             break;
+
                         case "large_city":
                             culture.Large_city.Card = x;
                             break;
+
                         case "citadel":
                             culture.Citadel.Card = x;
                             break;
+
                         case "huge_city":
                             culture.Huge_city.Card = x;
                             break;
                     }
                     break;
+
                 case "fort":
                     culture.Fort = x;
                     culture.FortBase = parts[2];
                     break;
+
                 case "fort_cost":
                     culture.FortCost = int.Parse(x);
                     break;
+
                 case "fort_wall":
                     culture.FortWalls = x;
                     break;
+
                 case "fishing_village":
                     culture.FishingVillage = x;
                     culture.FishingVillageBase = parts[2];
                     break;
+
                 case "port_land":
                     if (culture.FishingPort1 == null)
                     {
                         culture.FishingPort1 = x;
                         culture.FishingPort1Base = parts[2];
-                    } else if (culture.FishingPort2 == null)
+                    }
+                    else if (culture.FishingPort2 == null)
                     {
                         culture.FishingPort2 = x;
                         culture.FishingPort2Base = parts[2];
                     }
-                    else {
+                    else
+                    {
                         culture.FishingPort3 = x;
                         culture.FishingPort3Base = parts[2];
                     }
                     break;
+
                 case "port_sea":
                     if (culture.FishingPort1Sea == null)
                     {
                         culture.FishingPort1Sea = x;
-                    } else if (culture.FishingPort2Sea == null)
+                    }
+                    else if (culture.FishingPort2Sea == null)
                     {
                         culture.FishingPort2Sea = x;
                     }
-                    else {
+                    else
+                    {
                         culture.FishingPort3Sea = x;
                     }
                     break;
+
                 case "watchtower":
                     culture.Watchtower = x;
                     culture.WatchtowerBase = parts[2];
                     break;
+
                 case "watchtower_cost":
                     culture.WatchtowerCost = int.Parse(x);
                     break;
+
                 case "spy":
                     parts = x.Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                     x = parts[0];
@@ -527,6 +592,7 @@ namespace ModdingTool
                     culture.Spy.Population_cost = int.Parse(parts[4]);
                     culture.Spy.Recruitment_points = int.Parse(parts[5]);
                     break;
+
                 case "assassin":
                     parts = x.Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                     x = parts[0];
@@ -536,6 +602,7 @@ namespace ModdingTool
                     culture.Assassin.Population_cost = int.Parse(parts[4]);
                     culture.Assassin.Recruitment_points = int.Parse(parts[5]);
                     break;
+
                 case "diplomat":
                     parts = x.Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                     x = parts[0];
@@ -545,6 +612,7 @@ namespace ModdingTool
                     culture.Diplomat.Population_cost = int.Parse(parts[4]);
                     culture.Diplomat.Recruitment_points = int.Parse(parts[5]);
                     break;
+
                 case "admiral":
                     parts = x.Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                     x = parts[0];
@@ -554,6 +622,7 @@ namespace ModdingTool
                     culture.Admiral.Population_cost = int.Parse(parts[4]);
                     culture.Admiral.Recruitment_points = int.Parse(parts[5]);
                     break;
+
                 case "merchant":
                     parts = x.Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                     x = parts[0];
@@ -563,6 +632,7 @@ namespace ModdingTool
                     culture.Merchant.Population_cost = int.Parse(parts[4]);
                     culture.Merchant.Recruitment_points = int.Parse(parts[5]);
                     break;
+
                 case "priest":
                     parts = x.Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                     x = parts[0];
@@ -573,7 +643,6 @@ namespace ModdingTool
                     culture.Priest.Recruitment_points = int.Parse(parts[5]);
                     break;
             }
-
         }
     }
 }

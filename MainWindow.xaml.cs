@@ -1,22 +1,9 @@
-﻿using log4net.Config;
-using log4net;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using log4net;
+using log4net.Config;
+using System.IO;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.IO;
 using static ModdingTool.Globals;
 
 namespace ModdingTool
@@ -26,13 +13,9 @@ namespace ModdingTool
     /// </summary>
     public partial class MainWindow : Window
     {
-
-
-
         public MainWindow()
         {
-
-            string logpath = "D:\\source\\repos\\ModdingTool\\bin\\Debug\\net7.0-windows\\proper.log";
+            const string logpath = "D:\\proper.log";
             if (File.Exists(logpath))
             {
                 File.Delete(logpath);
@@ -45,19 +28,19 @@ namespace ModdingTool
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             factionParser.parseSMFactions();
-            EDUParser.parseEU();
-            EDUParser.parseEDU();
+            EduParser.ParseEu();
+            EduParser.ParseEdu();
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            string newtext = modPathInput.Text.Trim();
-            modPath = newtext;
+            var newtext = ModPathInput.Text.Trim();
+            ModPath = newtext;
         }
 
         private void openViewer_Click(object sender, RoutedEventArgs e)
         {
-            unitViewer view = new unitViewer();
+            var view = new UnitViewer();
             view.Show();
         }
     }

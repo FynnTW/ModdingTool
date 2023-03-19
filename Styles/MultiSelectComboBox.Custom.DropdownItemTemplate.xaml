@@ -3,21 +3,21 @@
                     xmlns:models="clr-namespace:Sdl.MultiSelectComboBox.Example.Models">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="MultiSelectComboBox.Custom.ControlTemplate.xaml"/>
-        <ResourceDictionary Source="MultiSelectComboBox.Custom.Image.Resources.xaml"/>
+        <ResourceDictionary Source="MultiSelectComboBox.Custom.ControlTemplate.xaml" />
+        <ResourceDictionary Source="MultiSelectComboBox.Custom.Image.Resources.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <DataTemplate x:Key="MultiSelectComboBox.Dropdown.ListBox.ItemTemplate" DataType="models:LanguageItem">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="30" />
             </Grid.ColumnDefinitions>
 
-            <Image Grid.Column="0" Style="{StaticResource MultiSelectComboBox.Custom.Image.Style}"/>
+            <Image Grid.Column="0" Style="{StaticResource MultiSelectComboBox.Custom.Image.Style}" />
 
-            <TextBlock Grid.Column="1" Text="{Binding Path=Name}" Style="{StaticResource MultiSelectComboBox.DefaultTextBlock.Style}"/>
+            <TextBlock Grid.Column="1" Text="{Binding Path=Name}" Style="{StaticResource MultiSelectComboBox.DefaultTextBlock.Style}" />
 
             <TextBlock Grid.Column="2" Text="{Binding Path=SelectedOrder}" Margin="5,0" Foreground="{StaticResource MultiSelectComboBox.DropDown.ListBoxItem.SelectedOrder.Foreground}" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBlock.Style>
@@ -36,16 +36,16 @@
     <DataTemplate x:Key="MultiSelectComboBox.Dropdown.ListBox.Custom.ItemTemplate" DataType="models:LanguageItem">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="30" />
             </Grid.ColumnDefinitions>
 
-            <Image Grid.Column="0" Style="{StaticResource MultiSelectComboBox.Custom.Image.Style}"/>
+            <Image Grid.Column="0" Style="{StaticResource MultiSelectComboBox.Custom.Image.Style}" />
 
             <TextBlock Grid.Column="1" Style="{StaticResource MultiSelectComboBox.DefaultTextBlock.Style}" HorizontalAlignment="Left">
-                <Run Text="["/><Bold><Run Foreground="#FF4F68AA" Text="{Binding CultureInfo.Name, Mode=OneWay}"/></Bold><Run Text="]"/>
-                <Run Text="{Binding Name}"/>
+                <Run Text="[" /><Bold><Run Foreground="#FF4F68AA" Text="{Binding CultureInfo.Name, Mode=OneWay}" /></Bold><Run Text="]" />
+                <Run Text="{Binding Name}" />
             </TextBlock>
 
             <TextBlock Grid.Column="2" Text="{Binding Path=SelectedOrder}" Margin="5,0" Foreground="{StaticResource MultiSelectComboBox.DropDown.ListBoxItem.SelectedOrder.Foreground}" VerticalAlignment="Center" HorizontalAlignment="Center">
@@ -61,5 +61,4 @@
             </TextBlock>
         </Grid>
     </DataTemplate>
-
 </ResourceDictionary>

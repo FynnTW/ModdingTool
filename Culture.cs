@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace ModdingTool
 {
-    internal class Culture
+    public class Culture
     {
         private string name;
         private string portrait_mapping;
@@ -89,7 +85,6 @@ namespace ModdingTool
         public string FishingPort3Sea { get => fishingPort3Sea; set => fishingPort3Sea = value; }
         internal Dictionary<string, Faction> Factions { get => factions; set => factions = value; }
         public string LocalizedName { get => localizedName; set => localizedName = value; }
-
     }
 
     public class cultureAgent

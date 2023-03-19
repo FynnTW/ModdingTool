@@ -1,105 +1,96 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Pfim;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Shapes;
-using Pfim;
-using static System.Net.Mime.MediaTypeNames;
-using System.IO;
 using System.Windows.Media.Imaging;
+using ImageFormat = Pfim.ImageFormat;
+using static ModdingTool.Globals;
 
 namespace ModdingTool
 {
     /// <summary>
     /// Interaction logic for unitViewer.xaml
     /// </summary>
-    public partial class unitViewer : Window
+    public partial class UnitViewer : Window
     {
+        public ObservableCollection<string?> UnitList { get; set; }
 
-        public ObservableCollection<string> unitList { get; set; }
+        private Unit selectedUnit = AllUnits["Sellswords"];
 
-        Unit selectedUnit = EDUParser.allUnits["Sellswords"];
-        public unitViewer()
+        public UnitViewer()
         {
             InitializeComponent();
-            this.unitList = new ObservableCollection<string>(EDUParser.allUnits.Keys.ToList());
+            this.UnitList = new ObservableCollection<string?>(AllUnits.Keys.ToList());
             this.DataContext = this;
         }
 
         private void unitPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string strItem = unitPicker.SelectedItem as string;
-            selectedUnit = EDUParser.allUnits[strItem];
-            infoCardImage.Source = tgaToImageSource(selectedUnit.Unit_cardInfo);
-            unitCardImage.Source = tgaToImageSource(selectedUnit.Unit_card);
-            localName.Text = selectedUnit.Unit_name;
-            unitCategory.Text = selectedUnit.Unit_category;
-            unitClass.Text = selectedUnit.Unit_class;
-            unitVoice.Text = selectedUnit.Unit_voice_type;
-            unitAccent.Text = selectedUnit.Unit_accent;
-            unitSoldier.Text = selectedUnit.Unit_soldier;
-            unitSoldierCount.Text = selectedUnit.Unit_soldierCount + "";
-            unitExtrasCount.Text = selectedUnit.Unit_extrasCount + "";
-            unitFormationWidth.Text = selectedUnit.Unit_spacing_width + "";
-            unitRadius1.Text = selectedUnit.Unit_radius + "";
-            unitHeight1.Text = selectedUnit.Unit_height + "";
-            unitOfficer1.Text = selectedUnit.Unit_officer1 + "";
-            unitOfficer2.Text = selectedUnit.Unit_officer2 + "";
-            unitOfficer3.Text = selectedUnit.Unit_officer3 + "";
-            unitShip.Text = selectedUnit.Unit_ship + "";
-            unitEngine.Text = selectedUnit.Unit_engine + "";
-            unitAnimal.Text = selectedUnit.Unit_animal + "";
-            unitMount.Text = selectedUnit.Unit_mount + "";
-            unitMountHP.Text = selectedUnit.Unit_mount_hitpoints + "";
-            unitFormationHeight.Text = selectedUnit.Unit_spacing_depth + "";
-            unitFormationWidthLoose.Text = selectedUnit.Unit_spacing_width_loose + "";
-            unitFormationHeightLoose.Text = selectedUnit.Unit_spacing_depth_loose + "";
-            unitMoveSpeed.Text = selectedUnit.Unit_moveSpeed + "";
-            unitHitPoints.Text = selectedUnit.Unit_hitpoints + "";
-            unitFormationStyle.Text = selectedUnit.Unit_formation_style + "";
-            unitFormationRanks.Text = selectedUnit.Unit_spacing_ranks + "";
-            unitSpecialFormation.Text = selectedUnit.Unit_special_formation + "";
-            unitMass.Text = selectedUnit.Unit_mass + "";
-            unitPriAttack.Text = selectedUnit.Unit_pri_attack + "";
-            unitPriCharge.Text = selectedUnit.Unit_pri_charge + "";
-            unitPriProjectile.Text = selectedUnit.Unit_pri_projectile + "";
-            unitPriRange.Text = selectedUnit.Unit_pri_range + "";
-            unitPriAmmo.Text = selectedUnit.Unit_pri_ammunition + "";
-            unitPriFiringSound.Text = selectedUnit.Unit_pri_fire_type + "";
-            unitSecAttack.Text = selectedUnit.Unit_sec_attack + "";
-            unitSecCharge.Text = selectedUnit.Unit_sec_charge + "";
-            unitSecProjectile.Text = selectedUnit.Unit_sec_projectile + "";
-            unitSecRange.Text = selectedUnit.Unit_sec_range + "";
-            unitSecAmmo.Text = selectedUnit.Unit_sec_ammunition + "";
-            unitSecFiringSound.Text = selectedUnit.Unit_sec_fire_type + "";
-            unitTerAttack.Text = selectedUnit.Unit_ter_attack + "";
-            unitTerCharge.Text = selectedUnit.Unit_ter_charge + "";
-            unitTerProjectile.Text = selectedUnit.Unit_ter_projectile + "";
-            unitTerRange.Text = selectedUnit.Unit_ter_range + "";
-            unitTerAmmo.Text = selectedUnit.Unit_ter_ammunition + "";
-            unitTerFiringSound.Text = selectedUnit.Unit_ter_fire_type + "";
-            unitPriArmour.Text = selectedUnit.Unit_pri_armour + "";
-            unitPriDefense.Text = selectedUnit.Unit_pri_defense + "";
-            unitPriShield.Text = selectedUnit.Unit_pri_shield + "";
-
-
+            if (unitPicker.SelectedItem is string strItem) selectedUnit = AllUnits[strItem];
+            infoCardImage.Source = TgaToImageSource(selectedUnit.CardInfo);
+            unitCardImage.Source = TgaToImageSource(selectedUnit.Card);
+            localName.Text = selectedUnit.Name;
+            unitDescr.Text = selectedUnit.Descr;
+            unitShortDescr.Text = selectedUnit.Descr;
+            unitCategory.Text = selectedUnit.Category;
+            unitClass.Text = selectedUnit.Class_type;
+            unitVoice.Text = selectedUnit.Voice_type;
+            unitAccent.Text = selectedUnit.Accent;
+            unitSoldier.Text = selectedUnit.Soldier;
+            unitSoldierCount.Text = selectedUnit.SoldierCount + "";
+            unitExtrasCount.Text = selectedUnit.ExtrasCount + "";
+            unitFormationWidth.Text = selectedUnit.Spacing_width + "";
+            unitRadius1.Text = selectedUnit.Radius + "";
+            unitHeight1.Text = selectedUnit.Height + "";
+            unitOfficer1.Text = selectedUnit.Officer1 + "";
+            unitOfficer2.Text = selectedUnit.Officer2 + "";
+            unitOfficer3.Text = selectedUnit.Officer3 + "";
+            unitShip.Text = selectedUnit.Ship + "";
+            unitEngine.Text = selectedUnit.Engine + "";
+            unitAnimal.Text = selectedUnit.Animal + "";
+            unitMount.Text = selectedUnit.Mount + "";
+            unitMountHP.Text = selectedUnit.Mount_hitpoints + "";
+            unitFormationHeight.Text = selectedUnit.Spacing_depth + "";
+            unitFormationWidthLoose.Text = selectedUnit.Spacing_width_loose + "";
+            unitFormationHeightLoose.Text = selectedUnit.Spacing_depth_loose + "";
+            unitMoveSpeed.Text = selectedUnit.MoveSpeed + "";
+            unitHitPoints.Text = selectedUnit.Hitpoints + "";
+            unitFormationStyle.Text = selectedUnit.Formation_style + "";
+            unitFormationRanks.Text = selectedUnit.Spacing_ranks + "";
+            unitSpecialFormation.Text = selectedUnit.Special_formation + "";
+            unitMass.Text = selectedUnit.Mass + "";
+            unitPriAttack.Text = selectedUnit.Pri_attack + "";
+            unitPriCharge.Text = selectedUnit.Pri_charge + "";
+            unitPriProjectile.Text = selectedUnit.Pri_projectile + "";
+            unitPriRange.Text = selectedUnit.Pri_range + "";
+            unitPriAmmo.Text = selectedUnit.Pri_ammunition + "";
+            unitPriFiringSound.Text = selectedUnit.Pri_fire_type + "";
+            unitSecAttack.Text = selectedUnit.Sec_attack + "";
+            unitSecCharge.Text = selectedUnit.Sec_charge + "";
+            unitSecProjectile.Text = selectedUnit.Sec_projectile + "";
+            unitSecRange.Text = selectedUnit.Sec_range + "";
+            unitSecAmmo.Text = selectedUnit.Sec_ammunition + "";
+            unitSecFiringSound.Text = selectedUnit.Sec_fire_type + "";
+            unitTerAttack.Text = selectedUnit.Ter_attack + "";
+            unitTerCharge.Text = selectedUnit.Ter_charge + "";
+            unitTerProjectile.Text = selectedUnit.Ter_projectile + "";
+            unitTerRange.Text = selectedUnit.Ter_range + "";
+            unitTerAmmo.Text = selectedUnit.Ter_ammunition + "";
+            unitTerFiringSound.Text = selectedUnit.Ter_fire_type + "";
+            unitPriArmour.Text = selectedUnit.Pri_armour + "";
+            unitPriDefense.Text = selectedUnit.Pri_defense + "";
+            unitPriShield.Text = selectedUnit.Pri_shield + "";
         }
 
-        BitmapImage tgaToImageSource(string source)
+        private static BitmapImage TgaToImageSource(string source)
         {
             Bitmap bitmap;
-            IImage image = Pfimage.FromFile(source);
+            var image = Pfimage.FromFile(source);
             PixelFormat format;
             switch (image.Format)
             {
@@ -127,10 +118,11 @@ namespace ModdingTool
                     format = PixelFormat.Format8bppIndexed;
                     break;
 
+                case ImageFormat.Rgba16:
                 default:
                     var msg = $"{image.Format} is not recognized for Bitmap on Windows Forms. " +
                                "You'd need to write a conversion function to convert the data to known format";
-                    var caption = "Unrecognized format";
+                    const string caption = "Unrecognized format";
                     MessageBox.Show(msg, caption);
                     format = PixelFormat.Format32bppArgb;
                     break;
@@ -146,38 +138,33 @@ namespace ModdingTool
             {
                 handle.Free();
             }
-            using (MemoryStream memory = new MemoryStream())
-            {
-                bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
-                memory.Position = 0;
-                BitmapImage bitmapimage = new BitmapImage();
-                bitmapimage.BeginInit();
-                bitmapimage.StreamSource = memory;
-                bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
-                bitmapimage.EndInit();
 
-                return bitmapimage;
-            }
+            using var memory = new MemoryStream();
+            bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
+            memory.Position = 0;
+            var bitmapimage = new BitmapImage();
+            bitmapimage.BeginInit();
+            bitmapimage.StreamSource = memory;
+            bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+            bitmapimage.EndInit();
+
+            return bitmapimage;
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-
         }
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
         }
 
         private void TextBox_TextChanged_1(object sender, TextChangedEventArgs e)
         {
-
         }
 
         private void TextBox_TextChanged_2(object sender, TextChangedEventArgs e)
         {
-
         }
     }
 }

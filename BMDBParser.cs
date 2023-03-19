@@ -1,176 +1,183 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using static ModdingTool.Globals;
+using System.Text;
 using System.Text.RegularExpressions;
-using System.Reflection;
-using System.Windows.Shapes;
-using Microsoft.VisualBasic;
-using System.Windows.Media.Media3D;
+using static ModdingTool.Globals;
 
 namespace ModdingTool
 {
-    internal class BMDBParser
+    internal class BmdbParser
     {
+        private static int _stringPos;
+        private static int _nextLenght;
+        private static string _bmdb = null!;
 
-        private static int stringPos;
-        private static int nextLenght;
-        private static string bmdb;
-        public static Dictionary<string, BattleModel> ModelDB = new Dictionary<string, BattleModel>();
-
-
-        public static void parseBMDB()
+        public static void ParseBmdb()
         {
-            _log.Info("start parse bmdb");
-            bmdb = File.ReadAllText(modPath + "\\data\\unit_models\\battle_models.modeldb", Encoding.UTF8);
+            Console.WriteLine(@"start parse bmdb");
+            _bmdb = File.ReadAllText(ModPath + "\\data\\unit_models\\battle_models.modeldb", Encoding.UTF8);
 
-            stringPos = 0;
-            stringPos += 35; //serialization
+            _stringPos = 0;
+            _stringPos += 35; //serialization
 
-            int numberOfEntries = getInt();
-            int pad = getInt();
-            pad = getInt();
+            var numberOfEntries = GetInt();
+            // ReSharper disable once NotAccessedVariable
+            var pad = GetInt();
+            // ReSharper disable once RedundantAssignment
+            pad = GetInt();
 
-            for (int n = 0; n < numberOfEntries; n++)
+            for (var n = 0; n < numberOfEntries; n++)
             {
-                BattleModel entry = new BattleModel();
-                entry.Name = getString();
-                entry.Scale = getFloat();
-                entry.LodCount= getInt();
+
+                if (_stringPos >= _bmdb.Length - 1) continue;
+                var entry = new BattleModel
+                {
+                    Name = GetString()
+                };
+                if (n == 0 && entry.Name.Equals("blank"))
+                {
+                    for (var i = 0; i < 39; i++)
+                    {
+                        // ReSharper disable once RedundantAssignment
+                        pad = GetInt();
+                    }
+                    continue;
+                }
+                entry.Scale = GetFloat();
+                entry.LodCount = GetInt();
                 entry.LodTable = new LOD[entry.LodCount];
-                for (int i = 0; i < entry.LodCount;i++)
+                for (var i = 0; i < entry.LodCount; i++)
                 {
-                    entry.LodTable[i] = new LOD();
-                    entry.LodTable[i].Mesh = getString();
-                    entry.LodTable[i].Distance = getInt();
+                    entry.LodTable[i] = new LOD
+                    {
+                        Mesh = GetString(),
+                        Distance = GetInt()
+                    };
                 }
-                entry.MainTexturesCount = getInt();
-                for (int i = 0; i < entry.MainTexturesCount; i++)
+                entry.MainTexturesCount = GetInt();
+                for (var i = 0; i < entry.MainTexturesCount; i++)
                 {
-                    string facname = getString();
-                    entry.MainTextures[facname] = new Texture();
-                    entry.MainTextures[facname].TexturePath = getString();
-                    entry.MainTextures[facname].Normal = getString();
-                    entry.MainTextures[facname].Sprite = getString();
+                    var facname = GetString();
+                    entry.MainTextures[facname] = new Texture
+                    {
+                        TexturePath = GetString(),
+                        Normal = GetString(),
+                        Sprite = GetString()
+                    };
                 }
-                entry.AttachTexturesCount = getInt();
-                for (int i = 0; i < entry.AttachTexturesCount; i++)
+                entry.AttachTexturesCount = GetInt();
+                for (var i = 0; i < entry.AttachTexturesCount; i++)
                 {
-                    string facname = getString();
-                    entry.AttachTextures[facname] = new Texture();
-                    entry.AttachTextures[facname].TexturePath = getString();
-                    entry.AttachTextures[facname].Normal = getString();
-                    entry.AttachTextures[facname].Sprite = getString();
+                    var facname = GetString();
+                    entry.AttachTextures[facname] = new Texture
+                    {
+                        TexturePath = GetString(),
+                        Normal = GetString(),
+                        Sprite = GetString()
+                    };
                 }
-                entry.MountTypeCount= getInt();
+                entry.MountTypeCount = GetInt();
                 entry.Animations = new Animation[entry.MountTypeCount];
-                for (int i = 0; i < entry.MountTypeCount; i++)
+                for (var i = 0; i < entry.MountTypeCount; i++)
                 {
-                    entry.Animations[i] = new Animation();
-                    entry.Animations[i].MountType = getString();
-                    entry.Animations[i].Primary_skeleton = getString();
-                    entry.Animations[i].Secondary_skeleton = getString();
-                    entry.Animations[i].PriWeaponCount = getInt();
+                    entry.Animations[i] = new Animation
+                    {
+                        MountType = GetString(),
+                        Primary_skeleton = GetString(),
+                        Secondary_skeleton = GetString(),
+                        PriWeaponCount = GetInt()
+                    };
                     entry.Animations[i].PriWeapons = new string[entry.Animations[i].PriWeaponCount];
-                    for (int j = 0; j < entry.Animations[i].PriWeaponCount; j++)
+                    for (var j = 0; j < entry.Animations[i].PriWeaponCount; j++)
                     {
-                        entry.Animations[i].PriWeapons[j] = getString();
+                        entry.Animations[i].PriWeapons[j] = GetString();
                     }
-                    entry.Animations[i].SecWeaponCount = getInt();
+                    entry.Animations[i].SecWeaponCount = GetInt();
                     entry.Animations[i].SecWeapons = new string[entry.Animations[i].SecWeaponCount];
-                    for (int j = 0; j < entry.Animations[i].SecWeaponCount; j++)
+                    for (var j = 0; j < entry.Animations[i].SecWeaponCount; j++)
                     {
-                        entry.Animations[i].SecWeapons[j] = getString();
+                        entry.Animations[i].SecWeapons[j] = GetString();
                     }
                 }
-                entry.TorchIndex = getInt();
-                entry.TorchBoneX = getFloat();
-                entry.TorchBoneY = getFloat();
-                entry.TorchBoneZ = getFloat();
-                entry.TorchspriteX = getFloat();
-                entry.TorchspriteY = getFloat();
-                entry.TorchspriteZ = getFloat();
-                ModelDB[entry.Name] = entry;
-                _log.Info(entry.Name);
-
+                entry.TorchIndex = GetInt();
+                entry.TorchBoneX = GetFloat();
+                entry.TorchBoneY = GetFloat();
+                entry.TorchBoneZ = GetFloat();
+                entry.TorchspriteX = GetFloat();
+                entry.TorchspriteY = GetFloat();
+                entry.TorchspriteZ = GetFloat();
+                if (ModelDb.ContainsKey(entry.Name))
+                {
+                    Console.WriteLine(@"Duplicate entry");
+                    Console.WriteLine(@"====================================================================================");
+                }
+                ModelDb[entry.Name] = entry;
+                Console.WriteLine(entry.Name);
             }
-            _log.Info("end parse bmdb");
-
+            Console.WriteLine(@"end parse bmdb");
         }
 
-        public static string getString()
+        public static string GetString()
         {
-            advancePos();
-            int lenght = getInt();
-            stringPos += getNextNonWhite();
-            if (lenght > 0)
-            {
-                string returnString = bmdb.Substring(stringPos, lenght).Trim();
-                stringPos += lenght;
-                return returnString;
-            }
-            return "";
+            if (_stringPos >= _bmdb.Length - 1) return "";
+            AdvancePos();
+            var lenght = GetInt();
+            _stringPos += GetNextNonWhite();
+            if (lenght <= 0) return "";
+            var returnString = _bmdb.Substring(_stringPos, lenght).Trim();
+            _stringPos += lenght;
+            return returnString;
         }
 
-        public static int getInt()
+        public static int GetInt()
         {
-            advancePos();
-            int returnValue = int.Parse(bmdb.Substring(stringPos, nextLenght).Trim());
-            stringPos += nextLenght - 1;
+            if (_stringPos >= _bmdb.Length - 1) return 0;
+            AdvancePos();
+            var returnValue = int.Parse(_bmdb.Substring(_stringPos, _nextLenght).Trim());
+            _stringPos += _nextLenght - 1;
             return returnValue;
         }
 
-        public static float getFloat()
+        public static float GetFloat()
         {
-            advancePos();
-            int stringLen = bmdb.Length - 1;
-            int len = Math.Min((bmdb.Length - 1) - stringPos, nextLenght);
-            float returnValue = float.Parse(bmdb.Substring(stringPos, len).Trim());
-            stringPos += nextLenght - 1;
+            if (_stringPos >= _bmdb.Length - 1) return 0;
+            AdvancePos();
+            if (_stringPos >= _bmdb.Length - 1) return 0;
+            var stringLen = _bmdb.Length - 1;
+            var len = Math.Min((stringLen) - _stringPos, _nextLenght);
+            var returnValue = float.Parse(_bmdb.Substring(_stringPos, len).Trim());
+            _stringPos += _nextLenght - 1;
             return returnValue;
         }
 
-        public static void advancePos()
+        public static void AdvancePos()
         {
-            stringPos += getNextNonWhite();
-            int end = stringPos + getNextWhite() + 1;
-            nextLenght =  end - stringPos;
+            if (_stringPos >= _bmdb.Length - 1) return;
+            _stringPos += GetNextNonWhite();
+            var end = _stringPos + GetNextWhite() + 1;
+            _nextLenght = end - _stringPos;
         }
 
-        public static int getNextNonWhite()
+        public static int GetNextNonWhite()
         {
-            int stringLen = bmdb.Length - 1;
-            int len = Math.Min((bmdb.Length - 1) - stringPos, 100);
-            string subline = bmdb.Substring(stringPos, len);
+            if (_stringPos >= _bmdb.Length - 1) return 0;
+            var stringLen = _bmdb.Length - 1;
+            var len = Math.Min((stringLen) - _stringPos, 100);
+            var subline = _bmdb.Substring(_stringPos, len);
             var match = Regex.Match(subline, @"\S");
-            if (match.Success)
-            {
-                return match.Index;
-            }
-            else
-            {
-                return stringPos;
-            }
+            return match.Success ? match.Index : _stringPos;
         }
-        public static int getNextWhite()
+
+        public static int GetNextWhite()
         {
-            int stringLen = bmdb.Length - 1;
-            int len = Math.Min((bmdb.Length - 1) - stringPos, 100);
-            string subline = bmdb.Substring(stringPos, len);
+            if (_stringPos >= _bmdb.Length - 1) return 0;
+            var stringLen = _bmdb.Length - 1;
+            var len = Math.Min((stringLen) - _stringPos, 100);
+            if (len <= 0) return _stringPos;
+            var subline = _bmdb.Substring(_stringPos, len);
             var match = Regex.Match(subline, @"\s");
-            if (match.Success)
-            {
-                return match.Index;
-            }
-            else
-            {
-                return stringPos;
-            }
+            return match.Success ? match.Index : _stringPos;
         }
-
-
     }
 }

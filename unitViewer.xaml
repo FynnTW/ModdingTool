@@ -1,339 +1,342 @@
-﻿<Window x:Class="ModdingTool.unitViewer"
+﻿<Window x:Class="ModdingTool.UnitViewer"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:sdl="http://schemas.sdl.com/xaml"
-        xmlns:local="clr-namespace:ModdingTool"  
+        xmlns:local="clr-namespace:ModdingTool"
         mc:Ignorable="d"
         Title="unitViewer" Height="1080" Width="1920" WindowStartupLocation="CenterScreen" WindowState="Maximized">
 
     <Grid Margin="0,0,0,-6">
         <Grid.RowDefinitions>
-            <RowDefinition/>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="2*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0*"/>
-            <ColumnDefinition Width="0*"/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="1.5*" />
+            <ColumnDefinition Width="2.5*" />
         </Grid.ColumnDefinitions>
-        <ListView x:Name="unitPicker" ItemsSource="{Binding unitList}" Margin="10,10,1439,45" SelectionChanged="unitPicker_SelectionChanged" Grid.ColumnSpan="3">
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <UniformGrid Columns="1"/>
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-        </ListView>
-        <Image x:Name="infoCardImage" HorizontalAlignment="Left" Height="216" Margin="686,48,0,0" VerticalAlignment="Top" Width="600" Grid.Column="2"/>
-        <Image x:Name="unitCardImage" HorizontalAlignment="Left" Height="234" Margin="1528,10,0,0" VerticalAlignment="Top" Width="190" RenderTransformOrigin="0.495,0.513" Grid.Column="2"/>
-        <TextBlock x:Name="localName" HorizontalAlignment="Left" Height="48" Margin="584,256,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="204" Grid.Column="2" FontSize="36"/>
-        <TextBlock x:Name="unitDescr" Grid.Column="2" HorizontalAlignment="Left" Height="292" Margin="556,347,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="336" FontSize="16"/>
-        <TextBox x:Name="unitShortDescr" Grid.Column="2" HorizontalAlignment="Left" Margin="550,692,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="272" Height="120"/>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="954,277,0,0" TextWrapping="Wrap" Text="Category" VerticalAlignment="Top" Height="24" Width="78"/>
-        <TextBox x:Name="unitCategory" Grid.Column="2" HorizontalAlignment="Left" Margin="1032,280,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged"/>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1162,277,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="78"><Run Text="Class"/><LineBreak/><Run/></TextBlock>
+        <DockPanel>
+            <ListView x:Name="unitPicker" ItemsSource="{Binding unitList}" DockPanel.Dock="Left" SelectionChanged="unitPicker_SelectionChanged" Grid.RowSpan="2">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="1" />
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+            </ListView>
+        </DockPanel>
+        <Image x:Name="infoCardImage" HorizontalAlignment="Left" Height="216" VerticalAlignment="Bottom" Width="600" Grid.Column="1" />
+        <Image x:Name="unitCardImage" HorizontalAlignment="Left" Height="234" Margin="1528,10,0,0" VerticalAlignment="Top" Width="190" RenderTransformOrigin="0.495,0.513" Grid.Column="2" />
+        <TextBlock x:Name="localName" HorizontalAlignment="Left" Height="48" Margin="584,256,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="204" Grid.Column="2" FontSize="18" />
+        <TextBlock x:Name="unitDescr" Grid.Column="2" HorizontalAlignment="Left" Height="292" Margin="556,347,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="336" FontSize="16" />
+        <TextBox x:Name="unitShortDescr" Grid.Column="2" HorizontalAlignment="Left" Margin="550,692,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="272" Height="120" />
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="954,277,0,0" TextWrapping="Wrap" Text="Category" VerticalAlignment="Top" Height="24" Width="78" />
+        <TextBox x:Name="unitCategory" Grid.Column="2" HorizontalAlignment="Left" Margin="1032,280,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged" />
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1162,277,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="78"><Run Text="Class" /><LineBreak /><Run /></TextBlock>
         <TextBox x:Name="unitClass" Grid.Column="2" HorizontalAlignment="Left" Margin="1240,280,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged">
             <UIElement.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </UIElement.RenderTransform>
         </TextBox>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1369,277,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="78" Text="Voice type"/>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1369,277,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="78" Text="Voice type" />
         <TextBox x:Name="unitVoice" Grid.Column="2" HorizontalAlignment="Left" Margin="1447,280,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1577,277,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="78" Text="Accent"/>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1577,277,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="78" Text="Accent" />
         <TextBox x:Name="unitAccent" Grid.Column="2" HorizontalAlignment="Left" Margin="1655,280,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="954,303,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="78" Text="Soldier"/>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="954,303,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="78" Text="Soldier" />
         <TextBox x:Name="unitSoldier" Grid.Column="2" HorizontalAlignment="Left" Margin="1032,306,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1162,303,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="78" Text="Soldier Count"/>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1162,303,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="78" Text="Soldier Count" />
         <TextBox x:Name="unitSoldierCount" Grid.Column="2" HorizontalAlignment="Left" Margin="1240,306,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" TextChanged="TextBox_TextChanged">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1298,303,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="78" Text="Extras Count"/>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1298,303,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="78" Text="Extras Count" />
         <TextBox x:Name="unitExtrasCount" Grid.Column="2" HorizontalAlignment="Left" Margin="1376,306,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" TextChanged="TextBox_TextChanged">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1504,435,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="104"><Run Text="Formation Width"/><LineBreak/><Run/></TextBlock>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1504,435,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="104"><Run Text="Formation Width" /><LineBreak /><Run /></TextBlock>
         <TextBox x:Name="unitFormationWidth" Grid.Column="2" HorizontalAlignment="Left" Margin="1608,435,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="46" TextChanged="TextBox_TextChanged" Height="21">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock x:Name="unitRadius" Grid.Column="2" HorizontalAlignment="Left" Margin="1548,306,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="40" Text="Radius"/>
+        <TextBlock x:Name="unitRadius" Grid.Column="2" HorizontalAlignment="Left" Margin="1548,306,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="40" Text="Radius" />
         <TextBox x:Name="unitRadius1" Grid.Column="2" HorizontalAlignment="Left" Margin="1592,306,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="46" TextChanged="TextBox_TextChanged" Height="21">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock x:Name="unitHeight" Grid.Column="2" HorizontalAlignment="Left" Margin="1654,306,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="38" Text="Height"/>
+        <TextBlock x:Name="unitHeight" Grid.Column="2" HorizontalAlignment="Left" Margin="1654,306,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="38" Text="Height" />
         <TextBox x:Name="unitHeight1" Grid.Column="2" HorizontalAlignment="Left" Margin="1698,306,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="44" TextChanged="TextBox_TextChanged" Height="21">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="953,329,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="40" Text="Officer"/>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="953,329,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="40" Text="Officer" />
         <TextBox x:Name="unitOfficer1" Grid.Column="2" HorizontalAlignment="Left" Margin="999,332,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1129,329,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="46" Text="Officer"/>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1129,329,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="46" Text="Officer" />
         <TextBox x:Name="unitOfficer2" Grid.Column="2" HorizontalAlignment="Left" Margin="1175,332,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1301,329,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="42" Text="Officer"/>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1301,329,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="42" Text="Officer" />
         <TextBox x:Name="unitOfficer3" Grid.Column="2" HorizontalAlignment="Left" Margin="1349,332,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1304,352,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="38" Text="Ship"/>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1304,352,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="38" Text="Ship" />
         <TextBox x:Name="unitShip" Grid.Column="2" HorizontalAlignment="Left" Margin="1348,352,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1478,352,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="42" Text="Engine"/>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1478,352,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="42" Text="Engine" />
         <TextBox x:Name="unitEngine" Grid.Column="2" HorizontalAlignment="Left" Margin="1524,352,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1652,352,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="40" Text="Animal"/>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1652,352,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="40" Text="Animal" />
         <TextBox x:Name="unitAnimal" Grid.Column="2" HorizontalAlignment="Left" Margin="1698,352,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="954,352,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="38" Text="Mount"/>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="954,352,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="38" Text="Mount" />
         <TextBox x:Name="unitMount" Grid.Column="2" HorizontalAlignment="Left" Margin="998,352,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1128,352,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="96"><Run Text="Mount Hitpoints"/><LineBreak/><Run/></TextBlock>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1128,352,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="96"><Run Text="Mount Hitpoints" /><LineBreak /><Run /></TextBlock>
         <TextBox x:Name="unitMountHP" Grid.Column="2" HorizontalAlignment="Left" Margin="1224,355,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="50" TextChanged="TextBox_TextChanged">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
         <ListView x:Name="unitMountEffects" Grid.Column="2" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="1299,373,431,611" SelectionChanged="ListView_SelectionChanged" RenderTransformOrigin="0.505,0.432">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn/>
+                    <GridViewColumn />
                 </GridView>
             </ListView.View>
         </ListView>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1223,373,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="78" Text="Mount Effect"/>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1223,373,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="78" Text="Mount Effect" />
         <ListView x:Name="unitAttributes" Grid.Column="2" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="1029,373,701,572" SelectionChanged="ListView_SelectionChanged" RenderTransformOrigin="0.505,0.432">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn/>
+                    <GridViewColumn />
                 </GridView>
             </ListView.View>
         </ListView>
-        <Rectangle x:Name="CloseRect" Grid.Column="2" HorizontalAlignment="Left" Height="64" Margin="1498,403,0,0" Stroke="Black" VerticalAlignment="Top" Width="316"/>
-        <Rectangle Grid.Column="2" HorizontalAlignment="Left" Height="64" Margin="1498,467,0,0" Stroke="Black" VerticalAlignment="Top" Width="316"/>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="953,373,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="78" Text="Attributes"/>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1662,435,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="104"><Run Text="Formation Height"/><LineBreak/><Run/></TextBlock>
+        <Rectangle x:Name="CloseRect" Grid.Column="2" HorizontalAlignment="Left" Height="64" Margin="1498,403,0,0" Stroke="Black" VerticalAlignment="Top" Width="316" />
+        <Rectangle Grid.Column="2" HorizontalAlignment="Left" Height="64" Margin="1498,467,0,0" Stroke="Black" VerticalAlignment="Top" Width="316" />
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="953,373,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="78" Text="Attributes" />
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1662,435,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="104"><Run Text="Formation Height" /><LineBreak /><Run /></TextBlock>
         <TextBox x:Name="unitFormationHeight" Grid.Column="2" HorizontalAlignment="Left" Margin="1766,435,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="44" TextChanged="TextBox_TextChanged" Height="21">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1502,499,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="104"><Run Text="Formation Width"/><LineBreak/><Run/></TextBlock>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1502,499,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="104"><Run Text="Formation Width" /><LineBreak /><Run /></TextBlock>
         <TextBox x:Name="unitFormationWidthLoose" Grid.Column="2" HorizontalAlignment="Left" Margin="1606,499,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="46" TextChanged="TextBox_TextChanged" Height="21">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1660,499,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="104"><Run Text="Formation Height"/><LineBreak/><Run/></TextBlock>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1660,499,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="104"><Run Text="Formation Height" /><LineBreak /><Run /></TextBlock>
         <TextBox x:Name="unitFormationHeightLoose" Grid.Column="2" HorizontalAlignment="Left" Margin="1764,499,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="44" TextChanged="TextBox_TextChanged" Height="21">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1644,408,0,0" TextWrapping="Wrap" Text="Close" VerticalAlignment="Top"/>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1642,472,0,0" TextWrapping="Wrap" Text="Loose" VerticalAlignment="Top"/>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1263,491,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="98" RenderTransformOrigin="0.628,0.522"><Run Text="Movement Speed"/><LineBreak/><Run/></TextBlock>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1644,408,0,0" TextWrapping="Wrap" Text="Close" VerticalAlignment="Top" />
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1642,472,0,0" TextWrapping="Wrap" Text="Loose" VerticalAlignment="Top" />
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1263,491,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="98" RenderTransformOrigin="0.628,0.522"><Run Text="Movement Speed" /><LineBreak /><Run /></TextBlock>
         <TextBox x:Name="unitMoveSpeed" Grid.Column="2" HorizontalAlignment="Left" Margin="1369,494,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1309,512,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="60"><Run Text="Hit Points"/><LineBreak/><Run/></TextBlock>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1309,512,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="60"><Run Text="Hit Points" /><LineBreak /><Run /></TextBlock>
         <TextBox x:Name="unitHitPoints" Grid.Column="2" HorizontalAlignment="Left" Margin="1369,515,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1652,376,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="106"><Run Text="Formation Style"/><LineBreak/><Run/></TextBlock>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1652,376,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="106"><Run Text="Formation Style" /><LineBreak /><Run /></TextBlock>
         <TextBox x:Name="unitFormationStyle" Grid.Column="2" HorizontalAlignment="Left" Margin="1758,376,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1496,376,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="104"><Run Text="Formation Ranks"/><LineBreak/><Run/></TextBlock>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1496,376,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="104"><Run Text="Formation Ranks" /><LineBreak /><Run /></TextBlock>
         <TextBox x:Name="unitFormationRanks" Grid.Column="2" HorizontalAlignment="Left" Margin="1600,376,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="44" TextChanged="TextBox_TextChanged" Height="21">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1263,472,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="104"><Run Text="Special Formation"/><LineBreak/><Run/></TextBlock>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1263,472,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="104"><Run Text="Special Formation" /><LineBreak /><Run /></TextBlock>
         <TextBox x:Name="unitSpecialFormation" Grid.Column="2" HorizontalAlignment="Left" Margin="1369,472,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock x:Name="unitMass1" Grid.Column="2" HorizontalAlignment="Left" Margin="1440,306,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="38"><Run Text="Mass"/><LineBreak/><Run/></TextBlock>
+        <TextBlock x:Name="unitMass1" Grid.Column="2" HorizontalAlignment="Left" Margin="1440,306,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="38"><Run Text="Mass" /><LineBreak /><Run /></TextBlock>
         <TextBox x:Name="unitMass" Grid.Column="2" HorizontalAlignment="Left" Margin="1484,306,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="44" TextChanged="TextBox_TextChanged" Height="21">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
@@ -349,10 +352,10 @@
             SelectionMode="Multiple" Height="20" VerticalAlignment="Top" RenderTransformOrigin="0.508,0.477">
             <sdl:MultiSelectComboBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform ScaleY="-1"/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform Y="6.992"/>
+                    <ScaleTransform ScaleY="-1" />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform Y="6.992" />
                 </TransformGroup>
             </sdl:MultiSelectComboBox.RenderTransform>
             <sdl:MultiSelectComboBox.SelectedItemTemplate>
@@ -373,229 +376,229 @@
                 </DataTemplate>
             </sdl:MultiSelectComboBox.DropdownItemTemplate>
         </sdl:MultiSelectComboBox>
-        <TextBlock x:Name="unitRadius_Copy1" Grid.Column="2" HorizontalAlignment="Left" Margin="952,539,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="38" Text="Attack"/>
+        <TextBlock x:Name="unitRadius_Copy1" Grid.Column="2" HorizontalAlignment="Left" Margin="952,539,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="38" Text="Attack" />
         <TextBox x:Name="unitPriAttack" Grid.Column="2" HorizontalAlignment="Left" Margin="996,539,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="44" TextChanged="TextBox_TextChanged" Height="21">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock x:Name="unitRadius_Copy2" Grid.Column="2" HorizontalAlignment="Left" Margin="1046,539,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="38" Text="Charge"/>
+        <TextBlock x:Name="unitRadius_Copy2" Grid.Column="2" HorizontalAlignment="Left" Margin="1046,539,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="38" Text="Charge" />
         <TextBox x:Name="unitPriCharge" Grid.Column="2" HorizontalAlignment="Left" Margin="1090,539,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="44" TextChanged="TextBox_TextChanged" Height="21">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="953,565,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="56" Text="Projectile"/>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="953,565,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="56" Text="Projectile" />
         <TextBox x:Name="unitPriProjectile" Grid.Column="2" HorizontalAlignment="Left" Margin="1009,565,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock x:Name="unitRadius_Copy3" Grid.Column="2" HorizontalAlignment="Left" Margin="1139,565,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="40" Text="Range" RenderTransformOrigin="0.517,0.835"/>
+        <TextBlock x:Name="unitRadius_Copy3" Grid.Column="2" HorizontalAlignment="Left" Margin="1139,565,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="40" Text="Range" RenderTransformOrigin="0.517,0.835" />
         <TextBox x:Name="unitPriRange" Grid.Column="2" HorizontalAlignment="Left" Margin="1181,563,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="46" TextChanged="TextBox_TextChanged" Height="21">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock x:Name="unitRadius_Copy4" Grid.Column="2" HorizontalAlignment="Left" Margin="1233,565,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="40" Text="Ammo" RenderTransformOrigin="0.517,0.835"/>
+        <TextBlock x:Name="unitRadius_Copy4" Grid.Column="2" HorizontalAlignment="Left" Margin="1233,565,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="40" Text="Ammo" RenderTransformOrigin="0.517,0.835" />
         <TextBox x:Name="unitPriAmmo" Grid.Column="2" HorizontalAlignment="Left" Margin="1277,563,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="46" TextChanged="TextBox_TextChanged" Height="21">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <ComboBox x:Name="unitPriWeaponType" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="1228,536,0,0" VerticalAlignment="Top" Width="120"/>
-        <TextBlock x:Name="unitRadius_Copy5" Grid.Column="2" HorizontalAlignment="Left" Margin="1148,538,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="74" Text="Weapon Type"/>
-        <ComboBox x:Name="unitPriTechType" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="1422,536,0,0" VerticalAlignment="Top" Width="120"/>
-        <TextBlock x:Name="unitRadius_Copy6" Grid.Column="2" HorizontalAlignment="Left" Margin="1362,538,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="72" Text="Tech Type"/>
-        <ComboBox x:Name="unitPriSoundType" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="1627,536,0,0" VerticalAlignment="Top" Width="120"/>
-        <TextBlock x:Name="unitRadius_Copy7" Grid.Column="2" HorizontalAlignment="Left" Margin="1557,539,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="65"><Run Text="Sound Type"/><LineBreak/><Run/></TextBlock>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1338,565,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="79" Text="Firing Sound"/>
+        <ComboBox x:Name="unitPriWeaponType" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="1228,536,0,0" VerticalAlignment="Top" Width="120" />
+        <TextBlock x:Name="unitRadius_Copy5" Grid.Column="2" HorizontalAlignment="Left" Margin="1148,538,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="74" Text="Weapon Type" />
+        <ComboBox x:Name="unitPriTechType" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="1422,536,0,0" VerticalAlignment="Top" Width="120" />
+        <TextBlock x:Name="unitRadius_Copy6" Grid.Column="2" HorizontalAlignment="Left" Margin="1362,538,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="72" Text="Tech Type" />
+        <ComboBox x:Name="unitPriSoundType" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="1627,536,0,0" VerticalAlignment="Top" Width="120" />
+        <TextBlock x:Name="unitRadius_Copy7" Grid.Column="2" HorizontalAlignment="Left" Margin="1557,539,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="65"><Run Text="Sound Type" /><LineBreak /><Run /></TextBlock>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1338,565,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="79" Text="Firing Sound" />
         <TextBox x:Name="unitPriFiringSound" Grid.Column="2" HorizontalAlignment="Left" Margin="1422,563,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <Rectangle Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="54" Margin="947,533,0,0" Stroke="Black" VerticalAlignment="Top" Width="867"/>
-        <TextBlock Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="18" Margin="1554,563,0,0" TextWrapping="Wrap" Text="PRIMARY" VerticalAlignment="Top" Width="193" TextAlignment="Center" FontWeight="Bold"/>
-        <TextBlock x:Name="unitRadius_Copy8" Grid.Column="2" HorizontalAlignment="Left" Margin="952,592,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="38" Text="Attack"/>
+        <Rectangle Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="54" Margin="947,533,0,0" Stroke="Black" VerticalAlignment="Top" Width="867" />
+        <TextBlock Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="18" Margin="1554,563,0,0" TextWrapping="Wrap" Text="PRIMARY" VerticalAlignment="Top" Width="193" TextAlignment="Center" FontWeight="Bold" />
+        <TextBlock x:Name="unitRadius_Copy8" Grid.Column="2" HorizontalAlignment="Left" Margin="952,592,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="38" Text="Attack" />
         <TextBox x:Name="unitSecAttack" Grid.Column="2" HorizontalAlignment="Left" Margin="996,592,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="44" TextChanged="TextBox_TextChanged" Height="21">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock x:Name="unitRadius_Copy9" Grid.Column="2" HorizontalAlignment="Left" Margin="1046,592,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="38" Text="Charge"/>
+        <TextBlock x:Name="unitRadius_Copy9" Grid.Column="2" HorizontalAlignment="Left" Margin="1046,592,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="38" Text="Charge" />
         <TextBox x:Name="unitSecCharge" Grid.Column="2" HorizontalAlignment="Left" Margin="1090,592,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="44" TextChanged="TextBox_TextChanged" Height="21">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="953,618,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="56" Text="Projectile"/>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="953,618,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="56" Text="Projectile" />
         <TextBox x:Name="unitSecProjectile" Grid.Column="2" HorizontalAlignment="Left" Margin="1009,618,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock x:Name="unitRadius_Copy10" Grid.Column="2" HorizontalAlignment="Left" Margin="1139,618,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="40" Text="Range" RenderTransformOrigin="0.517,0.835"/>
+        <TextBlock x:Name="unitRadius_Copy10" Grid.Column="2" HorizontalAlignment="Left" Margin="1139,618,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="40" Text="Range" RenderTransformOrigin="0.517,0.835" />
         <TextBox x:Name="unitSecRange" Grid.Column="2" HorizontalAlignment="Left" Margin="1181,616,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="46" TextChanged="TextBox_TextChanged" Height="21">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock x:Name="unitRadius_Copy11" Grid.Column="2" HorizontalAlignment="Left" Margin="1233,618,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="40" Text="Ammo" RenderTransformOrigin="0.517,0.835"/>
+        <TextBlock x:Name="unitRadius_Copy11" Grid.Column="2" HorizontalAlignment="Left" Margin="1233,618,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="40" Text="Ammo" RenderTransformOrigin="0.517,0.835" />
         <TextBox x:Name="unitSecAmmo" Grid.Column="2" HorizontalAlignment="Left" Margin="1277,616,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="46" TextChanged="TextBox_TextChanged" Height="21">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <ComboBox x:Name="unitSecWeaponType" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="1228,589,0,0" VerticalAlignment="Top" Width="120"/>
-        <TextBlock x:Name="unitRadius_Copy12" Grid.Column="2" HorizontalAlignment="Left" Margin="1148,591,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="74" Text="Weapon Type"/>
-        <ComboBox x:Name="unitSecTechType" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="1422,589,0,0" VerticalAlignment="Top" Width="120"/>
-        <TextBlock x:Name="unitRadius_Copy13" Grid.Column="2" HorizontalAlignment="Left" Margin="1362,591,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="72" Text="Tech Type"/>
-        <ComboBox x:Name="unitSecSoundType" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="1627,589,0,0" VerticalAlignment="Top" Width="120"/>
-        <TextBlock x:Name="unitRadius_Copy14" Grid.Column="2" HorizontalAlignment="Left" Margin="1557,592,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="65"><Run Text="Sound Type"/><LineBreak/><Run/></TextBlock>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1338,618,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="79" Text="Firing Sound"/>
+        <ComboBox x:Name="unitSecWeaponType" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="1228,589,0,0" VerticalAlignment="Top" Width="120" />
+        <TextBlock x:Name="unitRadius_Copy12" Grid.Column="2" HorizontalAlignment="Left" Margin="1148,591,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="74" Text="Weapon Type" />
+        <ComboBox x:Name="unitSecTechType" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="1422,589,0,0" VerticalAlignment="Top" Width="120" />
+        <TextBlock x:Name="unitRadius_Copy13" Grid.Column="2" HorizontalAlignment="Left" Margin="1362,591,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="72" Text="Tech Type" />
+        <ComboBox x:Name="unitSecSoundType" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="1627,589,0,0" VerticalAlignment="Top" Width="120" />
+        <TextBlock x:Name="unitRadius_Copy14" Grid.Column="2" HorizontalAlignment="Left" Margin="1557,592,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="65"><Run Text="Sound Type" /><LineBreak /><Run /></TextBlock>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1338,618,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="79" Text="Firing Sound" />
         <TextBox x:Name="unitSecFiringSound" Grid.Column="2" HorizontalAlignment="Left" Margin="1422,616,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <Rectangle Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="54" Margin="947,586,0,0" Stroke="Black" VerticalAlignment="Top" Width="867"/>
-        <TextBlock Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="18" Margin="1554,616,0,0" TextWrapping="Wrap" Text="SECONDARY" VerticalAlignment="Top" Width="193" TextAlignment="Center" FontWeight="Bold"/>
-        <TextBlock x:Name="unitRadius_Copy15" Grid.Column="2" HorizontalAlignment="Left" Margin="949,645,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="38" Text="Attack"/>
+        <Rectangle Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="54" Margin="947,586,0,0" Stroke="Black" VerticalAlignment="Top" Width="867" />
+        <TextBlock Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="18" Margin="1554,616,0,0" TextWrapping="Wrap" Text="SECONDARY" VerticalAlignment="Top" Width="193" TextAlignment="Center" FontWeight="Bold" />
+        <TextBlock x:Name="unitRadius_Copy15" Grid.Column="2" HorizontalAlignment="Left" Margin="949,645,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="38" Text="Attack" />
         <TextBox x:Name="unitTerAttack" Grid.Column="2" HorizontalAlignment="Left" Margin="996,645,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="44" TextChanged="TextBox_TextChanged" Height="21">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock x:Name="unitRadius_Copy16" Grid.Column="2" HorizontalAlignment="Left" Margin="1046,645,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="38" Text="Charge"/>
+        <TextBlock x:Name="unitRadius_Copy16" Grid.Column="2" HorizontalAlignment="Left" Margin="1046,645,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="38" Text="Charge" />
         <TextBox x:Name="unitTerCharge" Grid.Column="2" HorizontalAlignment="Left" Margin="1090,645,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="44" TextChanged="TextBox_TextChanged" Height="21">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="949,671,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="56" Text="Projectile"/>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="949,671,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="56" Text="Projectile" />
         <TextBox x:Name="unitTerProjectile" Grid.Column="2" HorizontalAlignment="Left" Margin="1009,671,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock x:Name="unitRadius_Copy17" Grid.Column="2" HorizontalAlignment="Left" Margin="1139,671,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="40" Text="Range" RenderTransformOrigin="0.517,0.835"/>
+        <TextBlock x:Name="unitRadius_Copy17" Grid.Column="2" HorizontalAlignment="Left" Margin="1139,671,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="40" Text="Range" RenderTransformOrigin="0.517,0.835" />
         <TextBox x:Name="unitTerRange" Grid.Column="2" HorizontalAlignment="Left" Margin="1181,669,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="46" TextChanged="TextBox_TextChanged" Height="21">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock x:Name="unitRadius_Copy18" Grid.Column="2" HorizontalAlignment="Left" Margin="1233,671,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="40" Text="Ammo" RenderTransformOrigin="0.517,0.835"/>
+        <TextBlock x:Name="unitRadius_Copy18" Grid.Column="2" HorizontalAlignment="Left" Margin="1233,671,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="22" Width="40" Text="Ammo" RenderTransformOrigin="0.517,0.835" />
         <TextBox x:Name="unitTerAmmo" Grid.Column="2" HorizontalAlignment="Left" Margin="1277,669,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="46" TextChanged="TextBox_TextChanged" Height="21">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <ComboBox x:Name="unitTerWeaponType" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="1228,642,0,0" VerticalAlignment="Top" Width="120"/>
-        <TextBlock x:Name="unitRadius_Copy19" Grid.Column="2" HorizontalAlignment="Left" Margin="1148,644,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="74" Text="Weapon Type"/>
-        <ComboBox x:Name="unitTerTechType" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="1422,642,0,0" VerticalAlignment="Top" Width="120"/>
-        <TextBlock x:Name="unitRadius_Copy20" Grid.Column="2" HorizontalAlignment="Left" Margin="1362,644,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="72" Text="Tech Type"/>
-        <ComboBox x:Name="unitTerSoundType" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="1627,642,0,0" VerticalAlignment="Top" Width="120"/>
-        <TextBlock x:Name="unitRadius_Copy21" Grid.Column="2" HorizontalAlignment="Left" Margin="1557,645,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="65"><Run Text="Sound Type"/><LineBreak/><Run/></TextBlock>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1338,671,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="79" Text="Firing Sound"/>
+        <ComboBox x:Name="unitTerWeaponType" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="1228,642,0,0" VerticalAlignment="Top" Width="120" />
+        <TextBlock x:Name="unitRadius_Copy19" Grid.Column="2" HorizontalAlignment="Left" Margin="1148,644,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="74" Text="Weapon Type" />
+        <ComboBox x:Name="unitTerTechType" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="1422,642,0,0" VerticalAlignment="Top" Width="120" />
+        <TextBlock x:Name="unitRadius_Copy20" Grid.Column="2" HorizontalAlignment="Left" Margin="1362,644,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="72" Text="Tech Type" />
+        <ComboBox x:Name="unitTerSoundType" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="1627,642,0,0" VerticalAlignment="Top" Width="120" />
+        <TextBlock x:Name="unitRadius_Copy21" Grid.Column="2" HorizontalAlignment="Left" Margin="1557,645,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="65"><Run Text="Sound Type" /><LineBreak /><Run /></TextBlock>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1338,671,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="79" Text="Firing Sound" />
         <TextBox x:Name="unitTerFiringSound" Grid.Column="2" HorizontalAlignment="Left" Margin="1422,669,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <Rectangle Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="54" Margin="947,639,0,0" Stroke="Black" VerticalAlignment="Top" Width="867" d:IsHidden="True"/>
-        <TextBlock Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="18" Margin="1554,669,0,0" TextWrapping="Wrap" Text="TERTARY" VerticalAlignment="Top" Width="193" TextAlignment="Center" FontWeight="Bold"/>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="949,695,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="40" Width="80"><Run Text="Primary Attack Attributes"/><LineBreak/><Run/></TextBlock>
+        <Rectangle Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="54" Margin="947,639,0,0" Stroke="Black" VerticalAlignment="Top" Width="867" d:IsHidden="True" />
+        <TextBlock Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="18" Margin="1554,669,0,0" TextWrapping="Wrap" Text="TERTARY" VerticalAlignment="Top" Width="193" TextAlignment="Center" FontWeight="Bold" />
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="949,695,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="40" Width="80"><Run Text="Primary Attack Attributes" /><LineBreak /><Run /></TextBlock>
         <sdl:MultiSelectComboBox
             x:Name="unitSecAttr"
             Grid.Column="2"
@@ -608,10 +611,10 @@
             SelectionMode="Multiple" Height="20" VerticalAlignment="Top" RenderTransformOrigin="0.508,0.477">
             <sdl:MultiSelectComboBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform ScaleY="-1"/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform Y="6.992"/>
+                    <ScaleTransform ScaleY="-1" />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform Y="6.992" />
                 </TransformGroup>
             </sdl:MultiSelectComboBox.RenderTransform>
             <sdl:MultiSelectComboBox.SelectedItemTemplate>
@@ -632,7 +635,7 @@
                 </DataTemplate>
             </sdl:MultiSelectComboBox.DropdownItemTemplate>
         </sdl:MultiSelectComboBox>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1230,695,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="40" Width="93"><Run Text="Secondary Attack Attributes"/><LineBreak/><Run/></TextBlock>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1230,695,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="40" Width="93"><Run Text="Secondary Attack Attributes" /><LineBreak /><Run /></TextBlock>
         <sdl:MultiSelectComboBox
             x:Name="unitTerAttr"
             Grid.Column="2"
@@ -645,10 +648,10 @@
             SelectionMode="Multiple" Height="20" VerticalAlignment="Top" RenderTransformOrigin="0.508,0.477">
             <sdl:MultiSelectComboBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform ScaleY="-1"/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform Y="6.992"/>
+                    <ScaleTransform ScaleY="-1" />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform Y="6.992" />
                 </TransformGroup>
             </sdl:MultiSelectComboBox.RenderTransform>
             <sdl:MultiSelectComboBox.SelectedItemTemplate>
@@ -669,81 +672,80 @@
                 </DataTemplate>
             </sdl:MultiSelectComboBox.DropdownItemTemplate>
         </sdl:MultiSelectComboBox>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1520,695,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="40" Width="80"><Run Text="Tertary Attack Attributes"/><LineBreak/><Run/></TextBlock>
-        <TextBlock x:Name="unitRadius_Copy22" Grid.Column="2" HorizontalAlignment="Left" Margin="949,741,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="43" Text="Armour"/>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Left" Margin="1520,695,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="40" Width="80"><Run Text="Tertary Attack Attributes" /><LineBreak /><Run /></TextBlock>
+        <TextBlock x:Name="unitRadius_Copy22" Grid.Column="2" HorizontalAlignment="Left" Margin="949,741,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="43" Text="Armour" />
         <TextBox x:Name="unitPriArmour" Grid.Column="2" HorizontalAlignment="Left" Margin="996,742,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="44" TextChanged="TextBox_TextChanged" Height="20">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock x:Name="unitRadius_Copy23" Grid.Column="2" HorizontalAlignment="Left" Margin="1046,742,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="43" Text="Defense"/>
+        <TextBlock x:Name="unitRadius_Copy23" Grid.Column="2" HorizontalAlignment="Left" Margin="1046,742,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="43" Text="Defense" />
         <TextBox x:Name="unitPriDefense" Grid.Column="2" HorizontalAlignment="Left" Margin="1097,742,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="44" TextChanged="TextBox_TextChanged" Height="20">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock x:Name="unitRadius_Copy24" Grid.Column="2" HorizontalAlignment="Left" Margin="1150,742,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="43" Text="Shield"/>
+        <TextBlock x:Name="unitRadius_Copy24" Grid.Column="2" HorizontalAlignment="Left" Margin="1150,742,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="43" Text="Shield" />
         <TextBox x:Name="unitPriShield" Grid.Column="2" HorizontalAlignment="Left" Margin="1201,742,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="44" TextChanged="TextBox_TextChanged" Height="20">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <ComboBox x:Name="unitPriDefSoundType" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="1323,742,0,0" VerticalAlignment="Top" Width="120"/>
-        <TextBlock x:Name="unitRadius_Copy25" Grid.Column="2" HorizontalAlignment="Left" Margin="1254,743,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="64"><Run Text="Sound Type"/><LineBreak/><Run/></TextBlock>
-        <TextBlock Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="18" Margin="1461,744,0,0" TextWrapping="Wrap" Text="PRIMARY" VerticalAlignment="Top" Width="193" TextAlignment="Center" FontWeight="Bold"/>
-        <Rectangle Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="35" Margin="947,735,0,0" Stroke="Black" VerticalAlignment="Top" Width="659"/>
-        <TextBlock x:Name="unitRadius_Copy26" Grid.Column="2" HorizontalAlignment="Left" Margin="949,775,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="43" Text="Armour"/>
+        <ComboBox x:Name="unitPriDefSoundType" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="1323,742,0,0" VerticalAlignment="Top" Width="120" />
+        <TextBlock x:Name="unitRadius_Copy25" Grid.Column="2" HorizontalAlignment="Left" Margin="1254,743,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="64"><Run Text="Sound Type" /><LineBreak /><Run /></TextBlock>
+        <TextBlock Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="18" Margin="1461,744,0,0" TextWrapping="Wrap" Text="PRIMARY" VerticalAlignment="Top" Width="193" TextAlignment="Center" FontWeight="Bold" />
+        <Rectangle Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="35" Margin="947,735,0,0" Stroke="Black" VerticalAlignment="Top" Width="659" />
+        <TextBlock x:Name="unitRadius_Copy26" Grid.Column="2" HorizontalAlignment="Left" Margin="949,775,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="43" Text="Armour" />
         <TextBox x:Name="unitSecArmour" Grid.Column="2" HorizontalAlignment="Left" Margin="996,776,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="44" TextChanged="TextBox_TextChanged" Height="20">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock x:Name="unitRadius_Copy27" Grid.Column="2" HorizontalAlignment="Left" Margin="1046,776,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="43" Text="Defense"/>
+        <TextBlock x:Name="unitRadius_Copy27" Grid.Column="2" HorizontalAlignment="Left" Margin="1046,776,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="43" Text="Defense" />
         <TextBox x:Name="unitSecDefense" Grid.Column="2" HorizontalAlignment="Left" Margin="1097,776,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="44" TextChanged="TextBox_TextChanged" Height="20">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <TextBlock x:Name="unitRadius_Copy28" Grid.Column="2" HorizontalAlignment="Left" Margin="1150,776,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="43" Text="Shield"/>
+        <TextBlock x:Name="unitRadius_Copy28" Grid.Column="2" HorizontalAlignment="Left" Margin="1150,776,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="43" Text="Shield" />
         <TextBox x:Name="unitSecShield" Grid.Column="2" HorizontalAlignment="Left" Margin="1201,776,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="44" TextChanged="TextBox_TextChanged" Height="20">
             <TextBox.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform />
+                    <TranslateTransform />
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <ComboBox x:Name="unitSecDefSoundType" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="1323,776,0,0" VerticalAlignment="Top" Width="120"/>
-        <TextBlock x:Name="unitRadius_Copy29" Grid.Column="2" HorizontalAlignment="Left" Margin="1254,777,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="64"><Run Text="Sound Type"/><LineBreak/><Run/></TextBlock>
-        <TextBlock Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="18" Margin="1461,778,0,0" TextWrapping="Wrap" Text="SECONDARY" VerticalAlignment="Top" Width="193" TextAlignment="Center" FontWeight="Bold"/>
-        <Rectangle Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="35" Margin="947,769,0,0" Stroke="Black" VerticalAlignment="Top" Width="659"/>
-
+        <ComboBox x:Name="unitSecDefSoundType" Grid.ColumnSpan="3" HorizontalAlignment="Left" Margin="1323,776,0,0" VerticalAlignment="Top" Width="120" />
+        <TextBlock x:Name="unitRadius_Copy29" Grid.Column="2" HorizontalAlignment="Left" Margin="1254,777,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="64"><Run Text="Sound Type" /><LineBreak /><Run /></TextBlock>
+        <TextBlock Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="18" Margin="1461,778,0,0" TextWrapping="Wrap" Text="SECONDARY" VerticalAlignment="Top" Width="193" TextAlignment="Center" FontWeight="Bold" />
+        <Rectangle Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="35" Margin="947,769,0,0" Stroke="Black" VerticalAlignment="Top" Width="659" />
     </Grid>
 </Window>

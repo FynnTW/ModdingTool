@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace ModdingTool
 {
-    internal class BattleModel
+    public class BattleModel
     {
         private string name;
         private float scale;
@@ -53,6 +49,7 @@ namespace ModdingTool
         public string Mesh { get => mesh; set => mesh = value; }
         public int Distance { get => distance; set => distance = value; }
     }
+
     public class Texture
     {
         private Faction faction;
@@ -65,6 +62,7 @@ namespace ModdingTool
         public string Sprite { get => sprite; set => sprite = value; }
         internal Faction Faction { get => faction; set => faction = value; }
     }
+
     public class Animation
     {
         private string mountType;

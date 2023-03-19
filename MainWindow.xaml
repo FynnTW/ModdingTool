@@ -7,9 +7,8 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Button Content="PARSE EDU" HorizontalAlignment="Left" Margin="310,0,0,0" VerticalAlignment="Center" Height="78" Width="210" Click="Button_Click" FontSize="22"/>
-        <TextBox x:Name="modPathInput" HorizontalAlignment="Left" Margin="249,80,0,0" TextWrapping="Wrap" Text="D:\Fynn\Steam\steamapps\common\Medieval II Total War\mods\Divide_and_Conquer_ago" VerticalAlignment="Top" Width="465" TextChanged="TextBox_TextChanged"/>
-        <Button x:Name="openViewer" Content="Button" HorizontalAlignment="Left" Margin="318,282,0,0" VerticalAlignment="Top" Height="79" Width="194" Click="openViewer_Click"/>
-
+        <Button Content="PARSE EDU" HorizontalAlignment="Left" Margin="310,0,0,0" VerticalAlignment="Center" Height="78" Width="210" Click="Button_Click" FontSize="22" />
+        <TextBox x:Name="ModPathInput" HorizontalAlignment="Left" Margin="249,80,0,0" TextWrapping="Wrap" Text="E:\SteamLibrary\steamapps\common\Medieval II Total War\mods\Divide_and_Conquer" VerticalAlignment="Top" Width="465" TextChanged="TextBox_TextChanged" />
+        <Button x:Name="OpenViewer" Content="Button" HorizontalAlignment="Left" Margin="318,282,0,0" VerticalAlignment="Top" Height="79" Width="194" Click="openViewer_Click" />
     </Grid>
 </Window>
