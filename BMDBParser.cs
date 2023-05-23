@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -146,7 +147,8 @@ namespace ModdingTool
             if (_stringPos >= _bmdb.Length - 1) return 0;
             var stringLen = _bmdb.Length - 1;
             var len = Math.Min((stringLen) - _stringPos, _nextLenght);
-            var returnValue = float.Parse(_bmdb.Substring(_stringPos, len).Trim());
+            var substr = _bmdb.Substring(_stringPos, len).Trim();
+            var returnValue = float.Parse(substr, CultureInfo.InvariantCulture.NumberFormat);
             _stringPos += _nextLenght - 1;
             return returnValue;
         }

@@ -3,6 +3,7 @@ using log4net;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Security.Cryptography;
+using Newtonsoft.Json;
 
 namespace ModdingTool
 {
@@ -28,6 +29,10 @@ namespace ModdingTool
         }
         public static void PrintFinal()
         {
+            System.IO.File.WriteAllText(@"units.json", JsonConvert.SerializeObject(AllUnits));
+            System.IO.File.WriteAllText(@"bmdb.json", JsonConvert.SerializeObject(ModelDb));
+            System.IO.File.WriteAllText(@"factions.json", JsonConvert.SerializeObject(AllFactions));
+            System.IO.File.WriteAllText(@"cultures.json", JsonConvert.SerializeObject(AllCultures));
             Console.WriteLine("Done");
         }
         public static void PrintInt(int statement)
