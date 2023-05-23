@@ -1,6 +1,7 @@
 ﻿using System;
 using log4net;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
 using Newtonsoft.Json;
@@ -19,6 +20,7 @@ namespace ModdingTool
         public static Dictionary<string, string?> UnitDescr = new();
         public static Dictionary<string, string?> UnitDescrShort = new();
         public static Dictionary<string, BattleModel> ModelDb = new();
+        public static Dictionary<string, BattleModel> ModelDb_import = new();
         public static Dictionary<string, Faction> AllFactions = new();
         public static Dictionary<string, Culture> AllCultures = new();
         public static Dictionary<string, string> ExpandedEntries = new();
@@ -29,12 +31,33 @@ namespace ModdingTool
         }
         public static void PrintFinal()
         {
-            System.IO.File.WriteAllText(@"units.json", JsonConvert.SerializeObject(AllUnits));
-            System.IO.File.WriteAllText(@"bmdb.json", JsonConvert.SerializeObject(ModelDb));
-            System.IO.File.WriteAllText(@"factions.json", JsonConvert.SerializeObject(AllFactions));
-            System.IO.File.WriteAllText(@"cultures.json", JsonConvert.SerializeObject(AllCultures));
             Console.WriteLine("Done");
         }
+
+        public static void ImportJson(string fileName)
+        {
+            string jsonString = File.ReadAllText(fileName);
+            ModelDb = JsonConvert.DeserializeObject<Dictionary<string, BattleModel>>(jsonString);
+        }
+
+        public static void WriteBMDB()
+        {
+            string newBmdb = "";
+            newBmdb += "22 serialization::archive 3 0 0 0 0 ";
+            newBmdb += (ModelDb.Count + 1) + " 0 0\n";
+            newBmdb += "5 blank 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n";
+            foreach (KeyValuePair<string, BattleModel> entry in ModelDb)
+            {
+                newBmdb += entry.Value.WriteEntry(entry.Value);
+            }
+            System.IO.File.WriteAllText(@"battle_models.modeldb", newBmdb);
+        }
+
+        public static void ExportJson()
+        {
+            System.IO.File.WriteAllText(@"bmdb.json", JsonConvert.SerializeObject(ModelDb));
+        }
+
         public static void PrintInt(int statement)
         {
             Console.WriteLine(statement);

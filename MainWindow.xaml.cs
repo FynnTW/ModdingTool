@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Win32;
 using static ModdingTool.Globals;
 
 namespace ModdingTool
@@ -27,9 +28,11 @@ namespace ModdingTool
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            factionParser.parseSMFactions();
-            EduParser.ParseEu();
-            EduParser.ParseEdu();
+            //factionParser.parseSMFactions();
+            // EduParser.ParseEu();
+            //EduParser.ParseEdu();
+            BmdbParser.ParseBmdb();
+            Globals.ExportJson();
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -40,8 +43,28 @@ namespace ModdingTool
 
         private void openViewer_Click(object sender, RoutedEventArgs e)
         {
-            var view = new UnitViewer();
-            view.Show();
+            //var view = new UnitViewer();
+            //view.Show();
+        }
+
+        private void Import_Click(object sender, RoutedEventArgs e)
+        {
+            //open gui file selection dialog
+            //below code to open a windows explorer file selection dialog
+            var dialog = new OpenFileDialog();
+            dialog.Filter = "Json files (*.json)|*.json";
+            dialog.InitialDirectory = @"C:\";
+            dialog.Title = "Please select a file to import";
+            dialog.ShowDialog();
+            var filename = dialog.FileName;
+            Globals.ImportJson(filename);
+
+
+        }
+
+        private void WriteBMDB_Click(object sender, RoutedEventArgs e)
+        {
+            Globals.WriteBMDB();
         }
     }
 }
