@@ -12,7 +12,6 @@ namespace ModdingTool
     {
         public static void parseSMFactions()
         {
-            BmdbParser.ParseBmdb();
             parseExpanded();
             parseCultures();
             Console.WriteLine(@"start parse factions");

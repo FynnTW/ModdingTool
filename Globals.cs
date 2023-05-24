@@ -11,6 +11,7 @@ namespace ModdingTool
     public class Globals
     {
         public static string ModPath = null!;
+        public static bool ModLoaded = false;
         public static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public static int ProjectileDelayStandard = 0;
         public static int ProjectileDelayFlaming = 0;

@@ -16,6 +16,7 @@ namespace ModdingTool
 
         public static void ParseEdu()
         {
+            ParseEu();
             Console.WriteLine(@"start parse edu");
             var lines = File.ReadAllLines(ModPath + "\\data\\export_descr_unit.txt");
 
