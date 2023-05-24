@@ -29,10 +29,7 @@
         <usercontrols:DataList x:Name="DataListLive" Grid.Row="2" Grid.RowSpan="2"></usercontrols:DataList>
 
         <!-- Main Data Tabs -->
-        <TabControl Grid.Row="2" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="4">
-            <TabPanel Grid.Row="2" Grid.Column="1"></TabPanel>
-            <TabItem Grid.Row="3" Grid.Column="1"></TabItem>
-        </TabControl>
+        <usercontrols:DataTab x:Name="DataTabLive" Grid.Row="2" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="4"></usercontrols:DataTab>
 
         <!-- Status Bar -->
         <usercontrols:StatusBarCustom x:Name="StatusBarLive" Grid.Row="4" Grid.ColumnSpan="4"></usercontrols:StatusBarCustom>

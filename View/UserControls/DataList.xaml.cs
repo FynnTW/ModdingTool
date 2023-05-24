@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ModdingTool.View.InterfaceData;
 using static ModdingTool.Globals;
 
 namespace ModdingTool.View.UserControls
@@ -22,8 +23,13 @@ namespace ModdingTool.View.UserControls
     public partial class DataList : UserControl
     {
 
+        public static string Selected { get; set; }
+        public static string SelectedType { get; set; }
+
         public DataList()
         {
+            Selected = "";
+            SelectedType = "";
             InitializeComponent();
         }
 
@@ -41,16 +47,37 @@ namespace ModdingTool.View.UserControls
             {
                 case "Units":
                     DataListPicker.ItemsSource = AllUnits.Keys;
+                    SelectedType = selected;
                     break;
                 case "Model Entries":
                     DataListPicker.ItemsSource = ModelDb.Keys;
+                    SelectedType = selected;
                     break;
                 case "Factions":
                     DataListPicker.ItemsSource = AllFactions.Keys;
+                    SelectedType = selected;
                     break;
                 case "Cultures":
                     DataListPicker.ItemsSource = AllCultures.Keys;
+                    SelectedType = selected;
                     break;
+            }
+        }
+
+        private void DataListPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (DataListPicker.SelectedItem == null) return;
+            var selected = DataListPicker.SelectedItem.ToString();
+            if (selected != null)
+            {
+                Selected = selected;
+            }
+
+            if (SelectedType == "Units")
+            {
+                Window window = Window.GetWindow(this);
+                var dataTabs = window.FindName("DataTabLive") as DataTab;
+                dataTabs.AddTab(new UnitTab());
             }
         }
     }
