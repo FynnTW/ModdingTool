@@ -14,7 +14,6 @@
         <TabControl.Resources>
             <DataTemplate DataType="{x:Type mvvm:UnitTab}">
                 <local:UnitTabView>
-
                 </local:UnitTabView>
             </DataTemplate>
         </TabControl.Resources>

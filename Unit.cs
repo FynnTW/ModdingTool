@@ -1,10 +1,15 @@
-﻿namespace ModdingTool
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+
+namespace ModdingTool
 {
     public class Unit
     {
         #region Private fields
 
         #endregion Private fields
+
 
         #region Public properties
 
@@ -186,5 +191,10 @@
         public string CardInfo { get; set; } = "";
 
         #endregion Public properties
+
+        public Dictionary<string, IProperty> UnitPropsDictionary = new()
+        {
+        };
+
     }
 }

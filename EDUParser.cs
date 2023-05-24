@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using static ModdingTool.Globals;
@@ -290,13 +291,13 @@ namespace ModdingTool
                         unit.Soldier = parts?[1]?.Trim();
                         unit.SoldierCount = int.Parse(parts?[2] ?? string.Empty);
                         unit.ExtrasCount = int.Parse(parts?[3] ?? string.Empty);
-                        unit.Mass = float.Parse(parts?[4] ?? string.Empty);
+                        unit.Mass = float.Parse(parts?[4] ?? string.Empty, CultureInfo.InvariantCulture.NumberFormat);
                         if (parts is { Length: > 5 })
                         {
-                            unit.Radius = float.Parse(parts[5] ?? string.Empty);
+                            unit.Radius = float.Parse(parts[5] ?? string.Empty, CultureInfo.InvariantCulture.NumberFormat);
                             if (parts.Length > 6)
                             {
-                                unit.Height = float.Parse(parts[6] ?? string.Empty);
+                                unit.Height = float.Parse(parts[6] ?? string.Empty, CultureInfo.InvariantCulture.NumberFormat);
                             }
                         }
                         break;
@@ -357,14 +358,14 @@ namespace ModdingTool
                         break;
 
                     case "move_speed_mod":
-                        unit.MoveSpeed = float.Parse(parts?[1] ?? string.Empty);
+                        unit.MoveSpeed = float.Parse(parts?[1] ?? string.Empty, CultureInfo.InvariantCulture.NumberFormat);
                         break;
 
                     case "formation":
-                        unit.Spacing_width = float.Parse(parts?[1] ?? string.Empty);
-                        unit.Spacing_depth = float.Parse(parts?[2] ?? string.Empty);
-                        unit.Spacing_width_loose = float.Parse(parts?[3] ?? string.Empty);
-                        unit.Spacing_depth_loose = float.Parse(parts?[4] ?? string.Empty);
+                        unit.Spacing_width = float.Parse(parts?[1] ?? string.Empty, CultureInfo.InvariantCulture.NumberFormat);
+                        unit.Spacing_depth = float.Parse(parts?[2] ?? string.Empty, CultureInfo.InvariantCulture.NumberFormat);
+                        unit.Spacing_width_loose = float.Parse(parts?[3] ?? string.Empty, CultureInfo.InvariantCulture.NumberFormat);
+                        unit.Spacing_depth_loose = float.Parse(parts?[4] ?? string.Empty, CultureInfo.InvariantCulture.NumberFormat);
                         unit.Spacing_ranks = int.Parse(parts?[5] ?? string.Empty);
                         if (parts is { Length: > 6 })
                         {
@@ -546,7 +547,7 @@ namespace ModdingTool
                         break;
 
                     case "recruit_priority_offset":
-                        unit.Recruit_priority_offset = float.Parse(parts?[1] ?? string.Empty);
+                        unit.Recruit_priority_offset = float.Parse(parts?[1] ?? string.Empty, CultureInfo.InvariantCulture.NumberFormat);
                         break;
 
                     case "info_pic_dir":
@@ -558,7 +559,7 @@ namespace ModdingTool
                         break;
 
                     case "crusading_upkeep_modifier":
-                        unit.CrusadeUpkeep = float.Parse(parts?[1] ?? string.Empty);
+                        unit.CrusadeUpkeep = float.Parse(parts?[1] ?? string.Empty, CultureInfo.InvariantCulture.NumberFormat);
                         break;
                 }
             }

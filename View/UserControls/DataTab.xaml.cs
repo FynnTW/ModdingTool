@@ -25,6 +25,7 @@ namespace ModdingTool.View.UserControls
     {
         public ICollection<ITab> Tabs { get; }
         public ICommand NewTabCommand;
+        public ITab selectedTab = null;
 
         public DataTab()
         {
@@ -32,7 +33,6 @@ namespace ModdingTool.View.UserControls
             Tabs = new ObservableCollection<ITab>();
             InitializeComponent();
         }
-
 
         private void NewTab()
         {
@@ -43,6 +43,7 @@ namespace ModdingTool.View.UserControls
         {
             Tabs.Add(tab);
             AllTabs.ItemsSource = Tabs;
+            selectedTab = tab;
         }
     }
 }

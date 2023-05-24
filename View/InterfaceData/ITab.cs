@@ -31,5 +31,7 @@ public interface ITab
             CloseRequested?.Invoke(this, EventArgs.Empty);
         }
 
+
+
     }
 }
