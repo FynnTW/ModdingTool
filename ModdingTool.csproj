@@ -8,11 +8,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Styles\**" />
+    <EmbeddedResource Remove="Styles\**" />
+    <None Remove="Styles\**" />
+    <Page Remove="Styles\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.0" />
     <PackageReference Include="log4net" Version="2.0.15" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Pfim" Version="0.11.2" />
-    <PackageReference Include="Sdl.MultiSelectComboBox" Version="1.0.61" />
     <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
     <PackageReference Include="WindowsAPICodePack" Version="7.0.4" />
   </ItemGroup>
@@ -24,7 +31,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Styles\NewFolder\" />
+    <Reference Include="Sdl.MultiSelectComboBox">
+      <HintPath>C:\Users\fynnp\Desktop\Multiselect-ComboBox-master\MultiSelectComboBox\Sdl.MultiSelectComboBox\bin\Release\net6-windows\Sdl.MultiSelectComboBox.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

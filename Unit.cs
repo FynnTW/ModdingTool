@@ -30,9 +30,9 @@ namespace ModdingTool
         public string? Engine { get; set; } = "";
         public string? Animal { get; set; } = "";
         public string? Mount { get; set; } = "";
-        public string?[]? Mount_effect { get; set; }
+        public List<string> Mount_effect { get; set; } = new List<string>();
 
-        public string?[]? Attributes { get; set; }
+        public List<string> Attributes { get; set; } = new List<string>();
 
         public double Spacing_width { get; set; }
 
@@ -64,7 +64,7 @@ namespace ModdingTool
 
         public double Pri_skel_factor { get; set; }
 
-        public string?[]? Pri_attr { get; set; }
+        public List<string>? Pri_attr { get; set; } = new List<string>();
 
         public int Sec_attack { get; set; }
 
@@ -83,7 +83,7 @@ namespace ModdingTool
 
         public double Sec_skel_factor { get; set; }
 
-        public string?[]? Sec_attr { get; set; }
+        public List<string>? Sec_attr { get; set; } = new List<string>();
 
         public int Ter_attack { get; set; } = 0;
         public int Ter_charge { get; set; } = 0;
@@ -96,7 +96,7 @@ namespace ModdingTool
         public string? Ter_sound_type { get; set; } = "";
         public int Ter_att_delay { get; set; } = 0;
         public double Ter_skel_factor { get; set; } = 0;
-        public string?[]? Ter_attr { get; set; }
+        public List<string>? Ter_attr { get; set; } = new List<string>();
 
         public int Pri_armour { get; set; }
 
@@ -153,25 +153,47 @@ namespace ModdingTool
 
         public int CustomIncrease { get; set; }
 
-        public float MoveSpeed { get; set; }
+        public double MoveSpeed { get; set; }
 
         public int[]? Armour_ug_levels { get; set; }
 
+        public string ArmourlvlBase { get; set; } = "";
+
+        public string ArmourlvlOne { get; set; } = "";
+
+        public string ArmourlvlTwo { get; set; } = "";
+
+        public string ArmourlvlThree { get; set; } = "";
+
         public string?[]? Armour_ug_models { get; set; }
 
-        public string?[]? Ownership { get; set; }
+        public string ArmourModelBase { get; set; } = "";
 
-        public float Recruit_priority_offset { get; set; }
+        public string ArmourModelOne { get; set; } = "";
+
+        public string ArmourModelTwo { get; set; } = "";
+
+        public string ArmourModelThree { get; set; } = "";
+
+        public List<string> Ownership { get; set; } = new List<string>();
+
+        public List<string> EraZero { get; set; } = new List<string>();
+
+        public List<string> EraOne { get; set; } = new List<string>();
+
+        public List<string> EraTwo { get; set; } = new List<string>();
+
+        public double Recruit_priority_offset { get; set; }
 
         public string? Info_dict { get; set; }
 
         public string? Card_dict { get; set; }
 
-        public float CrusadeUpkeep { get; set; }
+        public double CrusadeUpkeep { get; set; }
 
-        public float Radius { get; set; }
+        public double Radius { get; set; }
 
-        public float Height { get; set; }
+        public double Height { get; set; }
 
         public string? Accent { get; set; } = "";
         public int Spacing_ranks { get; set; }

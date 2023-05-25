@@ -74,7 +74,7 @@ namespace ModdingTool.View.UserControls
             ModLoaded = true;
         }
 
-        private void loadMod()
+        public void loadMod()
         {
             parseFiles();
             Window window = Window.GetWindow(this);
@@ -82,13 +82,6 @@ namespace ModdingTool.View.UserControls
             statusBar.SetStatusModPath(ModPath);
             var dataPickerBox = window.FindName("DataListLive") as DataList;
             dataPickerBox.InitItems();
-        }
-
-        private void parseFiles()
-        {
-            BmdbParser.ParseBmdb();
-            factionParser.parseSMFactions();
-            EduParser.ParseEdu();
         }
     }
 }

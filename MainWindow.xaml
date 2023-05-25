@@ -23,7 +23,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- Menu -->
-        <usercontrols:Menubar  Grid.ColumnSpan="4" Grid.Row="0"></usercontrols:Menubar>
+        <usercontrols:Menubar  x:Name="MenuBarCustom"  Grid.ColumnSpan="4" Grid.Row="0"></usercontrols:Menubar>
 
         <!-- Data Pick List -->
         <usercontrols:DataList x:Name="DataListLive" Grid.Row="2" Grid.RowSpan="2"></usercontrols:DataList>

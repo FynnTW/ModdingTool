@@ -5,6 +5,7 @@ using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
 using Newtonsoft.Json;
+using ModdingTool.View.UserControls;
 
 namespace ModdingTool
 {
@@ -57,6 +58,21 @@ namespace ModdingTool
         public static void ExportJson()
         {
             System.IO.File.WriteAllText(@"bmdb.json", JsonConvert.SerializeObject(ModelDb));
+        }
+
+        public static void parseFiles()
+        {
+            BmdbParser.ParseBmdb();
+            factionParser.parseSMFactions();
+            EduParser.ParseEdu();
+        }
+
+        public static void startauto()
+        {
+            MainWindow window = (ModdingTool.MainWindow)App.Current.MainWindow;
+            var menubar = window.FindName("MenuBarCustom") as ModdingTool.View.UserControls.Menubar;
+            ModPath = "E:\\SteamLibrary\\steamapps\\common\\Medieval II Total War\\mods\\Divide_and_Conquer";
+            menubar.loadMod();
         }
 
         public static void PrintInt(int statement)

@@ -33,6 +33,12 @@ namespace ModdingTool
                 firstParts[0] = "banner " + bannersplit[0];
                 firstParts[1] = bannersplit[1];
             }
+            if (firstParts[0].Equals("era"))
+            {
+                string[] bannersplit = firstParts[1].Split(delimitersWhite, 2, StringSplitOptions.RemoveEmptyEntries);
+                firstParts[0] = "era " + bannersplit[0];
+                firstParts[1] = bannersplit[1];
+            }
 
             lineParts = firstParts.Concat(lineParts[1..]).ToArray();
             for (int i = 0; i < lineParts.Length; i++)

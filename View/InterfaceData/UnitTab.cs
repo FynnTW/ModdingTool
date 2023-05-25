@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media.Imaging;
@@ -15,23 +16,9 @@ namespace ModdingTool.View.InterfaceData;
 
 public class UnitTab : ITab.Tab
 {
-    public Unit SelectedUnit { get; set; }
-    public static string[] Categories { get; set; }
-    public static string[] Classes { get; set; }
-    public static string[] DamageTypes { get; set; }
-    public static string[] WeaponTypes { get; set; }
-    public static string[] SoundTypes { get; set; }
-    public static string[] TechTypes { get; set; }
-    public BitmapImage UnitImage { get; set; }
-    public BitmapImage UnitInfoImage { get; set; }
 
 
-
-    public Dictionary<string, string> UnitUiText { get; set; }
-
-    public UnitTab()
-    {
-        UnitUiText = new Dictionary<string, string>()
+    public Dictionary<string, string> UnitUiText { get; set; } = new Dictionary<string, string>()
         {
             { "Name", "Localized Name" },
             { "Type", "EDU Type" },
@@ -127,8 +114,19 @@ public class UnitTab : ITab.Tab
             { "CustomIncrease", "Custom Battle Limit Cost Increase" },
             { "MoveSpeed", "Movement Speed Modifier" },
             { "Armour_ug_levels", "Armour Upgrade Levels" },
+            { "ArmourlvlBase", "Base Armour Level" },
+            { "ArmourlvlOne", "Upgrade Level One" },
+            { "ArmourlvlTwo", "Upgrade Level Two" },
+            { "ArmourlvlThree", "Upgrade Level Three" },
             { "Armour_ug_models", "Armour Upgrade Models" },
+            { "ArmourModelBase", "Base Model" },
+            { "ArmourModelOne", "Upgrade Model One" },
+            { "ArmourModelTwo", "Upgrade Model Two" },
+            { "ArmourModelThree", "Upgrade Model Three" },
             { "Ownership", "Ownership Factions" },
+            { "EraZero", "Era 0" },
+            { "EraOne", "Era 1" },
+            { "EraTwo", "Era 2" },
             { "Recruit_priority_offset", "Recruitment Priority Modifier" },
             { "Info_dict", "Info Card Faction" },
             { "Card_dict", "Unit Card Faction" },
@@ -149,15 +147,92 @@ public class UnitTab : ITab.Tab
             { "Edu_index", "Edu Index: " },
             { "CardInfo", "Unit Info Card" }
         };
-        Categories = new string[] { "infantry", "cavalry", "siege", "handler", "ship", "non_combatant" };
-        Classes = new string[] { "light", "heavy", "missile", "spearmen", "skirmish" };
-        DamageTypes = new string[] { "piercing", "slashing", "blunt", "fire" };
-        WeaponTypes = new string[] { "melee", "thrown", "missile", "siege_missile" };
-        SoundTypes = new string[] { "none", "knife", "mace", "axe", "sword", "spear" };
-        TechTypes = new string[] { "melee_simple", "missile_mechanical", "melee_blade", "missile_gunpowder", "artillery_mechanical", "artillery_gunpowder" };
+    public Unit SelectedUnit { get; set; }
+    public static string[] Categories { get; set; } = new string[] { "infantry", "cavalry", "siege", "handler", "ship", "non_combatant" };
+    public static string[] Classes { get; set; } = new string[] { "light", "heavy", "missile", "spearmen", "skirmish" };
+    public static string[] DamageTypes { get; set; } = new string[] { "piercing", "slashing", "blunt", "fire" };
+    public static string[] WeaponTypes { get; set; } = new string[] { "melee", "thrown", "missile", "siege_missile" };
+    public static string[] SoundTypes { get; set; } = new string[] { "none", "knife", "mace", "axe", "sword", "spear" };
+    public static string[] Factions { get; set; }
+    public static string[] ModelEntries { get; set; }
+
+    public static string[] SoundTypesDef { get; set; } = new string[]
+    {
+        "flesh", "leather", "ground", "building", "metal"
+    };
+    public static List<string> AttributeTypes { get; set; } = new List<string>
+    {
+        "can_withdraw",
+        "can_sap",
+        "hide_long_grass",
+        "hide_anywhere",
+        "sea_faring",
+        "gunpowder_unit",
+        "screeching_women",
+        "druid",
+        "cantabrian_circle",
+        "is_peasant",
+        "no_custom",
+        "start_not_skirmishing",
+        "fire_by_rank",
+        "gunpowder_artillery_unit",
+        "command",
+        "free_upkeep_unit",
+        "heavy",
+        "hardy",
+        "mercenary_unit",
+        "frighten_foot",
+        "frighten_mounted",
+        "very_hardy",
+        "slave",
+        "power_charge",
+        "hide_forest",
+        "can_horde",
+        "can_swim",
+        "can_formed_charge",
+        "can_feign_rout",
+        "can_run_amok",
+        "warcry",
+        "stakes",
+        "general_unit",
+        "general_unit_upgrade",
+        "legionary_name",
+        "wagon_fort",
+        "cannot_skirmish",
+        "hide_improved_forest"
+    };
+    public static string[] DisciplineTypes { get; set; } = new string[]
+    {
+        "impetuous", "normal", "disciplined", "berserker"
+    };
+    public static string[] TrainedTypes { get; set; } = new string[]
+    {
+        "trained", "highly_trained", "untrained"
+    };
+    public static string[] TechTypes { get; set; } = new string[] { "melee_simple", "missile_mechanical", "melee_blade", "missile_gunpowder", "artillery_mechanical", "artillery_gunpowder" };
+    public static string[] FormationStyles { get; set; } = new string[] { "square", "horde", "column", "wedge", "square_hollow", "phalanx", "schiltrom", "shield_wall" };
+    public static List<string> AttackAttr { get; set; } = new List<string> { "spear", "light_spear", "prec", "ap", "bp", "area", "fire", "launching", "thrown", "short_pike", "long_pike", "spear_bonus_12", "spear_bonus_10", "spear_bonus_8", "spear_bonus_6", "spear_bonus_4" };
+    public BitmapImage UnitImage { get; set; }
+    public BitmapImage UnitInfoImage { get; set; }
+    public string mountEffectString { get; set; } = "";
+
+
+
+    public UnitTab()
+    {
         SelectedUnit = AllUnits[Name];
+        Factions = AllFactions.Keys.ToArray();
+        ModelEntries = ModelDb.Keys.ToArray();
         UnitInfoImage = TgaToImageSource(SelectedUnit.CardInfo);
         UnitImage = TgaToImageSource(SelectedUnit.Card);
+        foreach (var effect in SelectedUnit.Mount_effect)
+        {
+            mountEffectString += effect;
+            if (effect != SelectedUnit.Mount_effect.Last())
+            {
+                mountEffectString += ", ";
+            }
+        }
     }
 
 

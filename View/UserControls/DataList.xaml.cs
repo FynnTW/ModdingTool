@@ -37,6 +37,7 @@ namespace ModdingTool.View.UserControls
         {
             var pickList = new List<string> { "Units", "Model Entries", "Factions", "Cultures" };
             DataPicker.ItemsSource = pickList;
+            DataPicker.SelectedIndex = 0;
         }
 
         private void DataPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
