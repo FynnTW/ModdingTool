@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using ModdingTool.View.InterfaceData;
 using static ModdingTool.Globals;
@@ -65,9 +66,33 @@ namespace ModdingTool
                         }
 
                         if (newUnit.Ownership != null)
-                            foreach (var faction in newUnit.Ownership)
+                            foreach (var faction in newUnit.Ownership.Where(faction => true))
                             {
-                                if (faction != null) AllFactions[faction].Unit_ownership.Add(newUnit);
+                                if (faction == "all")
+                                {
+                                    foreach (var fac in AllFactions)
+                                    {
+                                        fac.Value.Unit_ownership.Add(newUnit);
+                                    }
+                                }
+                                else if (AllFactions.Keys.Contains(faction))
+                                {
+                                    AllFactions[faction].Unit_ownership.Add(newUnit);
+                                }
+                                else if (AllCultures.Keys.Contains(faction))
+                                {
+                                    foreach (var cult in AllCultures)
+                                    {
+                                        foreach (var fac in cult.Value.Factions)
+                                        {
+                                            fac.Value.Unit_ownership.Add(newUnit);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine(@"faction not found: " + faction);
+                                }
                             }
 
                         index++;
@@ -89,10 +114,35 @@ namespace ModdingTool
             }
 
             if (newUnit.Ownership != null)
-                foreach (var faction in newUnit.Ownership)
+                foreach (var faction in newUnit.Ownership.Where(faction => true))
                 {
-                    if (faction != null) AllFactions[faction].Unit_ownership.Add(newUnit);
+                    if (faction == "all")
+                    {
+                        foreach (var fac in AllFactions)
+                        {
+                            fac.Value.Unit_ownership.Add(newUnit);
+                        }
+                    }
+                    else if (AllFactions.Keys.Contains(faction))
+                    {
+                        AllFactions[faction].Unit_ownership.Add(newUnit);
+                    }
+                    else if (AllCultures.Keys.Contains(faction))
+                    {
+                        foreach (var cult in AllCultures)
+                        {
+                            foreach (var fac in cult.Value.Factions)
+                            {
+                                fac.Value.Unit_ownership.Add(newUnit);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine(@"faction not found: " + faction);
+                    }
                 }
+
 
             Console.WriteLine(@"end parse edu");
             Globals.PrintInt(AllUnits.Count);
@@ -289,7 +339,7 @@ namespace ModdingTool
                         break;
 
                     case "soldier":
-                        unit.Soldier = parts?[1]?.Trim();
+                        unit.Soldier = parts?[1]?.Trim().ToLower();
                         unit.SoldierCount = int.Parse(parts?[2] ?? string.Empty);
                         unit.ExtrasCount = int.Parse(parts?[3] ?? string.Empty);
                         unit.Mass = float.Parse(parts?[4] ?? string.Empty, CultureInfo.InvariantCulture.NumberFormat);
@@ -306,34 +356,34 @@ namespace ModdingTool
                     case "officer":
                         if (unit.Officer1 is "")
                         {
-                            unit.Officer1 = parts?[1]?.Trim();
+                            unit.Officer1 = parts?[1]?.Trim().ToLower();
                             break;
                         }
                         if (unit.Officer2 is "")
                         {
-                            unit.Officer2 = parts?[1]?.Trim();
+                            unit.Officer2 = parts?[1]?.Trim().ToLower();
                             break;
                         }
                         if (unit.Officer3 is "")
                         {
-                            unit.Officer3 = parts?[1]?.Trim();
+                            unit.Officer3 = parts?[1]?.Trim().ToLower();
                         }
                         break;
 
                     case "ship":
-                        unit.Ship = parts?[1]?.Trim();
+                        unit.Ship = parts?[1]?.Trim().ToLower();
                         break;
 
                     case "engine":
-                        unit.Engine = parts?[1]?.Trim();
+                        unit.Engine = parts?[1]?.Trim().ToLower();
                         break;
 
                     case "animal":
-                        unit.Animal = parts?[1]?.Trim();
+                        unit.Animal = parts?[1]?.Trim().ToLower();
                         break;
 
                     case "mount":
-                        unit.Mount = parts?[1]?.Trim();
+                        unit.Mount = parts?[1]?.Trim().ToLower();
                         break;
 
                     case "mount_effect":
@@ -574,7 +624,7 @@ namespace ModdingTool
                             foreach (var level in parts[1..])
                             {
                                 var lvlint = int.Parse(level ?? string.Empty);
-                                if (unit.ArmourlvlBase == "")
+                                if (string.IsNullOrWhiteSpace(unit.ArmourlvlBase))
                                 {
                                     lvlbase = lvlint;
                                     unit.ArmourlvlBase = lvlbase.ToString();
@@ -583,7 +633,7 @@ namespace ModdingTool
                                 {
                                     unit.ArmourlvlBase += ", " + lvlint;
                                 }
-                                else if (unit.ArmourlvlOne == "")
+                                else if (string.IsNullOrWhiteSpace(unit.ArmourlvlOne))
                                 {
                                     lvlone = lvlint;
                                     unit.ArmourlvlOne = lvlone.ToString();
@@ -592,7 +642,7 @@ namespace ModdingTool
                                 {
                                     unit.ArmourlvlOne += ", " + lvlint;
                                 }
-                                else if (unit.ArmourlvlTwo == "")
+                                else if (string.IsNullOrWhiteSpace(unit.ArmourlvlTwo))
                                 {
                                     lvltwo = lvlint;
                                     unit.ArmourlvlTwo = lvltwo.ToString();
@@ -601,7 +651,7 @@ namespace ModdingTool
                                 {
                                     unit.ArmourlvlTwo += ", " + lvlint;
                                 }
-                                else if (unit.ArmourlvlThree == "")
+                                else if (string.IsNullOrWhiteSpace(unit.ArmourlvlThree))
                                 {
                                     lvlthree = lvlint;
                                     unit.ArmourlvlThree = lvlthree.ToString();
@@ -618,21 +668,21 @@ namespace ModdingTool
                     case "armour_ug_models":
                         foreach (var model in parts?[1..])
                         {
-                            if (unit.ArmourModelBase == "")
+                            if (string.IsNullOrWhiteSpace(unit.ArmourModelBase))
                             {
-                                unit.ArmourModelBase = model;
+                                unit.ArmourModelBase = model.ToLower();
                             }
-                            else if (unit.ArmourModelOne == "")
+                            else if (string.IsNullOrWhiteSpace(unit.ArmourModelOne))
                             {
-                                unit.ArmourModelOne = model;
+                                unit.ArmourModelOne = model.ToLower();
                             }
-                            else if (unit.ArmourModelTwo == "")
+                            else if (string.IsNullOrWhiteSpace(unit.ArmourModelTwo))
                             {
-                                unit.ArmourModelTwo = model;
+                                unit.ArmourModelTwo = model.ToLower();
                             }
-                            else if (unit.ArmourModelThree == "")
+                            else if (string.IsNullOrWhiteSpace(unit.ArmourModelThree))
                             {
-                                unit.ArmourModelThree = model;
+                                unit.ArmourModelThree = model.ToLower();
                             }
                         }
                         unit.Armour_ug_models = parts?[1..];

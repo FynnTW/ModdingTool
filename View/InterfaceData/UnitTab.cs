@@ -240,6 +240,10 @@ public class UnitTab : ITab.Tab
 
     private static BitmapImage TgaToImageSource(string source)
     {
+        if (string.IsNullOrWhiteSpace(source))
+        {
+            return null;
+        }
         Bitmap bitmap;
         var image = Pfimage.FromFile(source);
         PixelFormat format;

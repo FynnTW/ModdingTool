@@ -23,6 +23,10 @@ namespace ModdingTool
 
         public static string?[]? splitLine(string line)
         {
+            if (line.Equals(""))
+            {
+                return null;
+            }
             char[] delimiters = { ',' };
             char[] delimitersWhite = { ' ', '\t' };
             string[]? lineParts = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);

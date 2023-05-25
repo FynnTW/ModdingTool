@@ -26,7 +26,7 @@ namespace ModdingTool
             var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
             XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
             InitializeComponent();
-            startauto();
+            //startauto();
         }
     }
 }

@@ -414,6 +414,11 @@ namespace ModdingTool
                     break;
 
                 case "normal":
+                    if (parts.Length < 3)
+                    {
+                        var newparts = parts[1].Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                        parts = parts.Concat(newparts).ToArray();
+                    }
                     switch (settlement_level)
                     {
                         case "village":

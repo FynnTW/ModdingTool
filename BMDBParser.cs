@@ -18,6 +18,7 @@ namespace ModdingTool
         {
             Console.WriteLine(@"start parse bmdb");
             _bmdb = File.ReadAllText(ModPath + "\\data\\unit_models\\battle_models.modeldb", Encoding.UTF8);
+            var firstEntry = false;
 
             _stringPos = 0;
             _stringPos += 35; //serialization
@@ -34,19 +35,28 @@ namespace ModdingTool
                 if (_stringPos >= _bmdb.Length - 1) continue;
                 var entry = new BattleModel
                 {
-                    Name = GetString()
+                    Name = GetString().ToLower()
                 };
-                if (n == 0 && entry.Name.Equals("blank"))
+                switch (n)
                 {
-                    for (var i = 0; i < 39; i++)
-                    {
-                        // ReSharper disable once RedundantAssignment
-                        pad = GetInt();
-                    }
-                    continue;
+                    case 0 when entry.Name.Equals("blank"):
+                        {
+                            for (var i = 0; i < 39; i++)
+                            {
+                                // ReSharper disable once RedundantAssignment
+                                pad = GetInt();
+                            }
+                            continue;
+                        }
+                    case 0 when !entry.Name.Equals("blank"):
+                        firstEntry = true;
+                        break;
                 }
+
                 entry.Scale = GetFloat();
+                if (firstEntry) { pad = GetInt(); pad = GetInt(); }
                 entry.LodCount = GetInt();
+                if (firstEntry) { pad = GetInt(); pad = GetInt(); }
                 entry.LodTable = new List<LOD>();
                 for (var i = 0; i < entry.LodCount; i++)
                 {
@@ -56,7 +66,9 @@ namespace ModdingTool
                         Distance = GetInt()
                     });
                 }
+                if (firstEntry) { pad = GetInt(); pad = GetInt(); }
                 entry.MainTexturesCount = GetInt();
+                if (firstEntry) { pad = GetInt(); pad = GetInt(); }
                 for (var i = 0; i < entry.MainTexturesCount; i++)
                 {
                     var facname = GetString();
@@ -80,7 +92,9 @@ namespace ModdingTool
                         Sprite = GetString()
                     });
                 }
+                if (firstEntry) { pad = GetInt(); pad = GetInt(); }
                 entry.MountTypeCount = GetInt();
+                if (firstEntry) { pad = GetInt(); pad = GetInt(); }
                 entry.Animations = new List<Animation>();
                 for (var i = 0; i < entry.MountTypeCount; i++)
                 {
@@ -103,6 +117,7 @@ namespace ModdingTool
                         entry.Animations[i].SecWeapons.Add(GetString());
                     }
                 }
+                if (firstEntry) { pad = GetInt(); pad = GetInt(); }
                 entry.TorchIndex = GetInt();
                 entry.TorchBoneX = GetFloat();
                 entry.TorchBoneY = GetFloat();
@@ -110,6 +125,8 @@ namespace ModdingTool
                 entry.TorchspriteX = GetFloat();
                 entry.TorchspriteY = GetFloat();
                 entry.TorchspriteZ = GetFloat();
+                if (firstEntry) { pad = GetInt(); pad = GetInt(); }
+                firstEntry = false;
                 if (ModelDb.ContainsKey(entry.Name))
                 {
                     Console.WriteLine(@"Duplicate entry");

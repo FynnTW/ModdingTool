@@ -157,23 +157,22 @@ namespace ModdingTool
 
         public int[]? Armour_ug_levels { get; set; }
 
-        public string ArmourlvlBase { get; set; } = "";
+        public string? ArmourlvlBase { get; set; }
 
-        public string ArmourlvlOne { get; set; } = "";
+        public string? ArmourlvlOne { get; set; }
 
-        public string ArmourlvlTwo { get; set; } = "";
+        public string? ArmourlvlTwo { get; set; }
 
-        public string ArmourlvlThree { get; set; } = "";
+        public string? ArmourlvlThree { get; set; }
 
         public string?[]? Armour_ug_models { get; set; }
 
-        public string ArmourModelBase { get; set; } = "";
+        public string? ArmourModelBase { get; set; }
 
-        public string ArmourModelOne { get; set; } = "";
+        public string? ArmourModelOne { get; set; }
 
-        public string ArmourModelTwo { get; set; } = "";
-
-        public string ArmourModelThree { get; set; } = "";
+        public string? ArmourModelTwo { get; set; }
+        public string? ArmourModelThree { get; set; }
 
         public List<string> Ownership { get; set; } = new List<string>();
 
