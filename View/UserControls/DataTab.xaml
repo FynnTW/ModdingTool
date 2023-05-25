@@ -16,6 +16,10 @@
                 <local:UnitTabView>
                 </local:UnitTabView>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type mvvm:ModelDbTab}">
+                <local:ModelDbTabView>
+                </local:ModelDbTabView>
+            </DataTemplate>
         </TabControl.Resources>
 
         <TabControl.ItemTemplate>

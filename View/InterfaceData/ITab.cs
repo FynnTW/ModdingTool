@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using ModdingTool.View.UserControls;
@@ -16,7 +17,6 @@ public interface ITab
         public Tab()
         {
             CloseCommand = new RelayCommand(Close);
-            Name = DataList.Selected;
         }
 
         public string Name { get; set; }
@@ -25,7 +25,11 @@ public interface ITab
 
         private void Close()
         {
-            // Your closing logic here
+
+            MainWindow window = (ModdingTool.MainWindow)App.Current.MainWindow;
+            var datatab = window?.FindName("DataTabLive") as DataTab;
+            // Remove the tab from the collection of tabs
+            datatab.Tabs.Remove(this);
 
             // Trigger the CloseRequested event
             CloseRequested?.Invoke(this, EventArgs.Empty);

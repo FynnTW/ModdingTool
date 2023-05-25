@@ -68,6 +68,8 @@ namespace ModdingTool.View.UserControls
         private void DataListPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (DataListPicker.SelectedItem == null) return;
+            Window window = Window.GetWindow(this);
+            var dataTabs = window.FindName("DataTabLive") as DataTab;
             var selected = DataListPicker.SelectedItem.ToString();
             if (selected != null)
             {
@@ -76,9 +78,11 @@ namespace ModdingTool.View.UserControls
 
             if (SelectedType == "Units")
             {
-                Window window = Window.GetWindow(this);
-                var dataTabs = window.FindName("DataTabLive") as DataTab;
-                dataTabs.AddTab(new UnitTab());
+                dataTabs.AddTab(new UnitTab(selected));
+            }
+            else if (SelectedType == "Model Entries")
+            {
+                dataTabs.AddTab(new ModelDbTab(selected));
             }
         }
     }

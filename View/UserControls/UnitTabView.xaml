@@ -37,15 +37,15 @@
                         <ColumnDefinition Width="75*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <StackPanel  Grid.Column="0">
-                        <TextBlock Text="{Binding UnitUiText[Name] }" Height="25"  Grid.Column="0"/>
-                        <TextBlock Text="{Binding UnitUiText[Type] }" Height="25"  Grid.Column="0"/>
-                        <TextBlock Text="{Binding UnitUiText[Dictionary] }" Height="25"  Grid.Column="0"/>
-                        <TextBlock Text="{Binding UnitUiText[Category] }" Height="25"  Grid.Column="0"/>
-                        <TextBlock Text="{Binding UnitUiText[Class_type] }" Height="25"  Grid.Column="0"/>
-                        <TextBlock Text="{Binding UnitUiText[Voice_type] }" Height="25"  Grid.Column="0"/>
-                        <TextBlock Text="{Binding UnitUiText[Accent] }" Height="25"  Grid.Column="0"/>
-                        <TextBlock Text="{Binding UnitUiText[BannerFaction] }" Height="25"  Grid.Column="0"/>
-                        <TextBlock Text="{Binding UnitUiText[BannerHoly] }" Height="25"  Grid.Column="0"/>
+                        <TextBlock Text="{Binding UnitUiText[Name] }" Height="25"/>
+                        <TextBlock Text="{Binding UnitUiText[Type] }" Height="25"/>
+                        <TextBlock Text="{Binding UnitUiText[Dictionary] }" Height="25"/>
+                        <TextBlock Text="{Binding UnitUiText[Category] }" Height="25"/>
+                        <TextBlock Text="{Binding UnitUiText[Class_type] }" Height="25"/>
+                        <TextBlock Text="{Binding UnitUiText[Voice_type] }" Height="25"/>
+                        <TextBlock Text="{Binding UnitUiText[Accent] }" Height="25"/>
+                        <TextBlock Text="{Binding UnitUiText[BannerFaction] }" Height="25"/>
+                        <TextBlock Text="{Binding UnitUiText[BannerHoly] }" Height="25"/>
                     </StackPanel>
                     <StackPanel  Grid.Column="1">
                         <TextBox x:Name="Name" Text="{Binding SelectedUnit.Name}" Height="25" Grid.Column="1" HorizontalAlignment="Stretch"/>
@@ -268,7 +268,13 @@
                     <ColumnDefinition Width="75*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Grid.ColumnSpan="2">
-                    <TextBlock Text="{Binding UnitUiText[Soldier] }" Height="25"/>
+                    <TextBlock Text="{Binding UnitUiText[Soldier] }" Height="25">
+                        <TextBlock.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem x:Name="SoldierGoto" Header="Go to entry" Click="SoldierGoto_OnClick"/>
+                            </ContextMenu>
+                        </TextBlock.ContextMenu>
+                    </TextBlock>
                     <TextBlock Text="{Binding UnitUiText[Officer1] }" Height="25"/>
                     <TextBlock Text="{Binding UnitUiText[Officer2] }" Height="25"/>
                     <TextBlock Text="{Binding UnitUiText[Officer3] }" Height="25"/>

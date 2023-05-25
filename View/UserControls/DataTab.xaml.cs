@@ -44,6 +44,13 @@ namespace ModdingTool.View.UserControls
             Tabs.Add(tab);
             AllTabs.ItemsSource = Tabs;
             selectedTab = tab;
+            AllTabs.SelectedItem = tab;
+        }
+
+        public void RemoveTab(ITab tab)
+        {
+            Tabs.Remove(tab);
+            AllTabs.ItemsSource = Tabs;
         }
     }
 }

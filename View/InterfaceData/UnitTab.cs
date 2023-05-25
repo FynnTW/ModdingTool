@@ -218,8 +218,9 @@ public class UnitTab : ITab.Tab
 
 
 
-    public UnitTab()
+    public UnitTab(string name)
     {
+        Name = name;
         SelectedUnit = AllUnits[Name];
         Factions = AllFactions.Keys.ToArray();
         ModelEntries = ModelDb.Keys.ToArray();

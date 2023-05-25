@@ -47,58 +47,60 @@ namespace ModdingTool
                 }
                 entry.Scale = GetFloat();
                 entry.LodCount = GetInt();
-                entry.LodTable = new LOD[entry.LodCount];
+                entry.LodTable = new List<LOD>();
                 for (var i = 0; i < entry.LodCount; i++)
                 {
-                    entry.LodTable[i] = new LOD
+                    entry.LodTable.Add(new LOD
                     {
                         Mesh = GetString(),
                         Distance = GetInt()
-                    };
+                    });
                 }
                 entry.MainTexturesCount = GetInt();
                 for (var i = 0; i < entry.MainTexturesCount; i++)
                 {
                     var facname = GetString();
-                    entry.MainTextures[facname] = new Texture
+                    entry.MainTextures.Add(new Texture
                     {
+                        Faction = facname,
                         TexturePath = GetString(),
                         Normal = GetString(),
                         Sprite = GetString()
-                    };
+                    });
                 }
                 entry.AttachTexturesCount = GetInt();
                 for (var i = 0; i < entry.AttachTexturesCount; i++)
                 {
                     var facname = GetString();
-                    entry.AttachTextures[facname] = new Texture
+                    entry.AttachTextures.Add(new Texture
                     {
+                        Faction = facname,
                         TexturePath = GetString(),
                         Normal = GetString(),
                         Sprite = GetString()
-                    };
+                    });
                 }
                 entry.MountTypeCount = GetInt();
-                entry.Animations = new Animation[entry.MountTypeCount];
+                entry.Animations = new List<Animation>();
                 for (var i = 0; i < entry.MountTypeCount; i++)
                 {
-                    entry.Animations[i] = new Animation
+                    entry.Animations.Add(new Animation
                     {
                         MountType = GetString(),
                         Primary_skeleton = GetString(),
                         Secondary_skeleton = GetString(),
                         PriWeaponCount = GetInt()
-                    };
-                    entry.Animations[i].PriWeapons = new string[entry.Animations[i].PriWeaponCount];
+                    });
+                    entry.Animations[i].PriWeapons = new List<string>();
                     for (var j = 0; j < entry.Animations[i].PriWeaponCount; j++)
                     {
-                        entry.Animations[i].PriWeapons[j] = GetString();
+                        entry.Animations[i].PriWeapons.Add(GetString());
                     }
                     entry.Animations[i].SecWeaponCount = GetInt();
-                    entry.Animations[i].SecWeapons = new string[entry.Animations[i].SecWeaponCount];
+                    entry.Animations[i].SecWeapons = new List<string>();
                     for (var j = 0; j < entry.Animations[i].SecWeaponCount; j++)
                     {
-                        entry.Animations[i].SecWeapons[j] = GetString();
+                        entry.Animations[i].SecWeapons.Add(GetString());
                     }
                 }
                 entry.TorchIndex = GetInt();

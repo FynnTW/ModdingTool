@@ -23,9 +23,16 @@ namespace ModdingTool.View.UserControls
     /// </summary>
     public partial class UnitTabView : UserControl
     {
+        private MainWindow window;
+        private DataTab datatab;
+        private TabControl tabcontroller;
+
         public UnitTabView()
         {
             InitializeComponent();
+            window = (ModdingTool.MainWindow)App.Current.MainWindow;
+            datatab = window?.FindName("DataTabLive") as DataTab;
+            tabcontroller = datatab?.FindName("AllTabs") as TabControl;
         }
 
         private void btn_Click(object sender, RoutedEventArgs e)
@@ -41,9 +48,6 @@ namespace ModdingTool.View.UserControls
             Attributes.SelectedItems.Add(txtBox.Text);
             FocusManager.SetFocusedElement(this, Pri_armour);
             txtBox.Text = "";
-            MainWindow window = (ModdingTool.MainWindow)App.Current.MainWindow;
-            var datatab = window?.FindName("DataTabLive") as DataTab;
-            var tabcontroller = datatab?.FindName("AllTabs") as TabControl;
             tabcontroller.Visibility = Visibility.Hidden;
             tabcontroller.Visibility = Visibility.Visible;
         }
@@ -52,6 +56,13 @@ namespace ModdingTool.View.UserControls
         {
             txtBox.Text = "";
             popup.IsOpen = false;
+        }
+
+        private void SoldierGoto_OnClick(object sender, RoutedEventArgs e)
+        {
+            var soldiertext = Soldier.Text;
+            var newTab = new ModelDbTab(soldiertext);
+            datatab.AddTab(newTab);
         }
     }
 }
