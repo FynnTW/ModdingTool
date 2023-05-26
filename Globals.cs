@@ -2,6 +2,7 @@
 using log4net;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using Newtonsoft.Json;
@@ -44,14 +45,11 @@ namespace ModdingTool
 
         public static void WriteBMDB()
         {
-            string newBmdb = "";
+            var newBmdb = "";
             newBmdb += "22 serialization::archive 3 0 0 0 0 ";
             newBmdb += (ModelDb.Count + 1) + " 0 0\n";
             newBmdb += "5 blank 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n";
-            foreach (KeyValuePair<string, BattleModel> entry in ModelDb)
-            {
-                newBmdb += entry.Value.WriteEntry(entry.Value);
-            }
+            newBmdb = ModelDb.Aggregate(newBmdb, (current, entry) => current + entry.Value.WriteEntry(entry.Value));
             System.IO.File.WriteAllText(@"battle_models.modeldb", newBmdb);
         }
 

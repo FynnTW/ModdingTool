@@ -11,6 +11,7 @@ using ModdingTool.View.UserControls;
 using Pfim;
 using ImageFormat = Pfim.ImageFormat;
 using static ModdingTool.Globals;
+using log4net;
 
 namespace ModdingTool.View.InterfaceData;
 
@@ -153,6 +154,7 @@ public class UnitTab : ITab.Tab
     public static string[] DamageTypes { get; set; } = new string[] { "piercing", "slashing", "blunt", "fire" };
     public static string[] WeaponTypes { get; set; } = new string[] { "melee", "thrown", "missile", "siege_missile" };
     public static string[] SoundTypes { get; set; } = new string[] { "none", "knife", "mace", "axe", "sword", "spear" };
+    public static string[] VoiceTypes { get; set; } = new string[] { "General", "Heavy", "Light", "Female", "Medium" };
     public static string[] Factions { get; set; }
     public static string[] ModelEntries { get; set; }
 
@@ -234,6 +236,7 @@ public class UnitTab : ITab.Tab
                 mountEffectString += ", ";
             }
         }
+
     }
 
 

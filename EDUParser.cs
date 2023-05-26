@@ -13,9 +13,311 @@ namespace ModdingTool
     internal class EduParser
     {
 
-        private const string UnitCardPath = "\\data\\ui\\units";
-        private const string UnitInfoCardPath = "\\data\\ui\\unit_info";
+        private const string UNIT_CARD_PATH = "\\data\\ui\\units";
+        private const string UNIT_INFO_CARD_PATH = "\\data\\ui\\unit_info";
         private static int _line;
+
+        public static void WriteEdu()
+        {
+            var newEdu = AllUnits.Values.Aggregate("", (current, unit) => current + WriteEduEntry(unit));
+            System.IO.File.WriteAllText(@"export_descr_unit.txt", newEdu);
+        }
+
+        private static string WriteEduEntry(Unit unit)
+        {
+            var entry = "";
+            entry += "type\t\t\t\t\t" + unit.Type + "\n";
+            entry += "dictionary\t\t\t\t" + unit.Dictionary + "\n";
+            entry += "category\t\t\t\t" + unit.Category + "\n";
+            entry += "class\t\t\t\t\t" + unit.Class_type + "\n";
+            entry += "voice_type\t\t\t\t" + unit.Voice_type + "\n";
+            if (!string.IsNullOrWhiteSpace(unit.Accent))
+            {
+                entry += "accent\t\t\t\t\t" + unit.Accent + "\n";
+            }
+            entry += "banner faction\t\t\t" + unit.BannerFaction + "\n";
+            entry += "banner holy\t\t\t\t" + unit.BannerHoly + "\n";
+            entry += "soldier\t\t\t\t\t" +
+                     unit.Soldier + ", " +
+                     unit.SoldierCount + ", " +
+                     unit.ExtrasCount + ", " +
+                     FormatFloat(unit.Mass);
+            if (unit.Radius != null)
+            {
+                var radius = (double)unit.Radius;
+                entry += ", " + FormatFloat(radius);
+            }
+            if (unit.Height != null)
+            {
+                var height = (double)unit.Height;
+                entry += ", " + FormatFloat(height);
+            }
+            entry += "\n";
+            if (!string.IsNullOrWhiteSpace(unit.Officer1))
+            {
+                entry += "officer\t\t\t\t\t" + unit.Officer1 + "\n";
+            }
+            if (!string.IsNullOrWhiteSpace(unit.Officer2))
+            {
+                entry += "officer\t\t\t\t\t" + unit.Officer2 + "\n";
+            }
+            if (!string.IsNullOrWhiteSpace(unit.Officer3))
+            {
+                entry += "officer\t\t\t\t\t" + unit.Officer3 + "\n";
+            }
+            if (!string.IsNullOrWhiteSpace(unit.Ship))
+            {
+                entry += "ship\t\t\t\t\t" + unit.Ship + "\n";
+            }
+            if (!string.IsNullOrWhiteSpace(unit.Engine))
+            {
+                entry += "engine\t\t\t\t\t" + unit.Engine + "\n";
+            }
+            if (!string.IsNullOrWhiteSpace(unit.Animal))
+            {
+                entry += "animal\t\t\t\t\t" + unit.Animal + "\n";
+            }
+            if (!string.IsNullOrWhiteSpace(unit.Mount))
+            {
+                entry += "mount\t\t\t\t\t" + unit.Mount + "\n";
+            }
+            var mountEffectString = MakeCommaString(unit.Mount_effect);
+            if (!string.IsNullOrWhiteSpace(mountEffectString))
+            {
+                entry += "mount_effect\t\t\t" + mountEffectString + "\n";
+            }
+            var attributesString = MakeCommaString(unit.Attributes);
+            if (!string.IsNullOrWhiteSpace(attributesString))
+            {
+                entry += "attributes\t\t\t\t" + attributesString + "\n";
+            }
+            entry += "move_speed_mod\t\t\t" + FormatFloat(unit.MoveSpeed) + "\n";
+            entry += "formation\t\t\t\t" +
+                     FormatFloatSingle(unit.Spacing_width) + ", " +
+                     FormatFloatSingle(unit.Spacing_depth) + ", " +
+                     FormatFloatSingle(unit.Spacing_width_loose) + ", " +
+                     FormatFloatSingle(unit.Spacing_depth_loose) + ", " +
+                                       unit.Spacing_ranks + ", " +
+                                       unit.Formation_style;
+            if (!string.IsNullOrWhiteSpace(unit.Special_formation))
+            {
+                entry += ", " + unit.Special_formation;
+            }
+            entry += "\n";
+            entry += "stat_health\t\t\t\t" + unit.Hitpoints + ", " + unit.Mount_hitpoints + "\n";
+            entry += "stat_pri\t\t\t\t" +
+                     unit.Pri_attack + ", " +
+                     unit.Pri_charge + ", " +
+                     unit.Pri_projectile + ", " +
+                     unit.Pri_range + ", " +
+                     unit.Pri_ammunition + ", " +
+                     unit.Pri_weapon_type + ", " +
+                     unit.Pri_tech_type + ", " +
+                     unit.Pri_damage_type + ", " +
+                     unit.Pri_sound_type;
+            if (!string.IsNullOrWhiteSpace(unit.Pri_fire_type))
+            {
+                entry += ", " + unit.Pri_fire_type;
+            }
+            entry += ", " + unit.Pri_att_delay + ", " + FormatFloat(unit.Pri_skel_factor) + "\n";
+            var priAttributesString = "no";
+            if (unit.Pri_attr is { Count: > 0 })
+            {
+                priAttributesString = MakeCommaString(unit.Pri_attr);
+            }
+            entry += "stat_pri_attr\t\t\t" + priAttributesString + "\n";
+            if (unit.Sec_weapon_type == "no" || string.IsNullOrWhiteSpace(unit.Sec_weapon_type))
+            {
+                entry += "stat_sec\t\t\t\t0, 0, no, 0, 0, no, melee_simple, blunt, none, 0, 1" + "\n";
+                entry += "stat_sec_attr\t\t\t" + "no" + "\n";
+            }
+            else
+            {
+                entry += "stat_sec\t\t\t\t" +
+                         unit.Sec_attack + ", " +
+                         unit.Sec_charge + ", " +
+                         unit.Sec_projectile + ", " +
+                         unit.Sec_range + ", " +
+                         unit.Sec_ammunition + ", " +
+                         unit.Sec_weapon_type + ", " +
+                         unit.Sec_tech_type + ", " +
+                         unit.Sec_damage_type + ", " +
+                         unit.Sec_sound_type;
+                if (!string.IsNullOrWhiteSpace(unit.Sec_fire_type))
+                {
+                    entry += ", " + unit.Sec_fire_type;
+                }
+                entry += ", " + unit.Sec_att_delay + ", " + FormatFloat(unit.Sec_skel_factor) + "\n";
+                var secAttributesString = "no";
+                if (unit.Pri_attr is { Count: > 0 })
+                {
+                    secAttributesString = MakeCommaString(unit.Sec_attr);
+                }
+                entry += "stat_sec_attr\t\t\t" + secAttributesString + "\n";
+            }
+            if (!string.IsNullOrWhiteSpace(unit.Ter_weapon_type) && unit.Ter_weapon_type != "no")
+            {
+                entry += "stat_ter\t\t\t\t" +
+                         unit.Ter_attack + ", " +
+                         unit.Ter_charge + ", " +
+                         unit.Ter_projectile + ", " +
+                         unit.Ter_range + ", " +
+                         unit.Ter_ammunition + ", " +
+                         unit.Ter_weapon_type + ", " +
+                         unit.Ter_tech_type + ", " +
+                         unit.Ter_damage_type + ", " +
+                         unit.Ter_sound_type;
+                if (!string.IsNullOrWhiteSpace(unit.Ter_fire_type))
+                {
+                    entry += ", " + unit.Ter_fire_type;
+                }
+                entry += ", " + unit.Ter_att_delay + ", " + FormatFloat(unit.Ter_skel_factor) + "\n";
+                var terAttributesString = "no";
+                if (unit.Ter_attr is { Count: > 0 })
+                {
+                    terAttributesString = MakeCommaString(unit.Ter_attr);
+                }
+                entry += "stat_ter_attr\t\t\t" + terAttributesString + "\n";
+            }
+            entry += "stat_pri_armour\t\t\t" +
+                     unit.Pri_armour + ", " +
+                     unit.Pri_defense + ", " +
+                     unit.Pri_shield + ", " +
+                     unit.Pri_defSound + "\n";
+            entry += "stat_sec_armour\t\t\t" +
+                     unit.Sec_armour + ", " +
+                     unit.Sec_defense + ", " +
+                     unit.Sec_defSound + "\n";
+            entry += "stat_heat\t\t\t\t" + unit.Stat_heat + "\n";
+            entry += "stat_ground\t\t\t\t" +
+                     unit.Stat_scrub + ", " +
+                     unit.Stat_forest + ", " +
+                     unit.Stat_snow + ", " +
+                     unit.Stat_sand + "\n";
+            entry += "stat_mental\t\t\t\t" +
+                     unit.Morale + ", " +
+                     unit.Discipline + ", " +
+                     unit.Training;
+            if (unit.LockMorale)
+            {
+                entry += ", lock_morale";
+            }
+            entry += "\n";
+            entry += "stat_charge_dist\t\t" + unit.Stat_charge_dist + "\n";
+            entry += "stat_fire_delay\t\t\t" + unit.Stat_fire_delay + "\n";
+            entry += "stat_food\t\t\t\t" +
+                     unit.Stat_food + ", " +
+                     unit.Stat_food_sec + "\n";
+            entry += "stat_cost\t\t\t\t" +
+                     unit.RecruitTime + ", " +
+                     unit.RecruitCost + ", " +
+                     unit.Upkeep + ", " +
+                     unit.WpnCost + ", " +
+                     unit.ArmourCost + ", " +
+                     unit.CustomCost + ", " +
+                     unit.CustomLimit + ", " +
+                     unit.CustomIncrease + "\n";
+            entry += "armour_ug_levels\t\t" + unit.ArmourlvlBase;
+            if (!string.IsNullOrWhiteSpace(unit.ArmourlvlOne))
+            {
+                entry += ", " + unit.ArmourlvlOne;
+            }
+            if (!string.IsNullOrWhiteSpace(unit.ArmourlvlTwo))
+            {
+                entry += ", " + unit.ArmourlvlTwo;
+            }
+            if (!string.IsNullOrWhiteSpace(unit.ArmourlvlThree))
+            {
+                entry += ", " + unit.ArmourlvlThree;
+            }
+            entry += "\n";
+            entry += "armour_ug_models\t\t" + unit.ArmourModelBase;
+            if (!string.IsNullOrWhiteSpace(unit.ArmourModelOne))
+            {
+                entry += ", " + unit.ArmourModelOne;
+            }
+            if (!string.IsNullOrWhiteSpace(unit.ArmourModelTwo))
+            {
+                entry += ", " + unit.ArmourModelTwo;
+            }
+            if (!string.IsNullOrWhiteSpace(unit.ArmourModelThree))
+            {
+                entry += ", " + unit.ArmourModelThree;
+            }
+            entry += "\n";
+            entry += "ownership\t\t\t\t";
+            var ownershipString = MakeCommaString(unit.Ownership);
+            if (!string.IsNullOrWhiteSpace(ownershipString))
+            {
+                entry += ownershipString;
+            }
+            entry += "\n";
+            var eraString = MakeCommaString(unit.EraZero);
+            if (!string.IsNullOrWhiteSpace(eraString))
+            {
+                entry += "era 0\t\t\t\t\t" + eraString + "\n";
+            }
+            eraString = MakeCommaString(unit.EraOne);
+            if (!string.IsNullOrWhiteSpace(eraString))
+            {
+                entry += "era 1\t\t\t\t\t" + eraString + "\n";
+            }
+            eraString = MakeCommaString(unit.EraTwo);
+            if (!string.IsNullOrWhiteSpace(eraString))
+            {
+                entry += "era 2\t\t\t\t\t" + eraString + "\n";
+            }
+            if (!string.IsNullOrWhiteSpace(unit.Info_dict))
+            {
+                entry += "info_pic_dir\t\t\t" + unit.Info_dict + "\n";
+            }
+            if (!string.IsNullOrWhiteSpace(unit.Card_dict))
+            {
+                entry += "card_pic_dir\t\t\t" + unit.Card_dict + "\n";
+            }
+            if (Math.Abs(unit.CrusadeUpkeep - 1.0) > 0.001)
+            {
+                entry += "crusading_upkeep_modifier\t" + FormatFloat(unit.CrusadeUpkeep) + "\n";
+            }
+            entry += "recruit_priority_offset\t" + unit.Recruit_priority_offset + "\n";
+            entry += "\n";
+            entry += "\n";
+            entry += "\n";
+            return entry;
+        }
+
+        private static string MakeCommaString(List<string> list)
+        {
+            var commaString = "";
+            if (list.Count == 0) return commaString;
+            foreach (var element in list)
+            {
+                commaString += element;
+                if (element != list.Last())
+                {
+                    commaString += ", ";
+                }
+            }
+            return commaString;
+        }
+
+        private static string FormatFloat(double input)
+        {
+            if (Math.Abs(input - 1) < 0.01)
+            {
+                return "1";
+            }
+            return input == 0 ? "0" : input.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        private static string FormatFloatSingle(double input)
+        {
+            if (Math.Abs(input - 1) < 0.01)
+            {
+                return "1";
+            }
+            return input == 0 ? "0" : input.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture);
+        }
 
         public static void ParseEdu()
         {
@@ -52,12 +354,9 @@ namespace ModdingTool
                     if (first)
                     {
                         newUnit.Edu_index = index;
-                        if (newUnit.Ownership != null)
-                        {
-                            var cards = GetCards(newUnit.Dictionary, newUnit.Ownership, newUnit.Card_dict, newUnit.Info_dict, newUnit.Mercenary_unit);
-                            newUnit.Card = cards[0];
-                            newUnit.CardInfo = cards[1];
-                        }
+                        var cards = GetCards(newUnit.Dictionary, newUnit.Ownership, newUnit.Card_dict, newUnit.Info_dict, newUnit.Mercenary_unit);
+                        newUnit.Card = cards[0];
+                        newUnit.CardInfo = cards[1];
 
                         if (newUnit.Type != null)
                         {
@@ -65,35 +364,31 @@ namespace ModdingTool
                             Console.WriteLine(newUnit.Type);
                         }
 
-                        if (newUnit.Ownership != null)
-                            foreach (var faction in newUnit.Ownership.Where(faction => true))
+                        foreach (var faction in newUnit.Ownership.Where(faction => true))
+                        {
+                            if (faction == "all")
                             {
-                                if (faction == "all")
+                                foreach (var fac in AllFactions)
                                 {
-                                    foreach (var fac in AllFactions)
-                                    {
-                                        fac.Value.Unit_ownership.Add(newUnit);
-                                    }
-                                }
-                                else if (AllFactions.Keys.Contains(faction))
-                                {
-                                    AllFactions[faction].Unit_ownership.Add(newUnit);
-                                }
-                                else if (AllCultures.Keys.Contains(faction))
-                                {
-                                    foreach (var cult in AllCultures)
-                                    {
-                                        foreach (var fac in cult.Value.Factions)
-                                        {
-                                            fac.Value.Unit_ownership.Add(newUnit);
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    Console.WriteLine(@"faction not found: " + faction);
+                                    fac.Value.Unit_ownership.Add(newUnit);
                                 }
                             }
+                            else if (AllFactions.Keys.Contains(faction))
+                            {
+                                AllFactions[faction].Unit_ownership.Add(newUnit);
+                            }
+                            else if (AllCultures.Keys.Contains(faction))
+                            {
+                                foreach (var fac in AllCultures.SelectMany(cult => cult.Value.Factions))
+                                {
+                                    fac.Value.Unit_ownership.Add(newUnit);
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine(@"faction not found: " + faction);
+                            }
+                        }
 
                         index++;
                     }
@@ -113,35 +408,31 @@ namespace ModdingTool
                 Console.WriteLine(newUnit.Type);
             }
 
-            if (newUnit.Ownership != null)
-                foreach (var faction in newUnit.Ownership.Where(faction => true))
+            foreach (var faction in newUnit.Ownership.Where(faction => true))
+            {
+                if (faction == "all")
                 {
-                    if (faction == "all")
+                    foreach (var fac in AllFactions)
                     {
-                        foreach (var fac in AllFactions)
-                        {
-                            fac.Value.Unit_ownership.Add(newUnit);
-                        }
-                    }
-                    else if (AllFactions.Keys.Contains(faction))
-                    {
-                        AllFactions[faction].Unit_ownership.Add(newUnit);
-                    }
-                    else if (AllCultures.Keys.Contains(faction))
-                    {
-                        foreach (var cult in AllCultures)
-                        {
-                            foreach (var fac in cult.Value.Factions)
-                            {
-                                fac.Value.Unit_ownership.Add(newUnit);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine(@"faction not found: " + faction);
+                        fac.Value.Unit_ownership.Add(newUnit);
                     }
                 }
+                else if (AllFactions.Keys.Contains(faction))
+                {
+                    AllFactions[faction].Unit_ownership.Add(newUnit);
+                }
+                else if (AllCultures.Keys.Contains(faction))
+                {
+                    foreach (var fac in AllCultures.SelectMany(cult => cult.Value.Factions))
+                    {
+                        fac.Value.Unit_ownership.Add(newUnit);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine(@"faction not found: " + faction);
+                }
+            }
 
 
             Console.WriteLine(@"end parse edu");
@@ -157,7 +448,7 @@ namespace ModdingTool
 
         }
 
-        public static void ParseEu()
+        private static void ParseEu()
         {
             Console.WriteLine(@"start parse export_units");
             var lines = File.ReadAllLines(ModPath + "\\data\\text\\export_units.txt", Encoding.Unicode);
@@ -183,14 +474,14 @@ namespace ModdingTool
             Console.WriteLine(@"end parse export_units");
         }
 
-        public static string?[] StringSplitter(string line)
+        private static string?[] StringSplitter(string line)
         {
             char[] deliminators = { '{', '}' };
             string?[] splitted = line.Split(deliminators, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
             return splitted;
         }
 
-        public static string[] GetCards(string? unit, List<string> factions, string? cardPicDir, string? infoPicDir, bool merc)
+        private static string[] GetCards(string? unit, List<string> factions, string? cardPicDir, string? infoPicDir, bool merc)
         {
             var unitCard = "";
             var cardSearchFactions = factions;
@@ -213,7 +504,7 @@ namespace ModdingTool
 
             foreach (var faction in cardSearchFactions)
             {
-                var cardPath = ModPath + UnitCardPath + "\\";
+                var cardPath = ModPath + UNIT_CARD_PATH + "\\";
                 cardPath += faction;
                 if (!(Directory.Exists(cardPath)))
                 {
@@ -233,7 +524,7 @@ namespace ModdingTool
             var unitInfoCard = "";
             foreach (var faction in infoCardSearchFactions)
             {
-                var cardInfoPath = ModPath + UnitInfoCardPath + "\\";
+                var cardInfoPath = ModPath + UNIT_INFO_CARD_PATH + "\\";
                 cardInfoPath += faction;
                 if (!(Directory.Exists(cardInfoPath)))
                 {
@@ -261,7 +552,7 @@ namespace ModdingTool
             return new[] { unitCard, unitInfoCard };
         }
 
-        public static void FillDicts(string?[] parts)
+        private static void FillDicts(string?[] parts)
         {
             var identifier = parts[0];
 
@@ -292,7 +583,7 @@ namespace ModdingTool
             }
         }
 
-        public static void AssignFields(Unit unit, string?[]? parts)
+        private static void AssignFields(Unit unit, string?[]? parts)
         {
             var identifier = parts?[0];
             try
@@ -342,13 +633,13 @@ namespace ModdingTool
                         unit.Soldier = parts?[1]?.Trim().ToLower();
                         unit.SoldierCount = int.Parse(parts?[2] ?? string.Empty);
                         unit.ExtrasCount = int.Parse(parts?[3] ?? string.Empty);
-                        unit.Mass = float.Parse(parts?[4] ?? string.Empty, CultureInfo.InvariantCulture.NumberFormat);
+                        unit.Mass = double.Parse(parts?[4] ?? string.Empty, CultureInfo.InvariantCulture.NumberFormat);
                         if (parts is { Length: > 5 })
                         {
-                            unit.Radius = float.Parse(parts[5] ?? string.Empty, CultureInfo.InvariantCulture.NumberFormat);
+                            unit.Radius = double.Parse(parts[5] ?? string.Empty, CultureInfo.InvariantCulture.NumberFormat);
                             if (parts.Length > 6)
                             {
-                                unit.Height = float.Parse(parts[6] ?? string.Empty, CultureInfo.InvariantCulture.NumberFormat);
+                                unit.Height = double.Parse(parts[6] ?? string.Empty, CultureInfo.InvariantCulture.NumberFormat);
                             }
                         }
                         break;
@@ -403,7 +694,7 @@ namespace ModdingTool
                         {
                             break;
                         }
-                        foreach (var attr in parts[1..])
+                        foreach (var attr in parts?[1..])
                         {
                             if (attr == null) break;
                             unit.Attributes.Add(attr);
@@ -477,9 +768,9 @@ namespace ModdingTool
                         {
                             break;
                         }
-                        foreach (var part in parts[1..])
+                        foreach (var part in parts?[1..])
                         {
-                            unit.Pri_attr.Add(part);
+                            if (part != null) unit.Pri_attr?.Add(part);
                         }
                         break;
 
@@ -511,11 +802,10 @@ namespace ModdingTool
                         {
                             break;
                         }
-                        foreach (var part in parts[1..])
+                        foreach (var part in parts?[1..])
                         {
-                            unit.Sec_attr.Add(part);
+                            if (part != null) unit.Sec_attr?.Add(part);
                         }
-                        break;
                         break;
 
                     case "stat_ter":
@@ -546,9 +836,9 @@ namespace ModdingTool
                         {
                             break;
                         }
-                        foreach (var part in parts[1..])
+                        foreach (var part in parts?[1..])
                         {
-                            unit.Ter_attr.Add(part);
+                            if (part != null) unit.Ter_attr?.Add(part);
                         }
                         break;
 
@@ -670,49 +960,49 @@ namespace ModdingTool
                         {
                             if (string.IsNullOrWhiteSpace(unit.ArmourModelBase))
                             {
-                                unit.ArmourModelBase = model.ToLower();
+                                unit.ArmourModelBase = model?.ToLower();
                             }
                             else if (string.IsNullOrWhiteSpace(unit.ArmourModelOne))
                             {
-                                unit.ArmourModelOne = model.ToLower();
+                                unit.ArmourModelOne = model?.ToLower();
                             }
                             else if (string.IsNullOrWhiteSpace(unit.ArmourModelTwo))
                             {
-                                unit.ArmourModelTwo = model.ToLower();
+                                unit.ArmourModelTwo = model?.ToLower();
                             }
                             else if (string.IsNullOrWhiteSpace(unit.ArmourModelThree))
                             {
-                                unit.ArmourModelThree = model.ToLower();
+                                unit.ArmourModelThree = model?.ToLower();
                             }
                         }
                         unit.Armour_ug_models = parts?[1..];
                         break;
 
                     case "ownership":
-                        foreach (var faction in parts[1..])
+                        foreach (var faction in parts?[1..])
                         {
-                            unit.Ownership.Add(faction);
+                            if (faction != null) unit.Ownership.Add(faction);
                         }
                         break;
 
                     case "era 0":
-                        foreach (var faction in parts[1..])
+                        foreach (var faction in parts?[1..])
                         {
-                            unit.EraZero.Add(faction);
+                            if (faction != null) unit.EraZero.Add(faction);
                         }
                         break;
 
                     case "era 1":
-                        foreach (var faction in parts[1..])
+                        foreach (var faction in parts?[1..])
                         {
-                            unit.EraOne.Add(faction);
+                            if (faction != null) unit.EraOne.Add(faction);
                         }
                         break;
 
                     case "era 2":
-                        foreach (var faction in parts[1..])
+                        foreach (var faction in parts?[1..])
                         {
-                            unit.EraTwo.Add(faction);
+                            if (faction != null) unit.EraTwo.Add(faction);
                         }
                         break;
 
@@ -742,4 +1032,5 @@ namespace ModdingTool
             }
         }
     }
+
 }

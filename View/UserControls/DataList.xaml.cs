@@ -25,6 +25,7 @@ namespace ModdingTool.View.UserControls
 
         public static string Selected { get; set; }
         public static string SelectedType { get; set; }
+        public List<Filter> FilterList { get; set; } = new List<Filter>();
 
         public DataList()
         {
@@ -39,6 +40,8 @@ namespace ModdingTool.View.UserControls
             DataPicker.ItemsSource = pickList;
             DataPicker.SelectedIndex = 0;
         }
+
+
 
         private void DataPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

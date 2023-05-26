@@ -7,6 +7,12 @@
         xmlns:local="clr-namespace:ModdingTool"
         mc:Ignorable="d"
         Title="Medieval II Total War Modding Tool" Height="1080" Width="1920" WindowState="Maximized">
+    <Window.InputBindings>
+        <KeyBinding Key="Z" Modifiers="Control"
+                    Command="Undo"
+                    />
+    </Window.InputBindings>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
@@ -24,6 +30,8 @@
 
         <!-- Menu -->
         <usercontrols:Menubar  x:Name="MenuBarCustom"  Grid.ColumnSpan="4" Grid.Row="0"></usercontrols:Menubar>
+
+        <usercontrols:ToolBoxCustom  x:Name="ToolBox"  Grid.ColumnSpan="4" Grid.Row="1"></usercontrols:ToolBoxCustom>
 
         <!-- Data Pick List -->
         <usercontrols:DataList x:Name="DataListLive" Grid.Row="2" Grid.RowSpan="2"></usercontrols:DataList>

@@ -52,5 +52,7 @@ namespace ModdingTool.View.UserControls
             Tabs.Remove(tab);
             AllTabs.ItemsSource = Tabs;
         }
+
+
     }
 }

@@ -55,7 +55,7 @@ namespace ModdingTool.View.UserControls
             }
         }
 
-        private static T FindVisualParent<T>(UIElement element) where T : UIElement
+        public static T FindVisualParent<T>(UIElement element) where T : UIElement
         {
             UIElement parent = element;
             while (parent != null)

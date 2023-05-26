@@ -29,8 +29,6 @@ namespace ModdingTool.View.UserControls
             InitializeComponent();
         }
 
-
-
         private void Export_Click(object sender, RoutedEventArgs e)
         {
             if (!ModLoaded) return;
@@ -46,10 +44,12 @@ namespace ModdingTool.View.UserControls
         private void Import_Click(object sender, RoutedEventArgs e)
         {
             if (!ModLoaded) return;
-            var dialog = new OpenFileDialog();
-            dialog.Filter = "Json files (*.json)|*.json";
-            dialog.InitialDirectory = @"C:\";
-            dialog.Title = "Please select a file to import";
+            var dialog = new OpenFileDialog
+            {
+                Filter = "Json files (*.json)|*.json",
+                InitialDirectory = @"C:\",
+                Title = "Please select a file to import"
+            };
             dialog.ShowDialog();
             var filename = dialog.FileName;
             if (filename == "") return;
@@ -68,7 +68,7 @@ namespace ModdingTool.View.UserControls
             dialog.IsFolderPicker = true;
             var result = dialog.ShowDialog();
             if (result != CommonFileDialogResult.Ok) return;
-            ModPath = dialog.FileName;
+            if (dialog.FileName != null) ModPath = dialog.FileName;
             loadMod();
             Print("Mod path set to: " + ModPath);
             ModLoaded = true;
@@ -77,11 +77,21 @@ namespace ModdingTool.View.UserControls
         public void loadMod()
         {
             parseFiles();
-            Window window = Window.GetWindow(this);
-            var statusBar = window.FindName("StatusBarLive") as StatusBarCustom;
-            statusBar.SetStatusModPath(ModPath);
-            var dataPickerBox = window.FindName("DataListLive") as DataList;
-            dataPickerBox.InitItems();
+            var window = Window.GetWindow(this);
+            if (window != null)
+            {
+                var statusBar = window.FindName("StatusBarLive") as StatusBarCustom;
+                statusBar?.SetStatusModPath(ModPath);
+            }
+
+            var dataPickerBox = window?.FindName("DataListLive") as DataList;
+            dataPickerBox?.InitItems();
+        }
+
+        private void WriteEDU_Click(object sender, RoutedEventArgs e)
+        {
+            if (!ModLoaded) return;
+            EduParser.WriteEdu();
         }
     }
 }

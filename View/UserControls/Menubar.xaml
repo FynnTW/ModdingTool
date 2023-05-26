@@ -20,6 +20,7 @@
                 <MenuItem Header="_Export JSON" Click="Export_Click"/>
                 <MenuItem Header="_Import JSON" Click="Import_Click"/>
                 <MenuItem Header="_Write BMDB" Click="WriteBMDB_Click"/>
+                <MenuItem Header="_Write EDU" Click="WriteEDU_Click"/>
             </MenuItem>
             <MenuItem Header="_Settings">
             </MenuItem>

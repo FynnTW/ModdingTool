@@ -11,17 +11,20 @@ public interface ITab
     string Name { get; set; }
     ICommand CloseCommand { get; }
     event EventHandler CloseRequested;
+    public InterfaceLogic iLogic { get; set; }
 
     public abstract class Tab : ITab
     {
         public Tab()
         {
             CloseCommand = new RelayCommand(Close);
+            iLogic = new InterfaceLogic(this);
         }
 
         public string Name { get; set; }
         public ICommand CloseCommand { get; private set; }
         public event EventHandler CloseRequested;
+        public InterfaceLogic iLogic { get; set; }
 
         private void Close()
         {
