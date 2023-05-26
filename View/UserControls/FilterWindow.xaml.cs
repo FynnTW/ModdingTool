@@ -79,7 +79,8 @@ namespace ModdingTool.View.UserControls
             Filtergrid.ItemsSource = dataList.FilterList;
             Filtergrid.Items.Refresh();
             ApplyFilters();
-            dataList.UnitList = filterUnits;
+            dataList.UnitList = new List<string>();
+            dataList.UnitList.AddRange(filterUnits);
             dataList.DataListPicker.ItemsSource = dataList.UnitList;
             dataList.DataListPicker.Items.Refresh();
         }
@@ -88,7 +89,8 @@ namespace ModdingTool.View.UserControls
 
         private void ApplyFilters()
         {
-            filterUnits = AllUnits.Keys.ToList();
+            filterUnits = new List<string>();
+            filterUnits.AddRange(AllUnits.Keys);
             foreach (var unit in AllUnits.Keys)
             {
                 if (!filterUnits.Contains(unit))
@@ -103,7 +105,7 @@ namespace ModdingTool.View.UserControls
                         continue;
                     }
                     var attribute = "";
-                    foreach (var attr in UnitTab.UnitUiText.Where(attr => attr.Value == ChooseAttrBox.Text))
+                    foreach (var attr in UnitTab.UnitUiText.Where(attr => attr.Value == filter.Attribute))
                     {
                         attribute = attr.Key;
                     }
