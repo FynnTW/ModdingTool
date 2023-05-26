@@ -19,7 +19,7 @@ public class UnitTab : ITab.Tab
 {
 
 
-    public Dictionary<string, string> UnitUiText { get; set; } = new Dictionary<string, string>()
+    public static Dictionary<string, string> UnitUiText { get; set; } = new Dictionary<string, string>()
         {
             { "Name", "Localized Name" },
             { "Type", "EDU Type" },

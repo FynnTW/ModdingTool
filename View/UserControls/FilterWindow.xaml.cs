@@ -25,7 +25,6 @@ namespace ModdingTool.View.UserControls
     {
         public static List<Filter> localFilterList { get; set; } = new List<Filter>();
         public static List<string> AttributeList { get; set; } = new List<string>();
-
         public static List<string> ConditionList { get; set; } = new List<string>
         {
             "Equals",
@@ -45,6 +44,7 @@ namespace ModdingTool.View.UserControls
         public FilterWindow()
         {
             InitializeComponent();
+            AttributeList = new List<string>();
             if (Application.Current.MainWindow == null) return;
             var window = (ModdingTool.MainWindow)Application.Current.MainWindow;
             datatab = window?.FindName("DataTabLive") as DataTab;
@@ -53,11 +53,13 @@ namespace ModdingTool.View.UserControls
             selectunit = unitTab;
             foreach (var prop in unitTab.SelectedUnit.GetType().GetProperties())
             {
-                AttributeList.Add(prop.Name);
+                AttributeList.Add(UnitTab.UnitUiText[prop.Name]);
             }
             ChooseAttrBox.ItemsSource = AttributeList;
             ChooseCondBox.ItemsSource = ConditionList;
+            ChooseAttrBox.SelectedIndex = 0;
             ChooseCondBox.SelectedIndex = 0;
+            RefreshFilters();
         }
 
         private void AddFilter_OnClick(object sender, RoutedEventArgs e)
@@ -77,7 +79,8 @@ namespace ModdingTool.View.UserControls
             Filtergrid.ItemsSource = dataList.FilterList;
             Filtergrid.Items.Refresh();
             ApplyFilters();
-            dataList.DataListPicker.ItemsSource = filterUnits;
+            dataList.UnitList = filterUnits;
+            dataList.DataListPicker.ItemsSource = dataList.UnitList;
             dataList.DataListPicker.Items.Refresh();
         }
 
@@ -99,7 +102,12 @@ namespace ModdingTool.View.UserControls
                     {
                         continue;
                     }
-                    var unitValue = AllUnits[unit].GetType().GetProperty(filter.Attribute)?.GetValue(AllUnits[unit], null);
+                    var attribute = "";
+                    foreach (var attr in UnitTab.UnitUiText.Where(attr => attr.Value == ChooseAttrBox.Text))
+                    {
+                        attribute = attr.Key;
+                    }
+                    var unitValue = AllUnits[unit].GetType().GetProperty(attribute)?.GetValue(AllUnits[unit], null);
                     switch (unitValue)
                     {
                         case null:
@@ -283,7 +291,8 @@ namespace ModdingTool.View.UserControls
                                     break;
                             }
                             break;
-                        case List:
+                        case List<string> list:
+                            var unitValueList = list.Select(x => x.ToLower()).ToList();
                             switch (filter.Condition)
                             {
                                 case "Equals":
@@ -301,14 +310,14 @@ namespace ModdingTool.View.UserControls
                                     }
                                     break;
                                 case "Contains":
-                                    if (!unitValue.ToString().Contains(filter.Value) && filterUnits.Contains(unit))
+                                    if (!unitValueList.Contains(filter.Value) && filterUnits.Contains(unit))
                                     {
                                         filterUnits.Remove(unit);
                                         filtered = true;
                                     }
                                     break;
                                 case "Not Contains":
-                                    if (unitValue.ToString().Contains(filter.Value) && filterUnits.Contains(unit))
+                                    if (unitValueList.Contains(filter.Value) && filterUnits.Contains(unit))
                                     {
                                         filterUnits.Remove(unit);
                                         filtered = true;

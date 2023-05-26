@@ -26,6 +26,9 @@ namespace ModdingTool.View.UserControls
         public static string Selected { get; set; }
         public static string SelectedType { get; set; }
         public List<Filter> FilterList { get; set; } = new List<Filter>();
+        public List<string> sortTypes { get; set; } = new List<string>();
+        public List<string> sortDirections { get; set; } = new List<string>() { "Decreasing", "Increasing" };
+        public List<string> UnitList { get; set; } = new List<string>();
 
         public DataList()
         {
@@ -39,6 +42,7 @@ namespace ModdingTool.View.UserControls
             var pickList = new List<string> { "Units", "Model Entries", "Factions", "Cultures" };
             DataPicker.ItemsSource = pickList;
             DataPicker.SelectedIndex = 0;
+            UnitList = AllUnits.Keys.ToList();
         }
 
 
@@ -50,7 +54,8 @@ namespace ModdingTool.View.UserControls
             switch (selected)
             {
                 case "Units":
-                    DataListPicker.ItemsSource = AllUnits.Keys;
+                    UnitList = AllUnits.Keys.ToList();
+                    DataListPicker.ItemsSource = UnitList;
                     SelectedType = selected;
                     break;
                 case "Model Entries":
