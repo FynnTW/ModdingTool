@@ -40,8 +40,8 @@ public class ModelDbTab : ITab.Tab
 
     public ModelDbTab(string name)
     {
-        Name = name;
-        SelectedModel = ModelDb[Name];
+        Title = name;
+        SelectedModel = ModelDb[Title];
         Factions = AllFactions.Keys.ToArray();
     }
 }

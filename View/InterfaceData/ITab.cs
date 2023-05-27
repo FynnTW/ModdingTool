@@ -8,7 +8,7 @@ namespace ModdingTool.View.InterfaceData;
 
 public interface ITab
 {
-    string Name { get; set; }
+    string Title { get; set; }
     ICommand CloseCommand { get; }
     event EventHandler CloseRequested;
     public InterfaceLogic iLogic { get; set; }
@@ -21,7 +21,14 @@ public interface ITab
             iLogic = new InterfaceLogic(this);
         }
 
-        public string Name { get; set; }
+        public Tab(string name)
+        {
+            CloseCommand = new RelayCommand(Close);
+            iLogic = new InterfaceLogic(this);
+            Title = name;
+        }
+
+        public string Title { get; set; }
         public ICommand CloseCommand { get; private set; }
         public event EventHandler CloseRequested;
         public InterfaceLogic iLogic { get; set; }

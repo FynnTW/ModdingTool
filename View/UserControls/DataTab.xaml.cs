@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Xceed.Wpf.AvalonDock.Layout;
 using CommunityToolkit.Mvvm.Input;
 using ModdingTool.View.InterfaceData;
 
@@ -42,17 +43,16 @@ namespace ModdingTool.View.UserControls
         public void AddTab(ITab tab)
         {
             Tabs.Add(tab);
-            AllTabs.ItemsSource = Tabs;
+            AllTabs.DocumentsSource = Tabs;
             selectedTab = tab;
-            AllTabs.SelectedItem = tab;
+            AllTabs.ActiveContent = tab;
+            if (documentPane.SelectedContent != null) documentPane.SelectedContent.Title = tab.Title;
         }
 
         public void RemoveTab(ITab tab)
         {
             Tabs.Remove(tab);
-            AllTabs.ItemsSource = Tabs;
+            AllTabs.DocumentsSource = Tabs;
         }
-
-
     }
 }

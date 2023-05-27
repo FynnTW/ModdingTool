@@ -5,34 +5,39 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:ModdingTool.View.UserControls"
              xmlns:mvvm="clr-namespace:ModdingTool.View.InterfaceData"
+             xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance local:DataTab}">
 
 
-
-    <TabControl Name="AllTabs" ItemsSource="{Binding Tabs}">
-
-        <TabControl.Resources>
-            <DataTemplate DataType="{x:Type mvvm:UnitTab}">
-                <local:UnitTabView>
-                </local:UnitTabView>
-            </DataTemplate>
-            <DataTemplate DataType="{x:Type mvvm:ModelDbTab}">
-                <local:ModelDbTabView>
-                </local:ModelDbTabView>
-            </DataTemplate>
-        </TabControl.Resources>
-
-        <TabControl.ItemTemplate>
-            <DataTemplate DataType="{x:Type mvvm:ITab}">
-                <TextBlock >
-                    <Run Text ="{Binding Name}"></Run>
-                    <Hyperlink Command="{Binding CloseCommand}">X</Hyperlink>
-                </TextBlock>
-            </DataTemplate>
-        </TabControl.ItemTemplate>
-
-    </TabControl>
+    <xcad:DockingManager x:Name="AllTabs" DocumentsSource="{Binding Tabs}">
+        <xcad:DockingManager.LayoutItemContainerStyle>
+            <Style TargetType="{x:Type xcad:LayoutItem}"  >
+                <Setter Property="Title" Value="{Binding Title}"/>
+            </Style>
+        </xcad:DockingManager.LayoutItemContainerStyle>
+        <xcad:DockingManager.LayoutItemTemplateSelector>
+            <local:PaneTemplateSelector>
+                <local:PaneTemplateSelector.UnitTabTemplate>
+                    <DataTemplate DataType="{x:Type mvvm:UnitTab}">
+                        <local:UnitTabView/>
+                    </DataTemplate>
+                </local:PaneTemplateSelector.UnitTabTemplate>
+                <local:PaneTemplateSelector.ModelDbTabTemplate>
+                    <DataTemplate DataType="{x:Type mvvm:ModelDbTab}">
+                        <local:ModelDbTabView/>
+                    </DataTemplate>
+                </local:PaneTemplateSelector.ModelDbTabTemplate>
+            </local:PaneTemplateSelector>
+        </xcad:DockingManager.LayoutItemTemplateSelector>
+        <xcad:LayoutRoot>
+            <xcad:LayoutPanel Orientation="Horizontal">
+                <xcad:LayoutDocumentPaneGroup >
+                    <xcad:LayoutDocumentPane x:Name="documentPane"/>
+                </xcad:LayoutDocumentPaneGroup>
+            </xcad:LayoutPanel>
+        </xcad:LayoutRoot>
+    </xcad:DockingManager>
 
 </UserControl>

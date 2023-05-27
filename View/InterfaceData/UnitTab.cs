@@ -222,8 +222,8 @@ public class UnitTab : ITab.Tab
 
     public UnitTab(string name)
     {
-        Name = name;
-        SelectedUnit = AllUnits[Name];
+        Title = name;
+        SelectedUnit = AllUnits[Title];
         Factions = AllFactions.Keys.ToArray();
         ModelEntries = ModelDb.Keys.ToArray();
         UnitInfoImage = TgaToImageSource(SelectedUnit.CardInfo);
