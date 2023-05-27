@@ -59,7 +59,7 @@ namespace ModdingTool.View.UserControls
         private void WriteBMDB_Click(object sender, RoutedEventArgs e)
         {
             if (!ModLoaded) return;
-            WriteBMDB();
+            WriteBmdb();
         }
 
         private void loadMod_Click(object sender, RoutedEventArgs e)
@@ -96,7 +96,9 @@ namespace ModdingTool.View.UserControls
 
         private void ErrorLog_Click(object sender, RoutedEventArgs e)
         {
-
+            var logWindow = new ErrorLog();
+            logWindow.Show();
+            logWindow.WriteErrors();
         }
     }
 }

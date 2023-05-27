@@ -43,8 +43,8 @@ namespace ModdingTool.View.UserControls
             var pickList = new List<string> { "Units", "Model Entries", "Factions", "Cultures" };
             DataPicker.ItemsSource = pickList;
             DataPicker.SelectedIndex = 0;
-            UnitList = AllUnits.Keys.ToList();
-            ModelList = ModelDb.Keys.ToList();
+            UnitList = UnitDataBase.Keys.ToList();
+            ModelList = BattleModelDataBase.Keys.ToList();
         }
 
 
@@ -56,12 +56,12 @@ namespace ModdingTool.View.UserControls
             switch (selected)
             {
                 case "Units":
-                    UnitList = AllUnits.Keys.ToList();
+                    UnitList = UnitDataBase.Keys.ToList();
                     DataListPicker.ItemsSource = UnitList;
                     SelectedType = selected;
                     break;
                 case "Model Entries":
-                    ModelList = ModelDb.Keys.ToList();
+                    ModelList = BattleModelDataBase.Keys.ToList();
                     DataListPicker.ItemsSource = ModelList;
                     SelectedType = selected;
                     break;

@@ -225,9 +225,9 @@ public class UnitTab : ITab.Tab
     public UnitTab(string name)
     {
         Title = name;
-        SelectedUnit = AllUnits[Title];
+        SelectedUnit = UnitDataBase[Title];
         Factions = FactionDataBase.Keys.ToArray();
-        ModelEntries = ModelDb.Keys.ToArray();
+        ModelEntries = BattleModelDataBase.Keys.ToArray();
         UnitInfoImage = TgaToImageSource(SelectedUnit.CardInfo);
         UnitImage = TgaToImageSource(SelectedUnit.Card);
         foreach (var effect in SelectedUnit.Mount_effect)

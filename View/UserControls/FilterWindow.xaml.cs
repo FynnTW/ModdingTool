@@ -85,13 +85,13 @@ namespace ModdingTool.View.UserControls
             dataList.DataListPicker.Items.Refresh();
         }
 
-        private List<string> filterUnits = AllUnits.Keys.ToList();
+        private List<string> filterUnits = UnitDataBase.Keys.ToList();
 
         private void ApplyFilters()
         {
             filterUnits = new List<string>();
-            filterUnits.AddRange(AllUnits.Keys);
-            foreach (var unit in AllUnits.Keys)
+            filterUnits.AddRange(UnitDataBase.Keys);
+            foreach (var unit in UnitDataBase.Keys)
             {
                 if (!filterUnits.Contains(unit))
                 {
@@ -109,7 +109,7 @@ namespace ModdingTool.View.UserControls
                     {
                         attribute = attr.Key;
                     }
-                    var unitValue = AllUnits[unit].GetType().GetProperty(attribute)?.GetValue(AllUnits[unit], null);
+                    var unitValue = UnitDataBase[unit].GetType().GetProperty(attribute)?.GetValue(UnitDataBase[unit], null);
                     switch (unitValue)
                     {
                         case null:

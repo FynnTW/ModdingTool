@@ -18,15 +18,7 @@ namespace ModdingTool
     {
         public MainWindow()
         {
-            const string logpath = "D:\\proper.log";
-            if (File.Exists(logpath))
-            {
-                File.Delete(logpath);
-            }
-            var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
-            XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
             InitializeComponent();
-            //startauto();
         }
     }
 }

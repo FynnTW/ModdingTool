@@ -37,7 +37,7 @@ namespace ModdingTool
         private int horde_max_percent_army_stack;
         private int horde_disband_percent_on_settlement_capture;
         private List<string> horde_units = new List<string>();
-        private List<Unit> unit_ownership = new List<Unit>();
+        private List<string> unit_ownership = new List<string>();
         private string logo;
         private string localizedName;
         private bool spawned_on_event = false;
@@ -75,7 +75,7 @@ namespace ModdingTool
         public List<string> Horde_units { get => horde_units; set => horde_units = value; }
         public string Logo { get => logo; set => logo = value; }
         public string LocalizedName { get => localizedName; set => localizedName = value; }
-        public List<Unit> Unit_ownership { get => unit_ownership; set => unit_ownership = value; }
+        public List<string> Unit_ownership { get => unit_ownership; set => unit_ownership = value; }
         public bool Spawned_on_event { get => spawned_on_event; set => spawned_on_event = value; }
         public int Primary_colourR { get => primary_colourR; set => primary_colourR = value; }
         public int Primary_colourG { get => primary_colourG; set => primary_colourG = value; }

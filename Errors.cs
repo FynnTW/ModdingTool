@@ -16,12 +16,14 @@ public class Errors
     {
         ErrorList.Add(error);
         Console.WriteLine(error);
+        Console.WriteLine(@"====================================================================================");
     }
 
     public void AddError(string error, string line, string file)
     {
         ErrorList.Add(error + "at line: " + line + " in file: " + file);
         Console.WriteLine(error + "at line: " + line + " in file: " + file);
+        Console.WriteLine(@"====================================================================================");
     }
 
     public void ClearErrors()

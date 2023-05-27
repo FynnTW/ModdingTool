@@ -8,6 +8,6 @@
         Title="ErrorLog" Height="450" Width="800"
         d:DataContext="{d:DesignInstance local:ErrorLog}">
     <Grid>
-        <TextBox x:Name="ErrorLogBox" Text ="{Binding Errors}"></TextBox>
+        <TextBox x:Name="ErrorLogBox" ></TextBox>
     </Grid>
 </Window>

@@ -42,7 +42,7 @@ public class ModelDbTab : ITab.Tab
     public ModelDbTab(string name)
     {
         Title = name;
-        SelectedModel = ModelDb[Title];
+        SelectedModel = BattleModelDataBase[Title];
         Factions = FactionDataBase.Keys.ToArray();
         Factions.Append("merc");
     }

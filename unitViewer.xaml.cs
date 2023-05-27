@@ -20,18 +20,18 @@ namespace ModdingTool
     {
         public ObservableCollection<string?> UnitList { get; set; }
 
-        private Unit selectedUnit = AllUnits["Sellswords"];
+        private Unit selectedUnit = UnitDataBase["Sellswords"];
 
         public UnitViewer()
         {
             InitializeComponent();
-            this.UnitList = new ObservableCollection<string?>(AllUnits.Keys.ToList());
+            this.UnitList = new ObservableCollection<string?>(UnitDataBase.Keys.ToList());
             this.DataContext = this;
         }
 
         private void unitPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (unitPicker.SelectedItem is string strItem) selectedUnit = AllUnits[strItem];
+            if (unitPicker.SelectedItem is string strItem) selectedUnit = UnitDataBase[strItem];
             infoCardImage.Source = TgaToImageSource(selectedUnit.CardInfo);
             unitCardImage.Source = TgaToImageSource(selectedUnit.Card);
             localName.Text = selectedUnit.Name;

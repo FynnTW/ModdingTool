@@ -109,11 +109,11 @@ namespace ModdingTool.View.UserControls
 
             if (dataList.UnitList.Count == 0)
             {
-                dataList.UnitList = AllUnits.Keys.ToList();
+                dataList.UnitList = UnitDataBase.Keys.ToList();
             }
             if (dataList.ModelList.Count == 0)
             {
-                dataList.ModelList = ModelDb.Keys.ToList();
+                dataList.ModelList = BattleModelDataBase.Keys.ToList();
             }
 
             var attribute = "";
@@ -141,8 +141,8 @@ namespace ModdingTool.View.UserControls
                         case "Units":
                             dataList?.UnitList.Sort((x, y) =>
                             {
-                                var propX = AllUnits[x].GetType().GetProperty(attribute)?.GetValue(AllUnits[x]);
-                                var propY = AllUnits[y].GetType().GetProperty(attribute)?.GetValue(AllUnits[y]);
+                                var propX = UnitDataBase[x].GetType().GetProperty(attribute)?.GetValue(UnitDataBase[x]);
+                                var propY = UnitDataBase[y].GetType().GetProperty(attribute)?.GetValue(UnitDataBase[y]);
 
                                 switch (propX)
                                 {
@@ -164,8 +164,8 @@ namespace ModdingTool.View.UserControls
                         case "Model Entries":
                             dataList?.ModelList.Sort((x, y) =>
                             {
-                                var propX = ModelDb[x].GetType().GetProperty(attribute)?.GetValue(ModelDb[x]);
-                                var propY = ModelDb[y].GetType().GetProperty(attribute)?.GetValue(ModelDb[y]);
+                                var propX = BattleModelDataBase[x].GetType().GetProperty(attribute)?.GetValue(BattleModelDataBase[x]);
+                                var propY = BattleModelDataBase[y].GetType().GetProperty(attribute)?.GetValue(BattleModelDataBase[y]);
 
                                 switch (propX)
                                 {
@@ -192,8 +192,8 @@ namespace ModdingTool.View.UserControls
                         case "Units":
                             dataList?.UnitList.Sort((x, y) =>
                             {
-                                var propX = AllUnits[x].GetType().GetProperty(attribute)?.GetValue(AllUnits[x]);
-                                var propY = AllUnits[y].GetType().GetProperty(attribute)?.GetValue(AllUnits[y]);
+                                var propX = UnitDataBase[x].GetType().GetProperty(attribute)?.GetValue(UnitDataBase[x]);
+                                var propY = UnitDataBase[y].GetType().GetProperty(attribute)?.GetValue(UnitDataBase[y]);
                                 switch (propX)
                                 {
                                     case null when propY == null:
@@ -214,8 +214,8 @@ namespace ModdingTool.View.UserControls
                         case "Model Entries":
                             dataList?.ModelList.Sort((x, y) =>
                             {
-                                var propX = ModelDb[x].GetType().GetProperty(attribute)?.GetValue(ModelDb[x]);
-                                var propY = ModelDb[y].GetType().GetProperty(attribute)?.GetValue(ModelDb[y]);
+                                var propX = BattleModelDataBase[x].GetType().GetProperty(attribute)?.GetValue(BattleModelDataBase[x]);
+                                var propY = BattleModelDataBase[y].GetType().GetProperty(attribute)?.GetValue(BattleModelDataBase[y]);
                                 switch (propX)
                                 {
                                     case null when propY == null:

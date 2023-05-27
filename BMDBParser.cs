@@ -10,18 +10,33 @@ namespace ModdingTool
 {
     internal class BmdbParser
     {
+        private static string _fileName = "";
+
+        //Position in Bmdb
         private static int _stringPos;
+
+        //Lenght of next string
         private static int _nextLenght;
-        private static string _bmdb = null!;
+
+        //bmdb loaded as string
+        private static string? _bmdb = null!;
 
         public static void ParseBmdb()
         {
-            Console.WriteLine(@"start parse bmdb");
-            _bmdb = File.ReadAllText(ModPath + "\\data\\unit_models\\battle_models.modeldb", Encoding.UTF8);
+            _fileName = "battle_models.modeldb";
+            Console.WriteLine($@"start parse {_fileName}");
+
+            //Try read file
+            _bmdb = BmdbReader("\\data\\unit_models\\battle_models.modeldb", _fileName, Encoding.UTF8);
+            if (_bmdb == null) return;
+
+            //First entry in vanilla has extra ints
             var firstEntry = false;
 
-            _stringPos = 0;
-            _stringPos += 35; //serialization
+            ////////Parse bmdb////////
+
+            //serialization
+            _stringPos = 35;
 
             var numberOfEntries = GetInt();
             // ReSharper disable once NotAccessedVariable
@@ -29,14 +44,23 @@ namespace ModdingTool
             // ReSharper disable once RedundantAssignment
             pad = GetInt();
 
+            //Loop through all entries
             for (var n = 0; n < numberOfEntries; n++)
             {
 
-                if (_stringPos >= _bmdb.Length - 1) continue;
+                //failsafe for out of bounds
+                if (_stringPos >= _bmdb.Length - 1)
+                {
+                    ErrorDb.AddError("Bmdb parsing error", _stringPos.ToString(), _fileName); continue;
+                }
+
+                //Create new entry
                 var entry = new BattleModel
                 {
                     Name = GetString().ToLower()
                 };
+
+                //check if there is a blank entry or default vanilla with extra ints
                 switch (n)
                 {
                     case 0 when entry.Name.Equals("blank"):
@@ -53,6 +77,7 @@ namespace ModdingTool
                         break;
                 }
 
+                //Get rest of entry
                 entry.Scale = GetFloat();
                 if (firstEntry) { pad = GetInt(); pad = GetInt(); }
                 entry.LodCount = GetInt();
@@ -89,6 +114,7 @@ namespace ModdingTool
                         texpad = GetString();
                     }
                 }
+                entry.MainTexturesCount = entry.MainTextures.Count;
                 entry.AttachTexturesCount = GetInt();
                 for (var i = 0; i < entry.AttachTexturesCount; i++)
                 {
@@ -105,11 +131,13 @@ namespace ModdingTool
                     }
                     else
                     {
+                        // ReSharper disable once NotAccessedVariable
                         var texpad = GetString();
                         texpad = GetString();
                         texpad = GetString();
                     }
                 }
+                entry.AttachTexturesCount = entry.AttachTextures.Count;
                 if (firstEntry) { pad = GetInt(); pad = GetInt(); }
                 entry.MountTypeCount = GetInt();
                 if (firstEntry) { pad = GetInt(); pad = GetInt(); }
@@ -143,13 +171,11 @@ namespace ModdingTool
                     {
                         entry.Animations[i].SecWeapons.Add(GetString());
                     }
-                    if (entry.Animations[i].SecWeapons.Count > 0)
+                    if (entry.Animations[i].SecWeapons.Count <= 0) continue;
+                    entry.Animations[i].SecWeaponOne = entry.Animations[i].SecWeapons[0];
+                    if (entry.Animations[i].SecWeapons.Count > 1)
                     {
-                        entry.Animations[i].SecWeaponOne = entry.Animations[i].SecWeapons[0];
-                        if (entry.Animations[i].SecWeapons.Count > 1)
-                        {
-                            entry.Animations[i].SecWeaponTwo = entry.Animations[i].SecWeapons[1];
-                        }
+                        entry.Animations[i].SecWeaponTwo = entry.Animations[i].SecWeapons[1];
                     }
                 }
                 if (firstEntry) { pad = GetInt(); pad = GetInt(); }
@@ -162,31 +188,38 @@ namespace ModdingTool
                 entry.TorchspriteZ = GetFloat();
                 if (firstEntry) { pad = GetInt(); pad = GetInt(); }
                 firstEntry = false;
-                if (ModelDb.ContainsKey(entry.Name))
+                if (BattleModelDataBase.ContainsKey(entry.Name))
                 {
-                    Console.WriteLine(@"Duplicate entry");
+                    ErrorDb.AddError($"Duplicate entry {entry.Name} in {_fileName}");
                     Console.WriteLine(@"====================================================================================");
                 }
-                ModelDb[entry.Name] = entry;
+                BattleModelDataBase[entry.Name] = entry;
                 Console.WriteLine(entry.Name);
             }
-            Console.WriteLine(@"end parse bmdb");
+            Console.WriteLine($@"end parse {_fileName}");
         }
 
-        public static string GetString()
+        private static string GetString()
         {
+            if (_bmdb == null) return "";
             if (_stringPos >= _bmdb.Length - 1) return "";
+
             AdvancePos();
+
             var lenght = GetInt();
             _stringPos += GetNextNonWhite();
+
             if (lenght <= 0) return "";
+
             var returnString = _bmdb.Substring(_stringPos, lenght).Trim();
             _stringPos += lenght;
+
             return returnString;
         }
 
-        public static int GetInt()
+        private static int GetInt()
         {
+            if (_bmdb == null) return 0;
             if (_stringPos >= _bmdb.Length - 1) return 0;
             AdvancePos();
             var returnValue = int.Parse(_bmdb.Substring(_stringPos, _nextLenght).Trim());
@@ -194,8 +227,9 @@ namespace ModdingTool
             return returnValue;
         }
 
-        public static float GetFloat()
+        private static float GetFloat()
         {
+            if (_bmdb == null) return 0;
             if (_stringPos >= _bmdb.Length - 1) return 0;
             AdvancePos();
             if (_stringPos >= _bmdb.Length - 1) return 0;
@@ -207,16 +241,18 @@ namespace ModdingTool
             return returnValue;
         }
 
-        public static void AdvancePos()
+        private static void AdvancePos()
         {
+            if (_bmdb == null) return;
             if (_stringPos >= _bmdb.Length - 1) return;
             _stringPos += GetNextNonWhite();
             var end = _stringPos + GetNextWhite() + 1;
             _nextLenght = end - _stringPos;
         }
 
-        public static int GetNextNonWhite()
+        private static int GetNextNonWhite()
         {
+            if (_bmdb == null) return 0;
             if (_stringPos >= _bmdb.Length - 1) return 0;
             var stringLen = _bmdb.Length - 1;
             var len = Math.Min((stringLen) - _stringPos, 100);
@@ -225,8 +261,9 @@ namespace ModdingTool
             return match.Success ? match.Index : _stringPos;
         }
 
-        public static int GetNextWhite()
+        private static int GetNextWhite()
         {
+            if (_bmdb == null) return 0;
             if (_stringPos >= _bmdb.Length - 1) return 0;
             var stringLen = _bmdb.Length - 1;
             var len = Math.Min((stringLen) - _stringPos, 100);
@@ -234,6 +271,22 @@ namespace ModdingTool
             var subline = _bmdb.Substring(_stringPos, len);
             var match = Regex.Match(subline, @"\s");
             return match.Success ? match.Index : _stringPos;
+        }
+
+        private static string? BmdbReader(string filepath, string filename, Encoding encoding)
+        {
+            string text;
+            try
+            {
+                text = File.ReadAllText(ModPath + filepath, encoding);
+            }
+            catch (Exception e)
+            {
+                ErrorDb.AddError("Error reading " + filename);
+                ErrorDb.AddError(e.Message);
+                return null;
+            }
+            return text;
         }
     }
 }

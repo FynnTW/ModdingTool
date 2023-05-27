@@ -3,12 +3,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using static ModdingTool.Globals;
-using System.Windows.Shapes;
 
 namespace ModdingTool
 {
     internal class ParseHelpers
     {
+
         public static string RemoveComment(string line)
         {
             if (!line.Contains(';'))
@@ -54,11 +54,30 @@ namespace ModdingTool
             return value.Equals("yes");
         }
 
-        public static string[] CurlySplitter(string line)
+        private static string[] CurlySplitter(string line)
         {
             char[] deliminators = { '{', '}' };
             var splitted = line.Split(deliminators, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
             return splitted;
+        }
+
+        public static string[]? LocalTextLineCleaner(string line, int num, string filename)
+        {
+            if (string.IsNullOrWhiteSpace(line))
+            {
+                return null;
+            }
+            if (line.StartsWith('¬'))
+            {
+                return null;
+            }
+            if (!line.Contains('{') || !line.Contains('}'))
+            {
+                ErrorDb.AddError("Unrecognized content", num.ToString(), filename);
+                return null;
+            }
+            var newLine = line.Trim();
+            return CurlySplitter(newLine);
         }
 
         public static string[]? FileReader(string filepath, string filename, Encoding encoding)
@@ -70,8 +89,8 @@ namespace ModdingTool
             }
             catch (Exception e)
             {
-                ErrorDB.AddError("Error reading " + filename);
-                ErrorDB.AddError("e");
+                ErrorDb.AddError("Error reading " + filename);
+                ErrorDb.AddError(e.Message);
                 return null;
             }
             return lines;

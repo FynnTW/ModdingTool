@@ -20,17 +20,18 @@ namespace ModdingTool.View
     /// </summary>
     public partial class ErrorLog : Window
     {
-        private readonly List<string> errorList;
+        private List<string> errorList;
 
         public ErrorLog()
         {
             InitializeComponent();
-            errorList = ErrorDB.GetErrors();
+            errorList = ErrorDb.GetErrors();
         }
 
-        private void WriteErrors()
+        public void WriteErrors()
         {
             ErrorLogBox.Text = "";
+            errorList = ErrorDb.GetErrors();
             foreach (var error in errorList)
             {
                 ErrorLogBox.Text += error + "\n";

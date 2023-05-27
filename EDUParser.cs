@@ -15,12 +15,13 @@ namespace ModdingTool
 
         private const string UNIT_CARD_PATH = "\\data\\ui\\units";
         private const string UNIT_INFO_CARD_PATH = "\\data\\ui\\unit_info";
-        private static int _line;
+        private static int _lineNum;
+        private static string _fileName = "";
 
         public static void WriteEdu()
         {
-            var newEdu = AllUnits.Values.Aggregate("", (current, unit) => current + WriteEduEntry(unit));
-            System.IO.File.WriteAllText(@"export_descr_unit.txt", newEdu);
+            var newEdu = UnitDataBase.Values.Aggregate("", (current, unit) => current + WriteEduEntry(unit));
+            File.WriteAllText(@"export_descr_unit.txt", newEdu);
         }
 
         private static string WriteEduEntry(Unit unit)
@@ -149,10 +150,7 @@ namespace ModdingTool
                 }
                 entry += ", " + unit.Sec_att_delay + ", " + FormatFloat(unit.Sec_skel_factor) + "\n";
                 var secAttributesString = "no";
-                if (unit.Pri_attr is { Count: > 0 })
-                {
-                    secAttributesString = MakeCommaString(unit.Sec_attr);
-                }
+                if (unit is { Sec_attr: { Count: > 0 }, Sec_attr: { } }) secAttributesString = MakeCommaString(unit.Sec_attr);
                 entry += "stat_sec_attr\t\t\t" + secAttributesString + "\n";
             }
             if (!string.IsNullOrWhiteSpace(unit.Ter_weapon_type) && unit.Ter_weapon_type != "no")
@@ -307,7 +305,7 @@ namespace ModdingTool
             {
                 return "1";
             }
-            return input == 0 ? "0" : input.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
+            return input == 0 ? "0" : input.ToString("0.00", CultureInfo.InvariantCulture);
         }
 
         private static string FormatFloatSingle(double input)
@@ -316,42 +314,55 @@ namespace ModdingTool
             {
                 return "1";
             }
-            return input == 0 ? "0" : input.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture);
+            return input == 0 ? "0" : input.ToString("0.0", CultureInfo.InvariantCulture);
         }
 
         public static void ParseEdu()
         {
-            ParseEu();
-            Console.WriteLine(@"start parse edu");
-            var lines = File.ReadAllLines(ModPath + "\\data\\export_descr_unit.txt");
+            _fileName = "export_descr_unit.txt";
+            Console.WriteLine($@"start parse {_fileName}");
 
+            //Try read file
+            var lines = FileReader("\\data\\export_descr_unit.txt", _fileName, Encoding.UTF8);
+            if (lines == null) { return; }
+
+            //Initialize Global Unit Database
+            UnitDataBase = new Dictionary<string, Unit>();
+
+            //Make first entry
             var newUnit = new Unit();
-            var first = false;
-            AllUnits = new Dictionary<string, Unit>();
+            var first = true;
 
+            //Reset line counter and EDU index tracker
             var index = 0;
-            _line = 0;
+            _lineNum = 0;
+
+            //Loop through lines
             foreach (var line in lines)
             {
-                _line++;
-                if (line.StartsWith(';'))
+                //Increase line counter
+                _lineNum++;
+
+                //Remove Comments and Faulty lines
+                var newline = CleanLine(line);
+                if (string.IsNullOrWhiteSpace(newline))
                 {
                     continue;
                 }
-                var newline = RemoveComment(line);
-                if (line.Equals(""))
-                {
-                    continue;
-                }
-                newline = newline.Trim();
+
+                //Split line into parts
                 var lineParts = SplitEduLine(newline);
                 if (lineParts is { Length: < 2 })
                 {
+                    //Should be something wrong with line if you hit this
+                    ErrorDb.AddError("Unrecognized content", _lineNum.ToString(), _fileName);
                     continue;
                 }
+
+                //Entry is completed, next entry is starting
                 if (lineParts != null && (bool)lineParts[0]?.Equals("type"))
                 {
-                    if (first)
+                    if (!first)
                     {
                         newUnit.Edu_index = index;
                         var cards = GetCards(newUnit.Dictionary, newUnit.Ownership, newUnit.Card_dict, newUnit.Info_dict, newUnit.Mercenary_unit);
@@ -360,125 +371,91 @@ namespace ModdingTool
 
                         if (newUnit.Type != null)
                         {
-                            AllUnits.Add(newUnit.Type, newUnit);
-                            Console.WriteLine(newUnit.Type);
-                        }
-
-                        foreach (var faction in newUnit.Ownership.Where(faction => true))
-                        {
-                            if (faction == "all")
-                            {
-                                foreach (var fac in FactionDataBase)
-                                {
-                                    fac.Value.Unit_ownership.Add(newUnit);
-                                }
-                            }
-                            else if (FactionDataBase.Keys.Contains(faction))
-                            {
-                                FactionDataBase[faction].Unit_ownership.Add(newUnit);
-                            }
-                            else if (CultureDataBase.Keys.Contains(faction))
-                            {
-                                foreach (var fac in CultureDataBase.SelectMany(cult => cult.Value.Factions))
-                                {
-                                    FactionDataBase[fac].Unit_ownership.Add(newUnit);
-                                }
-                            }
-                            else
-                            {
-                                Console.WriteLine(@"faction not found: " + faction);
-                            }
+                            AddUnit(newUnit);
                         }
 
                         index++;
                     }
-                    first = true;
+                    first = false;
                     newUnit = new Unit();
                 }
-                if (first)
-                {
-                    AssignFields(newUnit, lineParts);
-                }
-                //Console.WriteLine(lineParts[0]);
-            }
-            newUnit.Edu_index = index;
-            if (newUnit.Type != null)
-            {
-                AllUnits.Add(newUnit.Type, newUnit);
-                Console.WriteLine(newUnit.Type);
+
+                //assign field line is about
+                AssignFields(newUnit, lineParts);
             }
 
-            foreach (var faction in newUnit.Ownership.Where(faction => true))
+            //Add last unit
+            newUnit.Edu_index = index;
+            AddUnit(newUnit);
+
+
+            Console.WriteLine($@"end parse {_fileName}");
+
+        }
+
+        private static void AddUnit(Unit unit)
+        {
+            if (unit.Type == null) return;
+            UnitDataBase.Add(unit.Type, unit);
+            Console.WriteLine(unit.Type);
+
+            foreach (var faction in unit.Ownership.Where(_ => true))
             {
                 if (faction == "all")
                 {
                     foreach (var fac in FactionDataBase)
                     {
-                        fac.Value.Unit_ownership.Add(newUnit);
+                        fac.Value.Unit_ownership.Add(unit.Type);
                     }
                 }
                 else if (FactionDataBase.Keys.Contains(faction))
                 {
-                    FactionDataBase[faction].Unit_ownership.Add(newUnit);
+                    FactionDataBase[faction].Unit_ownership.Add(unit.Type);
                 }
                 else if (CultureDataBase.Keys.Contains(faction))
                 {
                     foreach (var fac in CultureDataBase.SelectMany(cult => cult.Value.Factions))
                     {
-                        FactionDataBase[fac].Unit_ownership.Add(newUnit);
+                        FactionDataBase[fac].Unit_ownership.Add(unit.Type);
                     }
                 }
                 else
                 {
+                    ErrorDb.AddError($@"Faction not found {faction}", _lineNum.ToString(), _fileName);
                     Console.WriteLine(@"faction not found: " + faction);
                 }
             }
-
-
-            Console.WriteLine(@"end parse edu");
-            Globals.PrintInt(AllUnits.Count);
-            Globals.PrintInt(UnitNames.Count);
-            Globals.PrintInt(UnitDescr.Count);
-            Globals.PrintInt(UnitDescrShort.Count);
-            Globals.PrintInt(ModelDb.Count);
-            Globals.PrintInt(FactionDataBase.Count);
-            Globals.PrintInt(CultureDataBase.Count);
-            Globals.PrintInt(ExpandedEntries.Count);
-            PrintFinal();
-
         }
 
-        private static void ParseEu()
+        public static void ParseEu()
         {
-            Console.WriteLine(@"start parse export_units");
-            var lines = File.ReadAllLines(ModPath + "\\data\\text\\export_units.txt", Encoding.Unicode);
+            _fileName = "export_units.txt";
+            Console.WriteLine($@"start parse {_fileName}");
+
+            //Try read file
+            var lines = FileReader("\\data\\text\\export_units.txt", _fileName, Encoding.Unicode);
+            if (lines == null) { return; }
+
+            //Reset line counter
+            _lineNum = 0;
+
+            //Initialize Global names and descriptions database
             UnitNames = new Dictionary<string, string>();
             UnitDescr = new Dictionary<string, string?>();
             UnitDescrShort = new Dictionary<string, string?>();
+
+            //Loop through lines
             foreach (var line in lines)
             {
-                if (line.StartsWith('¬'))
-                {
-                    continue;
-                }
-                if (!line.Contains('{') || !line.Contains('}'))
-                {
-                    continue;
-                }
-                var newLine = line.Trim();
-                var parts = StringSplitter(newLine);
-                FillDicts(parts);
+                //Increase line counter
+                _lineNum++;
+                //Clean up line
+                var parts = LocalTextLineCleaner(line, _lineNum, _fileName);
+                if (parts != null)
+                    AddUnitStringEntry(parts);
 
-                //Console.WriteLine(line);
             }
-            Console.WriteLine(@"end parse export_units");
-        }
-
-        private static string?[] StringSplitter(string line)
-        {
-            char[] deliminators = { '{', '}' };
-            string?[] splitted = line.Split(deliminators, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-            return splitted;
+            Console.WriteLine($@"end parse {_fileName}");
         }
 
         private static string[] GetCards(string? unit, List<string> factions, string? cardPicDir, string? infoPicDir, bool merc)
@@ -508,6 +485,7 @@ namespace ModdingTool
                 cardPath += faction;
                 if (!(Directory.Exists(cardPath)))
                 {
+                    ErrorDb.AddError($@"Card path not found {cardPath}", _lineNum.ToString(), _fileName);
                     continue;
                 }
 
@@ -517,7 +495,7 @@ namespace ModdingTool
                 }
                 else
                 {
-                    Console.WriteLine(@"no unit card found for unit: " + unit + @" in faction: " + faction);
+                    ErrorDb.AddError($@"no unit card found for unit: {unit} in faction: {faction}");
                 }
             }
 
@@ -528,6 +506,7 @@ namespace ModdingTool
                 cardInfoPath += faction;
                 if (!(Directory.Exists(cardInfoPath)))
                 {
+                    ErrorDb.AddError($@"Info Card path not found {cardInfoPath}", _lineNum.ToString(), _fileName);
                     continue;
                 }
 
@@ -537,22 +516,22 @@ namespace ModdingTool
                 }
                 else
                 {
-                    Console.WriteLine(@"no unit info card found for unit: " + unit + @" in faction: " + faction);
+                    ErrorDb.AddError($@"no unit info card found for unit: {unit} in faction: {faction}");
                 }
             }
 
             if (unitCard.Equals(""))
             {
-                Console.WriteLine(@"!!no unit card at all found for unit: " + unit);
+                ErrorDb.AddError($@"!!no unit card at all found for unit: {unit}");
             }
             if (unitInfoCard.Equals(""))
             {
-                Console.WriteLine(@"!!no unit info card at all found for unit: " + unit);
+                ErrorDb.AddError($@"!!no unit info card at all found for unit: {unit}");
             }
             return new[] { unitCard, unitInfoCard };
         }
 
-        private static void FillDicts(string?[] parts)
+        private static void AddUnitStringEntry(string?[] parts)
         {
             var identifier = parts[0];
 
@@ -563,6 +542,10 @@ namespace ModdingTool
             if (parts.Length > 1)
             {
                 text = parts[1];
+            }
+            else
+            {
+                ErrorDb.AddError($@"Unit localization is empty {identifier}", _lineNum.ToString(), _fileName);
             }
 
             if (identifier != null && identifier.Contains("_descr_short"))
@@ -577,9 +560,8 @@ namespace ModdingTool
             }
             else
             {
-                if (text == null) return;
-                if (identifier != null)
-                    UnitNames.Add(identifier, text);
+                if (text == null || identifier == null ) return;
+                UnitNames.Add(identifier, text);
             }
         }
 
@@ -690,11 +672,11 @@ namespace ModdingTool
                         break;
 
                     case "attributes":
-                        if (parts == null || parts?.Length < 2)
+                        if (parts == null || parts.Length < 2)
                         {
                             break;
                         }
-                        foreach (var attr in parts?[1..])
+                        foreach (var attr in parts?[1..]!)
                         {
                             if (attr == null) break;
                             unit.Attributes.Add(attr);
@@ -768,7 +750,7 @@ namespace ModdingTool
                         {
                             break;
                         }
-                        foreach (var part in parts?[1..])
+                        foreach (var part in parts?[1..]!)
                         {
                             if (part != null) unit.Pri_attr?.Add(part);
                         }
@@ -802,7 +784,7 @@ namespace ModdingTool
                         {
                             break;
                         }
-                        foreach (var part in parts?[1..])
+                        foreach (var part in parts?[1..]!)
                         {
                             if (part != null) unit.Sec_attr?.Add(part);
                         }
@@ -836,7 +818,7 @@ namespace ModdingTool
                         {
                             break;
                         }
-                        foreach (var part in parts?[1..])
+                        foreach (var part in parts?[1..]!)
                         {
                             if (part != null) unit.Ter_attr?.Add(part);
                         }
@@ -956,7 +938,7 @@ namespace ModdingTool
                         break;
 
                     case "armour_ug_models":
-                        foreach (var model in parts?[1..])
+                        foreach (var model in parts?[1..]!)
                         {
                             if (string.IsNullOrWhiteSpace(unit.ArmourModelBase))
                             {
@@ -979,28 +961,28 @@ namespace ModdingTool
                         break;
 
                     case "ownership":
-                        foreach (var faction in parts?[1..])
+                        foreach (var faction in parts?[1..]!)
                         {
                             if (faction != null) unit.Ownership.Add(faction);
                         }
                         break;
 
                     case "era 0":
-                        foreach (var faction in parts?[1..])
+                        foreach (var faction in parts?[1..]!)
                         {
                             if (faction != null) unit.EraZero.Add(faction);
                         }
                         break;
 
                     case "era 1":
-                        foreach (var faction in parts?[1..])
+                        foreach (var faction in parts?[1..]!)
                         {
                             if (faction != null) unit.EraOne.Add(faction);
                         }
                         break;
 
                     case "era 2":
-                        foreach (var faction in parts?[1..])
+                        foreach (var faction in parts?[1..]!)
                         {
                             if (faction != null) unit.EraTwo.Add(faction);
                         }
@@ -1025,9 +1007,10 @@ namespace ModdingTool
             }
             catch (Exception e)
             {
+                ErrorDb.AddError(e.Message + " " + identifier, _lineNum.ToString(), _fileName);
                 Console.WriteLine(e);
                 Console.WriteLine(identifier);
-                Console.WriteLine(@"on line: " + _line);
+                Console.WriteLine(@"on line: " + _lineNum);
                 Console.WriteLine(@"====================================================================================");
             }
         }
