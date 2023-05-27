@@ -21,8 +21,8 @@ public class Errors
 
     public void AddError(string error, string line, string file)
     {
-        ErrorList.Add(error + "at line: " + line + " in file: " + file);
-        Console.WriteLine(error + "at line: " + line + " in file: " + file);
+        ErrorList.Add($@" {error} at line: {line} in file: {file}");
+        Console.WriteLine($@" {error} at line: {line} in file: {file}");
         Console.WriteLine(@"====================================================================================");
     }
 

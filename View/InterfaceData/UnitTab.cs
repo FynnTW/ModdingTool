@@ -152,10 +152,10 @@ public class UnitTab : ITab.Tab
     public static string[] Categories { get; set; } = new string[] { "infantry", "cavalry", "siege", "handler", "ship", "non_combatant" };
     public static string[] Classes { get; set; } = new string[] { "light", "heavy", "missile", "spearmen", "skirmish" };
     public static string[] DamageTypes { get; set; } = new string[] { "piercing", "slashing", "blunt", "fire" };
-    public static string[] WeaponTypes { get; set; } = new string[] { "melee", "thrown", "missile", "siege_missile" };
+    public static string[] WeaponTypes { get; set; } = new string[] { "melee", "thrown", "missile", "siege_missile", "no" };
     public static string[] SoundTypes { get; set; } = new string[] { "none", "knife", "mace", "axe", "sword", "spear" };
     public static string[] VoiceTypes { get; set; } = new string[] { "General", "Heavy", "Light", "Female", "Medium" };
-    public static string[] Factions { get; set; }
+    public static List<string> Factions { get; set; }
     public static string[] ModelEntries { get; set; }
     public static string PriAnimation { get; set; }
     public static string SecAnimation { get; set; }
@@ -207,7 +207,7 @@ public class UnitTab : ITab.Tab
     };
     public static string[] DisciplineTypes { get; set; } = new string[]
     {
-        "impetuous", "normal", "disciplined", "berserker"
+        "impetuous", "normal", "disciplined", "berserker","low"
     };
     public static string[] TrainedTypes { get; set; } = new string[]
     {
@@ -226,7 +226,9 @@ public class UnitTab : ITab.Tab
     {
         Title = name;
         SelectedUnit = UnitDataBase[Title];
-        Factions = FactionDataBase.Keys.ToArray();
+        Factions = FactionDataBase.Keys.ToList();
+        Factions.Add("all");
+        Factions.AddRange(CultureDataBase.Keys.ToList());
         ModelEntries = BattleModelDataBase.Keys.ToArray();
         UnitInfoImage = TgaToImageSource(SelectedUnit.CardInfo);
         UnitImage = TgaToImageSource(SelectedUnit.Card);
