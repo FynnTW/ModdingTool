@@ -7,7 +7,7 @@ namespace ModdingTool.View.InterfaceData;
 
 public class ModelDbTab : ITab.Tab
 {
-    public Dictionary<string, string> BmdbUiText { get; set; } = new Dictionary<string, string>()
+    public static Dictionary<string, string> BmdbUiText { get; set; } = new Dictionary<string, string>()
     {
         {"Name", "Name"},
         {"Scale", "Scale"},

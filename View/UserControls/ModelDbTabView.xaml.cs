@@ -126,5 +126,17 @@ namespace ModdingTool.View.UserControls
             MainTextureGrid.Items.Refresh();
             AttachTextureGrid.Items.Refresh();
         }
+
+        private void AnimationGrid_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var dataGrid = sender as DataGrid;
+            if (dataGrid == null) return;
+            foreach (var item in dataGrid.Items)
+            {
+                if (item is not Animation animation) continue;
+                animation.PriWeapons ??= new List<string>();
+                animation.SecWeapons ??= new List<string>();
+            }
+        }
     }
 }

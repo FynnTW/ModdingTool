@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 
 namespace ModdingTool
@@ -69,18 +70,47 @@ namespace ModdingTool
             entry += model.Animations.Count + "\n";
             foreach (var animation in model.Animations)
             {
+                if (!animation.PriWeapons.Contains(animation.PriWeaponOne))
+                {
+                    animation.PriWeapons.Add(animation.PriWeaponOne);
+                }
+
+                if (!animation.PriWeapons.Contains(animation.PriWeaponTwo))
+                {
+                    animation.PriWeapons.Add(animation.PriWeaponTwo);
+                }
+
+                if (!animation.SecWeapons.Contains(animation.SecWeaponOne))
+                {
+                    animation.SecWeapons.Add(animation.SecWeaponOne);
+                }
+
+                if (!animation.SecWeapons.Contains(animation.SecWeaponTwo))
+                {
+                    animation.SecWeapons.Add(animation.SecWeaponTwo);
+                }
                 entry += NumString(animation.MountType) + "\n";
                 entry += NumString(animation.Primary_skeleton) + " ";
                 entry += NumString(animation.Secondary_skeleton) + "\n";
                 entry += animation.PriWeapons.Count + "\n";
-                for (int i = 0; i < animation.PriWeapons.Count; i++)
+                for (var i = 0; i < animation.PriWeapons.Count; i++)
                 {
-                    entry += NumString(animation.PriWeapons[i]) + "\n";
+                    entry += i switch
+                    {
+                        0 => NumString(animation.PriWeaponOne) + "\n",
+                        1 => NumString(animation.PriWeaponTwo) + "\n",
+                        _ => NumString(animation.PriWeapons[i]) + "\n"
+                    };
                 }
                 entry += animation.SecWeapons.Count + "\n";
-                for (int i = 0; i < animation.SecWeapons.Count; i++)
+                for (var i = 0; i < animation.SecWeapons.Count; i++)
                 {
-                    entry += NumString(animation.SecWeapons[i]) + "\n";
+                    entry += i switch
+                    {
+                        0 => NumString(animation.SecWeaponOne) + "\n",
+                        1 => NumString(animation.SecWeaponTwo) + "\n",
+                        _ => NumString(animation.SecWeapons[i]) + "\n"
+                    };
                 }
             }
             entry += model.TorchIndex + " ";
@@ -92,6 +122,7 @@ namespace ModdingTool
 
         private static string NumString(string input)
         {
+            if (input == null) return "0";
             if (input.Length > 0)
             {
                 return input.Length + " " + input;
@@ -101,7 +132,7 @@ namespace ModdingTool
 
         private static string FormatFloat(float input)
         {
-            if (input == 1)
+            if (Math.Abs(input - 1) < 0.001)
             {
                 return "1";
             }
@@ -146,6 +177,10 @@ namespace ModdingTool
         public string Secondary_skeleton { get => secondary_skeleton; set => secondary_skeleton = value; }
         public int PriWeaponCount { get => priWeaponCount; set => priWeaponCount = value; }
         public List<string> PriWeapons { get => priWeapons; set => priWeapons = value; }
+        public string PriWeaponOne { get; set; }
+        public string PriWeaponTwo { get; set; }
+        public string SecWeaponOne { get; set; }
+        public string SecWeaponTwo { get; set; }
         public int SecWeaponCount { get => secWeaponCount; set => secWeaponCount = value; }
         public List<string> SecWeapons { get => secWeapons; set => secWeapons = value; }
     }

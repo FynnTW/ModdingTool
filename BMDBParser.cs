@@ -110,11 +110,28 @@ namespace ModdingTool
                     {
                         entry.Animations[i].PriWeapons.Add(GetString());
                     }
+
+                    if (entry.Animations[i].PriWeapons.Count > 0)
+                    {
+                        entry.Animations[i].PriWeaponOne = entry.Animations[i].PriWeapons[0];
+                        if (entry.Animations[i].PriWeapons.Count > 1)
+                        {
+                            entry.Animations[i].PriWeaponTwo = entry.Animations[i].PriWeapons[1];
+                        }
+                    }
                     entry.Animations[i].SecWeaponCount = GetInt();
                     entry.Animations[i].SecWeapons = new List<string>();
                     for (var j = 0; j < entry.Animations[i].SecWeaponCount; j++)
                     {
                         entry.Animations[i].SecWeapons.Add(GetString());
+                    }
+                    if (entry.Animations[i].SecWeapons.Count > 0)
+                    {
+                        entry.Animations[i].SecWeaponOne = entry.Animations[i].SecWeapons[0];
+                        if (entry.Animations[i].SecWeapons.Count > 1)
+                        {
+                            entry.Animations[i].SecWeaponTwo = entry.Animations[i].SecWeapons[1];
+                        }
                     }
                 }
                 if (firstEntry) { pad = GetInt(); pad = GetInt(); }

@@ -72,11 +72,24 @@ namespace ModdingTool.View.UserControls
             var window = (ModdingTool.MainWindow)Application.Current.MainWindow;
             datatab = window?.FindName("DataTabLive") as DataTab;
             dataList = window?.FindName("DataListLive") as DataList;
-            if (datatab?.selectedTab is not UnitTab unitTab) return;
-            selectunit = unitTab;
-            foreach (var prop in unitTab.SelectedUnit.GetType().GetProperties())
+            if (dataList.SelectedType == "Units")
             {
-                sortTypes.Add(UnitTab.UnitUiText[prop.Name]);
+                var unit = new Unit();
+                foreach (var prop in unit.GetType().GetProperties())
+                {
+                    sortTypes.Add(UnitTab.UnitUiText[prop.Name]);
+                }
+            }
+            else if (dataList.SelectedType == "Model Entries")
+            {
+                var entry = new BattleModel();
+                foreach (var prop in entry.GetType().GetProperties())
+                {
+                    if (ModelDbTab.BmdbUiText.ContainsKey(prop.Name))
+                    {
+                        sortTypes.Add(ModelDbTab.BmdbUiText[prop.Name]);
+                    }
+                }
             }
             popup.IsOpen = true;
             sortDirection.ItemsSource = sortDirections;
@@ -88,72 +101,143 @@ namespace ModdingTool.View.UserControls
         }
 
         private DataList dataList;
-        private UnitTab selectunit;
+
+
 
         private void SortAccept_OnClick(object sender, RoutedEventArgs e)
         {
+
             if (dataList.UnitList.Count == 0)
             {
                 dataList.UnitList = AllUnits.Keys.ToList();
             }
-            var attribute = "";
-            foreach (var attr in UnitTab.UnitUiText.Where(attr => attr.Value == sortType.Text))
+            if (dataList.ModelList.Count == 0)
             {
-                attribute = attr.Key;
+                dataList.ModelList = ModelDb.Keys.ToList();
             }
+
+            var attribute = "";
+            switch (dataList.SelectedType)
+            {
+                case "Units":
+                    foreach (var attr in UnitTab.UnitUiText.Where(attr => attr.Value == sortType.Text))
+                    {
+                        attribute = attr.Key;
+                    }
+                    break;
+                case "Model Entries":
+                    foreach (var attr in ModelDbTab.BmdbUiText.Where(attr => attr.Value == sortType.Text))
+                    {
+                        attribute = attr.Key;
+                    }
+                    break;
+            }
+
             switch (sortDirection.Text)
             {
                 case "Increasing":
-                    dataList?.UnitList.Sort((x, y) =>
+                    switch (dataList.SelectedType)
                     {
-                        var propX = AllUnits[x].GetType().GetProperty(attribute)?.GetValue(AllUnits[x]);
-                        var propY = AllUnits[y].GetType().GetProperty(attribute)?.GetValue(AllUnits[y]);
+                        case "Units":
+                            dataList?.UnitList.Sort((x, y) =>
+                            {
+                                var propX = AllUnits[x].GetType().GetProperty(attribute)?.GetValue(AllUnits[x]);
+                                var propY = AllUnits[y].GetType().GetProperty(attribute)?.GetValue(AllUnits[y]);
 
-                        switch (propX)
-                        {
-                            case null when propY == null:
-                                return 0;
-                            case null:
-                                return -1;
-                            default:
+                                switch (propX)
                                 {
-                                    if (propY == null)
-                                        return 1;
-                                    break;
+                                    case null when propY == null:
+                                        return 0;
+                                    case null:
+                                        return -1;
+                                    default:
+                                        {
+                                            if (propY == null)
+                                                return 1;
+                                            break;
+                                        }
                                 }
-                        }
 
-                        return Comparer<object>.Default.Compare(propX, propY);
-                    });
+                                return Comparer<object>.Default.Compare(propX, propY);
+                            });
+                            break;
+                        case "Model Entries":
+                            dataList?.ModelList.Sort((x, y) =>
+                            {
+                                var propX = ModelDb[x].GetType().GetProperty(attribute)?.GetValue(ModelDb[x]);
+                                var propY = ModelDb[y].GetType().GetProperty(attribute)?.GetValue(ModelDb[y]);
+
+                                switch (propX)
+                                {
+                                    case null when propY == null:
+                                        return 0;
+                                    case null:
+                                        return -1;
+                                    default:
+                                        {
+                                            if (propY == null)
+                                                return 1;
+                                            break;
+                                        }
+                                }
+
+                                return Comparer<object>.Default.Compare(propX, propY);
+                            });
+                            break;
+                    }
                     break;
                 case "Decreasing":
-                    dataList?.UnitList.Sort((x, y) =>
+                    switch (dataList.SelectedType)
                     {
-                        var propX = AllUnits[x].GetType().GetProperty(attribute)?.GetValue(AllUnits[x]);
-                        var propY = AllUnits[y].GetType().GetProperty(attribute)?.GetValue(AllUnits[y]);
-                        switch (propX)
-                        {
-                            case null when propY == null:
-                                return 0;
-                            case null:
-                                return -1;
-                            default:
+                        case "Units":
+                            dataList?.UnitList.Sort((x, y) =>
+                            {
+                                var propX = AllUnits[x].GetType().GetProperty(attribute)?.GetValue(AllUnits[x]);
+                                var propY = AllUnits[y].GetType().GetProperty(attribute)?.GetValue(AllUnits[y]);
+                                switch (propX)
                                 {
-                                    if (propY == null)
-                                        return 1;
-                                    break;
+                                    case null when propY == null:
+                                        return 0;
+                                    case null:
+                                        return -1;
+                                    default:
+                                        {
+                                            if (propY == null)
+                                                return 1;
+                                            break;
+                                        }
                                 }
-                        }
-                        return Comparer<object>.Default.Compare(propY, propX);
-                    });
+
+                                return Comparer<object>.Default.Compare(propY, propX);
+                            });
+                            break;
+                        case "Model Entries":
+                            dataList?.ModelList.Sort((x, y) =>
+                            {
+                                var propX = ModelDb[x].GetType().GetProperty(attribute)?.GetValue(ModelDb[x]);
+                                var propY = ModelDb[y].GetType().GetProperty(attribute)?.GetValue(ModelDb[y]);
+                                switch (propX)
+                                {
+                                    case null when propY == null:
+                                        return 0;
+                                    case null:
+                                        return -1;
+                                    default:
+                                        {
+                                            if (propY == null)
+                                                return 1;
+                                            break;
+                                        }
+                                }
+
+                                return Comparer<object>.Default.Compare(propY, propX);
+                            });
+                            break;
+                    }
                     break;
             }
 
-            if (dataList != null)
-            {
-                dataList.DataListPicker.ItemsSource = dataList?.UnitList;
-                dataList?.DataListPicker.Items.Refresh();
-            }
+            dataList?.DataListPicker.Items.Refresh();
 
             popup.IsOpen = false;
         }

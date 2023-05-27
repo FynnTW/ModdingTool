@@ -88,14 +88,19 @@
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
+                <TextBlock Text="Animations" Height="25"/>
+                <DataGrid x:Name="AnimationGrid" ItemsSource="{Binding SelectedModel.Animations}"  AutoGenerateColumns="False" RowHeight="25" CanUserResizeRows="False" ColumnHeaderHeight="25" SizeChanged="AnimationGrid_OnSizeChanged">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Mount Type" Binding="{Binding MountType}" IsReadOnly="False"/>
+                        <DataGridTextColumn Header="Primary_skeleton" Binding="{Binding Primary_skeleton}" IsReadOnly="False"/>
+                        <DataGridTextColumn Header="Secondary_skeleton" Binding="{Binding Secondary_skeleton}" IsReadOnly="False"/>
+                        <DataGridTextColumn Header="Primary Weapon 1" Binding="{Binding PriWeaponOne}" IsReadOnly="False" />
+                        <DataGridTextColumn Header="Primary Weapon 2" Binding="{Binding PriWeaponTwo}" IsReadOnly="False"/>
+                        <DataGridTextColumn Header="Secondary Weapon 1" Binding="{Binding SecWeaponOne}" IsReadOnly="False"/>
+                        <DataGridTextColumn Header="Secondary Weapons 2" Binding="{Binding SecWeaponTwo}" IsReadOnly="False"/>
+                    </DataGrid.Columns>
+                </DataGrid>
             </StackPanel>
-            <Grid Column="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50*"></ColumnDefinition>
-                    <ColumnDefinition Width="50*"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-            </Grid>
-
         </Grid>
     </ScrollViewer>
 </UserControl>
