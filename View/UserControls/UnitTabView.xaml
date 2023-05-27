@@ -10,7 +10,7 @@
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance mvvm:UnitTab}">
-    <ScrollViewer Grid.ColumnSpan="5" Grid.RowSpan="2">
+    <ScrollViewer Grid.ColumnSpan="5" Grid.RowSpan="2" >
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="40*"></RowDefinition>
@@ -275,9 +275,27 @@
                             </ContextMenu>
                         </TextBlock.ContextMenu>
                     </TextBlock>
-                    <TextBlock Text="{Binding UnitUiText[Officer1] }" Height="25"/>
-                    <TextBlock Text="{Binding UnitUiText[Officer2] }" Height="25"/>
-                    <TextBlock Text="{Binding UnitUiText[Officer3] }" Height="25"/>
+                    <TextBlock x:Name="Officer1a" Text="{Binding UnitUiText[Officer1] }" Height="25">
+                        <TextBlock.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem  Header="Go to entry" Click="SoldierGoto_OnClick"/>
+                            </ContextMenu>
+                        </TextBlock.ContextMenu>
+                    </TextBlock>
+                    <TextBlock x:Name="Officer2a" Text="{Binding UnitUiText[Officer2] }" Height="25">
+                        <TextBlock.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem  Header="Go to entry" Click="SoldierGoto_OnClick"/>
+                            </ContextMenu>
+                        </TextBlock.ContextMenu>
+                    </TextBlock>
+                    <TextBlock x:Name="Officer3a" Text="{Binding UnitUiText[Officer3] }" Height="25">
+                        <TextBlock.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem  Header="Go to entry" Click="SoldierGoto_OnClick"/>
+                            </ContextMenu>
+                        </TextBlock.ContextMenu>
+                    </TextBlock>
                     <Grid Grid.ColumnSpan="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="25*" MaxWidth="135"></ColumnDefinition>
@@ -291,22 +309,46 @@
                             <RowDefinition Height="25*"></RowDefinition>
                             <RowDefinition Height="25*"></RowDefinition>
                         </Grid.RowDefinitions>
-                        <TextBlock Text="{Binding UnitUiText[ArmourModelBase] }" Height="25" Grid.Row="0"/>
+                        <TextBlock Text="{Binding UnitUiText[ArmourModelBase] }" Height="25" Grid.Row="0">
+                            <TextBlock.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Go to entry" Click="SoldierGoto_OnClick"/>
+                                </ContextMenu>
+                            </TextBlock.ContextMenu>
+                        </TextBlock>
                         <ComboBox x:Name="ArmourModelBase" IsEditable="True" ItemsSource="{Binding ModelEntries}" Height="25" SelectedItem="{Binding SelectedUnit.ArmourModelBase}" Grid.Row="0"  Grid.Column="1"></ComboBox>
                         <TextBlock Text="Levels" Height="25" Margin="5,0,0,0"  Grid.Row="0"  Grid.Column="2"/>
                         <TextBox x:Name="ArmourlvlBase"  Margin="5,0,0,0" Width="50" Text="{Binding SelectedUnit.ArmourlvlBase}" Height="25" HorizontalAlignment="Stretch"  Grid.Row="0"  Grid.Column="3" TextChanged="Field_OnTextChanged"/>
 
-                        <TextBlock Text="{Binding UnitUiText[ArmourModelOne] }" Height="25" Grid.Row="1"/>
+                        <TextBlock Text="{Binding UnitUiText[ArmourModelOne] }" Height="25" Grid.Row="1">
+                            <TextBlock.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Go to entry" Click="SoldierGoto_OnClick"/>
+                                </ContextMenu>
+                            </TextBlock.ContextMenu>
+                        </TextBlock>
                         <ComboBox x:Name="ArmourModelOne" IsEditable="True" ItemsSource="{Binding ModelEntries}" Height="25" SelectedItem="{Binding SelectedUnit.ArmourModelOne}" Grid.Row="1"  Grid.Column="1"></ComboBox>
                         <TextBlock Text="Levels" Height="25" Margin="5,0,0,0"  Grid.Row="1"  Grid.Column="2"/>
                         <TextBox x:Name="ArmourlvlOne"  Margin="5,0,0,0" Width="50" Text="{Binding SelectedUnit.ArmourlvlOne}" Height="25" HorizontalAlignment="Stretch"  Grid.Row="1"  Grid.Column="3" TextChanged="Field_OnTextChanged"/>
 
-                        <TextBlock Text="{Binding UnitUiText[ArmourModelTwo] }" Height="25" Grid.Row="2"/>
+                        <TextBlock Text="{Binding UnitUiText[ArmourModelTwo] }" Height="25" Grid.Row="2">
+                            <TextBlock.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Go to entry" Click="SoldierGoto_OnClick"/>
+                                </ContextMenu>
+                            </TextBlock.ContextMenu>
+                        </TextBlock>
                         <ComboBox x:Name="ArmourModelTwo" IsEditable="True" ItemsSource="{Binding ModelEntries}" Height="25" SelectedItem="{Binding SelectedUnit.ArmourModelTwo}" Grid.Row="2"  Grid.Column="1"></ComboBox>
                         <TextBlock Text="Levels" Height="25" Margin="5,0,0,0"  Grid.Row="2"  Grid.Column="2"/>
                         <TextBox x:Name="ArmourlvlTwo"  Margin="5,0,0,0" Width="50" Text="{Binding SelectedUnit.ArmourlvlTwo}" Height="25" HorizontalAlignment="Stretch"  Grid.Row="2"  Grid.Column="3" TextChanged="Field_OnTextChanged"/>
 
-                        <TextBlock Text="{Binding UnitUiText[ArmourModelThree] }" Height="25" Grid.Row="3"/>
+                        <TextBlock Text="{Binding UnitUiText[ArmourModelThree] }" Height="25" Grid.Row="3">
+                            <TextBlock.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Go to entry" Click="SoldierGoto_OnClick"/>
+                                </ContextMenu>
+                            </TextBlock.ContextMenu>
+                        </TextBlock>
                         <ComboBox x:Name="ArmourModelThree" IsEditable="True" ItemsSource="{Binding ModelEntries}" Height="25" SelectedItem="{Binding SelectedUnit.ArmourModelThree}" Grid.Row="3"  Grid.Column="1"></ComboBox>
                         <TextBlock Text="Levels" Height="25" Margin="5,0,0,0"  Grid.Row="3"  Grid.Column="2"/>
                         <TextBox x:Name="ArmourlvlThree"  Margin="5,0,0,0" Width="50" Text="{Binding SelectedUnit.ArmourlvlThree}" Height="25" HorizontalAlignment="Stretch"  Grid.Row="3"  Grid.Column="3" TextChanged="Field_OnTextChanged"/>

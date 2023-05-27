@@ -42,7 +42,7 @@ namespace ModdingTool
         private cultureAgent admiral = new cultureAgent();
         private cultureAgent merchant = new cultureAgent();
         private cultureAgent priest = new cultureAgent();
-        private Dictionary<string, Faction> factions = new Dictionary<string, Faction>();
+        private List<string> factions = new List<string>();
         private string localizedName;
 
         public string Name { get => name; set => name = value; }
@@ -83,7 +83,7 @@ namespace ModdingTool
         public string FishingPort1Sea { get => fishingPort1Sea; set => fishingPort1Sea = value; }
         public string FishingPort2Sea { get => fishingPort2Sea; set => fishingPort2Sea = value; }
         public string FishingPort3Sea { get => fishingPort3Sea; set => fishingPort3Sea = value; }
-        internal Dictionary<string, Faction> Factions { get => factions; set => factions = value; }
+        internal List<string> Factions { get => factions; set => factions = value; }
         public string LocalizedName { get => localizedName; set => localizedName = value; }
     }
 

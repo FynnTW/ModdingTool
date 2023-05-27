@@ -7,14 +7,13 @@
              xmlns:mvvm="clr-namespace:ModdingTool.View.InterfaceData"
              xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800"
-             d:DataContext="{d:DesignInstance local:DataTab}">
+             d:DesignHeight="450" d:DesignWidth="800">
 
 
-    <xcad:DockingManager x:Name="AllTabs" DocumentsSource="{Binding Tabs}">
+    <xcad:DockingManager x:Name="AllTabs" DocumentsSource="{Binding Tabs}" d:DataContext="{d:DesignInstance local:DataTab }" >
         <xcad:DockingManager.LayoutItemContainerStyle>
             <Style TargetType="{x:Type xcad:LayoutItem}"  >
-                <Setter Property="Title" Value="{Binding Title}"/>
+                <Setter Property="Title" Value="{Binding Model.Title}"/>
             </Style>
         </xcad:DockingManager.LayoutItemContainerStyle>
         <xcad:DockingManager.LayoutItemTemplateSelector>

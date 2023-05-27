@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using ModdingTool.View.InterfaceData;
 using static ModdingTool.Globals;
-using static ModdingTool.parseHelpers;
+using static ModdingTool.ParseHelpers;
 
 namespace ModdingTool
 {
@@ -338,13 +338,13 @@ namespace ModdingTool
                 {
                     continue;
                 }
-                var newline = removeComment(line);
+                var newline = RemoveComment(line);
                 if (line.Equals(""))
                 {
                     continue;
                 }
                 newline = newline.Trim();
-                var lineParts = splitLine(newline);
+                var lineParts = SplitEduLine(newline);
                 if (lineParts is { Length: < 2 })
                 {
                     continue;
@@ -368,20 +368,20 @@ namespace ModdingTool
                         {
                             if (faction == "all")
                             {
-                                foreach (var fac in AllFactions)
+                                foreach (var fac in FactionDataBase)
                                 {
                                     fac.Value.Unit_ownership.Add(newUnit);
                                 }
                             }
-                            else if (AllFactions.Keys.Contains(faction))
+                            else if (FactionDataBase.Keys.Contains(faction))
                             {
-                                AllFactions[faction].Unit_ownership.Add(newUnit);
+                                FactionDataBase[faction].Unit_ownership.Add(newUnit);
                             }
-                            else if (AllCultures.Keys.Contains(faction))
+                            else if (CultureDataBase.Keys.Contains(faction))
                             {
-                                foreach (var fac in AllCultures.SelectMany(cult => cult.Value.Factions))
+                                foreach (var fac in CultureDataBase.SelectMany(cult => cult.Value.Factions))
                                 {
-                                    fac.Value.Unit_ownership.Add(newUnit);
+                                    FactionDataBase[fac].Unit_ownership.Add(newUnit);
                                 }
                             }
                             else
@@ -412,20 +412,20 @@ namespace ModdingTool
             {
                 if (faction == "all")
                 {
-                    foreach (var fac in AllFactions)
+                    foreach (var fac in FactionDataBase)
                     {
                         fac.Value.Unit_ownership.Add(newUnit);
                     }
                 }
-                else if (AllFactions.Keys.Contains(faction))
+                else if (FactionDataBase.Keys.Contains(faction))
                 {
-                    AllFactions[faction].Unit_ownership.Add(newUnit);
+                    FactionDataBase[faction].Unit_ownership.Add(newUnit);
                 }
-                else if (AllCultures.Keys.Contains(faction))
+                else if (CultureDataBase.Keys.Contains(faction))
                 {
-                    foreach (var fac in AllCultures.SelectMany(cult => cult.Value.Factions))
+                    foreach (var fac in CultureDataBase.SelectMany(cult => cult.Value.Factions))
                     {
-                        fac.Value.Unit_ownership.Add(newUnit);
+                        FactionDataBase[fac].Unit_ownership.Add(newUnit);
                     }
                 }
                 else
@@ -441,8 +441,8 @@ namespace ModdingTool
             Globals.PrintInt(UnitDescr.Count);
             Globals.PrintInt(UnitDescrShort.Count);
             Globals.PrintInt(ModelDb.Count);
-            Globals.PrintInt(AllFactions.Count);
-            Globals.PrintInt(AllCultures.Count);
+            Globals.PrintInt(FactionDataBase.Count);
+            Globals.PrintInt(CultureDataBase.Count);
             Globals.PrintInt(ExpandedEntries.Count);
             PrintFinal();
 

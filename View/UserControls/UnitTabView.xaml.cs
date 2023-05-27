@@ -64,8 +64,32 @@ namespace ModdingTool.View.UserControls
 
         private void SoldierGoto_OnClick(object sender, RoutedEventArgs e)
         {
-            var soldiertext = Soldier.Text;
-            var newTab = new ModelDbTab(soldiertext);
+            var menu = (sender as MenuItem)?.Parent as ContextMenu;
+            var textblock = menu?.PlacementTarget as TextBlock;
+            if (textblock?.Text == null) return;
+            var attribute = "";
+            if (textblock.Text.Contains("Officer"))
+            {
+                attribute = textblock.Name switch
+                {
+                    "Officer1a" => "Officer1",
+                    "Officer2a" => "Officer2",
+                    "Officer3a" => "Officer3",
+                    _ => attribute
+                };
+            }
+            else
+            {
+                foreach (var attr in UnitTab.UnitUiText.Where(attr => attr.Value == textblock?.Text))
+                {
+                    attribute = attr.Key;
+                }
+            }
+            if (attribute == null) return;
+            var unit = menu?.DataContext as UnitTab;
+            var model = unit?.SelectedUnit.GetType().GetProperty(attribute)?.GetValue(unit.SelectedUnit, null);
+            if (model?.ToString() == null) return;
+            var newTab = new ModelDbTab(model.ToString());
             datatab?.AddTab(newTab);
         }
 

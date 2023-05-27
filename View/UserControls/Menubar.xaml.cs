@@ -69,14 +69,14 @@ namespace ModdingTool.View.UserControls
             var result = dialog.ShowDialog();
             if (result != CommonFileDialogResult.Ok) return;
             if (dialog.FileName != null) ModPath = dialog.FileName;
-            loadMod();
+            LoadMod();
             Print("Mod path set to: " + ModPath);
             ModLoaded = true;
         }
 
-        public void loadMod()
+        public void LoadMod()
         {
-            parseFiles();
+            ParseFiles();
             var window = Window.GetWindow(this);
             if (window != null)
             {
@@ -92,6 +92,11 @@ namespace ModdingTool.View.UserControls
         {
             if (!ModLoaded) return;
             EduParser.WriteEdu();
+        }
+
+        private void ErrorLog_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

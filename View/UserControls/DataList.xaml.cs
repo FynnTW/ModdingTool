@@ -66,11 +66,11 @@ namespace ModdingTool.View.UserControls
                     SelectedType = selected;
                     break;
                 case "Factions":
-                    DataListPicker.ItemsSource = AllFactions.Keys;
+                    DataListPicker.ItemsSource = FactionDataBase.Keys;
                     SelectedType = selected;
                     break;
                 case "Cultures":
-                    DataListPicker.ItemsSource = AllCultures.Keys;
+                    DataListPicker.ItemsSource = CultureDataBase.Keys;
                     SelectedType = selected;
                     break;
             }

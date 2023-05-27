@@ -3,171 +3,246 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows.Controls;
 using static ModdingTool.Globals;
-using static ModdingTool.parseHelpers;
+using static ModdingTool.ParseHelpers;
 
 namespace ModdingTool
 {
-    internal class factionParser
+    internal class FactionParser
     {
-        public static void parseSMFactions()
+        //Parsing line number used for error logging
+        private static int _lineNum = 0;
+
+        public static void ParseSmFactions()
         {
-            parseExpanded();
-            parseCultures();
-            Console.WriteLine(@"start parse factions");
-            string[] lines = File.ReadAllLines(ModPath + "\\data\\descr_sm_factions.txt");
+            Console.WriteLine(@"start parse descr_sm_factions");
 
-            Faction faction = new Faction();
-            bool first = false;
-            AllFactions = new Dictionary<string, Faction>();
+            //Try read sm_factions file
+            var lines = FileReader("\\data\\descr_sm_factions.txt", "descr_sm_factions.txt", Encoding.Default);
+            if (lines == null) { return; } //something very wrong if you hit this
 
-            foreach (string line in lines)
+            //Reset line counter
+            _lineNum = 0;
+
+            //Initialize Global Factions Database
+            FactionDataBase = new Dictionary<string, Faction>();
+
+            //Create new faction for first entry
+            var faction = new Faction();
+            var first = true;
+
+            //Loop through lines
+            foreach (var line in lines)
             {
-                if (line.StartsWith(';'))
+                //Increase line counter
+                _lineNum++;
+
+                //Remove Comments and Faulty lines
+                var newline = CleanLine(line);
+                if (string.IsNullOrWhiteSpace(newline))
                 {
                     continue;
                 }
-                string newline = removeComment(line);
-                if (newline.Equals(""))
-                {
-                    continue;
-                }
-                newline = newline.Trim();
-                string[] parts = lineSplitter(newline);
+
+                //Split line into parts
+                var parts = LineSplitterFactions(newline);
                 if (parts.Length < 2)
                 {
+                    //Should be something wrong with line if you hit this
+                    ErrorDB.AddError("Unrecognized content", _lineNum.ToString(), "descr_sm_factions.txt");
                     continue;
                 }
+
+                //Entry is completed, next entry is starting
                 if (parts[0].Equals("faction"))
                 {
-                    if (first)
+                    //Add new faction if it is not the first time we hit this
+                    if (!first)
                     {
-                        AllFactions.Add(faction.Name, faction);
-                        Console.WriteLine(faction.Name);
-                        AllCultures[faction.Culture].Factions.Add(faction.Name, faction);
+                        AddFaction(faction);
                     }
-                    first = true;
+                    first = false;
                     faction = new Faction();
                 }
-                assignFields(faction, parts);
+
+                //Fill out the faction field the line is about
+                AssignFields(faction, parts);
             }
-            AllFactions.Add(faction.Name, faction);
-            Console.WriteLine(faction.Name);
-            AllCultures[faction.Culture].Factions.Add(faction.Name, faction);
-            Console.WriteLine(@"end parse factions");
+
+            //Add last faction
+            AddFaction(faction);
+
+            //Reset Line Counter
+            Console.WriteLine(@"end parse descr_sm_factions");
+            _lineNum = 0;
         }
 
-        public static void parseCultures()
+        private static void AddFaction(Faction fac)
         {
-            Console.WriteLine(@"start parse cultures");
-            string[] lines = File.ReadAllLines(ModPath + "\\data\\descr_cultures.txt");
+            FactionDataBase.Add(fac.Name, fac);
+            Console.WriteLine(fac.Name);
+            CultureDataBase[fac.Culture].Factions.Add(fac.Name);
+        }
 
-            Culture culture = new Culture();
-            bool first = false;
-            AllCultures = new Dictionary<string, Culture>();
+        public static void ParseCultures()
+        {
+            Console.WriteLine(@"start parse descr_cultures");
 
-            foreach (string line in lines)
+            //Try read descr_cultures file
+            var lines = FileReader("\\data\\descr_cultures.txt", "descr_cultures.txt", Encoding.Default);
+            if (lines == null) { return; } //something very wrong if you hit this
+
+            //Reset line counter
+            _lineNum = 0;
+
+            //Initialize Global Cultures Database
+            CultureDataBase = new Dictionary<string, Culture>();
+
+            //Create new culture for first entry
+            var culture = new Culture();
+            var first = true;
+
+            //Loop through lines
+            foreach (var line in lines)
             {
-                if (line.StartsWith(';'))
+                //Increase line counter
+                _lineNum++;
+
+                //Remove Comments and Faulty lines
+                //This file has valid line with only brackets so remove them too
+                var newline = line.Replace("}", "");
+                newline = newline.Replace("{", "").Trim();
+                newline = CleanLine(newline);
+                if (string.IsNullOrWhiteSpace(newline))
                 {
                     continue;
                 }
-                string newline = removeComment(line);
-                if (newline.Equals(""))
-                {
-                    continue;
-                }
-                newline = newline.Trim();
-                string[] parts = lineSplitterCultures(newline);
+
+                //Split line into parts
+                var parts = LineSplitterCultures(newline);
                 if (parts.Length < 1)
                 {
+                    //Should be something wrong with line if you hit this
+                    ErrorDB.AddError("Unrecognized content", _lineNum.ToString(), "descr_cultures.txt");
                     continue;
                 }
+
+                //Entry is completed, next entry is starting
                 if (parts[0].Equals("culture"))
                 {
-                    if (first)
+                    //Add new culture if it is not the first time we hit this
+                    if (!first)
                     {
-                        AllCultures.Add(culture.Name, culture);
-                        Console.WriteLine(culture.Name);
+                        AddCulture(culture);
                     }
-                    first = true;
+                    first = false;
                     culture = new Culture();
                 }
-                assignCultureFields(culture, parts);
+
+                //Fill out the culture field the line is about
+                AssignCultureFields(culture, parts);
             }
-            AllCultures.Add(culture.Name, culture);
-            Console.WriteLine(culture.Name);
-            Console.WriteLine(@"end parse cultures");
+
+            //Add last culture
+            AddCulture(culture);
+
+            //Reset Line Counter
+            Console.WriteLine(@"end parse descr_cultures");
+            _lineNum = 0;
         }
 
-        public static void parseExpanded()
+        private static void AddCulture(Culture culture)
+        {
+            CultureDataBase.Add(culture.Name, culture);
+            Console.WriteLine(culture.Name);
+        }
+
+        public static void ParseExpanded()
         {
             Console.WriteLine(@"start parse expanded");
-            string[] lines = File.ReadAllLines(ModPath + "\\data\\text\\expanded.txt", Encoding.Unicode);
+
+            //Try read expanded file
+            var lines = FileReader("\\data\\text\\expanded.txt", "expanded.txt", Encoding.Unicode);
+            if (lines == null) { return; }
+
+            //Reset line counter
+            _lineNum = 0;
+
+            //Initialize Global Expanded Text Entries Database
             ExpandedEntries = new Dictionary<string, string>();
-            foreach (string line in lines)
+
+            //Loop through lines
+            foreach (var line in lines)
             {
+                //Increase line counter
+                _lineNum++;
+                if (string.IsNullOrWhiteSpace(line))
+                {
+                    continue;
+                }
                 if (line.StartsWith('¬'))
                 {
                     continue;
                 }
                 if (!line.Contains('{') || !line.Contains('}'))
                 {
+                    ErrorDB.AddError("Unrecognized content", _lineNum.ToString(), "expanded.txt");
                     continue;
                 }
-                string newLine = line.Trim();
-                string[] parts = stringSplitter(newLine);
-                fillDict(parts);
-
-                //Console.WriteLine(line);
+                var newLine = line.Trim();
+                var parts = CurlySplitter(newLine);
+                AddExpandedEntry(parts);
             }
             Console.WriteLine(@"end parse expanded");
+            _lineNum = 0;
         }
 
-        public static void fillDict(string[] parts)
+        private static void AddExpandedEntry(IReadOnlyList<string> parts)
         {
-            String identifier = parts[0];
+            var identifier = parts[0];
 
-            if (parts.Length > 1)
+            if (parts.Count > 1)
             {
                 ExpandedEntries[identifier.ToLower()] = parts[1];
             }
             else
             {
+                ErrorDB.AddError("Warning entry has no localization", _lineNum.ToString(), "expanded.txt");
                 ExpandedEntries[identifier.ToLower()] = "";
             }
             Console.WriteLine(@identifier.ToLower());
         }
 
-        public static string[] lineSplitter(string line)
+        private static string[] LineSplitterFactions(string line)
         {
             char[] delimiters = { ',' };
-            string[] lineParts = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            var lineParts = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
             char[] delimitersWhite = { ' ', '\t' };
-            string[] firstParts = lineParts[0].Split(delimitersWhite, 2, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            var firstParts = lineParts[0].Split(delimitersWhite, 2, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
             lineParts = firstParts.Concat(lineParts[1..]).ToArray();
             return lineParts;
         }
 
-        public static string[] lineSplitterCultures(string line)
+        private static string[] LineSplitterCultures(string line)
         {
             char[] delimiters = { ',', '}', '{' };
-            string[] lineParts = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            var lineParts = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
             char[] delimitersWhite = { ' ', '\t' };
             if (lineParts.Length == 0)
             {
                 return lineParts;
             }
-            string[] firstParts = lineParts[0].Split(delimitersWhite, 2, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            var firstParts = lineParts[0].Split(delimitersWhite, 2, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
             lineParts = firstParts.Concat(lineParts[1..]).ToArray();
             return lineParts;
         }
 
-        public static void assignFields(Faction faction, string[] parts)
+        private static void AssignFields(Faction faction, string[] parts)
         {
-            String identifier = parts[0];
+            var identifier = parts[0];
 
-            String x = parts[1];
+            var x = parts[1];
             char[] delimitersWhite = { ' ', '\t' };
 
             switch (identifier)
@@ -176,7 +251,7 @@ namespace ModdingTool
                     faction.Name = x;
                     if (parts.Length > 2)
                     {
-                        string id = parts[2];
+                        var id = parts[2];
                         switch (id)
                         {
                             case "spawned_on_event":
@@ -339,13 +414,13 @@ namespace ModdingTool
             }
         }
 
-        private static string settlement_level;
+        private static string? _settlementLevel;
 
-        public static void assignCultureFields(Culture culture, string[] parts)
+        private static void AssignCultureFields(Culture culture, string[] parts)
         {
-            String identifier = parts[0];
+            var identifier = parts[0];
 
-            String x = "";
+            var x = "";
 
             if (parts.Length > 1)
             {
@@ -370,47 +445,47 @@ namespace ModdingTool
                     break;
 
                 case "village":
-                    settlement_level = "village";
+                    _settlementLevel = "village";
                     break;
 
                 case "moot_and_bailey":
-                    settlement_level = "moot_and_bailey";
+                    _settlementLevel = "moot_and_bailey";
                     break;
 
                 case "town":
-                    settlement_level = "town";
+                    _settlementLevel = "town";
                     break;
 
                 case "wooden_castle":
-                    settlement_level = "wooden_castle";
+                    _settlementLevel = "wooden_castle";
                     break;
 
                 case "large_town":
-                    settlement_level = "large_town";
+                    _settlementLevel = "large_town";
                     break;
 
                 case "castle":
-                    settlement_level = "castle";
+                    _settlementLevel = "castle";
                     break;
 
                 case "city":
-                    settlement_level = "city";
+                    _settlementLevel = "city";
                     break;
 
                 case "fortress":
-                    settlement_level = "fortress";
+                    _settlementLevel = "fortress";
                     break;
 
                 case "large_city":
-                    settlement_level = "large_city";
+                    _settlementLevel = "large_city";
                     break;
 
                 case "citadel":
-                    settlement_level = "citadel";
+                    _settlementLevel = "citadel";
                     break;
 
                 case "huge_city":
-                    settlement_level = "huge_city";
+                    _settlementLevel = "huge_city";
                     break;
 
                 case "normal":
@@ -419,7 +494,7 @@ namespace ModdingTool
                         var newparts = parts[1].Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                         parts = parts.Concat(newparts).ToArray();
                     }
-                    switch (settlement_level)
+                    switch (_settlementLevel)
                     {
                         case "village":
                             culture.Village.Model = x;
@@ -479,7 +554,7 @@ namespace ModdingTool
                     break;
 
                 case "card":
-                    switch (settlement_level)
+                    switch (_settlementLevel)
                     {
                         case "village":
                             culture.Village.Card = x;
@@ -546,12 +621,12 @@ namespace ModdingTool
                     break;
 
                 case "port_land":
-                    if (culture.FishingPort1 == null)
+                    if (string.IsNullOrWhiteSpace(culture.FishingPort1))
                     {
                         culture.FishingPort1 = x;
                         culture.FishingPort1Base = parts[2];
                     }
-                    else if (culture.FishingPort2 == null)
+                    else if (string.IsNullOrWhiteSpace(culture.FishingPort2))
                     {
                         culture.FishingPort2 = x;
                         culture.FishingPort2Base = parts[2];
@@ -564,11 +639,11 @@ namespace ModdingTool
                     break;
 
                 case "port_sea":
-                    if (culture.FishingPort1Sea == null)
+                    if (string.IsNullOrWhiteSpace(culture.FishingPort1Sea))
                     {
                         culture.FishingPort1Sea = x;
                     }
-                    else if (culture.FishingPort2Sea == null)
+                    else if (string.IsNullOrWhiteSpace(culture.FishingPort2Sea))
                     {
                         culture.FishingPort2Sea = x;
                     }

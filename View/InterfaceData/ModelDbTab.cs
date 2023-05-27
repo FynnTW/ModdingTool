@@ -37,11 +37,13 @@ public class ModelDbTab : ITab.Tab
     };
     public BattleModel SelectedModel { get; set; }
     public static string[] Factions { get; set; }
+    public static string[] MountTypes { get; set; } = new string[] { "horse", "none", "elephant", "camel" };
 
     public ModelDbTab(string name)
     {
         Title = name;
         SelectedModel = ModelDb[Title];
-        Factions = AllFactions.Keys.ToArray();
+        Factions = FactionDataBase.Keys.ToArray();
+        Factions.Append("merc");
     }
 }

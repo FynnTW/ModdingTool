@@ -46,7 +46,7 @@ namespace ModdingTool.View.UserControls
             AllTabs.DocumentsSource = Tabs;
             selectedTab = tab;
             AllTabs.ActiveContent = tab;
-            if (documentPane.SelectedContent != null) documentPane.SelectedContent.Title = tab.Title;
+            //if (documentPane.SelectedContent != null) documentPane.SelectedContent.Title = tab.Title;
         }
 
         public void RemoveTab(ITab tab)

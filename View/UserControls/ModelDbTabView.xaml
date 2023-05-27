@@ -10,10 +10,10 @@
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance mvvm:ModelDbTab}">
-    <ScrollViewer>
+    <ScrollViewer x:Name="ScrollViewerTabs">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="50*"></ColumnDefinition>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="5*"></RowDefinition>
@@ -55,7 +55,13 @@
                 <TextBlock Text="Main Textures" Height="25"/>
                 <DataGrid x:Name="MainTextureGrid" ItemsSource="{Binding SelectedModel.MainTextures}"   AutoGenerateColumns="False" RowHeight="25" CanUserResizeRows="False" ColumnHeaderHeight="25" >
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Faction" Binding="{Binding Faction}" IsReadOnly="False"/>
+                        <DataGridTemplateColumn Header="Faction" >
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox x:Name="factionbox" IsEditable="True" SelectedItem="{Binding Faction}" ItemsSource="{Binding ElementName=ScrollViewerTabs, Path=DataContext.Factions}" ></ComboBox>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTextColumn Header="Texture Path" Binding="{Binding TexturePath}" IsReadOnly="False"/>
                         <DataGridTextColumn Header="Normal Texture Path" Binding="{Binding Normal}" IsReadOnly="False"/>
                         <DataGridTextColumn Header="Sprite Path" Binding="{Binding Sprite}" IsReadOnly="False"/>
@@ -73,7 +79,13 @@
                 <TextBlock Text="Attachment Textures" Height="25"/>
                 <DataGrid x:Name="AttachTextureGrid" ItemsSource="{Binding SelectedModel.AttachTextures}"  AutoGenerateColumns="False" RowHeight="25" CanUserResizeRows="False" ColumnHeaderHeight="25" >
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Faction" Binding="{Binding Faction}" IsReadOnly="False"/>
+                        <DataGridTemplateColumn Header="Faction" >
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox x:Name="factionbox" IsEditable="True" SelectedItem="{Binding Faction}" ItemsSource="{Binding ElementName=ScrollViewerTabs, Path=DataContext.Factions}" ></ComboBox>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTextColumn Header="Texture Path" Binding="{Binding TexturePath}" IsReadOnly="False"/>
                         <DataGridTextColumn Header="Normal Texture Path" Binding="{Binding Normal}" IsReadOnly="False"/>
                         <DataGridTextColumn Header="Sprite Path" Binding="{Binding Sprite}" IsReadOnly="False"/>
@@ -91,7 +103,13 @@
                 <TextBlock Text="Animations" Height="25"/>
                 <DataGrid x:Name="AnimationGrid" ItemsSource="{Binding SelectedModel.Animations}"  AutoGenerateColumns="False" RowHeight="25" CanUserResizeRows="False" ColumnHeaderHeight="25" SizeChanged="AnimationGrid_OnSizeChanged">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Mount Type" Binding="{Binding MountType}" IsReadOnly="False"/>
+                        <DataGridTemplateColumn Header="Mount Type" >
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox x:Name="factionbox" IsEditable="True" SelectedItem="{Binding MountType}" ItemsSource="{Binding ElementName=ScrollViewerTabs, Path=DataContext.MountTypes}" ></ComboBox>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTextColumn Header="Primary_skeleton" Binding="{Binding Primary_skeleton}" IsReadOnly="False"/>
                         <DataGridTextColumn Header="Secondary_skeleton" Binding="{Binding Secondary_skeleton}" IsReadOnly="False"/>
                         <DataGridTextColumn Header="Primary Weapon 1" Binding="{Binding PriWeaponOne}" IsReadOnly="False" />
@@ -100,6 +118,42 @@
                         <DataGridTextColumn Header="Secondary Weapons 2" Binding="{Binding SecWeaponTwo}" IsReadOnly="False"/>
                     </DataGrid.Columns>
                 </DataGrid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding BmdbUiText[TorchIndex] }" Height="25" Grid.Column="0"/>
+                        <TextBox x:Name="TorchIndex" Text="{Binding SelectedModel.TorchIndex}" Height="25" HorizontalAlignment="Stretch"  Margin="3" MinWidth="50"/>
+                    </StackPanel>
+
+                    <TextBlock Text="Torch Offsets" Height="25" Grid.Column="0" Grid.Row="1"/>
+                    <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0" >
+                        <TextBlock Text="X" Height="25" MinWidth="20"/>
+                        <TextBox x:Name="TorchBoneX" Text="{Binding SelectedModel.TorchBoneY}" MinWidth="50" Height="25" HorizontalAlignment="Stretch" Margin="3"/>
+                        <TextBlock Text="Y" Height="25" MinWidth="20"/>
+                        <TextBox x:Name="TorchBoneY" Text="{Binding SelectedModel.TorchBoneY}"  MinWidth="50" Height="25" HorizontalAlignment="Stretch" Margin="3"/>
+                        <TextBlock Text="Z" Height="25"  MinWidth="20"/>
+                        <TextBox x:Name="TorchBoneZ" Text="{Binding SelectedModel.TorchBoneZ}"  MinWidth="50" Height="25" HorizontalAlignment="Stretch" Margin="3"/>
+                    </StackPanel>
+
+                    <TextBlock Text="Torch Sprite Offsets" Height="25" Grid.Column="0" Grid.Row="3"/>
+                    <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="0" >
+                        <TextBlock Text="X" Height="25" MinWidth="20"/>
+                        <TextBox x:Name="TorchspriteX" Text="{Binding SelectedModel.TorchspriteX}" MinWidth="50" Height="25" HorizontalAlignment="Stretch" Margin="3"/>
+                        <TextBlock Text="Y" Height="25" MinWidth="20"/>
+                        <TextBox x:Name="TorchspriteY" Text="{Binding SelectedModel.TorchspriteY}"  MinWidth="50" Height="25" HorizontalAlignment="Stretch" Margin="3"/>
+                        <TextBlock Text="Z" Height="25"  MinWidth="20"/>
+                        <TextBox x:Name="TorchspriteZ" Text="{Binding SelectedModel.TorchspriteZ}"  MinWidth="50" Height="25" HorizontalAlignment="Stretch" Margin="3"/>
+                    </StackPanel>
+                </Grid>
             </StackPanel>
         </Grid>
     </ScrollViewer>

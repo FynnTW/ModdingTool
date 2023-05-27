@@ -157,6 +157,8 @@ public class UnitTab : ITab.Tab
     public static string[] VoiceTypes { get; set; } = new string[] { "General", "Heavy", "Light", "Female", "Medium" };
     public static string[] Factions { get; set; }
     public static string[] ModelEntries { get; set; }
+    public static string PriAnimation { get; set; }
+    public static string SecAnimation { get; set; }
 
     public static string[] SoundTypesDef { get; set; } = new string[]
     {
@@ -224,7 +226,7 @@ public class UnitTab : ITab.Tab
     {
         Title = name;
         SelectedUnit = AllUnits[Title];
-        Factions = AllFactions.Keys.ToArray();
+        Factions = FactionDataBase.Keys.ToArray();
         ModelEntries = ModelDb.Keys.ToArray();
         UnitInfoImage = TgaToImageSource(SelectedUnit.CardInfo);
         UnitImage = TgaToImageSource(SelectedUnit.Card);
@@ -236,7 +238,6 @@ public class UnitTab : ITab.Tab
                 mountEffectString += ", ";
             }
         }
-
     }
 
 

@@ -14,7 +14,6 @@ namespace ModdingTool
     {
         public static string ModPath = null!;
         public static bool ModLoaded = false;
-        public static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public static int ProjectileDelayStandard = 0;
         public static int ProjectileDelayFlaming = 0;
         public static int ProjectileDelayGunpowder = 0;
@@ -23,10 +22,11 @@ namespace ModdingTool
         public static Dictionary<string, string?> UnitDescr = new();
         public static Dictionary<string, string?> UnitDescrShort = new();
         public static Dictionary<string, BattleModel> ModelDb = new();
-        public static Dictionary<string, BattleModel> ModelDb_import = new();
-        public static Dictionary<string, Faction> AllFactions = new();
-        public static Dictionary<string, Culture> AllCultures = new();
+        public static Dictionary<string, Faction> FactionDataBase = new();
+        public static Dictionary<string, Culture> CultureDataBase = new();
         public static Dictionary<string, string> ExpandedEntries = new();
+        // ReSharper disable once InconsistentNaming
+        public static Errors ErrorDB = new();
 
         public static void Print(string message)
         {
@@ -58,19 +58,21 @@ namespace ModdingTool
             System.IO.File.WriteAllText(@"bmdb.json", JsonConvert.SerializeObject(ModelDb));
         }
 
-        public static void parseFiles()
+        public static void ParseFiles()
         {
+            FactionParser.ParseExpanded();
+            FactionParser.ParseCultures();
+            FactionParser.ParseSmFactions();
             BmdbParser.ParseBmdb();
-            factionParser.parseSMFactions();
             EduParser.ParseEdu();
         }
 
-        public static void startauto()
+        public static void Startauto()
         {
             MainWindow window = (ModdingTool.MainWindow)App.Current.MainWindow;
             var menubar = window.FindName("MenuBarCustom") as ModdingTool.View.UserControls.Menubar;
             ModPath = "E:\\SteamLibrary\\steamapps\\common\\Medieval II Total War\\mods\\Divide_and_Conquer";
-            menubar.loadMod();
+            menubar.LoadMod();
         }
 
         public static void PrintInt(int statement)

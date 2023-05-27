@@ -71,26 +71,44 @@ namespace ModdingTool
                 if (firstEntry) { pad = GetInt(); pad = GetInt(); }
                 for (var i = 0; i < entry.MainTexturesCount; i++)
                 {
-                    var facname = GetString();
-                    entry.MainTextures.Add(new Texture
+                    var facname = GetString().ToLower();
+                    if (FactionDataBase.ContainsKey(facname) || facname == "merc")
                     {
-                        Faction = facname,
-                        TexturePath = GetString(),
-                        Normal = GetString(),
-                        Sprite = GetString()
-                    });
+                        entry.MainTextures.Add(new Texture
+                        {
+                            Faction = facname,
+                            TexturePath = GetString(),
+                            Normal = GetString(),
+                            Sprite = GetString()
+                        });
+                    }
+                    else
+                    {
+                        var texpad = GetString();
+                        texpad = GetString();
+                        texpad = GetString();
+                    }
                 }
                 entry.AttachTexturesCount = GetInt();
                 for (var i = 0; i < entry.AttachTexturesCount; i++)
                 {
-                    var facname = GetString();
-                    entry.AttachTextures.Add(new Texture
+                    var facname = GetString().ToLower();
+                    if (FactionDataBase.ContainsKey(facname) || facname == "merc")
                     {
-                        Faction = facname,
-                        TexturePath = GetString(),
-                        Normal = GetString(),
-                        Sprite = GetString()
-                    });
+                        entry.AttachTextures.Add(new Texture
+                        {
+                            Faction = facname,
+                            TexturePath = GetString(),
+                            Normal = GetString(),
+                            Sprite = GetString()
+                        });
+                    }
+                    else
+                    {
+                        var texpad = GetString();
+                        texpad = GetString();
+                        texpad = GetString();
+                    }
                 }
                 if (firstEntry) { pad = GetInt(); pad = GetInt(); }
                 entry.MountTypeCount = GetInt();
@@ -100,7 +118,7 @@ namespace ModdingTool
                 {
                     entry.Animations.Add(new Animation
                     {
-                        MountType = GetString(),
+                        MountType = GetString().ToLower(),
                         Primary_skeleton = GetString(),
                         Secondary_skeleton = GetString(),
                         PriWeaponCount = GetInt()
