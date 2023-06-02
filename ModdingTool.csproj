@@ -32,13 +32,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Sdl.MultiSelectComboBox">
-      <HintPath>C:\Users\fynnp\Desktop\Multiselect-ComboBox-master\MultiSelectComboBox\Sdl.MultiSelectComboBox\bin\Release\net6-windows\Sdl.MultiSelectComboBox.dll</HintPath>
-    </Reference>
+    <Folder Include="View\NewFolder\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="View\NewFolder\" />
+    <Reference Include="Sdl.MultiSelectComboBox">
+      <HintPath>Resources\Sdl.MultiSelectComboBox.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
