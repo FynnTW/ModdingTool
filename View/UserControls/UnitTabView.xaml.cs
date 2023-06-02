@@ -141,5 +141,41 @@ namespace ModdingTool.View.UserControls
             EraTwo.Visibility = Visibility.Hidden;
             EraTwo.Visibility = Visibility.Visible;
         }
+
+        private void Special_formation_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (Special_formation.SelectedItem == null) return;
+            if (Formation_style.SelectedItem == null) return;
+            if ((sender as ComboBox)?.DataContext is not UnitTab utab) return;
+
+            utab.SpecialFormationStylesX = UnitTab.SpecialFormationStyles;
+            utab.FormationStylesX = UnitTab.FormationStyles;
+
+            if (UnitTab.SpecialFormationStyles.Contains(Formation_style.SelectedItem))
+            {
+                utab.SpecialFormationStylesX = UnitTab.FormationStyles;
+                if (Formation_style.SelectedItem != null && utab.SpecialFormationStylesX.Contains(Formation_style.SelectedItem))
+                    utab.SpecialFormationStylesX.Remove((string)Formation_style.SelectedItem);
+            }
+            else
+            {
+                utab.SpecialFormationStylesX = UnitTab.SpecialFormationStyles;
+            }
+
+            if (UnitTab.FormationStyles.Contains(Special_formation.SelectedItem))
+            {
+                if (Special_formation.SelectedItem != null)
+                    utab.FormationStylesX.Remove((string)Special_formation.SelectedItem);
+            }
+            else
+            {
+                utab.FormationStylesX = UnitTab.FormationStyles;
+            }
+
+            Formation_style.ItemsSource = utab.FormationStylesX;
+            Special_formation.ItemsSource = utab.SpecialFormationStylesX;
+            Formation_style.Items.Refresh();
+            Special_formation.Items.Refresh();
+        }
     }
 }

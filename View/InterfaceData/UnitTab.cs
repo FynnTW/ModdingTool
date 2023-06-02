@@ -214,11 +214,14 @@ public class UnitTab : ITab.Tab
         "trained", "highly_trained", "untrained"
     };
     public static string[] TechTypes { get; set; } = new string[] { "melee_simple", "missile_mechanical", "melee_blade", "missile_gunpowder", "artillery_mechanical", "artillery_gunpowder" };
-    public static string[] FormationStyles { get; set; } = new string[] { "square", "horde", "column", "wedge", "square_hollow", "phalanx", "schiltrom", "shield_wall" };
+    public static List<string> FormationStyles { get; set; } = new List<string> { "square", "horde", "phalanx" };
+    public static List<string> SpecialFormationStyles { get; set; } = new List<string> { "wedge", "phalanx", "schiltrom", "shield_wall" };
     public static List<string> AttackAttr { get; set; } = new List<string> { "spear", "light_spear", "prec", "ap", "bp", "area", "fire", "launching", "thrown", "short_pike", "long_pike", "spear_bonus_12", "spear_bonus_10", "spear_bonus_8", "spear_bonus_6", "spear_bonus_4" };
     public BitmapImage UnitImage { get; set; }
     public BitmapImage UnitInfoImage { get; set; }
     public string mountEffectString { get; set; } = "";
+    public List<string> FormationStylesX { get; set; } = new List<string> { "square", "horde", "phalanx" };
+    public List<string> SpecialFormationStylesX { get; set; } = new List<string> { "wedge", "phalanx", "schiltrom", "shield_wall" };
 
 
 

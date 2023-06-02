@@ -517,7 +517,7 @@
                     <TextBox x:Name="Spacing_width" Text="{Binding SelectedUnit.Spacing_width}" Height="25" HorizontalAlignment="Stretch"/>
                     <TextBox x:Name="Spacing_width_loose" Text="{Binding SelectedUnit.Spacing_width_loose}" Height="25" HorizontalAlignment="Stretch"/>
                     <TextBox x:Name="Spacing_ranks" Text="{Binding SelectedUnit.Spacing_ranks}" Height="25" HorizontalAlignment="Stretch"/>
-                    <ComboBox x:Name="Formation_style" ItemsSource="{Binding FormationStyles}" Height="25" SelectedItem="{Binding SelectedUnit.Formation_style}"></ComboBox>
+                    <ComboBox x:Name="Formation_style" SelectionChanged="Special_formation_OnSelectionChanged" ItemsSource="{Binding FormationStylesX}" Height="25" SelectedItem="{Binding SelectedUnit.Formation_style}"></ComboBox>
                 </StackPanel>
                 <StackPanel  Grid.Column="2" Grid.Row="2" VerticalAlignment="Top">
                     <TextBlock Text="{Binding UnitUiText[Card_dict] }" Height="25"/>
@@ -533,7 +533,7 @@
                     <TextBox x:Name="Card_dict" Text="{Binding SelectedUnit.Card_dict}" Height="25" HorizontalAlignment="Stretch"/>
                     <TextBox x:Name="Spacing_depth" Text="{Binding SelectedUnit.Spacing_depth}" Height="25" HorizontalAlignment="Stretch"/>
                     <TextBox x:Name="Spacing_depth_loose" Text="{Binding SelectedUnit.Spacing_depth_loose}" Height="25" HorizontalAlignment="Stretch"/>
-                    <ComboBox x:Name="Special_formation" ItemsSource="{Binding FormationStyles}" Height="25" SelectedItem="{Binding SelectedUnit.Special_formation}"></ComboBox>
+                    <ComboBox x:Name="Special_formation" SelectionChanged="Special_formation_OnSelectionChanged" ItemsSource="{Binding SpecialFormationStylesX}" Height="25" SelectedItem="{Binding SelectedUnit.Special_formation}"></ComboBox>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding UnitUiText[Stat_food_sec] }" Height="25"/>
                         <TextBox x:Name="Stat_food_sec" Text="{Binding SelectedUnit.Stat_food_sec}" Margin="10,0,0,0" Width="50" Height="25" HorizontalAlignment="Stretch"/>

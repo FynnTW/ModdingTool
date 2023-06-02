@@ -192,9 +192,9 @@ namespace ModdingTool
 
         public double CrusadeUpkeep { get; set; } = 1.0;
 
-        public double? Radius { get; set; }
+        public double? Radius { get; set; } = 0.4;
 
-        public double? Height { get; set; }
+        public double? Height { get; set; } = 1.7;
 
         public string? Accent { get; set; } = "";
         public int Spacing_ranks { get; set; }
