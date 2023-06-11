@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ModdingTool
 {
@@ -212,6 +210,10 @@ namespace ModdingTool
         public int Edu_index { get; set; }
 
         public string CardInfo { get; set; } = "";
+
+        public Dictionary<string, List<string>> Comments { get; set; } = new();
+
+        public Dictionary<string, string> CommentsInLine { get; set; } = new();
 
         #endregion Public properties
 

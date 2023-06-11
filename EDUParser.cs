@@ -1,10 +1,12 @@
-﻿using System;
+﻿// Ignore Spelling: Edu
+
+using ModdingTool.View.InterfaceData;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using ModdingTool.View.InterfaceData;
 using static ModdingTool.Globals;
 using static ModdingTool.ParseHelpers;
 
@@ -17,27 +19,107 @@ namespace ModdingTool
         private const string UNIT_INFO_CARD_PATH = "\\data\\ui\\unit_info";
         private static int _lineNum;
         private static string _fileName = "";
+        public static List<string> EduEndComments = new();
+        public static List<string> EduIdentifiers = new()
+        {
+            "type",
+            "dictionary",
+            "category",
+            "class",
+            "voice_type",
+            "accent",
+            "banner faction",
+            "banner holy",
+            "soldier",
+            "officer",
+            "ship",
+            "engine",
+            "animal",
+            "mount",
+            "mount_effect",
+            "attributes",
+            "move_speed_mod",
+            "formation",
+            "stat_health",
+            "stat_pri",
+            "stat_pri_attr",
+            "stat_sec",
+            "stat_sec_attr",
+            "stat_ter",
+            "stat_ter_attr",
+            "stat_pri_armour",
+            "stat_sec_armour",
+            "stat_heat",
+            "stat_ground",
+            "stat_mental",
+            "stat_charge_dist",
+            "stat_fire_delay",
+            "stat_food",
+            "stat_cost",
+            "armour_ug_levels",
+            "armour_ug_models",
+            "ownership",
+            "era 0",
+            "era 1",
+            "era 2",
+            "info_pic_dir",
+            "card_pic_dir",
+            "crusading_upkeep_modifier",
+            "recruit_priority_offset"
+        };
 
         public static void WriteEdu()
         {
             var newEdu = UnitDataBase.Values.Aggregate("", (current, unit) => current + WriteEduEntry(unit));
+            newEdu += EduEndComments.Aggregate("", (current, comment) => current + comment);
             File.WriteAllText(@"export_descr_unit.txt", newEdu);
+        }
+
+        private static string AddComment(string identifier, Unit unit)
+        {
+            if (!unit.Comments.ContainsKey(identifier)) return "";
+            if (unit.Comments[identifier].Count == 0) return "";
+            var comment = unit.Comments[identifier].Aggregate("", (current, c) => current + (c + "\n"));
+            return comment;
         }
 
         private static string WriteEduEntry(Unit unit)
         {
             var entry = "";
-            entry += "type\t\t\t\t\t" + unit.Type + "\n";
-            entry += "dictionary\t\t\t\t" + unit.Dictionary + "\n";
-            entry += "category\t\t\t\t" + unit.Category + "\n";
-            entry += "class\t\t\t\t\t" + unit.Class_type + "\n";
-            entry += "voice_type\t\t\t\t" + unit.Voice_type + "\n";
+            var identifier = "type";
+            foreach (var id in EduIdentifiers)
+            {
+                unit.CommentsInLine.TryAdd(id, "");
+            }
+            entry += AddComment(identifier, unit);
+            entry += identifier + "\t\t\t\t\t" + unit.Type + " " + unit.CommentsInLine[identifier] + "\n";
+            identifier = "dictionary";
+            entry += AddComment(identifier, unit);
+            entry += identifier + "\t\t\t\t" + unit.Dictionary + " " + unit.CommentsInLine[identifier] + "\n";
+            identifier = "category";
+            entry += AddComment(identifier, unit);
+            entry += "category\t\t\t\t" + unit.Category + " " + unit.CommentsInLine[identifier] + "\n";
+            identifier = "class";
+            entry += AddComment(identifier, unit);
+            entry += "class\t\t\t\t\t" + unit.Class_type + " " + unit.CommentsInLine[identifier] + "\n";
+            identifier = "voice_type";
+            entry += AddComment(identifier, unit);
+            entry += "voice_type\t\t\t\t" + unit.Voice_type + " " + unit.CommentsInLine[identifier] + "\n";
             if (!string.IsNullOrWhiteSpace(unit.Accent))
             {
-                entry += "accent\t\t\t\t\t" + unit.Accent + "\n";
+                identifier = "accent";
+                entry += AddComment(identifier, unit);
+                entry += "accent\t\t\t\t\t" + unit.Accent + " " + unit.CommentsInLine[identifier] + "\n";
             }
-            entry += "banner faction\t\t\t" + unit.BannerFaction + "\n";
-            entry += "banner holy\t\t\t\t" + unit.BannerHoly + "\n";
+            identifier = "banner faction";
+            entry += AddComment(identifier, unit);
+            entry += "banner faction\t\t\t" + unit.BannerFaction + " " + unit.CommentsInLine[identifier] + "\n";
+            identifier = "banner holy";
+            entry += AddComment(identifier, unit);
+            entry += "banner holy\t\t\t\t" + unit.BannerHoly + " " + unit.CommentsInLine[identifier] + "\n";
+
+            identifier = "soldier";
+            entry += AddComment(identifier, unit);
             entry += "soldier\t\t\t\t\t" +
                      unit.Soldier + ", " +
                      unit.SoldierCount + ", " +
@@ -53,10 +135,13 @@ namespace ModdingTool
                 var height = (double)unit.Height;
                 entry += ", " + FormatFloat(height);
             }
-            entry += "\n";
+            entry += unit.CommentsInLine[identifier] + "\n";
+
             if (!string.IsNullOrWhiteSpace(unit.Officer1))
             {
-                entry += "officer\t\t\t\t\t" + unit.Officer1 + "\n";
+                identifier = "officer";
+                entry += AddComment(identifier, unit);
+                entry += "officer\t\t\t\t\t" + unit.Officer1 + " " + unit.CommentsInLine[identifier] + "\n";
             }
             if (!string.IsNullOrWhiteSpace(unit.Officer2))
             {
@@ -68,31 +153,49 @@ namespace ModdingTool
             }
             if (!string.IsNullOrWhiteSpace(unit.Ship))
             {
-                entry += "ship\t\t\t\t\t" + unit.Ship + "\n";
+                identifier = "ship";
+                entry += AddComment(identifier, unit);
+                entry += "ship\t\t\t\t\t" + unit.Ship + " " + unit.CommentsInLine[identifier] + "\n";
             }
             if (!string.IsNullOrWhiteSpace(unit.Engine))
             {
-                entry += "engine\t\t\t\t\t" + unit.Engine + "\n";
+                identifier = "engine";
+                entry += AddComment(identifier, unit);
+                entry += "engine\t\t\t\t\t" + unit.Engine + " " + unit.CommentsInLine[identifier] + "\n";
             }
             if (!string.IsNullOrWhiteSpace(unit.Animal))
             {
-                entry += "animal\t\t\t\t\t" + unit.Animal + "\n";
+                identifier = "animal";
+                entry += AddComment(identifier, unit);
+                entry += "animal\t\t\t\t\t" + unit.Animal + " " + unit.CommentsInLine[identifier] + "\n";
             }
             if (!string.IsNullOrWhiteSpace(unit.Mount))
             {
-                entry += "mount\t\t\t\t\t" + unit.Mount + "\n";
+                identifier = "mount";
+                entry += AddComment(identifier, unit);
+                entry += "mount\t\t\t\t\t" + unit.Mount + " " + unit.CommentsInLine[identifier] + "\n";
             }
             var mountEffectString = MakeCommaString(unit.Mount_effect);
             if (!string.IsNullOrWhiteSpace(mountEffectString))
             {
-                entry += "mount_effect\t\t\t" + mountEffectString + "\n";
+                identifier = "mount_effect";
+                entry += AddComment(identifier, unit);
+                entry += "mount_effect\t\t\t" + mountEffectString + " " + unit.CommentsInLine[identifier] + "\n";
             }
             var attributesString = MakeCommaString(unit.Attributes);
             if (!string.IsNullOrWhiteSpace(attributesString))
             {
-                entry += "attributes\t\t\t\t" + attributesString + "\n";
+                identifier = "attributes";
+                entry += AddComment(identifier, unit);
+                entry += "attributes\t\t\t\t" + attributesString + " " + unit.CommentsInLine[identifier] + "\n";
             }
-            entry += "move_speed_mod\t\t\t" + FormatFloat(unit.MoveSpeed) + "\n";
+
+            identifier = "move_speed_mod";
+            entry += AddComment(identifier, unit);
+            entry += "move_speed_mod\t\t\t" + FormatFloat(unit.MoveSpeed) + " " + unit.CommentsInLine[identifier] + "\n";
+
+            identifier = "formation";
+            entry += AddComment(identifier, unit);
             entry += "formation\t\t\t\t" +
                      FormatFloatSingle(unit.Spacing_width) + ", " +
                      FormatFloatSingle(unit.Spacing_depth) + ", " +
@@ -104,8 +207,14 @@ namespace ModdingTool
             {
                 entry += ", " + unit.Special_formation;
             }
-            entry += "\n";
-            entry += "stat_health\t\t\t\t" + unit.Hitpoints + ", " + unit.Mount_hitpoints + "\n";
+            entry += unit.CommentsInLine[identifier] + "\n";
+
+            identifier = "stat_health";
+            entry += AddComment(identifier, unit);
+            entry += "stat_health\t\t\t\t" + unit.Hitpoints + ", " + unit.Mount_hitpoints + " " + unit.CommentsInLine[identifier] + "\n";
+
+            identifier = "stat_pri";
+            entry += AddComment(identifier, unit);
             entry += "stat_pri\t\t\t\t" +
                      unit.Pri_attack + ", " +
                      unit.Pri_charge + ", " +
@@ -120,20 +229,27 @@ namespace ModdingTool
             {
                 entry += ", " + unit.Pri_fire_type;
             }
-            entry += ", " + unit.Pri_att_delay + ", " + FormatFloat(unit.Pri_skel_factor) + "\n";
+            entry += ", " + unit.Pri_att_delay + ", " + FormatFloat(unit.Pri_skel_factor) + " " + unit.CommentsInLine[identifier] + "\n";
+
             var priAttributesString = "no";
             if (unit.Pri_attr is { Count: > 0 })
             {
                 priAttributesString = MakeCommaString(unit.Pri_attr);
             }
-            entry += "stat_pri_attr\t\t\t" + priAttributesString + "\n";
+            identifier = "stat_pri_attr";
+            entry += AddComment(identifier, unit);
+            entry += "stat_pri_attr\t\t\t" + priAttributesString + " " + unit.CommentsInLine[identifier] + "\n";
             if (unit.Sec_weapon_type == "no" || string.IsNullOrWhiteSpace(unit.Sec_weapon_type))
             {
-                entry += "stat_sec\t\t\t\t0, 0, no, 0, 0, no, melee_simple, blunt, none, 0, 1" + "\n";
+                identifier = "stat_sec";
+                entry += AddComment(identifier, unit);
+                entry += "stat_sec\t\t\t\t0, 0, no, 0, 0, no, melee_simple, blunt, none, 0, 1" + " " + unit.CommentsInLine[identifier] + "\n";
                 entry += "stat_sec_attr\t\t\t" + "no" + "\n";
             }
             else
             {
+                identifier = "stat_sec";
+                entry += AddComment(identifier, unit);
                 entry += "stat_sec\t\t\t\t" +
                          unit.Sec_attack + ", " +
                          unit.Sec_charge + ", " +
@@ -148,13 +264,17 @@ namespace ModdingTool
                 {
                     entry += ", " + unit.Sec_fire_type;
                 }
-                entry += ", " + unit.Sec_att_delay + ", " + FormatFloat(unit.Sec_skel_factor) + "\n";
+                entry += ", " + unit.Sec_att_delay + ", " + FormatFloat(unit.Sec_skel_factor) + " " + unit.CommentsInLine[identifier] + "\n";
                 var secAttributesString = "no";
                 if (unit is { Sec_attr: { Count: > 0 }, Sec_attr: { } }) secAttributesString = MakeCommaString(unit.Sec_attr);
-                entry += "stat_sec_attr\t\t\t" + secAttributesString + "\n";
+                identifier = "stat_sec_attr";
+                entry += AddComment(identifier, unit);
+                entry += "stat_sec_attr\t\t\t" + secAttributesString + " " + unit.CommentsInLine[identifier] + "\n";
             }
             if (!string.IsNullOrWhiteSpace(unit.Ter_weapon_type) && unit.Ter_weapon_type != "no")
             {
+                identifier = "stat_ter";
+                entry += AddComment(identifier, unit);
                 entry += "stat_ter\t\t\t\t" +
                          unit.Ter_attack + ", " +
                          unit.Ter_charge + ", " +
@@ -169,29 +289,46 @@ namespace ModdingTool
                 {
                     entry += ", " + unit.Ter_fire_type;
                 }
-                entry += ", " + unit.Ter_att_delay + ", " + FormatFloat(unit.Ter_skel_factor) + "\n";
+                entry += ", " + unit.Ter_att_delay + ", " + FormatFloat(unit.Ter_skel_factor) + " " + unit.CommentsInLine[identifier] + "\n";
                 var terAttributesString = "no";
                 if (unit.Ter_attr is { Count: > 0 })
                 {
                     terAttributesString = MakeCommaString(unit.Ter_attr);
                 }
-                entry += "stat_ter_attr\t\t\t" + terAttributesString + "\n";
+                identifier = "stat_ter_attr";
+                entry += AddComment(identifier, unit);
+                entry += "stat_ter_attr\t\t\t" + terAttributesString + " " + unit.CommentsInLine[identifier] + "\n";
             }
+
+            identifier = "stat_pri_armour";
+            entry += AddComment(identifier, unit);
             entry += "stat_pri_armour\t\t\t" +
                      unit.Pri_armour + ", " +
                      unit.Pri_defense + ", " +
                      unit.Pri_shield + ", " +
-                     unit.Pri_defSound + "\n";
+                     unit.Pri_defSound + " " + unit.CommentsInLine[identifier] + "\n";
+
+            identifier = "stat_sec_armour";
+            entry += AddComment(identifier, unit);
             entry += "stat_sec_armour\t\t\t" +
                      unit.Sec_armour + ", " +
                      unit.Sec_defense + ", " +
-                     unit.Sec_defSound + "\n";
-            entry += "stat_heat\t\t\t\t" + unit.Stat_heat + "\n";
+                     unit.Sec_defSound + " " + unit.CommentsInLine[identifier] + "\n";
+
+            identifier = "stat_heat";
+            entry += AddComment(identifier, unit);
+            entry += "stat_heat\t\t\t\t" + unit.Stat_heat + " " + unit.CommentsInLine[identifier] + "\n";
+
+            identifier = "stat_ground";
+            entry += AddComment(identifier, unit);
             entry += "stat_ground\t\t\t\t" +
                      unit.Stat_scrub + ", " +
                      unit.Stat_forest + ", " +
                      unit.Stat_snow + ", " +
-                     unit.Stat_sand + "\n";
+                     unit.Stat_sand + " " + unit.CommentsInLine[identifier] + "\n";
+
+            identifier = "stat_mental";
+            entry += AddComment(identifier, unit);
             entry += "stat_mental\t\t\t\t" +
                      unit.Morale + ", " +
                      unit.Discipline + ", " +
@@ -200,12 +337,24 @@ namespace ModdingTool
             {
                 entry += ", lock_morale";
             }
-            entry += "\n";
-            entry += "stat_charge_dist\t\t" + unit.Stat_charge_dist + "\n";
-            entry += "stat_fire_delay\t\t\t" + unit.Stat_fire_delay + "\n";
+            entry += " " + unit.CommentsInLine[identifier] + "\n";
+
+            identifier = "stat_charge_dist";
+            entry += AddComment(identifier, unit);
+            entry += "stat_charge_dist\t\t" + unit.Stat_charge_dist + " " + unit.CommentsInLine[identifier] + "\n";
+
+            identifier = "stat_fire_delay";
+            entry += AddComment(identifier, unit);
+            entry += "stat_fire_delay\t\t\t" + unit.Stat_fire_delay + " " + unit.CommentsInLine[identifier] + "\n";
+
+            identifier = "stat_food";
+            entry += AddComment(identifier, unit);
             entry += "stat_food\t\t\t\t" +
                      unit.Stat_food + ", " +
-                     unit.Stat_food_sec + "\n";
+                     unit.Stat_food_sec + " " + unit.CommentsInLine[identifier] + "\n";
+
+            identifier = "stat_cost";
+            entry += AddComment(identifier, unit);
             entry += "stat_cost\t\t\t\t" +
                      unit.RecruitTime + ", " +
                      unit.RecruitCost + ", " +
@@ -214,7 +363,10 @@ namespace ModdingTool
                      unit.ArmourCost + ", " +
                      unit.CustomCost + ", " +
                      unit.CustomLimit + ", " +
-                     unit.CustomIncrease + "\n";
+                     unit.CustomIncrease + " " + unit.CommentsInLine[identifier] + "\n";
+
+            identifier = "armour_ug_levels";
+            entry += AddComment(identifier, unit);
             entry += "armour_ug_levels\t\t" + unit.ArmourlvlBase;
             if (!string.IsNullOrWhiteSpace(unit.ArmourlvlOne))
             {
@@ -228,7 +380,10 @@ namespace ModdingTool
             {
                 entry += ", " + unit.ArmourlvlThree;
             }
-            entry += "\n";
+            entry += " " + unit.CommentsInLine[identifier] + "\n";
+
+            identifier = "armour_ug_models";
+            entry += AddComment(identifier, unit);
             entry += "armour_ug_models\t\t" + unit.ArmourModelBase;
             if (!string.IsNullOrWhiteSpace(unit.ArmourModelOne))
             {
@@ -242,42 +397,61 @@ namespace ModdingTool
             {
                 entry += ", " + unit.ArmourModelThree;
             }
-            entry += "\n";
+            entry += " " + unit.CommentsInLine[identifier] + "\n";
+
+            identifier = "ownership";
+            entry += AddComment(identifier, unit);
             entry += "ownership\t\t\t\t";
             var ownershipString = MakeCommaString(unit.Ownership);
             if (!string.IsNullOrWhiteSpace(ownershipString))
             {
                 entry += ownershipString;
             }
-            entry += "\n";
+            entry += " " + unit.CommentsInLine[identifier] + "\n";
+
+
             var eraString = MakeCommaString(unit.EraZero);
             if (!string.IsNullOrWhiteSpace(eraString))
             {
-                entry += "era 0\t\t\t\t\t" + eraString + "\n";
+                identifier = "era 0";
+                entry += AddComment(identifier, unit);
+                entry += "era 0\t\t\t\t\t" + eraString + " " + unit.CommentsInLine[identifier] + "\n";
             }
             eraString = MakeCommaString(unit.EraOne);
             if (!string.IsNullOrWhiteSpace(eraString))
             {
-                entry += "era 1\t\t\t\t\t" + eraString + "\n";
+                identifier = "era 1";
+                entry += AddComment(identifier, unit);
+                entry += "era 1\t\t\t\t\t" + eraString + " " + unit.CommentsInLine[identifier] + "\n";
             }
             eraString = MakeCommaString(unit.EraTwo);
             if (!string.IsNullOrWhiteSpace(eraString))
             {
-                entry += "era 2\t\t\t\t\t" + eraString + "\n";
+                identifier = "era 2";
+                entry += AddComment(identifier, unit);
+                entry += "era 2\t\t\t\t\t" + eraString + " " + unit.CommentsInLine[identifier] + "\n";
             }
             if (!string.IsNullOrWhiteSpace(unit.Info_dict))
             {
-                entry += "info_pic_dir\t\t\t" + unit.Info_dict + "\n";
+                identifier = "info_pic_dir";
+                entry += AddComment(identifier, unit);
+                entry += "info_pic_dir\t\t\t" + unit.Info_dict + " " + unit.CommentsInLine[identifier] + "\n";
             }
             if (!string.IsNullOrWhiteSpace(unit.Card_dict))
             {
-                entry += "card_pic_dir\t\t\t" + unit.Card_dict + "\n";
+                identifier = "card_pic_dir";
+                entry += AddComment(identifier, unit);
+                entry += "card_pic_dir\t\t\t" + unit.Card_dict + " " + unit.CommentsInLine[identifier] + "\n";
             }
             if (Math.Abs(unit.CrusadeUpkeep - 1.0) > 0.001)
             {
-                entry += "crusading_upkeep_modifier\t" + FormatFloat(unit.CrusadeUpkeep) + "\n";
+                identifier = "crusading_upkeep_modifier";
+                entry += AddComment(identifier, unit);
+                entry += "crusading_upkeep_modifier\t" + FormatFloat(unit.CrusadeUpkeep) + " " + unit.CommentsInLine[identifier] + "\n";
             }
-            entry += "recruit_priority_offset\t" + unit.Recruit_priority_offset + "\n";
+            identifier = "recruit_priority_offset";
+            entry += AddComment(identifier, unit);
+            entry += "recruit_priority_offset\t" + unit.Recruit_priority_offset + " " + unit.CommentsInLine[identifier] + "\n";
             entry += "\n";
             entry += "\n";
             entry += "\n";
@@ -387,6 +561,9 @@ namespace ModdingTool
             //Add last unit
             newUnit.Edu_index = index;
             AddUnit(newUnit);
+
+            EduEndComments.AddRange(CommentCache);
+            CommentCache.Clear();
 
 
             Console.WriteLine($@"end parse {_fileName}");
@@ -560,9 +737,19 @@ namespace ModdingTool
             }
             else
             {
-                if (text == null || identifier == null ) return;
+                if (text == null || identifier == null) return;
                 UnitNames.Add(identifier, text);
             }
+        }
+
+        private static void AssignComments(string identifier, Unit unit)
+        {
+            unit.Comments[identifier] = new List<string>();
+            unit.Comments[identifier].AddRange(CommentCache);
+            CommentCache.Clear();
+            unit.CommentsInLine[identifier] = "";
+            unit.CommentsInLine[identifier] = CommentCacheInLine;
+            CommentCacheInLine = "";
         }
 
         private static void AssignFields(Unit unit, string?[]? parts)
@@ -573,10 +760,12 @@ namespace ModdingTool
                 switch (identifier)
                 {
                     case "type":
+                        AssignComments(identifier, unit);
                         unit.Type = parts?[1]?.Trim();
                         break;
 
                     case "dictionary":
+                        AssignComments(identifier, unit);
                         var dict = parts?[1];
                         if (dict != null)
                         {
@@ -588,30 +777,37 @@ namespace ModdingTool
                         break;
 
                     case "category":
+                        AssignComments(identifier, unit);
                         unit.Category = parts?[1]?.Trim();
                         break;
 
                     case "class":
+                        AssignComments(identifier, unit);
                         unit.Class_type = parts?[1]?.Trim();
                         break;
 
                     case "voice_type":
+                        AssignComments(identifier, unit);
                         unit.Voice_type = parts?[1]?.Trim();
                         break;
 
                     case "accent":
+                        AssignComments(identifier, unit);
                         unit.Accent = parts?[1]?.Trim();
                         break;
 
                     case "banner faction":
+                        AssignComments(identifier, unit);
                         unit.BannerFaction = parts?[1]?.Trim();
                         break;
 
                     case "banner holy":
+                        AssignComments(identifier, unit);
                         unit.BannerHoly = parts?[1]?.Trim();
                         break;
 
                     case "soldier":
+                        AssignComments(identifier, unit);
                         unit.Soldier = parts?[1]?.Trim().ToLower();
                         unit.SoldierCount = int.Parse(parts?[2] ?? string.Empty);
                         unit.ExtrasCount = int.Parse(parts?[3] ?? string.Empty);
@@ -627,6 +823,7 @@ namespace ModdingTool
                         break;
 
                     case "officer":
+                        AssignComments(identifier, unit);
                         if (unit.Officer1 is "")
                         {
                             unit.Officer1 = parts?[1]?.Trim().ToLower();
@@ -644,22 +841,27 @@ namespace ModdingTool
                         break;
 
                     case "ship":
+                        AssignComments(identifier, unit);
                         unit.Ship = parts?[1]?.Trim().ToLower();
                         break;
 
                     case "engine":
+                        AssignComments(identifier, unit);
                         unit.Engine = parts?[1]?.Trim().ToLower();
                         break;
 
                     case "animal":
+                        AssignComments(identifier, unit);
                         unit.Animal = parts?[1]?.Trim().ToLower();
                         break;
 
                     case "mount":
+                        AssignComments(identifier, unit);
                         unit.Mount = parts?[1]?.Trim().ToLower();
                         break;
 
                     case "mount_effect":
+                        AssignComments(identifier, unit);
                         if (parts == null || parts.Length < 2)
                         {
                             break;
@@ -672,6 +874,7 @@ namespace ModdingTool
                         break;
 
                     case "attributes":
+                        AssignComments(identifier, unit);
                         if (parts == null || parts.Length < 2)
                         {
                             break;
@@ -698,10 +901,12 @@ namespace ModdingTool
                         break;
 
                     case "move_speed_mod":
+                        AssignComments(identifier, unit);
                         unit.MoveSpeed = double.Parse(parts?[1] ?? string.Empty, CultureInfo.InvariantCulture.NumberFormat);
                         break;
 
                     case "formation":
+                        AssignComments(identifier, unit);
                         unit.Spacing_width = double.Parse(parts?[1] ?? string.Empty, CultureInfo.InvariantCulture.NumberFormat);
                         unit.Spacing_depth = double.Parse(parts?[2] ?? string.Empty, CultureInfo.InvariantCulture.NumberFormat);
                         unit.Spacing_width_loose = double.Parse(parts?[3] ?? string.Empty, CultureInfo.InvariantCulture.NumberFormat);
@@ -718,11 +923,13 @@ namespace ModdingTool
                         break;
 
                     case "stat_health":
+                        AssignComments(identifier, unit);
                         unit.Hitpoints = int.Parse(parts?[1] ?? string.Empty);
                         unit.Mount_hitpoints = int.Parse(parts?[2] ?? string.Empty);
                         break;
 
                     case "stat_pri":
+                        AssignComments(identifier, unit);
                         unit.Pri_attack = int.Parse(parts?[1] ?? string.Empty);
                         unit.Pri_charge = int.Parse(parts?[2] ?? string.Empty);
                         unit.Pri_projectile = parts?[3];
@@ -746,6 +953,7 @@ namespace ModdingTool
                         break;
 
                     case "stat_pri_attr":
+                        AssignComments(identifier, unit);
                         if (parts?.Length < 2)
                         {
                             break;
@@ -757,6 +965,7 @@ namespace ModdingTool
                         break;
 
                     case "stat_sec":
+                        AssignComments(identifier, unit);
                         unit.Sec_attack = int.Parse(parts?[1] ?? string.Empty);
                         unit.Sec_charge = int.Parse(parts?[2] ?? string.Empty);
                         unit.Sec_projectile = parts?[3];
@@ -780,6 +989,7 @@ namespace ModdingTool
                         break;
 
                     case "stat_sec_attr":
+                        AssignComments(identifier, unit);
                         if (parts?.Length < 2)
                         {
                             break;
@@ -791,6 +1001,7 @@ namespace ModdingTool
                         break;
 
                     case "stat_ter":
+                        AssignComments(identifier, unit);
                         unit.Ter_attack = int.Parse(parts?[1] ?? string.Empty);
                         unit.Ter_charge = int.Parse(parts?[2] ?? string.Empty);
                         unit.Ter_projectile = parts?[3];
@@ -814,6 +1025,7 @@ namespace ModdingTool
                         break;
 
                     case "stat_ter_attr":
+                        AssignComments(identifier, unit);
                         if (parts?.Length < 2)
                         {
                             break;
@@ -825,6 +1037,7 @@ namespace ModdingTool
                         break;
 
                     case "stat_pri_armour":
+                        AssignComments(identifier, unit);
                         unit.Pri_armour = int.Parse(parts?[1] ?? string.Empty);
                         unit.Pri_defense = int.Parse(parts?[2] ?? string.Empty);
                         unit.Pri_shield = int.Parse(parts?[3] ?? string.Empty);
@@ -832,16 +1045,19 @@ namespace ModdingTool
                         break;
 
                     case "stat_sec_armour":
+                        AssignComments(identifier, unit);
                         unit.Sec_armour = int.Parse(parts?[1] ?? string.Empty);
                         unit.Sec_defense = int.Parse(parts?[2] ?? string.Empty);
                         unit.Sec_defSound = parts?[3];
                         break;
 
                     case "stat_heat":
+                        AssignComments(identifier, unit);
                         unit.Stat_heat = int.Parse(parts?[1] ?? string.Empty);
                         break;
 
                     case "stat_ground":
+                        AssignComments(identifier, unit);
                         unit.Stat_scrub = int.Parse(parts?[1] ?? string.Empty);
                         unit.Stat_sand = int.Parse(parts?[2] ?? string.Empty);
                         unit.Stat_forest = int.Parse(parts?[3] ?? string.Empty);
@@ -849,6 +1065,7 @@ namespace ModdingTool
                         break;
 
                     case "stat_mental":
+                        AssignComments(identifier, unit);
                         unit.Morale = int.Parse(parts?[1] ?? string.Empty);
                         unit.Discipline = parts?[2];
                         unit.Training = parts?[3];
@@ -863,19 +1080,23 @@ namespace ModdingTool
                         break;
 
                     case "stat_charge_dist":
+                        AssignComments(identifier, unit);
                         unit.Stat_charge_dist = int.Parse(parts?[1] ?? string.Empty);
                         break;
 
                     case "stat_fire_delay":
+                        AssignComments(identifier, unit);
                         unit.Stat_fire_delay = int.Parse(parts?[1] ?? string.Empty);
                         break;
 
                     case "stat_food":
+                        AssignComments(identifier, unit);
                         unit.Stat_food = int.Parse(parts?[1] ?? string.Empty);
                         unit.Stat_food_sec = int.Parse(parts?[2] ?? string.Empty);
                         break;
 
                     case "stat_cost":
+                        AssignComments(identifier, unit);
                         unit.RecruitTime = int.Parse(parts?[1] ?? string.Empty);
                         unit.RecruitCost = int.Parse(parts?[2] ?? string.Empty);
                         unit.Upkeep = int.Parse(parts?[3] ?? string.Empty);
@@ -887,6 +1108,7 @@ namespace ModdingTool
                         break;
 
                     case "armour_ug_levels":
+                        AssignComments(identifier, unit);
                         if (parts != null)
                         {
                             var lvlbase = 0;
@@ -938,6 +1160,7 @@ namespace ModdingTool
                         break;
 
                     case "armour_ug_models":
+                        AssignComments(identifier, unit);
                         foreach (var model in parts?[1..]!)
                         {
                             if (string.IsNullOrWhiteSpace(unit.ArmourModelBase))
@@ -961,6 +1184,7 @@ namespace ModdingTool
                         break;
 
                     case "ownership":
+                        AssignComments(identifier, unit);
                         foreach (var faction in parts?[1..]!)
                         {
                             if (faction != null) unit.Ownership.Add(faction);
@@ -968,6 +1192,7 @@ namespace ModdingTool
                         break;
 
                     case "era 0":
+                        AssignComments(identifier, unit);
                         foreach (var faction in parts?[1..]!)
                         {
                             if (faction != null) unit.EraZero.Add(faction);
@@ -975,6 +1200,7 @@ namespace ModdingTool
                         break;
 
                     case "era 1":
+                        AssignComments(identifier, unit);
                         foreach (var faction in parts?[1..]!)
                         {
                             if (faction != null) unit.EraOne.Add(faction);
@@ -982,6 +1208,7 @@ namespace ModdingTool
                         break;
 
                     case "era 2":
+                        AssignComments(identifier, unit);
                         foreach (var faction in parts?[1..]!)
                         {
                             if (faction != null) unit.EraTwo.Add(faction);
@@ -989,18 +1216,22 @@ namespace ModdingTool
                         break;
 
                     case "recruit_priority_offset":
+                        AssignComments(identifier, unit);
                         unit.Recruit_priority_offset = float.Parse(parts?[1] ?? string.Empty, CultureInfo.InvariantCulture.NumberFormat);
                         break;
 
                     case "info_pic_dir":
+                        AssignComments(identifier, unit);
                         unit.Info_dict = parts?[1];
                         break;
 
                     case "card_pic_dir":
+                        AssignComments(identifier, unit);
                         unit.Card_dict = parts?[1];
                         break;
 
                     case "crusading_upkeep_modifier":
+                        AssignComments(identifier, unit);
                         unit.CrusadeUpkeep = float.Parse(parts?[1] ?? string.Empty, CultureInfo.InvariantCulture.NumberFormat);
                         break;
                 }

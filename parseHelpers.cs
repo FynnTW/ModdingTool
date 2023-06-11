@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Ignore Spelling: Modding Edu
+
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -9,11 +12,18 @@ namespace ModdingTool
     internal class ParseHelpers
     {
 
+        public static List<string> CommentCache = new();
+        public static string CommentCacheInLine = "";
+
         public static string RemoveComment(string line)
         {
             if (!line.Contains(';'))
             {
                 return line;
+            }
+            else
+            {
+                CommentCacheInLine = line[line.IndexOf(';')..];
             }
             return line.StartsWith(';') ? "" : line[..line.IndexOf(';')];
         }
@@ -28,17 +38,19 @@ namespace ModdingTool
             char[] delimitersWhite = { ' ', '\t' };
             var lineParts = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
             var firstParts = lineParts[0].Split(delimitersWhite, 2, StringSplitOptions.RemoveEmptyEntries);
+
+            //some first edu lines have multiple words in the first part
             if (firstParts[0].Equals("banner"))
             {
-                var bannersplit = firstParts[1].Split(delimitersWhite, 2, StringSplitOptions.RemoveEmptyEntries);
-                firstParts[0] = "banner " + bannersplit[0];
-                firstParts[1] = bannersplit[1];
+                var bannerSplit = firstParts[1].Split(delimitersWhite, 2, StringSplitOptions.RemoveEmptyEntries);
+                firstParts[0] = "banner " + bannerSplit[0];
+                firstParts[1] = bannerSplit[1];
             }
             if (firstParts[0].Equals("era"))
             {
-                var bannersplit = firstParts[1].Split(delimitersWhite, 2, StringSplitOptions.RemoveEmptyEntries);
-                firstParts[0] = "era " + bannersplit[0];
-                firstParts[1] = bannersplit[1];
+                var eraSplit = firstParts[1].Split(delimitersWhite, 2, StringSplitOptions.RemoveEmptyEntries);
+                firstParts[0] = "era " + eraSplit[0];
+                firstParts[1] = eraSplit[1];
             }
 
             lineParts = firstParts.Concat(lineParts[1..]).ToArray();
@@ -57,8 +69,8 @@ namespace ModdingTool
         private static string[] CurlySplitter(string line)
         {
             char[] deliminators = { '{', '}' };
-            var splitted = line.Split(deliminators, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-            return splitted;
+            var splitLine = line.Split(deliminators, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            return splitLine;
         }
 
         public static string[]? LocalTextLineCleaner(string line, int num, string filename)
@@ -80,12 +92,12 @@ namespace ModdingTool
             return CurlySplitter(newLine);
         }
 
-        public static string[]? FileReader(string filepath, string filename, Encoding encoding)
+        public static string[]? FileReader(string filePath, string filename, Encoding encoding)
         {
             string[]? lines;
             try
             {
-                lines = File.ReadAllLines(ModPath + filepath, encoding);
+                lines = File.ReadAllLines(ModPath + filePath, encoding);
             }
             catch (Exception e)
             {
@@ -98,7 +110,11 @@ namespace ModdingTool
 
         public static string? CleanLine(string line)
         {
-            if (line.StartsWith(';')) { return null; }
+            if (line.StartsWith(';'))
+            {
+                CommentCache.Add(line);
+                return null;
+            }
             var newline = RemoveComment(line);
             return string.IsNullOrWhiteSpace(newline) ? null : newline.Trim();
         }
