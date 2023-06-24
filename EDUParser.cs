@@ -71,7 +71,7 @@ namespace ModdingTool
         public static void WriteEdu()
         {
             var newEdu = UnitDataBase.Values.Aggregate("", (current, unit) => current + WriteEduEntry(unit));
-            newEdu += EduEndComments.Aggregate("", (current, comment) => current + comment);
+            newEdu += EduEndComments.Aggregate("", (current, comment) => current + (comment + "\n"));
             File.WriteAllText(@"export_descr_unit.txt", newEdu);
         }
 
