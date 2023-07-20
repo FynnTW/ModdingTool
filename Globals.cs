@@ -102,6 +102,8 @@ namespace ModdingTool
                 Print(entry.Key);
                 ErrorDb.AddError("Mount " + entry.Key + " is not used");
             }
+
+            //FileRemover.CheckFiles();
         }
 
         public static void AutoStart()

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 
 namespace ModdingTool
 {
@@ -64,35 +63,52 @@ namespace ModdingTool
             {
                 entry += NumString(texture.Faction) + "\n";
                 entry += NumString(texture.TexturePath) + "\n";
-                entry += NumString(texture.Normal) + "\n";
+                entry += NumString(texture.Normal);
+                if (texture.Sprite != null && texture.Sprite != "0" && texture.Sprite != "")
+                {
+                    entry += "\n";
+                }
+                else
+                {
+                    entry += " ";
+                }
                 entry += NumString(texture.Sprite) + "\n";
             }
             entry += model.Animations.Count + "\n";
             foreach (var animation in model.Animations)
             {
-                if (!animation.PriWeapons.Contains(animation.PriWeaponOne))
+                animation.PriWeapons = new List<string>();
+                if (!string.IsNullOrWhiteSpace(animation.PriWeaponOne))
                 {
                     animation.PriWeapons.Add(animation.PriWeaponOne);
                 }
 
-                if (!animation.PriWeapons.Contains(animation.PriWeaponTwo))
+                if (!string.IsNullOrWhiteSpace(animation.PriWeaponTwo))
                 {
                     animation.PriWeapons.Add(animation.PriWeaponTwo);
                 }
-
-                if (!animation.SecWeapons.Contains(animation.SecWeaponOne))
+                animation.SecWeapons = new List<string>();
+                if (!string.IsNullOrWhiteSpace(animation.SecWeaponOne))
                 {
                     animation.SecWeapons.Add(animation.SecWeaponOne);
                 }
 
-                if (!animation.SecWeapons.Contains(animation.SecWeaponTwo))
+                if (!string.IsNullOrWhiteSpace(animation.SecWeaponTwo))
                 {
                     animation.SecWeapons.Add(animation.SecWeaponTwo);
                 }
                 entry += NumString(animation.MountType) + "\n";
                 entry += NumString(animation.Primary_skeleton) + " ";
                 entry += NumString(animation.Secondary_skeleton) + "\n";
-                entry += animation.PriWeapons.Count + "\n";
+                entry += animation.PriWeapons.Count;
+                if (animation.PriWeapons.Count > 0)
+                {
+                    entry += "\n";
+                }
+                else
+                {
+                    entry += " ";
+                }
                 for (var i = 0; i < animation.PriWeapons.Count; i++)
                 {
                     entry += i switch
@@ -102,7 +118,16 @@ namespace ModdingTool
                         _ => NumString(animation.PriWeapons[i]) + "\n"
                     };
                 }
-                entry += animation.SecWeapons.Count + "\n";
+
+                entry += animation.SecWeapons.Count;
+                if (animation.SecWeapons.Count > 0)
+                {
+                    entry += "\n";
+                }
+                else
+                {
+                    entry += " ";
+                }
                 for (var i = 0; i < animation.SecWeapons.Count; i++)
                 {
                     entry += i switch
