@@ -87,6 +87,16 @@ namespace ModdingTool
         public string Spawn_faction { get => spawn_faction; set => spawn_faction = value; }
         public bool Slave_faction { get => slave_faction; set => slave_faction = value; }
         public bool Papal_faction { get => papal_faction; set => papal_faction = value; }
+        public Dictionary<string, FactionCharacter> FactionCharacterTypes { get; set; } = new();
         public string[] Periods_unavailable_in_custom_battle { get => periods_unavailable_in_custom_battle; set => periods_unavailable_in_custom_battle = value; }
     }
+}
+
+public class FactionCharacter
+{
+    public string name;
+    public string[] models = new string[11];
+    public int dictionary = 2;
+    public string battle_model = "";
+    public string battle_equip = "chainmail shirt helmet and rectangular shield";
 }

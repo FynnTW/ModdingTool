@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using Newtonsoft.Json;
 
 namespace ModdingTool
 {
@@ -14,6 +14,7 @@ namespace ModdingTool
         public static int ProjectileDelayStandard = 0;
         public static int ProjectileDelayFlaming = 0;
         public static int ProjectileDelayGunpowder = 0;
+        public static int StartingActionPoints = 250;
         public static Dictionary<string, Unit> UnitDataBase = new();
         public static Dictionary<string, string> UnitNames = new();
         public static Dictionary<string, string?> UnitDescr = new();
@@ -21,7 +22,10 @@ namespace ModdingTool
         public static Dictionary<string, BattleModel> BattleModelDataBase = new();
         public static Dictionary<string, Faction> FactionDataBase = new();
         public static Dictionary<string, Culture> CultureDataBase = new();
+        public static Dictionary<string, Projectile> ProjectileDataBase = new();
+        public static Dictionary<string, Mount> MountDataBase = new();
         public static Dictionary<string, string> ExpandedEntries = new();
+        public static Dictionary<string, CharacterType> CharacterTypes = new();
         public static readonly Errors ErrorDb = new();
 
         public static void Print(string message)
@@ -79,6 +83,9 @@ namespace ModdingTool
             BmdbParser.ParseBmdb();
             EduParser.ParseEu();
             EduParser.ParseEdu();
+            MountParser.ParseMounts();
+            CharacterTypesParser.parseCharacterTypes();
+            ProjectileParser.ParseProjectiles();
         }
 
         public static void AutoStart()

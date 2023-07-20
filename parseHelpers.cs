@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -106,6 +107,11 @@ namespace ModdingTool
                 return null;
             }
             return lines;
+        }
+
+        public static double ParseDouble(string? value)
+        {
+            return double.Parse(value ?? string.Empty, CultureInfo.InvariantCulture.NumberFormat);
         }
 
         public static string? CleanLine(string line)
