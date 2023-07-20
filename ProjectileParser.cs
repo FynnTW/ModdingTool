@@ -80,8 +80,6 @@ public class ProjectileParser
         Console.WriteLine($@"end parse {_fileName}");
         _lineNum = 0;
 
-        PrintFinal();
-
     }
 
     private static void AddProjectile(Projectile projectile)

@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using static ModdingTool.Globals;
+using static ModdingTool.ParseHelpers;
 
 namespace ModdingTool
 {
@@ -17,6 +18,7 @@ namespace ModdingTool
 
         //Lenght of next string
         private static int _nextLenght;
+        private static int _lineNum;
 
         //bmdb loaded as string
         private static string? _bmdb = null!;
@@ -287,6 +289,102 @@ namespace ModdingTool
                 return null;
             }
             return text;
+        }
+
+        public static void checkModelUsage()
+        {
+            _fileName = "campaign_script.txt";
+            Console.WriteLine($@"start parse {_fileName}");
+
+
+            var lines = FileReader("\\data\\world\\maps\\campaign\\imperial_campaign\\campaign_script.txt", _fileName, Encoding.Default);
+            if (lines == null)
+            {
+                return;
+            } //something very wrong if you hit this
+
+            //Reset line counter
+            _lineNum = 0;
+            //Loop through lines
+            foreach (var line in lines)
+            {
+                //Increase line counter
+                _lineNum++;
+
+                //Remove Comments and Faulty lines
+                var newline = CleanLine(line);
+                if (string.IsNullOrWhiteSpace(newline))
+                {
+                    continue;
+                }
+
+
+                var rx = new Regex(@"battle_model\s+(\S*)\s");
+                var match = rx.Match(newline);
+                if (match.Success)
+                {
+                    var matchstring = match.Groups[1].Value;
+                    if (matchstring.Contains(','))
+                    {
+                        matchstring = matchstring.Split(',')[0];
+                    }
+                    UsedModels.Add(matchstring.ToLower().Trim());
+                }
+
+            }
+
+            //Reset Line Counter
+            Console.WriteLine($@"end parse {_fileName}");
+            _lineNum = 0;
+
+
+            _fileName = "descr_strat.txt";
+            Console.WriteLine($@"start parse {_fileName}");
+            //Reset line counter
+            _lineNum = 0;
+            lines = FileReader("\\data\\world\\maps\\campaign\\imperial_campaign\\descr_strat.txt", _fileName, Encoding.Default);
+            if (lines == null)
+            {
+                return;
+            } //something very wrong if you hit this
+
+            //Reset line counter
+            _lineNum = 0;
+            //Loop through lines
+            foreach (var line in lines)
+            {
+                //Increase line counter
+                _lineNum++;
+
+                //Remove Comments and Faulty lines
+                var newline = CleanLine(line);
+                if (string.IsNullOrWhiteSpace(newline))
+                {
+                    continue;
+                }
+
+                var rx = new Regex(@"battle_model\s+(\S*)\s");
+                var match = rx.Match(newline);
+                if (match.Success)
+                {
+                    var matchstring = match.Groups[1].Value;
+                    if (matchstring.Contains(','))
+                    {
+                        matchstring = matchstring.Split(',')[0];
+                    }
+                    UsedModels.Add(matchstring.ToLower().Trim());
+                }
+
+            }
+
+            //Reset Line Counter
+            Console.WriteLine($@"end parse {_fileName}");
+            _lineNum = 0;
+            UsedModels.Add("dunforgoil_warlords");
+            UsedModels.Add("dun_elite_horse");
+            UsedModels.Add("frekkalingir");
+            UsedModels.Add("dunland_banner");
+            PrintFinal();
         }
     }
 }

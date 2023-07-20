@@ -26,6 +26,8 @@ namespace ModdingTool
         public static Dictionary<string, Mount> MountDataBase = new();
         public static Dictionary<string, string> ExpandedEntries = new();
         public static Dictionary<string, CharacterType> CharacterTypes = new();
+        public static List<string> UsedModels = new();
+        public static List<string> UsedMounts = new();
         public static readonly Errors ErrorDb = new();
 
         public static void Print(string message)
@@ -82,10 +84,24 @@ namespace ModdingTool
             FactionParser.ParseSmFactions();
             BmdbParser.ParseBmdb();
             EduParser.ParseEu();
-            EduParser.ParseEdu();
             MountParser.ParseMounts();
+            EduParser.ParseEdu();
             CharacterTypesParser.parseCharacterTypes();
+            BmdbParser.checkModelUsage();
             ProjectileParser.ParseProjectiles();
+            UsedModels = UsedModels.Distinct().ToList();
+            foreach (var entry in BattleModelDataBase.Where(entry => !UsedModels.Contains(entry.Key)))
+            {
+                Print(entry.Key);
+                ErrorDb.AddError("Model " + entry.Key + " is not used");
+                BattleModelDataBase.Remove(entry.Key);
+            }
+            UsedMounts = UsedMounts.Distinct().ToList();
+            foreach (var entry in MountDataBase.Where(entry => !UsedMounts.Contains(entry.Key)))
+            {
+                Print(entry.Key);
+                ErrorDb.AddError("Mount " + entry.Key + " is not used");
+            }
         }
 
         public static void AutoStart()

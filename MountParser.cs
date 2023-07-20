@@ -139,13 +139,13 @@ public class MountParser
             switch (identifier)
             {
                 case "type":
-                    mount.type = value;
+                    mount.type = value.ToLower().Trim();
                     break;
                 case "class":
                     mount.mount_class = value;
                     break;
                 case "model":
-                    mount.model = value;
+                    mount.model = value.Trim().ToLower();
                     break;
                 case "radius":
                     mount.radius = ParseDouble(value);

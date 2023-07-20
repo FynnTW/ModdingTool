@@ -809,6 +809,7 @@ namespace ModdingTool
                     case "soldier":
                         AssignComments(identifier, unit);
                         unit.Soldier = parts?[1]?.Trim().ToLower();
+                        UsedModels.Add(unit.Soldier);
                         unit.SoldierCount = int.Parse(parts?[2] ?? string.Empty);
                         unit.ExtrasCount = int.Parse(parts?[3] ?? string.Empty);
                         unit.Mass = double.Parse(parts?[4] ?? string.Empty, CultureInfo.InvariantCulture.NumberFormat);
@@ -827,16 +828,19 @@ namespace ModdingTool
                         if (unit.Officer1 is "")
                         {
                             unit.Officer1 = parts?[1]?.Trim().ToLower();
+                            UsedModels.Add(unit.Officer1);
                             break;
                         }
                         if (unit.Officer2 is "")
                         {
                             unit.Officer2 = parts?[1]?.Trim().ToLower();
+                            UsedModels.Add(unit.Officer2);
                             break;
                         }
                         if (unit.Officer3 is "")
                         {
                             unit.Officer3 = parts?[1]?.Trim().ToLower();
+                            UsedModels.Add(unit.Officer3);
                         }
                         break;
 
@@ -858,6 +862,8 @@ namespace ModdingTool
                     case "mount":
                         AssignComments(identifier, unit);
                         unit.Mount = parts?[1]?.Trim().ToLower();
+                        UsedModels.Add(MountDataBase[unit.Mount].model.Trim().ToLower());
+                        UsedMounts.Add(unit.Mount);
                         break;
 
                     case "mount_effect":
@@ -1166,18 +1172,22 @@ namespace ModdingTool
                             if (string.IsNullOrWhiteSpace(unit.ArmourModelBase))
                             {
                                 unit.ArmourModelBase = model?.ToLower();
+                                UsedModels.Add(unit.ArmourModelBase);
                             }
                             else if (string.IsNullOrWhiteSpace(unit.ArmourModelOne))
                             {
                                 unit.ArmourModelOne = model?.ToLower();
+                                UsedModels.Add(unit.ArmourModelOne);
                             }
                             else if (string.IsNullOrWhiteSpace(unit.ArmourModelTwo))
                             {
                                 unit.ArmourModelTwo = model?.ToLower();
+                                UsedModels.Add(unit.ArmourModelTwo);
                             }
                             else if (string.IsNullOrWhiteSpace(unit.ArmourModelThree))
                             {
                                 unit.ArmourModelThree = model?.ToLower();
+                                UsedModels.Add(unit.ArmourModelThree);
                             }
                         }
                         unit.Armour_ug_models = parts?[1..];
