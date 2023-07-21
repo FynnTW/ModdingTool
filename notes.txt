@@ -47,3 +47,19 @@ Engine attack stat attr
 shot_at 
 	commence
 	recover
+
+building requirements
+	not
+	building_present
+	building_present_min_level
+	port
+	factions
+	building_factions
+	capability
+	resource
+	hidden_resource
+	marian_reforms
+	event_counter
+	region_religion
+	and
+	or
