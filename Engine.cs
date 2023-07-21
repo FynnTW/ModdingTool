@@ -53,6 +53,12 @@ namespace ModdingTool
         public string shot_pfx_front { get; set; } = "";
         public string shot_pfx_back { get; set; } = "";
         public string shot_sfx { get; set; } = "";
+        public string engine_push_point_string { get; set; } = "";
+        public string engine_push_point_one { get; set; } = "";
+        public string engine_push_point_two { get; set; } = "";
+        public string engine_station_string { get; set; } = "";
+        public string engine_station_one { get; set; } = "";
+        public string engine_station_two { get; set; } = "";
         public List<CrewAnimation> CrewAnimations { get; set; } = new();
     }
 
