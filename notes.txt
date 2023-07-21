@@ -1,0 +1,49 @@
+engine_model_groups 
+	normal
+	dying
+	dead
+
+obstacle_shapes
+	ellipse
+	rectangle
+	drop
+
+Engine classes
+	catapult
+	onager
+	trebuchet
+	heavy_onager
+	ballista
+	scorpion
+	bombard
+	grand_bombard
+	huge_bombard
+	culverin
+	basilisk
+	cannon
+	mortar
+	serpentine
+	rocket_launcher
+	ribault
+	monster_ribault
+	tower
+	ram
+	ladder
+	holy_cart
+	mangonel
+
+Engine attack stat attr
+	spear
+	prec
+	ap
+	bp
+	area
+	fire
+	launching
+	thrown
+	short_pike
+	long_pike
+
+shot_at 
+	commence
+	recover

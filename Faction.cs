@@ -98,5 +98,5 @@ public class FactionCharacter
     public string[] models = new string[11];
     public int dictionary = 2;
     public string battle_model = "";
-    public string battle_equip = "chainmail shirt helmet and rectangular shield";
+    public string battle_equip = "gladius, chainmail shirt helmet and rectangular shield";
 }
