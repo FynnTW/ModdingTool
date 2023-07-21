@@ -849,6 +849,11 @@ namespace ModdingTool
                         unit.Ship = parts?[1]?.Trim().ToLower();
                         break;
 
+                    case "mounted_engine":
+                        AssignComments(identifier, unit);
+                        unit.Mounted_engine = parts?[1]?.Trim().ToLower();
+                        break;
+
                     case "engine":
                         AssignComments(identifier, unit);
                         unit.Engine = parts?[1]?.Trim().ToLower();
@@ -1111,6 +1116,11 @@ namespace ModdingTool
                         unit.CustomCost = int.Parse(parts?[6] ?? string.Empty);
                         unit.CustomLimit = int.Parse(parts?[7] ?? string.Empty);
                         unit.CustomIncrease = int.Parse(parts?[8] ?? string.Empty);
+                        break;
+
+                    case "stat_stl":
+                        AssignComments(identifier, unit);
+                        unit.Stat_stl = int.Parse(parts?[1] ?? string.Empty);
                         break;
 
                     case "armour_ug_levels":

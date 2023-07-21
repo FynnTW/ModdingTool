@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using Pfim;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -7,11 +7,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using ModdingTool.View.UserControls;
-using Pfim;
-using ImageFormat = Pfim.ImageFormat;
 using static ModdingTool.Globals;
-using log4net;
+using ImageFormat = Pfim.ImageFormat;
 
 namespace ModdingTool.View.InterfaceData;
 
@@ -38,6 +35,8 @@ public class UnitTab : ITab.Tab
             { "Engine", "Engine" },
             { "Animal", "Animal" },
             { "Mount", "Mount" },
+            { "Stat_stl", "Minimum Soldiers" },
+            { "Mounted_engine", "Mounted engine" },
             { "Mount_effect", "Mount effects" },
             { "Attributes", "Attributes" },
             { "Spacing_width", "Spacing width" },

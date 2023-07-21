@@ -74,6 +74,7 @@
                         <TextBlock Text="{Binding UnitUiText[Radius] }" Height="25"  VerticalAlignment="Top"/>
                         <TextBlock Text="{Binding UnitUiText[Hitpoints] }" Height="25"  VerticalAlignment="Top"/>
                         <TextBlock Text="{Binding UnitUiText[SoldierCount] }" Height="25"  VerticalAlignment="Top"/>
+                        <TextBlock Text="{Binding UnitUiText[Stat_stl] }" Height="25"  VerticalAlignment="Top"/>
                     </StackPanel>
                     <StackPanel  Grid.Column="1">
                         <TextBox x:Name="Ship" Text="{Binding SelectedUnit.Ship}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
@@ -83,6 +84,7 @@
                         <TextBox x:Name="Radius" Text="{Binding SelectedUnit.Radius}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
                         <TextBox x:Name="Hitpoints" Text="{Binding SelectedUnit.Hitpoints}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
                         <TextBox x:Name="SoldierCount" Text="{Binding SelectedUnit.SoldierCount}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
+                        <TextBox x:Name="Stat_stl" Text="{Binding SelectedUnit.Stat_stl}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
                     </StackPanel>
                     <StackPanel  Grid.Column="2">
                         <TextBlock Text="{Binding UnitUiText[Engine] }" Height="25"  VerticalAlignment="Top"/>
@@ -92,6 +94,7 @@
                         <TextBlock Text="{Binding UnitUiText[Height] }" Height="25"  VerticalAlignment="Top"/>
                         <TextBlock Text="{Binding UnitUiText[Mount_hitpoints] }" Height="25"  VerticalAlignment="Top"/>
                         <TextBlock Text="{Binding UnitUiText[ExtrasCount] }" Height="25"  VerticalAlignment="Top"/>
+                        <TextBlock Text="{Binding UnitUiText[Mounted_engine] }" Height="25"  VerticalAlignment="Top"/>
                     </StackPanel>
                     <StackPanel  Grid.Column="3">
                         <TextBox x:Name="Engine" Text="{Binding SelectedUnit.Engine}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
@@ -101,6 +104,7 @@
                         <TextBox x:Name="Height" Text="{Binding SelectedUnit.Height}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
                         <TextBox x:Name="Mount_hitpoints" Text="{Binding SelectedUnit.Mount_hitpoints}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
                         <TextBox x:Name="ExtrasCount" Text="{Binding SelectedUnit.ExtrasCount}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
+                        <TextBox x:Name="Mounted_engine" Text="{Binding SelectedUnit.Mounted_engine}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
                     </StackPanel>
                 </Grid>
             </Grid>

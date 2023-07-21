@@ -1,21 +1,10 @@
 ﻿using ModdingTool.View.InterfaceData;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using static ModdingTool.Globals;
-using static ModdingTool.Unit;
-using System.Windows.Shapes;
 
 namespace ModdingTool.View.UserControls
 {
@@ -77,7 +66,10 @@ namespace ModdingTool.View.UserControls
                 var unit = new Unit();
                 foreach (var prop in unit.GetType().GetProperties())
                 {
-                    sortTypes.Add(UnitTab.UnitUiText[prop.Name]);
+                    if (UnitTab.UnitUiText.ContainsKey(prop.Name))
+                    {
+                        sortTypes.Add(UnitTab.UnitUiText[prop.Name]);
+                    }
                 }
             }
             else if (dataList.SelectedType == "Model Entries")

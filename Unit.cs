@@ -28,6 +28,7 @@ namespace ModdingTool
         public string? Engine { get; set; } = "";
         public string? Animal { get; set; } = "";
         public string? Mount { get; set; } = "";
+        public string? Mounted_engine { get; set; } = "";
         public List<string> Mount_effect { get; set; } = new List<string>();
 
         public List<string> Attributes { get; set; } = new List<string>();
@@ -153,6 +154,7 @@ namespace ModdingTool
         public int CustomIncrease { get; set; } = 50;
 
         public double MoveSpeed { get; set; } = 1.0;
+        public int Stat_stl { get; set; } = 0;
 
         public int[]? Armour_ug_levels { get; set; }
 
