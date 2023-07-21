@@ -1,20 +1,11 @@
-﻿using System;
+﻿using ModdingTool.View.InterfaceData;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using static ModdingTool.Globals;
-using ModdingTool.View.InterfaceData;
 
 namespace ModdingTool.View.UserControls
 {
@@ -53,7 +44,10 @@ namespace ModdingTool.View.UserControls
             selectunit = unitTab;
             foreach (var prop in unitTab.SelectedUnit.GetType().GetProperties())
             {
-                AttributeList.Add(UnitTab.UnitUiText[prop.Name]);
+                if (UnitTab.UnitUiText.ContainsKey(prop.Name))
+                {
+                    AttributeList.Add(UnitTab.UnitUiText[prop.Name]);
+                }
             }
             ChooseAttrBox.ItemsSource = AttributeList;
             ChooseCondBox.ItemsSource = ConditionList;
