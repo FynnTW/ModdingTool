@@ -8,6 +8,8 @@
 
 The following is a modding tool for the game Medieval II: Total War.
 
+**NOTE: This project is currently a Work In Progress. While the tool shouldn't cause any harm to your build, if you haven't already made backups of any files you care about, do it NOW before using this tool.**
+
 ## Features
 - Fast and lightweight
 - GUI for easy editing of EDU and BMDB
