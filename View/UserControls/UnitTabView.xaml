@@ -12,6 +12,10 @@
              d:DataContext="{d:DesignInstance mvvm:UnitTab}">
     <ScrollViewer Grid.ColumnSpan="5" Grid.RowSpan="2" >
         <Grid>
+            <Grid.Background>
+                            <ImageBrush  ImageSource="pack://application:,,,/Images/parchment.jpg"
+                AlignmentY="Top" AlignmentX="Center" />
+            </Grid.Background>
             <Grid.RowDefinitions>
                 <RowDefinition Height="40*"></RowDefinition>
                 <RowDefinition Height="20*"></RowDefinition>

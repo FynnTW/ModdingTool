@@ -31,15 +31,33 @@
         <!-- Menu -->
         <usercontrols:Menubar  x:Name="MenuBarCustom"  Grid.ColumnSpan="4" Grid.Row="0"></usercontrols:Menubar>
 
-        <usercontrols:ToolBoxCustom  x:Name="ToolBox"  Grid.ColumnSpan="4" Grid.Row="1"></usercontrols:ToolBoxCustom>
+        <usercontrols:ToolBoxCustom  x:Name="ToolBox"  Grid.ColumnSpan="4" Grid.Row="1">
+        </usercontrols:ToolBoxCustom>
 
         <!-- Data Pick List -->
-        <usercontrols:DataList x:Name="DataListLive" Grid.Row="2" Grid.RowSpan="2"></usercontrols:DataList>
+        <usercontrols:DataList x:Name="DataListLive" Grid.Row="2" Grid.RowSpan="2" >
+            <usercontrols:DataList.Effect>
+                <DropShadowEffect/>
+            </usercontrols:DataList.Effect>
+            <usercontrols:DataList.Background>
+                            <ImageBrush  ImageSource="pack://application:,,,/Images/parchment.jpg"
+                AlignmentY="Top" AlignmentX="Center" />
+            </usercontrols:DataList.Background>
+        </usercontrols:DataList>
 
         <!-- Main Data Tabs -->
-        <usercontrols:DataTab x:Name="DataTabLive" Grid.Row="2" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="4"></usercontrols:DataTab>
+        <usercontrols:DataTab x:Name="DataTabLive" Grid.Row="2" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="4" >
+            <usercontrols:DataTab.Effect>
+                <DropShadowEffect/>
+            </usercontrols:DataTab.Effect>
+            <usercontrols:DataTab.Background>
+                            <ImageBrush  ImageSource="pack://application:,,,/Images/parchment.jpg"
+                AlignmentY="Top" AlignmentX="Center" />
+            </usercontrols:DataTab.Background>
+        </usercontrols:DataTab>
 
         <!-- Status Bar -->
-        <usercontrols:StatusBarCustom x:Name="StatusBarLive" Grid.Row="4" Grid.ColumnSpan="4"></usercontrols:StatusBarCustom>
+        <usercontrols:StatusBarCustom x:Name="StatusBarLive" Grid.Row="4" Grid.ColumnSpan="4">
+        </usercontrols:StatusBarCustom>
     </Grid>
 </Window>

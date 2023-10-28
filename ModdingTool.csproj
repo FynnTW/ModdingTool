@@ -5,7 +5,22 @@
     <TargetFramework>net7.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>ModdingTool.ico</ApplicationIcon>
+    <Configurations>Debug;Release;Release64</Configurations>
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>false</SelfContained>
+    <RuntimeIdentifier>win-x86</RuntimeIdentifier>
+  	<RollForward>Major</RollForward>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\parchment.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="ModdingTool.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="Styles\**" />

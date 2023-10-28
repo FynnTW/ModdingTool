@@ -9,6 +9,10 @@
         Title="unitViewer" Height="1080" Width="1920" WindowStartupLocation="CenterScreen" WindowState="Maximized">
 
     <Grid Margin="0,0,0,-6">
+        <Grid.Background>
+                        <ImageBrush  ImageSource="pack://application:,,,/Images/parchment.jpg"
+                AlignmentY="Top" AlignmentX="Center" />
+        </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="2*" />
@@ -19,7 +23,7 @@
             <ColumnDefinition Width="2.5*" />
         </Grid.ColumnDefinitions>
         <DockPanel>
-            <ListView x:Name="unitPicker" ItemsSource="{Binding unitList}" DockPanel.Dock="Left" SelectionChanged="unitPicker_SelectionChanged" Grid.RowSpan="2">
+            <ListView x:Name="unitPicker" ItemsSource="{Binding unitList}" DockPanel.Dock="Left" SelectionChanged="unitPicker_SelectionChanged" Grid.RowSpan="2" Background="{x:Null}">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Columns="1" />
@@ -448,7 +452,11 @@
                 </TransformGroup>
             </TextBox.RenderTransform>
         </TextBox>
-        <Rectangle Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="54" Margin="947,533,0,0" Stroke="Black" VerticalAlignment="Top" Width="867" />
+        <Rectangle Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="54" Margin="947,533,0,0" Stroke="Black" VerticalAlignment="Top" Width="867" >
+            <Rectangle.Fill>
+                <ImageBrush/>
+            </Rectangle.Fill>
+        </Rectangle>
         <TextBlock Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="18" Margin="1554,563,0,0" TextWrapping="Wrap" Text="PRIMARY" VerticalAlignment="Top" Width="193" TextAlignment="Center" FontWeight="Bold" />
         <TextBlock x:Name="unitRadius_Copy8" Grid.Column="2" HorizontalAlignment="Left" Margin="952,592,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="24" Width="38" Text="Attack" />
         <TextBox x:Name="unitSecAttack" Grid.Column="2" HorizontalAlignment="Left" Margin="996,592,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="44" TextChanged="TextBox_TextChanged" Height="21">
