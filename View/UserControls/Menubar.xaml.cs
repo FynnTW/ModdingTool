@@ -90,7 +90,7 @@ namespace ModdingTool.View.UserControls
         }
         private void Open_GitHub_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("open https://github.com/FynnTW/ModdingTool");
+            System.Diagnostics.Process.Start(new ProcessStartInfo("https://github.com/FynnTW/ModdingTool#readme") { UseShellExecute = true });
         }
     }
 }
