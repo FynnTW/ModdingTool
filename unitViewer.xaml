@@ -6,7 +6,21 @@
         xmlns:sdl="http://schemas.sdl.com/xaml"
         xmlns:local="clr-namespace:ModdingTool"
         mc:Ignorable="d"
-        Title="unitViewer" Height="1080" Width="1920" WindowStartupLocation="CenterScreen" WindowState="Maximized">
+        Title="unitViewer" Height="1080" Width="1920" WindowStartupLocation="CenterScreen" WindowState="Maximized"
+        >
+
+        <Window.Resources>
+            <!-- One style for each *type* of control on the window -->
+            <Style TargetType="TextBox">
+                <Setter Property="Margin" Value="3,0,0,0"/>
+                <Setter Property="Background" Value="#ededec"/>
+            </Style>
+            <Style TargetType="TextBlock">
+                <Setter Property="Margin" Value="3,0,0,0"/>
+                <Setter Property="FontFamily" Value="Verdana"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+            </Style>
+        </Window.Resources>
 
     <Grid Margin="0,0,0,-6">
         <Grid.Background>
@@ -32,7 +46,8 @@
             </ListView>
         </DockPanel>
         <Image x:Name="infoCardImage" HorizontalAlignment="Left" Height="216" VerticalAlignment="Bottom" Width="600" Grid.Column="1" />
-        <Image x:Name="unitCardImage" HorizontalAlignment="Left" Height="234" Margin="1528,10,0,0" VerticalAlignment="Top" Width="190" RenderTransformOrigin="0.495,0.513" Grid.Column="2" />
+        <Image x:Name="unitCardImage" HorizontalAlignment="Right" Height="234" Margin="1528,10,0,0" VerticalAlignment="Top" Width="190" RenderTransformOrigin="0.495,0.513" Grid.Column="3" />
+        <Image x:Name="factionSymbolImage" HorizontalAlignment="Right" Height="234" Margin="1528,10,0,0" VerticalAlignment="Top" Width="190" RenderTransformOrigin="0.495,0.513" Grid.Column="3" />
         <TextBlock x:Name="localName" HorizontalAlignment="Left" Height="48" Margin="584,256,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="204" Grid.Column="2" FontSize="18" />
         <TextBlock x:Name="unitDescr" Grid.Column="2" HorizontalAlignment="Left" Height="292" Margin="556,347,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="336" FontSize="16" />
         <TextBox x:Name="unitShortDescr" Grid.Column="2" HorizontalAlignment="Left" Margin="550,692,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="272" Height="120" />

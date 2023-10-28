@@ -82,6 +82,7 @@
                         <TextBlock Text="{Binding UnitUiText[Hitpoints] }" Height="25"  VerticalAlignment="Top"/>
                         <TextBlock Text="{Binding UnitUiText[SoldierCount] }" Height="25"  VerticalAlignment="Top"/>
                         <TextBlock Text="{Binding UnitUiText[Stat_stl] }" Height="25"  VerticalAlignment="Top"/>
+                        <TextBlock Text="EDU Index" Height="25"  VerticalAlignment="Top"/>
                     </StackPanel>
                     <StackPanel  Grid.Column="1">
                         <TextBox x:Name="Ship" Text="{Binding SelectedUnit.Ship}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
@@ -92,6 +93,7 @@
                         <TextBox x:Name="Hitpoints" Text="{Binding SelectedUnit.Hitpoints}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
                         <TextBox x:Name="SoldierCount" Text="{Binding SelectedUnit.SoldierCount}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
                         <TextBox x:Name="Stat_stl" Text="{Binding SelectedUnit.Stat_stl}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
+                        <TextBox IsReadOnly="True" Background="DarkGray" x:Name="Edu_index" Text="{Binding SelectedUnit.Edu_index}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top"/>
                     </StackPanel>
                     <StackPanel  Grid.Column="2">
                         <TextBlock Text="{Binding UnitUiText[Engine] }" Height="25"  VerticalAlignment="Top"/>
@@ -502,7 +504,7 @@
 
             </StackPanel>
 
-            <Grid Grid.Column="2">
+            <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="45*"></RowDefinition>
                     <RowDefinition Height="10*"></RowDefinition>
@@ -603,22 +605,17 @@
             </Grid>
 
 
-            <Grid Grid.Column="1">
+            <Grid Grid.Column="2">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="40*"></RowDefinition>
-                    <RowDefinition Height="60*"></RowDefinition>
+                    <RowDefinition Height="48*"></RowDefinition>
+                    <RowDefinition Height="64*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="60*"></ColumnDefinition>
-                    <ColumnDefinition Width="40*"></ColumnDefinition>
+                    <ColumnDefinition Width="48*"></ColumnDefinition>
+                    <ColumnDefinition Width="64*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <Image Source="{Binding UnitImage}" VerticalAlignment="Top" HorizontalAlignment="Center" Width="100"  Grid.Column="0"></Image>
-                <StackPanel Grid.Column="1">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left">
-                        <TextBlock Text="{Binding UnitUiText[Edu_index] }" Height="25"  Grid.Column="1"/>
-                        <TextBlock  x:Name="Edu_index" Text="{Binding SelectedUnit.Edu_index }" Height="25"  Grid.Column="1"/>
-                    </StackPanel>
-                </StackPanel>
+                <Image Source="{Binding UnitImage}" VerticalAlignment="Center" HorizontalAlignment="Center" Width="125" Grid.Column="0"></Image>
+                <Image Source="{Binding FactionSymbolImage}" VerticalAlignment="Center" HorizontalAlignment="Center" Width="125" Grid.Column="1"></Image>
                 <TextBox x:Name="Descr" Text="{Binding SelectedUnit.Descr}" Grid.ColumnSpan="2" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Left" TextWrapping="Wrap"/>
             </Grid>
         </Grid>

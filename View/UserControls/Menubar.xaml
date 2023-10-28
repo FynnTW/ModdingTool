@@ -27,6 +27,7 @@
                 <MenuItem Header="_Write EDU" Click="WriteEDU_Click"/>
             </MenuItem>
             <MenuItem Header="_Error Log" Click="ErrorLog_Click"/>
+            <MenuItem Header="Open_GitHub_Click" Click="Open_GitHub_Click"/>
             <!-- <MenuItem Header="_Window"> -->
             <!-- </MenuItem> -->
             <!-- <MenuItem Header="_Settings">

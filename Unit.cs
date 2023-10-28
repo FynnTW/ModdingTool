@@ -212,6 +212,7 @@ namespace ModdingTool
         public int Edu_index { get; set; }
 
         public string CardInfo { get; set; } = "";
+        public string FactionSymbol { get; set; } = "";
 
         public Dictionary<string, List<string>> Comments { get; set; } = new();
 

@@ -14,7 +14,7 @@
                 <Button Click="Filter" Content="Filter" ></Button>
                 <Button x:Name="SortButton" Click="SortList" Content="Sort" ></Button>
                 <Popup x:Name="popup"  PlacementTarget="{Binding ElementName=SortButton}" Placement="Bottom"  Width="200" Height="100" Margin="0,20,0,0">
-                    <Border BorderBrush="Black" BorderThickness="2" Background="AliceBlue">
+                    <Border BorderBrush="Black" BorderThickness="2" Background="#a3a39e">
                         <StackPanel VerticalAlignment="Center">
                             <ComboBox x:Name="sortType" VerticalAlignment="Center" Margin="15,0,15,0" ItemsSource="{Binding sortTypes}" />
                             <ComboBox x:Name="sortDirection" VerticalAlignment="Center" Margin="15,0,15,0" ItemsSource="{Binding sortDirections}"/>

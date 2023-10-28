@@ -34,6 +34,7 @@ namespace ModdingTool
             if (unitPicker.SelectedItem is string strItem) selectedUnit = UnitDataBase[strItem];
             infoCardImage.Source = TgaToImageSource(selectedUnit.CardInfo);
             unitCardImage.Source = TgaToImageSource(selectedUnit.Card);
+            factionSymbolImage.Source = TgaToImageSource(selectedUnit.FactionSymbol);
             localName.Text = selectedUnit.Name;
             unitDescr.Text = selectedUnit.Descr;
             unitShortDescr.Text = selectedUnit.Descr;

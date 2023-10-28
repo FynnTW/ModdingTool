@@ -64,11 +64,11 @@
     <Window.Resources>
         <!-- One style for each *type* of control on the window -->
         <Style TargetType="TextBox">
-            <Setter Property="Margin" Value="3"/>
+            <Setter Property="Margin" Value="3,0,0,0"/>
             <Setter Property="Background" Value="#ededec"/>
         </Style>
         <Style TargetType="TextBlock">
-            <Setter Property="Margin" Value="3"/>
+            <Setter Property="Margin" Value="3,0,0,0"/>
             <Setter Property="FontFamily" Value="Verdana"/>
             <Setter Property="FontWeight" Value="Bold"/>
         </Style>
