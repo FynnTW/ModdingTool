@@ -1,0 +1,35 @@
+name: build-m2tw-modding-tool
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: windows-2022
+    strategy:
+      matrix:
+        dotnet-version: [ '7.0.x' ]
+
+    steps:
+      # Checkout the repo
+      - uses: actions/checkout@v3
+
+      # Setup .net
+      - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+
+      # Setup dependencies
+      - name: Install dependencies
+        run: dotnet restore
+
+      # Build DaC Launcher
+      - name: Build
+        run: dotnet publish -c Release --no-restore
+
+      # Upload build artifact
+      - uses: actions/upload-artifact@v3
+        with:
+          name: M2TW-Modding-Tool
+          path: D:\a\ModdingTool\ModdingTool\bin\Release\net7.0-windows\win-x86\publish\ModdingTool.exe
