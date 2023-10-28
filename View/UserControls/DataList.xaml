@@ -12,6 +12,10 @@
             <RowDefinition Height="965*"></RowDefinition>
         </Grid.RowDefinitions>
         <ComboBox Name="DataPicker" Text="Data" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" SelectionChanged="DataPicker_SelectionChanged"/>
-        <ListBox Name="DataListPicker"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" SelectionChanged="DataListPicker_SelectionChanged" FontSize="18" FontFamily="Verdana" Background="Transparent"></ListBox>
+        <ListBox Name="DataListPicker"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" SelectionChanged="DataListPicker_SelectionChanged" FontSize="18" FontFamily="Verdana">
+            <ListBox.Background>
+                <ImageBrush ImageSource="pack://application:,,,/Images/blank_parchment.jpg" Stretch="None"/>
+            </ListBox.Background>
+        </ListBox>
     </Grid>
 </UserControl>

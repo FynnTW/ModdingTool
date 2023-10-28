@@ -10,7 +10,7 @@
 
     <Grid Margin="0,0,0,-6">
         <Grid.Background>
-                        <ImageBrush  ImageSource="pack://application:,,,/Images/parchment.jpg"
+                        <ImageBrush  ImageSource="pack://application:,,,/Images/blank_parchment.jpg"
                 AlignmentY="Top" AlignmentX="Center" />
         </Grid.Background>
         <Grid.RowDefinitions>

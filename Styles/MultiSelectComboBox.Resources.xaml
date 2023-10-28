@@ -26,7 +26,7 @@
     <SolidColorBrush x:Key="MultiSelectComboBox.SelectedItem.Button.Light.Foreground" Color="#FF808080" />
     <SolidColorBrush x:Key="MultiSelectComboBox.SelectedItemsPanel.Border" Color="#FFACACAC" />
 
-    <FontFamily x:Key="MultiSelectComboBox.Text.FontFamily">Segoe UI</FontFamily>
+    <FontFamily x:Key="MultiSelectComboBox.Text.FontFamily">Verdana</FontFamily>
     <SolidColorBrush x:Key="MultiSelectComboBox.Text.Disabled.Foreground" Color="#FFB8B3B3" />
     <SolidColorBrush x:Key="MultiSelectComboBox.Text.Foreground" Color="#FF000000" />
 </ResourceDictionary>

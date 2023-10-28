@@ -10,10 +10,13 @@
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance mvvm:UnitTab}">
+
+   
+    
     <ScrollViewer Grid.ColumnSpan="5" Grid.RowSpan="2" >
         <Grid>
             <Grid.Background>
-                            <ImageBrush  ImageSource="pack://application:,,,/Images/parchment.jpg"
+                            <ImageBrush  ImageSource="pack://application:,,,/Images/blank_parchment.jpg"
                 AlignmentY="Top" AlignmentX="Center" />
             </Grid.Background>
             <Grid.RowDefinitions>
@@ -41,7 +44,7 @@
                         <ColumnDefinition Width="75*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <StackPanel  Grid.Column="0">
-                        <TextBlock Text="{Binding UnitUiText[Name] }" Height="25"/>
+                        <TextBlock Text="{Binding UnitUiText[Name] }" Height="25" />
                         <TextBlock Text="{Binding UnitUiText[Type] }" Height="25"/>
                         <TextBlock Text="{Binding UnitUiText[Dictionary] }" Height="25"/>
                         <TextBlock Text="{Binding UnitUiText[Category] }" Height="25"/>
@@ -49,7 +52,7 @@
                         <TextBlock Text="{Binding UnitUiText[Voice_type] }" Height="25"/>
                         <TextBlock Text="{Binding UnitUiText[Accent] }" Height="25"/>
                         <TextBlock Text="{Binding UnitUiText[BannerFaction] }" Height="25"/>
-                        <TextBlock Text="{Binding UnitUiText[BannerHoly] }" Height="25"/>
+                        <TextBlock Text="{Binding UnitUiText[BannerHoly] }" Height="25" />
                     </StackPanel>
                     <StackPanel  Grid.Column="1">
                         <TextBox x:Name="Name" Text="{Binding SelectedUnit.Name}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
@@ -236,12 +239,12 @@
                     <TextBlock Text="{Binding UnitUiText[Pri_fire_type] }" Height="25" />
                 </StackPanel>
                 <StackPanel  Grid.Column="1">
-                    <TextBox x:Name="Pri_attack" Text="{Binding SelectedUnit.Pri_attack}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
-                    <TextBox x:Name="Pri_projectile" Text="{Binding SelectedUnit.Pri_projectile}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
-                    <TextBox x:Name="Pri_ammunition" Text="{Binding SelectedUnit.Pri_ammunition}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
-                    <ComboBox x:Name="Pri_tech_type" ItemsSource="{Binding TechTypes}" Height="25" SelectedItem="{Binding SelectedUnit.Pri_tech_type}"></ComboBox>
-                    <ComboBox x:Name="Pri_sound_type" ItemsSource="{Binding SoundTypes}" Height="25" SelectedItem="{Binding SelectedUnit.Pri_sound_type}"></ComboBox>
-                    <TextBox x:Name="Pri_fire_type" Text="{Binding SelectedUnit.Pri_fire_type}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
+                    <TextBox   x:Name="Pri_attack" Text="{Binding SelectedUnit.Pri_attack}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
+                    <TextBox   x:Name="Pri_projectile" Text="{Binding SelectedUnit.Pri_projectile}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
+                    <TextBox   x:Name="Pri_ammunition" Text="{Binding SelectedUnit.Pri_ammunition}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
+                    <ComboBox   x:Name="Pri_tech_type" ItemsSource="{Binding TechTypes}" Height="25" SelectedItem="{Binding SelectedUnit.Pri_tech_type}"></ComboBox>
+                    <ComboBox  x:Name="Pri_sound_type" ItemsSource="{Binding SoundTypes}" Height="25" SelectedItem="{Binding SelectedUnit.Pri_sound_type}"></ComboBox>
+                    <TextBox   x:Name="Pri_fire_type" Text="{Binding SelectedUnit.Pri_fire_type}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
                 </StackPanel>
                 <StackPanel  Grid.Column="2">
                     <TextBlock Text="{Binding UnitUiText[Pri_charge] }" Height="25" />
@@ -439,7 +442,7 @@
                     </sdl:MultiSelectComboBox>
                     <Button x:Name="btn" Content="Add Attribute"  Height="25" Width="80" Click="btn_Click"/>
                     <Popup x:Name="popup"  PlacementTarget="{Binding ElementName=btn}" Placement="Bottom"  Width="200" Height="100" Margin="0,20,0,0">
-                        <Border BorderBrush="Black" BorderThickness="2" Background="AliceBlue">
+                        <Border BorderBrush="Black" BorderThickness="2" Background="White">
                             <StackPanel VerticalAlignment="Center">
                                 <TextBox x:Name="txtBox" VerticalAlignment="Center" Margin="15,0,15,0"/>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">

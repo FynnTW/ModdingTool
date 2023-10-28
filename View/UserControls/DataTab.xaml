@@ -10,7 +10,10 @@
              d:DesignHeight="450" d:DesignWidth="800">
 
 
-    <xcad:DockingManager x:Name="AllTabs" DocumentsSource="{Binding Tabs}" d:DataContext="{d:DesignInstance local:DataTab }" Background="Transparent" >
+    <xcad:DockingManager x:Name="AllTabs" DocumentsSource="{Binding Tabs}" d:DataContext="{d:DesignInstance local:DataTab }" >
+        <xcad:DockingManager.Background>
+            <ImageBrush/>
+        </xcad:DockingManager.Background>
         <xcad:DockingManager.LayoutItemContainerStyle>
             <Style TargetType="{x:Type xcad:LayoutItem}"  >
                 <Setter Property="Title" Value="{Binding Model.Title}"/>

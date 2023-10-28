@@ -10,8 +10,8 @@
     <DockPanel Grid.ColumnSpan="4" Grid.Row="0">
         <Menu DockPanel.Dock="Top">
             <Menu.Background>
-                            <ImageBrush  ImageSource="pack://application:,,,/Images/parchment.jpg"
-                AlignmentY="Top" AlignmentX="Center" />
+                <ImageBrush  ImageSource="pack://application:,,,/Images/blank_parchment.jpg"
+                AlignmentY="Top" AlignmentX="Center" Stretch="Fill" />
             </Menu.Background>
             <MenuItem Header="_File">
                 <MenuItem Header="_Load Mod" Click="loadMod_Click"/>
@@ -26,11 +26,11 @@
                 <MenuItem Header="_Write BMDB" Click="WriteBMDB_Click"/>
                 <MenuItem Header="_Write EDU" Click="WriteEDU_Click"/>
             </MenuItem>
-            <MenuItem Header="_Window">
-                <MenuItem Header="_Error Log" Click="ErrorLog_Click"/>
-            </MenuItem>
-            <MenuItem Header="_Settings">
-            </MenuItem>
+            <MenuItem Header="_Error Log" Click="ErrorLog_Click"/>
+            <!-- <MenuItem Header="_Window"> -->
+            <!-- </MenuItem> -->
+            <!-- <MenuItem Header="_Settings">
+            </MenuItem> -->
         </Menu>
     </DockPanel>
 </UserControl>

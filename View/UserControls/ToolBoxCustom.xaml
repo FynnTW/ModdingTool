@@ -10,7 +10,7 @@
     <DockPanel>
         <ToolBarTray DockPanel.Dock="Top" HorizontalAlignment="Stretch">
             <ToolBar HorizontalAlignment="Stretch">
-                <Button Command="Save" Content="Save as JSON" ></Button>
+                <!-- <Button Command="Save" Content="Save as JSON" ></Button> -->
                 <Button Click="Filter" Content="Filter" ></Button>
                 <Button x:Name="SortButton" Click="SortList" Content="Sort" ></Button>
                 <Popup x:Name="popup"  PlacementTarget="{Binding ElementName=SortButton}" Placement="Bottom"  Width="200" Height="100" Margin="0,20,0,0">

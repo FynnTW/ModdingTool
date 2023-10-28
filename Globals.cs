@@ -114,7 +114,7 @@ namespace ModdingTool
             }
             var window = (MainWindow)Application.Current.MainWindow;
             var menubar = window.FindName("MenuBarCustom") as View.UserControls.Menubar;
-            ModPath = "E:\\SteamLibrary\\steamapps\\common\\Medieval II Total War\\mods\\Divide_and_Conquer";
+            ModPath = "E:\\SteamLibrary\\steamapps\\common\\Medieval II Total War\\mods\\ago_beta";
             menubar?.LoadMod();
         }
 

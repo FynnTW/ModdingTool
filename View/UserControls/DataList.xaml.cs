@@ -40,7 +40,9 @@ namespace ModdingTool.View.UserControls
 
         public void InitItems()
         {
-            var pickList = new List<string> { "Units", "Model Entries", "Factions", "Cultures" };
+            var pickList = new List<string> { "Units", "Model Entries", 
+            // "Factions", "Cultures" 
+            };
             DataPicker.ItemsSource = pickList;
             DataPicker.SelectedIndex = 0;
             UnitList = UnitDataBase.Keys.ToList();

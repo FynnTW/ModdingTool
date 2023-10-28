@@ -15,7 +15,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Resource Include="Images\parchment.jpg" />
+    <Resource Include="Images\Untitled.jpg" />
+    <Resource Include="Images\blank_parchment.jpg" />
   </ItemGroup>
 
   <ItemGroup>
