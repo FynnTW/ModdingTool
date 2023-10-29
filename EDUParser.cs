@@ -746,7 +746,7 @@ namespace ModdingTool
             if (identifier != null && identifier.Contains("_descr_short"))
             {
                 var split = identifier.Split("_descr_short", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                if (!UnitDescr.ContainsKey(split[0]))
+                if (!UnitDescrShort.ContainsKey(split[0]))
                 {
                     UnitDescrShort.Add(split[0], text);
                 }
