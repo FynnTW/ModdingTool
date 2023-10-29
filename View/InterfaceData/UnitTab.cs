@@ -1,4 +1,5 @@
 ﻿using Pfim;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -233,9 +234,35 @@ public class UnitTab : ITab.Tab
         Factions.Add("all");
         Factions.AddRange(CultureDataBase.Keys.ToList());
         ModelEntries = BattleModelDataBase.Keys.ToArray();
-        UnitInfoImage = TgaToImageSource(SelectedUnit.CardInfo);
-        UnitImage = TgaToImageSource(SelectedUnit.Card);
-        FactionSymbolImage = TgaToImageSource(SelectedUnit.FactionSymbol);
+        try
+        {
+            UnitInfoImage = TgaToImageSource(SelectedUnit.CardInfo);
+        }
+        catch (Exception e)
+        {
+            ErrorDb.AddError("Error reading " + SelectedUnit.CardInfo);
+            ErrorDb.AddError(e.Message);
+        }
+        try
+        {
+            UnitImage = TgaToImageSource(SelectedUnit.Card);
+        }
+        catch (Exception e)
+        {
+            ErrorDb.AddError("Error reading " + SelectedUnit.Card);
+            ErrorDb.AddError(e.Message);
+        }
+        try
+        {
+            FactionSymbolImage = TgaToImageSource(SelectedUnit.FactionSymbol);
+        }
+        catch (Exception e)
+        {
+            ErrorDb.AddError("Error reading " + SelectedUnit.FactionSymbol);
+            ErrorDb.AddError(e.Message);
+        }
+
+
         foreach (var effect in SelectedUnit.Mount_effect)
         {
             mountEffectString += effect;
@@ -255,7 +282,8 @@ public class UnitTab : ITab.Tab
             return null;
         }
         Bitmap bitmap;
-        var image = Pfimage.FromFile(source);
+        var image = Pfimage.FromFile(source, new PfimConfig(bufferSize: 65536));
+
         PixelFormat format;
         switch (image.Format)
         {
