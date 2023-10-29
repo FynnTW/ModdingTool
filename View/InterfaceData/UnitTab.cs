@@ -14,8 +14,6 @@ namespace ModdingTool.View.InterfaceData;
 
 public class UnitTab : ITab.Tab
 {
-
-
     public static Dictionary<string, string> UnitUiText { get; set; } = new Dictionary<string, string>()
         {
             { "Name", "Localized Name" },

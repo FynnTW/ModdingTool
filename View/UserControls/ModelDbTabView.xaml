@@ -92,7 +92,7 @@
                         <DataGridTemplateColumn Header="Browse" >
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Name="BrowseTexture"  Click="BrowseTexture_OnClick" >
+                                    <Button Name="BrowseTexture"  Click="BrowseTextureAttach_OnClick" >
                                         <Image Source="../../Resources/folder.jpg"></Image>
                                     </Button>
                                 </DataTemplate>
