@@ -746,26 +746,20 @@ namespace ModdingTool
             if (identifier != null && identifier.Contains("_descr_short"))
             {
                 var split = identifier.Split("_descr_short", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                if (!UnitDescrShort.ContainsKey(split[0]))
-                {
-                    UnitDescrShort.Add(split[0], text);
-                }
-                else
-                {
-                    ErrorDb.AddError($@"Duplicate _descr_short entries found for {split[0]}", split[0], _fileName);
-                }
+                UnitDescrShort.TryAdd(split[0], text);
+                // if (!UnitDescrShort.TryAdd(split[0], text))
+                // {
+                //     ErrorDb.AddError($@"Duplicate _descr_short entries found for {split[0]}", split[0], _fileName);
+                // }
             }
             else if (identifier != null && identifier.Contains("_descr"))
             {
                 var split = identifier.Split("_descr", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                if (!UnitDescr.ContainsKey(split[0]))
-                {
-                    UnitDescr.Add(split[0], text);
-                }
-                else
-                {
-                    ErrorDb.AddError($@"Duplicate _descr entries found for {split[0]}", split[0], _fileName);
-                }
+                UnitDescr.TryAdd(split[0], text);
+                // if (!UnitDescr.TryAdd(split[0], text))
+                // {
+                //     ErrorDb.AddError($@"Duplicate _descr entries found for {split[0]}", split[0], _fileName);
+                // }
             }
             else
             {
