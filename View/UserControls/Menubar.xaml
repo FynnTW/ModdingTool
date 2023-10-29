@@ -14,7 +14,7 @@
                 AlignmentY="Top" AlignmentX="Center" Stretch="Fill" />
             </Menu.Background>
             <MenuItem Header="_Load Mod" Click="loadMod_Click"/>
-            <MenuItem Header="_JSON">
+            <MenuItem Header="_Import/Export">
                 <MenuItem Header="_Export BMDB (JSON)" Click="Export_Click"/>
                 <MenuItem Header="_Import BMBD (JSON)" Click="Import_Click"/>
                 <MenuItem Header="_Export BMDB (modeldb)" Click="WriteBMDB_Click"/>
