@@ -10,16 +10,24 @@
         >
 
         <Window.Resources>
-            <!-- One style for each *type* of control on the window -->
-            <Style TargetType="TextBox">
-                <Setter Property="Margin" Value="3,0,0,0"/>
-                <Setter Property="Background" Value="#ededec"/>
-            </Style>
-            <Style TargetType="TextBlock">
-                <Setter Property="Margin" Value="3,0,0,0"/>
-                <Setter Property="FontFamily" Value="Verdana"/>
-                <Setter Property="FontWeight" Value="Bold"/>
-            </Style>
+               <!-- One style for each *type* of control on the window -->
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="2,1,1,1"/>
+            <Setter Property="Background" Value="#ededec"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Margin" Value="2,1,1,1"/>
+            <Setter Property="Background" Value="#ededec"/>
+        </Style>
+        <Style TargetType="ListBox">
+            <Setter Property="Margin" Value="2,1,1,1"/>
+            <Setter Property="Background" Value="#ededec"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="2,1,1,1"/>
+            <Setter Property="FontFamily" Value="Verdana"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
         </Window.Resources>
 
     <Grid Margin="0,0,0,-6">
