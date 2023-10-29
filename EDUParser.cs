@@ -701,18 +701,33 @@ namespace ModdingTool
 
             // Faction Symbols
             var factionSymbol = "";
-            foreach (var faction in infoCardSearchFactions)
+            var factionSymbolPath = ModPath + FACTION_SYMBOL_PATH + "\\";
+
+            // If the unit is slave only, just set to slave and move on
+            if (factions.Count == 1 && factions[0] == "slave")
             {
-                var factionSymbolPath = ModPath + FACTION_SYMBOL_PATH + "\\";
-                factionSymbolPath += faction;
-                if (File.Exists(factionSymbolPath + ".tga"))
+                factionSymbolPath += "slave";
+            }
+            // Otherwise, add the first non-slave faction
+            else if (factions.Count == 1 && factions[0] != "slave")
+            {
+                factionSymbolPath += factions[0];
+            }
+            else if (factions.Count > 1)
+            {
+                foreach (var faction in factions)
                 {
-                    factionSymbol = factionSymbolPath + ".tga";
+                    if (faction != "slave")
+                    {
+                        factionSymbolPath += faction;
+                        break;
+                    }
                 }
-                else
-                {
-                    ErrorDb.AddError($@"No faction symbol found for unit: {unit} in faction: {faction}");
-                }
+            }
+
+            if (File.Exists(factionSymbolPath + ".tga"))
+            {
+                factionSymbol = factionSymbolPath + ".tga";
             }
 
             if (unitCard.Equals(""))
@@ -746,8 +761,8 @@ namespace ModdingTool
             if (identifier != null && identifier.Contains("_descr_short"))
             {
                 var split = identifier.Split("_descr_short", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                UnitDescrShort.TryAdd(split[0], text);
-                // if (!UnitDescrShort.TryAdd(split[0], text))
+                var result = UnitDescrShort.TryAdd(split[0], text);
+                // if (!result)
                 // {
                 //     ErrorDb.AddError($@"Duplicate _descr_short entries found for {split[0]}", split[0], _fileName);
                 // }
@@ -755,8 +770,8 @@ namespace ModdingTool
             else if (identifier != null && identifier.Contains("_descr"))
             {
                 var split = identifier.Split("_descr", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                UnitDescr.TryAdd(split[0], text);
-                // if (!UnitDescr.TryAdd(split[0], text))
+                var result = UnitDescr.TryAdd(split[0], text);
+                // if (!result)
                 // {
                 //     ErrorDb.AddError($@"Duplicate _descr entries found for {split[0]}", split[0], _fileName);
                 // }
