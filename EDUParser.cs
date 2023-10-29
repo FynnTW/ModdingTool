@@ -705,7 +705,7 @@ namespace ModdingTool
             {
                 var factionSymbolPath = ModPath + FACTION_SYMBOL_PATH + "\\";
                 factionSymbolPath += faction;
-                if (File.Exists(factionSymbolPath+".tga"))
+                if (File.Exists(factionSymbolPath + ".tga"))
                 {
                     factionSymbol = factionSymbolPath + ".tga";
                 }
@@ -746,17 +746,34 @@ namespace ModdingTool
             if (identifier != null && identifier.Contains("_descr_short"))
             {
                 var split = identifier.Split("_descr_short", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                UnitDescrShort.Add(split[0], text);
+                if (!UnitDescr.ContainsKey(split[0]))
+                {
+                    UnitDescrShort.Add(split[0], text);
+                }
+                else
+                {
+                    ErrorDb.AddError($@"Duplicate _descr_short entries found for {split[0]}", split[0], _fileName);
+                }
             }
             else if (identifier != null && identifier.Contains("_descr"))
             {
                 var split = identifier.Split("_descr", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                UnitDescr.Add(split[0], text);
+                if (!UnitDescr.ContainsKey(split[0]))
+                {
+                    UnitDescr.Add(split[0], text);
+                }
+                else
+                {
+                    ErrorDb.AddError($@"Duplicate _descr entries found for {split[0]}", split[0], _fileName);
+                }
             }
             else
             {
                 if (text == null || identifier == null) return;
-                UnitNames.Add(identifier, text);
+                if (!UnitNames.ContainsKey(identifier))
+                {
+                    UnitNames.Add(identifier, text);
+                }
             }
         }
 
