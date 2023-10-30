@@ -45,41 +45,41 @@ public class UnitTab : ITab.Tab
             { "Special_formation", "Special_formation" },
             { "Hitpoints", "Hitpoints" },
             { "Mount_hitpoints", "Mount hitpoints" },
-            { "Pri_attack", "Primary Attack" },
-            { "Pri_charge", "Primary Charge" },
-            { "Pri_projectile", "Primary Projectile" },
-            { "Pri_range", "Primary Range" },
-            { "Pri_ammunition", "Primary Ammunition" },
-            { "Pri_weapon_type", "Primary Weapon Type" },
-            { "Pri_tech_type", "Primary Tech Type" },
-            { "Pri_damage_type", "Primary Damage Type" },
-            { "Pri_sound_type", "Primary Sound Type" },
-            { "Pri_att_delay", "Primary Attack Delay" },
-            { "Pri_skel_factor", "Primary Skeleton Factor" },
-            { "Pri_attr", "Primary Attack Attributes" },
-            { "Sec_attack", "Secondary Attack" },
-            { "Sec_charge", "Secondary Charge" },
-            { "Sec_projectile", "Secondary Projectile" },
-            { "Sec_range", "Secondary Range" },
-            { "Sec_ammunition", "Secondary Ammunition" },
-            { "Sec_weapon_type", "Secondary Weapon Type" },
-            { "Sec_tech_type", "Secondary Tech Type" },
-            { "Sec_damage_type", "Secondary Damage Type" },
-            { "Sec_sound_type", "Secondary Sound Type" },
-            { "Sec_att_delay", "Secondary Attack Delay" },
-            { "Sec_skel_factor", "Secondary Skeleton Factor" },
-            { "Sec_attr", "Secondary Attack Attributes" },
-            { "Ter_attack", "Tertiary Attack" },
-            { "Ter_charge", "Tertiary Charge" },
-            { "Ter_projectile", "Tertiary Projectile" },
-            { "Ter_range", "Tertiary Range" },
-            { "Ter_ammunition", "Tertiary Ammunition" },
-            { "Ter_weapon_type", "Tertiary Weapon Type" },
-            { "Ter_tech_type", "Tertiary Tech Type" },
-            { "Ter_damage_type", "Tertiary Damage Type" },
-            { "Ter_sound_type", "Tertiary Sound Type" },
-            { "Ter_att_delay", "Tertiary Attack Delay" },
-            { "Ter_skel_factor", "Tertiary Skeleton Factor" },
+            { "Pri_attack", "Pri Attack" },
+            { "Pri_charge", "Pri Charge" },
+            { "Pri_projectile", "Pri Projectile" },
+            { "Pri_range", "Pri Range" },
+            { "Pri_ammunition", "Pri Ammunition" },
+            { "Pri_weapon_type", "Pri Weapon Type" },
+            { "Pri_tech_type", "Pri Tech Type" },
+            { "Pri_damage_type", "Pri Damage Type" },
+            { "Pri_sound_type", "Pri Sound Type" },
+            { "Pri_att_delay", "Pri Attack Delay" },
+            { "Pri_skel_factor", "Pri Skeleton Factor" },
+            { "Pri_attr", "Pri Attack Attributes" },
+            { "Sec_attack", "Sec Attack" },
+            { "Sec_charge", "Sec Charge" },
+            { "Sec_projectile", "Sec Projectile" },
+            { "Sec_range", "Sec Range" },
+            { "Sec_ammunition", "Sec Ammunition" },
+            { "Sec_weapon_type", "Sec Weapon Type" },
+            { "Sec_tech_type", "Sec Tech Type" },
+            { "Sec_damage_type", "Sec Damage Type" },
+            { "Sec_sound_type", "Sec Sound Type" },
+            { "Sec_att_delay", "Sec Attack Delay" },
+            { "Sec_skel_factor", "Sec Skeleton Factor" },
+            { "Sec_attr", "Sec Attack Attributes" },
+            { "Ter_attack", "Ter Attack" },
+            { "Ter_charge", "Ter Charge" },
+            { "Ter_projectile", "Ter Projectile" },
+            { "Ter_range", "Ter Range" },
+            { "Ter_ammunition", "Ter Ammunition" },
+            { "Ter_weapon_type", "Ter Weapon Type" },
+            { "Ter_tech_type", "Ter Tech Type" },
+            { "Ter_damage_type", "Ter Damage Type" },
+            { "Ter_sound_type", "Ter Sound Type" },
+            { "Ter_att_delay", "Ter Attack Delay" },
+            { "Ter_skel_factor", "Ter Skeleton Factor" },
             { "Ter_attr", "Tertiary Attack Attributes" },
             { "Pri_armour", "Primary Armour" },
             { "Pri_defense", "Primary Defense Skill" },
@@ -156,6 +156,7 @@ public class UnitTab : ITab.Tab
     public static List<string> Factions { get; set; }
     public static string[] ModelEntries { get; set; }
     public static string[] MountEntries { get; set; }
+    public static string[] ProjectileEntries { get; set; }
     public static string PriAnimation { get; set; }
     public static string SecAnimation { get; set; }
 
@@ -233,6 +234,11 @@ public class UnitTab : ITab.Tab
         Factions.Add("all");
         Factions.AddRange(CultureDataBase.Keys.ToList());
         ModelEntries = BattleModelDataBase.Keys.ToArray();
+        MountEntries = MountDataBase.Keys.ToArray();
+        var projectilesList = ProjectileDataBase.Keys.ToList();
+        projectilesList.Add("no");
+        ProjectileEntries = projectilesList.ToArray();
+
         try
         {
             UnitInfoImage = TgaToImageSource(SelectedUnit.CardInfo);

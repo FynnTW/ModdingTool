@@ -12,6 +12,10 @@
              d:DataContext="{d:DesignInstance mvvm:MountTab}">
     <ScrollViewer Grid.ColumnSpan="5" Grid.RowSpan="2" >
         <Grid ColumnSpan="1" Row="0">
+            <Grid.Background>
+                <ImageBrush  ImageSource="pack://application:,,,/Images/blank_parchment.jpg"
+                             AlignmentY="Top" AlignmentX="Center" />
+            </Grid.Background>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="150"></ColumnDefinition>
                 <ColumnDefinition Width="250"></ColumnDefinition>

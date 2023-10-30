@@ -36,6 +36,11 @@
                         <local:MountTabView/>
                     </DataTemplate>
                 </local:PaneTemplateSelector.MountTabTemplate>
+                <local:PaneTemplateSelector.ProjectileTabTemplate>
+                    <DataTemplate DataType="{x:Type mvvm:ProjectileTab}">
+                        <local:ProjectileTabView/>
+                    </DataTemplate>
+                </local:PaneTemplateSelector.ProjectileTabTemplate>
             </local:PaneTemplateSelector>
         </xcad:DockingManager.LayoutItemTemplateSelector>
         <xcad:LayoutRoot>

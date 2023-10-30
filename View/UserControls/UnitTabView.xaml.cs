@@ -7,6 +7,7 @@ using System.Data;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace ModdingTool.View.UserControls
@@ -172,8 +173,7 @@ namespace ModdingTool.View.UserControls
 
         private void MountGoto_OnClick(object sender, RoutedEventArgs e)
         {
-            var menu = (sender as MenuItem)?.Parent as ContextMenu;
-            var unit = menu?.DataContext as UnitTab;
+            var unit = (sender as Hyperlink)?.DataContext as UnitTab;
             var model = unit?.SelectedUnit.GetType().GetProperty("Mount")?.GetValue(unit.SelectedUnit, null);
             if (model?.ToString() == null) return;
             var newTab = new MountTab(model.ToString());

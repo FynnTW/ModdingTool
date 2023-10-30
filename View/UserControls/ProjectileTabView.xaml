@@ -1,0 +1,257 @@
+﻿<UserControl x:Class="ModdingTool.View.UserControls.ProjectileTabView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ModdingTool.View.UserControls"
+             xmlns:mvvm="clr-namespace:ModdingTool.View.InterfaceData"
+             xmlns:mt="clr-namespace:ModdingTool"
+             xmlns:sdl="http://schemas.sdl.com/xaml"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance mvvm:ProjectileTab}">
+    <ScrollViewer Grid.ColumnSpan="5" Grid.RowSpan="2" >
+        <Grid ColumnSpan="1" Row="0">
+                <Grid.Background>
+                    <ImageBrush  ImageSource="pack://application:,,,/Images/blank_parchment.jpg"
+                             AlignmentY="Top" AlignmentX="Center" />
+                </Grid.Background>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="250"></ColumnDefinition>
+                    <ColumnDefinition Width="250"></ColumnDefinition>
+                    <ColumnDefinition Width="250"></ColumnDefinition>
+                    <ColumnDefinition Width="250"></ColumnDefinition>
+                    <ColumnDefinition Width="500"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="75*"></RowDefinition>
+                    <RowDefinition Height="5*"></RowDefinition>
+                    <RowDefinition Height="20*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <StackPanel  Grid.Column="0">
+                    <TextBlock Text="{Binding ProjectileUiText[name] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[flaming] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[exploding] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[effect] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[end_effect] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[end_man_effect] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[end_package_effect] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[end_shatter_effect] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[end_shatter_man_effect] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[end_shatter_package_effect] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[effect_only] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[explode_effect] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[area_effect] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[damage] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[damage_to_troops] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[destroy_after_max_range_percent] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[destroy_after_max_range_variation] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[min_angle] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[max_angle] }" Height="25"/>
+                <TextBlock Text="{Binding ProjectileUiText[prefer_high] }" Height="29"/>
+                    <Border BorderThickness="2" BorderBrush="Black" Opacity="0.25"></Border>
+                <TextBlock Text="Display Options" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[aimed] }" Height="25"/>
+                    <Border BorderThickness="1" BorderBrush="Black" Opacity="0.25"></Border>
+                    <TextBlock Text="{Binding ProjectileUiText[invert_model_z] }" Height="25"/>
+                    <Border BorderThickness="1" BorderBrush="Black" Opacity="0.25"></Border>
+                    <TextBlock Text="{Binding ProjectileUiText[shatter_dust] }" Height="25"/>
+                    <Border BorderThickness="1" BorderBrush="Black" Opacity="0.25"></Border>
+                    <TextBlock Text="{Binding ProjectileUiText[vanish_dust] }" Height="25"/>
+                    <Border BorderThickness="1" BorderBrush="Black" Opacity="0.25"></Border>
+                    <TextBlock Text="{Binding ProjectileUiText[shatter_debris] }" Height="25"/>
+                    <Border BorderThickness="1" BorderBrush="Black" Opacity="0.25"></Border>
+                    <TextBlock Text="{Binding ProjectileUiText[vanish_debris] }" Height="25"/>
+                    <Border BorderThickness="1" BorderBrush="Black" Opacity="0.25"></Border>
+                    <TextBlock Text="{Binding ProjectileUiText[particle_trail] }" Height="25"/>
+                    <Border BorderThickness="1" BorderBrush="Black" Opacity="0.25"></Border>
+                    <TextBlock Text="{Binding ProjectileUiText[spin] }" Height="25"/>
+                    <Border BorderThickness="1" BorderBrush="Black" Opacity="0.25"></Border>
+                    <TextBlock Text="{Binding ProjectileUiText[spin_amount] }" Height="25"/>
+                </StackPanel>
+                <StackPanel  Grid.Column="1">
+                    <TextBox x:Name="name" Text="{Binding selectedProjectile.name}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
+                    <TextBox x:Name="flaming" Text="{Binding selectedProjectile.flaming}" Height="25" ></TextBox>
+                    <TextBox x:Name="exploding" Text="{Binding selectedProjectile.exploding}" Height="25"></TextBox>
+                    <TextBox x:Name="effect" Text="{Binding selectedProjectile.effect}" Height="25"></TextBox>
+                    <TextBox x:Name="end_effect" Text="{Binding selectedProjectile.end_effect}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+                    <TextBox x:Name="end_man_effect" Text="{Binding selectedProjectile.end_man_effect}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+                    <TextBox x:Name="end_package_effect" Text="{Binding selectedProjectile.end_package_effect}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+                    <TextBox x:Name="end_shatter_effect" Text="{Binding selectedProjectile.end_shatter_effect}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+                    <TextBox x:Name="end_shatter_man_effect" Text="{Binding selectedProjectile.end_shatter_man_effect}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+                    <TextBox x:Name="end_shatter_package_effect" Text="{Binding selectedProjectile.end_shatter_package_effect}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+                    <CheckBox Name="effect_only" IsChecked="{Binding selectedProjectile.effect_only}" Height="25" ></CheckBox>
+                    <TextBox x:Name="explode_effect" Text="{Binding selectedProjectile.explode_effect}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+                    <TextBox x:Name="area_effect" Text="{Binding selectedProjectile.area_effect}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+                    <TextBox x:Name="damage" Text="{Binding selectedProjectile.damage}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+                    <TextBox x:Name="damage_to_troops" Text="{Binding selectedProjectile.damage_to_troops}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+                    <TextBox x:Name="destroy_after_max_range_percent" Text="{Binding selectedProjectile.destroy_after_max_range_percent}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+                    <TextBox x:Name="destroy_after_max_range_variation" Text="{Binding selectedProjectile.destroy_after_max_range_variation}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+                    <TextBox x:Name="min_angle" Text="{Binding selectedProjectile.min_angle}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+                    <TextBox x:Name="max_angle" Text="{Binding selectedProjectile.max_angle}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+                <CheckBox Name="prefer_high" IsChecked="{Binding selectedProjectile.prefer_high}"  Height="33" ></CheckBox>
+                <Border BorderThickness="2" BorderBrush="Black" Opacity="0.25"></Border>
+                <TextBlock Text="" Height="29"/>
+                    <CheckBox x:Name="aimed" IsChecked="{Binding selectedProjectile.display.aimed}" Height="29"/>
+                    <CheckBox x:Name="invert_model_z" IsChecked="{Binding selectedProjectile.display.invert_model_z}" Height="29"/>
+                    <CheckBox x:Name="shatter_dust" IsChecked="{Binding selectedProjectile.display.shatter_dust}" Height="29"/>
+                    <CheckBox x:Name="vanish_dust" IsChecked="{Binding selectedProjectile.display.vanish_dust}" Height="29"/>
+                    <CheckBox x:Name="shatter_debris" IsChecked="{Binding selectedProjectile.display.shatter_debris}" Height="29"/>
+                    <CheckBox x:Name="vanish_debris" IsChecked="{Binding selectedProjectile.display.vanish_debris}" Height="29"/>
+                    <CheckBox x:Name="particle_trail" IsChecked="{Binding selectedProjectile.display.particle_trail}" Height="29"/>
+                    <CheckBox x:Name="spin" IsChecked="{Binding selectedProjectile.display.spin}" Height="29"/>
+                    <TextBox x:Name="spin_amount" Text="{Binding selectedProjectile.display.spin_amount}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+                </StackPanel>
+                <StackPanel  Grid.Column="2">
+                    <TextBlock Text="{Binding ProjectileUiText[velocityMin] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[velocityMax] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[radius] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[mass] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[area] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[effect_offset] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[accuracy_vs_units] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[accuracy_vs_buildings] }" Height="25"/>
+                <TextBlock Text="{Binding ProjectileUiText[accuracy_vs_towers] }" Height="25"/>
+                    <Border BorderThickness="2" BorderBrush="Black" Opacity="0.25"></Border>
+                <TextBlock Text="{Binding ProjectileUiText[affected_by_rain] }" Height="25"/>
+                    <Border BorderThickness="1" BorderBrush="Black" Opacity="0.25"></Border>
+                    <TextBlock Text="{Binding ProjectileUiText[ground_shatter] }" Height="25"/>
+                    <Border BorderThickness="1" BorderBrush="Black" Opacity="0.25"></Border>
+                    <TextBlock Text="{Binding ProjectileUiText[no_ae_on_ram] }" Height="25"/>
+                    <Border BorderThickness="1" BorderBrush="Black" Opacity="0.25"></Border>
+                    <TextBlock Text="{Binding ProjectileUiText[fiery] }" Height="25"/>
+                    <Border BorderThickness="1" BorderBrush="Black" Opacity="0.25"></Border>
+                    <TextBlock Text="{Binding ProjectileUiText[explosive] }" Height="25"/>
+                    <Border BorderThickness="1" BorderBrush="Black" Opacity="0.25"></Border>
+                    <TextBlock Text="{Binding ProjectileUiText[body_piercing] }" Height="25"/>
+                    <Border BorderThickness="1" BorderBrush="Black" Opacity="0.25"></Border>
+                    <TextBlock Text="{Binding ProjectileUiText[elevated_rocket] }" Height="25"/>
+                    <Border BorderThickness="1" BorderBrush="Black" Opacity="0.25"></Border>
+                    <TextBlock Text="{Binding ProjectileUiText[cow_carcass] }" Height="25"/>
+                    <Border BorderThickness="1" BorderBrush="Black" Opacity="0.25"></Border>
+                    <TextBlock Text="{Binding ProjectileUiText[grapeshot] }" Height="25"/>
+                    <Border BorderThickness="1" BorderBrush="Black" Opacity="0.25"></Border>
+                    <TextBlock Text="{Binding ProjectileUiText[artillery] }" Height="34"/>
+                <Border BorderThickness="1" BorderBrush="Black" Opacity="0.25"></Border>
+                    <Border BorderThickness="1" BorderBrush="Black" Opacity="0.25"></Border>
+                <TextBlock Text="Bounce Options" Height="29"/>
+                    <TextBlock Text="{Binding ProjectileUiText[bounceVelocityThreshold] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[upVectorThreshold] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[velocityDampener] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[upVectorDampener] }" Height="25"/>
+                <TextBlock Text="{Binding ProjectileUiText[erratic] }" Height="25"/>
+                <Border BorderThickness="2" BorderBrush="Black" Opacity="0.25"></Border>
+                <TextBlock Text="Self Explode Options" Height="29"/>
+                    <TextBlock Text="{Binding ProjectileUiText[probability] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[minSeconds] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[maxSeconds] }" Height="25"/>
+                    <TextBlock Text="{Binding ProjectileUiText[area_effect] }" Height="25"/>
+                </StackPanel>
+                <StackPanel  Grid.Column="3">
+                    <TextBox x:Name="velocityMin" Text="{Binding selectedProjectile.velocityMin}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
+                    <TextBox x:Name="velocityMax" Text="{Binding selectedProjectile.velocityMax}" Height="25" ></TextBox>
+                    <TextBox x:Name="radius" Text="{Binding selectedProjectile.radius}" Height="25"></TextBox>
+                    <TextBox x:Name="mass" Text="{Binding selectedProjectile.mass}" Height="25"></TextBox>
+                    <TextBox x:Name="area" Text="{Binding selectedProjectile.area}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+                    <TextBox x:Name="effect_offset" Text="{Binding selectedProjectile.effect_offset}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+                    <TextBox x:Name="accuracy_vs_units" Text="{Binding selectedProjectile.accuracy_vs_units}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+                    <TextBox x:Name="accuracy_vs_buildings" Text="{Binding selectedProjectile.accuracy_vs_buildings}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+                <TextBox x:Name="accuracy_vs_towers" Text="{Binding selectedProjectile.accuracy_vs_towers}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+                    <Border BorderThickness="2" BorderBrush="Black" Opacity="0.25"></Border>
+                <CheckBox x:Name="affected_by_rain" IsChecked="{Binding selectedProjectile.affected_by_rain}" Height="29"/>
+                    <CheckBox Name="ground_shatter" IsChecked="{Binding selectedProjectile.ground_shatter}" Height="29" HorizontalAlignment="Stretch"   ></CheckBox>
+                    <CheckBox Name="no_ae_on_ram" IsChecked="{Binding selectedProjectile.no_ae_on_ram}" Height="29" HorizontalAlignment="Stretch"   ></CheckBox>
+                    <CheckBox Name="fiery" IsChecked="{Binding selectedProjectile.fiery}" Height="29"></CheckBox>
+                    <CheckBox Name="explosive" IsChecked="{Binding selectedProjectile.explosive}" Height="29" ></CheckBox>
+                    <CheckBox Name="body_piercing" IsChecked="{Binding selectedProjectile.body_piercing}" Height="29" ></CheckBox>
+                    <CheckBox Name="elevated_rocket" IsChecked="{Binding selectedProjectile.elevated_rocket}" Height="29" ></CheckBox>
+                    <CheckBox Name="cow_carcass" IsChecked="{Binding selectedProjectile.cow_carcass}" Height="29" ></CheckBox>
+                    <CheckBox Name="grapeshot" IsChecked="{Binding selectedProjectile.grapeshot}" Height="29" ></CheckBox>
+                <CheckBox Name="artillery" IsChecked="{Binding selectedProjectile.artillery}" Height="36" ></CheckBox>
+                    <Border BorderThickness="2" BorderBrush="Black" Opacity="0.25"></Border>
+                <TextBlock Text="" Height="29"/>
+                    <TextBox x:Name="bounceVelocityThreshold" Text="{Binding selectedProjectile.bounce.bounceVelocityThreshold}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+                    <TextBox x:Name="upVectorThreshold" Text="{Binding selectedProjectile.bounce.upVectorThreshold}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+                    <TextBox x:Name="velocityDampener" Text="{Binding selectedProjectile.bounce.velocityDampener}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+                    <TextBox x:Name="upVectorDampener" Text="{Binding selectedProjectile.bounce.upVectorDampener}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+                <CheckBox Name="erratic" IsChecked="{Binding selectedProjectile.bounce.erratic}" Height="27" ></CheckBox>
+                    <Border BorderThickness="2" BorderBrush="Black" Opacity="0.25"></Border>
+                <TextBlock Text="" Height="29"/>
+                    <TextBox x:Name="probability" Text="{Binding selectedProjectile.self_explode.probability}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+                    <TextBox x:Name="minSeconds" Text="{Binding selectedProjectile.self_explode.minSeconds}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+                    <TextBox x:Name="maxSeconds" Text="{Binding selectedProjectile.self_explode.maxSeconds}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+                    <TextBox x:Name="area_effectExplode" Text="{Binding selectedProjectile.self_explode.area_effect}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+                </StackPanel>
+                <StackPanel Grid.Column="4">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="250"></ColumnDefinition>
+                            <ColumnDefinition Width="250"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel  Grid.Column="0">
+                            <TextBlock Text="Triangle Options" Height="25"/>
+                            <TextBlock Text="{Binding ProjectileUiText[texture] }" Height="25"/>
+                            <TextBlock Text="{Binding ProjectileUiText[tail] }" Height="25"/>
+                            <TextBlock Text="{Binding ProjectileUiText[length] }" Height="25"/>
+                            <TextBlock Text="{Binding ProjectileUiText[tail_tex0_one] }" Height="25"/>
+                            <TextBlock Text="{Binding ProjectileUiText[tail_tex0_two] }" Height="25"/>
+                            <TextBlock Text="{Binding ProjectileUiText[tail_tex1_one] }" Height="25"/>
+                            <TextBlock Text="{Binding ProjectileUiText[tail_tex1_two] }" Height="25"/>
+                            <TextBlock Text="{Binding ProjectileUiText[head_tex_one] }" Height="25"/>
+                        <TextBlock Text="{Binding ProjectileUiText[head_tex_two] }" Height="25"/>
+                            <Border BorderThickness="2" BorderBrush="Black" Opacity="0.25"></Border>
+                        <TextBlock Text="Rocket Options" Height="25"/>
+                            <TextBlock Text="{Binding ProjectileUiText[trailTime] }" Height="25"/>
+                            <TextBlock Text="{Binding ProjectileUiText[spinProb] }" Height="25"/>
+                            <TextBlock Text="{Binding ProjectileUiText[spinTick] }" Height="25"/>
+                            <TextBlock Text="{Binding ProjectileUiText[maxRadiusDelta] }" Height="25"/>
+                            <TextBlock Text="{Binding ProjectileUiText[min_angle] }" Height="25"/>
+                            <TextBlock Text="{Binding ProjectileUiText[max_angle] }" Height="25"/>
+                            <TextBlock Text="{Binding ProjectileUiText[erraticProb] }" Height="25"/>
+                            <TextBlock Text="{Binding ProjectileUiText[erraticTick] }" Height="25"/>
+                        <TextBlock Text="{Binding ProjectileUiText[erraticMaxAngle] }" Height="25"/>
+                            <Border BorderThickness="2" BorderBrush="Black" Opacity="0.25"></Border>
+                    </StackPanel>
+                        <StackPanel Grid.Column="1" >
+                            <TextBlock Text="" Height="25"/>
+                            <TextBox x:Name="texture" Text="{Binding selectedProjectile.triangle.texture}" Height="25" ></TextBox>
+                            <TextBox x:Name="tail" Text="{Binding selectedProjectile.triangle.tail}" Height="25" ></TextBox>
+                            <TextBox x:Name="length" Text="{Binding selectedProjectile.triangle.length}" Height="25" ></TextBox>
+                            <TextBox x:Name="tail_tex0_one" Text="{Binding selectedProjectile.triangle.tail_tex0_one}" Height="25" ></TextBox>
+                            <TextBox x:Name="tail_tex0_two" Text="{Binding selectedProjectile.triangle.tail_tex0_two}" Height="25" ></TextBox>
+                            <TextBox x:Name="tail_tex1_one" Text="{Binding selectedProjectile.triangle.tail_tex1_one}" Height="25" ></TextBox>
+                            <TextBox x:Name="tail_tex1_two" Text="{Binding selectedProjectile.triangle.tail_tex1_two}" Height="25" ></TextBox>
+                            <TextBox x:Name="head_tex_one" Text="{Binding selectedProjectile.triangle.head_tex_one}" Height="25" ></TextBox>
+                        <TextBox x:Name="head_tex_two" Text="{Binding selectedProjectile.triangle.head_tex_two}" Height="25" ></TextBox>
+                            <Border BorderThickness="2" BorderBrush="Black" Opacity="0.25"></Border>
+                        <TextBlock Text="" Height="25"/>
+                            <TextBox x:Name="trailTime" Text="{Binding selectedProjectile.rocket.trailTime}" Height="25" ></TextBox>
+                            <TextBox x:Name="spinProb" Text="{Binding selectedProjectile.rocket.spinProb}" Height="25" ></TextBox>
+                            <TextBox x:Name="spinTick" Text="{Binding selectedProjectile.rocket.spinTick}" Height="25" ></TextBox>
+                            <TextBox x:Name="maxRadiusDelta" Text="{Binding selectedProjectile.rocket.maxRadiusDelta}" Height="25" ></TextBox>
+                            <TextBox x:Name="minAngle" Text="{Binding selectedProjectile.rocket.minAngle}" Height="25" ></TextBox>
+                            <TextBox x:Name="maxAngle" Text="{Binding selectedProjectile.rocket.maxAngle}" Height="25" ></TextBox>
+                            <TextBox x:Name="erraticProb" Text="{Binding selectedProjectile.rocket.erraticProb}" Height="25" ></TextBox>
+                            <TextBox x:Name="erraticTick" Text="{Binding selectedProjectile.rocket.erraticTick}" Height="25" ></TextBox>
+                        <TextBox x:Name="erraticMaxAngle" Text="{Binding selectedProjectile.rocket.erraticMaxAngle}" Height="25" ></TextBox>
+                            <Border BorderThickness="2" BorderBrush="Black" Opacity="0.25"></Border>
+                    </StackPanel>
+                     </Grid>
+                    <TextBlock Text="Models" Height="25"/>
+                    <DataGrid  x:Name="ModelsGrid" ItemsSource="{Binding selectedProjectile.models}"  AutoGenerateColumns="False" RowHeight="25" CanUserResizeRows="False" ColumnHeaderHeight="25" SizeChanged="Models_OnSizeChanged">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="name" Binding="{Binding name}" IsReadOnly="False"/>
+                            <DataGridTextColumn Header="distance" Binding="{Binding distance}" IsReadOnly="False"/>
+                         </DataGrid.Columns>
+                    </DataGrid>
+                    <TextBlock Text="Stuck Models" Height="25"/>
+                    <DataGrid  x:Name="StuckModelsGrid" ItemsSource="{Binding selectedProjectile.stuck_models}"  AutoGenerateColumns="False" RowHeight="25" CanUserResizeRows="False" ColumnHeaderHeight="25" SizeChanged="Models_OnSizeChanged">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="name" Binding="{Binding name}" IsReadOnly="False"/>
+                            <DataGridTextColumn Header="distance" Binding="{Binding distance}" IsReadOnly="False"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+            </StackPanel>
+            </Grid>
+    </ScrollViewer>
+</UserControl>

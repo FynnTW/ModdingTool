@@ -21,6 +21,7 @@ namespace ModdingTool.View.UserControls
         public List<string> UnitList { get; set; } = new List<string>();
         public List<string> ModelList { get; set; } = new List<string>();
         public List<string> MountList { get; set; } = new List<string>();
+        public List<string> ProjectileList { get; set; } = new List<string>();
 
         public DataList()
         {
@@ -31,7 +32,7 @@ namespace ModdingTool.View.UserControls
 
         public void InitItems()
         {
-            var pickList = new List<string> { "Units", "Model Entries", "Factions", "Cultures", "Mounts" };
+            var pickList = new List<string> { "Units", "Model Entries", "Mounts", "Projectiles", "Factions", "Cultures" };
             DataPicker.ItemsSource = pickList;
             DataPicker.SelectedIndex = 0;
             UnitList = UnitDataBase.Keys.ToList();
@@ -70,6 +71,11 @@ namespace ModdingTool.View.UserControls
                     DataListPicker.ItemsSource = MountList;
                     SelectedType = selected;
                     break;
+                case "Projectiles":
+                    ProjectileList = ProjectileDataBase.Keys.ToList();
+                    DataListPicker.ItemsSource = ProjectileList;
+                    SelectedType = selected;
+                    break;
             }
         }
 
@@ -95,6 +101,10 @@ namespace ModdingTool.View.UserControls
             else if (SelectedType == "Mounts")
             {
                 dataTabs.AddTab(new MountTab(selected));
+            }
+            else if (SelectedType == "Projectiles")
+            {
+                dataTabs.AddTab(new ProjectileTab(selected));
             }
         }
     }
