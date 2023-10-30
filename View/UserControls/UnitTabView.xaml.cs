@@ -169,5 +169,15 @@ namespace ModdingTool.View.UserControls
             Formation_style.Items.Refresh();
             Special_formation.Items.Refresh();
         }
+
+        private void MountGoto_OnClick(object sender, RoutedEventArgs e)
+        {
+            var menu = (sender as MenuItem)?.Parent as ContextMenu;
+            var unit = menu?.DataContext as UnitTab;
+            var model = unit?.SelectedUnit.GetType().GetProperty("Mount")?.GetValue(unit.SelectedUnit, null);
+            if (model?.ToString() == null) return;
+            var newTab = new MountTab(model.ToString());
+            datatab?.AddTab(newTab);
+        }
     }
 }

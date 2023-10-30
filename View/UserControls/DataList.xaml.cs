@@ -1,18 +1,8 @@
-﻿using System;
+﻿using ModdingTool.View.InterfaceData;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using ModdingTool.View.InterfaceData;
 using static ModdingTool.Globals;
 
 namespace ModdingTool.View.UserControls
@@ -30,6 +20,7 @@ namespace ModdingTool.View.UserControls
         public List<string> sortDirections { get; set; } = new List<string>() { "Decreasing", "Increasing" };
         public List<string> UnitList { get; set; } = new List<string>();
         public List<string> ModelList { get; set; } = new List<string>();
+        public List<string> MountList { get; set; } = new List<string>();
 
         public DataList()
         {
@@ -40,11 +31,12 @@ namespace ModdingTool.View.UserControls
 
         public void InitItems()
         {
-            var pickList = new List<string> { "Units", "Model Entries", "Factions", "Cultures" };
+            var pickList = new List<string> { "Units", "Model Entries", "Factions", "Cultures", "Mounts" };
             DataPicker.ItemsSource = pickList;
             DataPicker.SelectedIndex = 0;
             UnitList = UnitDataBase.Keys.ToList();
             ModelList = BattleModelDataBase.Keys.ToList();
+            MountList = MountDataBase.Keys.ToList();
         }
 
 
@@ -73,6 +65,11 @@ namespace ModdingTool.View.UserControls
                     DataListPicker.ItemsSource = CultureDataBase.Keys;
                     SelectedType = selected;
                     break;
+                case "Mounts":
+                    MountList = MountDataBase.Keys.ToList();
+                    DataListPicker.ItemsSource = MountList;
+                    SelectedType = selected;
+                    break;
             }
         }
 
@@ -94,6 +91,10 @@ namespace ModdingTool.View.UserControls
             else if (SelectedType == "Model Entries")
             {
                 dataTabs.AddTab(new ModelDbTab(selected));
+            }
+            else if (SelectedType == "Mounts")
+            {
+                dataTabs.AddTab(new MountTab(selected));
             }
         }
     }

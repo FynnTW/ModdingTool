@@ -9,6 +9,7 @@ public class PaneTemplateSelector : DataTemplateSelector
 
     public DataTemplate UnitTabTemplate { get; set; }
     public DataTemplate ModelDbTabTemplate { get; set; }
+    public DataTemplate MountTabTemplate { get; set; }
 
     public override DataTemplate SelectTemplate(object item, DependencyObject container)
     {
@@ -17,6 +18,9 @@ public class PaneTemplateSelector : DataTemplateSelector
 
         if (item is ModelDbTab)
             return ModelDbTabTemplate;
+
+        if (item is MountTab)
+            return MountTabTemplate;
 
         return base.SelectTemplate(item, container);
     }

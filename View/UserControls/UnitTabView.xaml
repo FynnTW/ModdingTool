@@ -68,7 +68,13 @@
                     </Grid.ColumnDefinitions>
                     <StackPanel  Grid.Column="0">
                         <TextBlock Text="{Binding UnitUiText[Ship] }" Height="25"  VerticalAlignment="Top"/>
-                        <TextBlock Text="{Binding UnitUiText[Mount] }" Height="25"  VerticalAlignment="Top"/>
+                        <TextBlock Text="{Binding UnitUiText[Mount] }" Height="25"  VerticalAlignment="Top">
+                            <TextBlock.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem  Header="Go to entry" Click="MountGoto_OnClick"/>
+                                </ContextMenu>
+                            </TextBlock.ContextMenu>
+                        </TextBlock>
                         <TextBlock Text="{Binding UnitUiText[Stat_fire_delay] }" Height="25"  VerticalAlignment="Top"/>
                         <TextBlock Text="{Binding UnitUiText[Mass] }" Height="25"  VerticalAlignment="Top"/>
                         <TextBlock Text="{Binding UnitUiText[Radius] }" Height="25"  VerticalAlignment="Top"/>
@@ -78,7 +84,7 @@
                     </StackPanel>
                     <StackPanel  Grid.Column="1">
                         <TextBox x:Name="Ship" Text="{Binding SelectedUnit.Ship}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
-                        <TextBox x:Name="Mount" Text="{Binding SelectedUnit.Mount}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
+                        <ComboBox x:Name="Mount" IsEditable="True" ItemsSource="{Binding MountEntries}" Height="25" SelectedItem="{Binding SelectedUnit.Mount}"></ComboBox>
                         <TextBox x:Name="Stat_fire_delay" Text="{Binding SelectedUnit.Stat_fire_delay}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
                         <TextBox x:Name="Mass" Text="{Binding SelectedUnit.Mass}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
                         <TextBox x:Name="Radius" Text="{Binding SelectedUnit.Radius}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>

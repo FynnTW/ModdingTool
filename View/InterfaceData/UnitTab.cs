@@ -154,6 +154,7 @@ public class UnitTab : ITab.Tab
     public static string[] VoiceTypes { get; set; } = new string[] { "General", "Heavy", "Light", "Female", "Medium" };
     public static List<string> Factions { get; set; }
     public static string[] ModelEntries { get; set; }
+    public static string[] MountEntries { get; set; }
     public static string PriAnimation { get; set; }
     public static string SecAnimation { get; set; }
 
@@ -230,6 +231,7 @@ public class UnitTab : ITab.Tab
         Factions.Add("all");
         Factions.AddRange(CultureDataBase.Keys.ToList());
         ModelEntries = BattleModelDataBase.Keys.ToArray();
+        MountEntries = MountDataBase.Keys.ToArray();
         UnitInfoImage = TgaToImageSource(SelectedUnit.CardInfo);
         UnitImage = TgaToImageSource(SelectedUnit.Card);
         foreach (var effect in SelectedUnit.Mount_effect)

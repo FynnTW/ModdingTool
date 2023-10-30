@@ -28,6 +28,11 @@
                         <local:ModelDbTabView/>
                     </DataTemplate>
                 </local:PaneTemplateSelector.ModelDbTabTemplate>
+                <local:PaneTemplateSelector.MountTabTemplate>
+                    <DataTemplate DataType="{x:Type mvvm:MountTab}">
+                        <local:MountTabView/>
+                    </DataTemplate>
+                </local:PaneTemplateSelector.MountTabTemplate>
             </local:PaneTemplateSelector>
         </xcad:DockingManager.LayoutItemTemplateSelector>
         <xcad:LayoutRoot>
