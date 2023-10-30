@@ -26,21 +26,25 @@ namespace ModdingTool.View.UserControls
                 DataGridRow row = FindVisualParent<DataGridRow>(button);
                 if (row != null)
                 {
-                    var dataItem = row.Item as LOD;
-                    if (dataItem != null)
+                    if (row.Item is not LOD dataItem)
                     {
-                        var dialog = new OpenFileDialog();
-                        dialog.Filter = "Mesh files (*.mesh)|*.mesh";
-                        dialog.Title = "Please select a mesh file";
-                        dialog.ShowDialog();
-                        var filename = dialog.FileName;
-                        if (filename == "") return;
-                        string removeString = ModPath + "\\data\\";
-                        filename = filename.Replace(removeString, "");
-                        filename = filename.Replace("\\", "/");
-                        dataItem.Mesh = filename;
-                        LodGrid.Items.Refresh();
-                    }
+                        dataItem = new LOD();
+                    };
+                    var dialog = new OpenFileDialog();
+                    dialog.Filter = "Mesh files (*.mesh)|*.mesh";
+                    dialog.Title = "Please select a mesh file";
+                    dialog.ShowDialog();
+                    var filename = dialog.FileName;
+                    if (filename == "") return;
+                    string removeString = ModPath + "\\data\\";
+                    filename = filename.Replace(removeString, "");
+                    filename = filename.Replace("\\", "/");
+                    dataItem.Mesh = filename;
+                    row.Item = dataItem;
+                    var lods = LodGrid.ItemsSource as List<LOD>;
+                    lods?.Add(dataItem);
+                    LodGrid.ItemsSource = lods;
+                    LodGrid.Items.Refresh();
                 }
             }
         }
@@ -62,14 +66,19 @@ namespace ModdingTool.View.UserControls
             return null;
         }
 
-        private void BrowseTexture_OnClick(object sender, RoutedEventArgs e)
+        private void openBrowseTextureDialog(object sender, bool main)
         {
             if (sender is not Button button) return;
 
             var row = FindVisualParent<DataGridRow>(button);
+            var parent = row.Parent as DataGrid;
             var removeString = ModPath + "\\data\\";
 
-            if (row.Item is not Texture dataItem) return;
+
+            if (row.Item is not Texture dataItem)
+            {
+                dataItem = new Texture();
+            };
 
             var dialog = new OpenFileDialog
             {
@@ -113,8 +122,30 @@ namespace ModdingTool.View.UserControls
                 filenameSprite = filenameSprite.Replace("\\", "/");
                 dataItem.Sprite = filenameSprite;
             }
+            row.Item = dataItem;
+            if (main)
+            {
+                var mainTextures = MainTextureGrid.ItemsSource as List<Texture>;
+                mainTextures?.Add(dataItem);
+                MainTextureGrid.ItemsSource = mainTextures;
+            }
+            else
+            {
+                var attachTextures = AttachTextureGrid.ItemsSource as List<Texture>;
+                attachTextures?.Add(dataItem);
+                AttachTextureGrid.ItemsSource = attachTextures;
+            }
             MainTextureGrid.Items.Refresh();
             AttachTextureGrid.Items.Refresh();
+        }
+
+        private void BrowseTexture_OnClick(object sender, RoutedEventArgs e)
+        {
+            openBrowseTextureDialog(sender, true);
+        }
+        private void BrowseTextureAttach_OnClick(object sender, RoutedEventArgs e)
+        {
+            openBrowseTextureDialog(sender, false);
         }
 
         private void AnimationGrid_OnSizeChanged(object sender, SizeChangedEventArgs e)
