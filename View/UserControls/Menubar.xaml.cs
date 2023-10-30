@@ -1,21 +1,9 @@
-﻿using Microsoft.WindowsAPICodePack.Dialogs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Microsoft.Win32;
 using static ModdingTool.Globals;
-using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace ModdingTool.View.UserControls
 {
@@ -24,6 +12,7 @@ namespace ModdingTool.View.UserControls
     /// </summary>
     public partial class Menubar : UserControl
     {
+        public string exportedFilePath { get; set; }
         public Menubar()
         {
             InitializeComponent();
@@ -32,7 +21,9 @@ namespace ModdingTool.View.UserControls
         private void Export_Click(object sender, RoutedEventArgs e)
         {
             if (!ModLoaded) return;
+            popupText.Text = System.AppDomain.CurrentDomain.BaseDirectory + "battle_models.json";
             ExportJson();
+            donePopup.IsOpen = true;
         }
 
         private void openViewer_Click(object sender, RoutedEventArgs e)
@@ -60,6 +51,13 @@ namespace ModdingTool.View.UserControls
         {
             if (!ModLoaded) return;
             WriteBmdb();
+            popupText.Text = System.AppDomain.CurrentDomain.BaseDirectory + "battle_models.modeldb";
+            donePopup.IsOpen = true;
+        }
+
+        private void ClosePopup_Click(object sender, RoutedEventArgs e)
+        {
+            donePopup.IsOpen = false;
         }
 
         private void loadMod_Click(object sender, RoutedEventArgs e)
@@ -92,6 +90,8 @@ namespace ModdingTool.View.UserControls
         {
             if (!ModLoaded) return;
             EduParser.WriteEdu();
+            popupText.Text = System.AppDomain.CurrentDomain.BaseDirectory + "export_descr_unit.txt";
+            donePopup.IsOpen = true;
         }
 
         private void ErrorLog_Click(object sender, RoutedEventArgs e)
@@ -99,6 +99,16 @@ namespace ModdingTool.View.UserControls
             var logWindow = new ErrorLog();
             logWindow.Show();
             logWindow.WriteErrors();
+        }
+        private void ClosePopupOpen_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(new ProcessStartInfo(popupText.Text) { UseShellExecute = true });
+            donePopup.IsOpen = false;
+        }
+        
+        private void Open_GitHub_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(new ProcessStartInfo("https://github.com/FynnTW/ModdingTool#readme") { UseShellExecute = true });
         }
     }
 }

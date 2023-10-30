@@ -45,7 +45,9 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button Name="BrowseMesh"  Click="BrowseMesh_OnClick" >
-                                        <Image Source="../../Resources/folder.jpg"></Image>
+                                        <Button.Background>
+                                            <ImageBrush ImageSource="pack://application:,,,/Images/folder.jpg"/>
+                                        </Button.Background>
                                     </Button>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -69,7 +71,9 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button Name="BrowseTexture"  Click="BrowseTexture_OnClick" >
-                                        <Image Source="../../Resources/folder.jpg"></Image>
+                                        <Button.Background>
+                                            <ImageBrush ImageSource="pack://application:,,,/Images/folder.jpg"/>
+                                        </Button.Background>
                                     </Button>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -92,8 +96,10 @@
                         <DataGridTemplateColumn Header="Browse" >
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Name="BrowseTexture"  Click="BrowseTextureAttach_OnClick" >
-                                        <Image Source="../../Resources/folder.jpg"></Image>
+                                    <Button Name="BrowseTexture"  Click="BrowseTexture_OnClick" >
+                                        <Button.Background>
+                                            <ImageBrush ImageSource="pack://application:,,,/Images/folder.jpg"/>
+                                        </Button.Background>
                                     </Button>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>

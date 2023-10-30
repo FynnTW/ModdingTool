@@ -1,13 +1,4 @@
-﻿using log4net;
-using log4net.Config;
-using System.IO;
-using System.Reflection;
-using System.Windows;
-using System.Windows.Controls;
-using Microsoft.Win32;
-using static ModdingTool.Globals;
-using Microsoft.WindowsAPICodePack.Dialogs;
-using ModdingTool.View.UserControls;
+﻿using System.Windows;
 
 namespace ModdingTool
 {
@@ -19,6 +10,11 @@ namespace ModdingTool
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void MenuBarCustom_Loaded(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

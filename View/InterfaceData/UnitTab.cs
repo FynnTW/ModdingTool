@@ -1,4 +1,5 @@
 ﻿using Pfim;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -118,9 +119,9 @@ public class UnitTab : ITab.Tab
             { "ArmourlvlThree", "Upgrade Level Three" },
             { "Armour_ug_models", "Armour Upgrade Models" },
             { "ArmourModelBase", "Base Model" },
-            { "ArmourModelOne", "Upgrade Model One" },
-            { "ArmourModelTwo", "Upgrade Model Two" },
-            { "ArmourModelThree", "Upgrade Model Three" },
+            { "ArmourModelOne", "Upgrade Model 1" },
+            { "ArmourModelTwo", "Upgrade Model 2" },
+            { "ArmourModelThree", "Upgrade Model 3" },
             { "Ownership", "Ownership Factions" },
             { "EraZero", "Era 0" },
             { "EraOne", "Era 1" },
@@ -217,6 +218,7 @@ public class UnitTab : ITab.Tab
     public static List<string> AttackAttr { get; set; } = new List<string> { "spear", "light_spear", "prec", "ap", "bp", "area", "fire", "launching", "thrown", "short_pike", "long_pike", "spear_bonus_12", "spear_bonus_10", "spear_bonus_8", "spear_bonus_6", "spear_bonus_4" };
     public BitmapImage UnitImage { get; set; }
     public BitmapImage UnitInfoImage { get; set; }
+    public BitmapImage FactionSymbolImage { get; set; }
     public string mountEffectString { get; set; } = "";
     public List<string> FormationStylesX { get; set; } = new List<string> { "square", "horde", "phalanx" };
     public List<string> SpecialFormationStylesX { get; set; } = new List<string> { "wedge", "phalanx", "schiltrom", "shield_wall" };
@@ -231,9 +233,35 @@ public class UnitTab : ITab.Tab
         Factions.Add("all");
         Factions.AddRange(CultureDataBase.Keys.ToList());
         ModelEntries = BattleModelDataBase.Keys.ToArray();
-        MountEntries = MountDataBase.Keys.ToArray();
-        UnitInfoImage = TgaToImageSource(SelectedUnit.CardInfo);
-        UnitImage = TgaToImageSource(SelectedUnit.Card);
+        try
+        {
+            UnitInfoImage = TgaToImageSource(SelectedUnit.CardInfo);
+        }
+        catch (Exception e)
+        {
+            ErrorDb.AddError("Error reading " + SelectedUnit.CardInfo);
+            ErrorDb.AddError(e.Message);
+        }
+        try
+        {
+            UnitImage = TgaToImageSource(SelectedUnit.Card);
+        }
+        catch (Exception e)
+        {
+            ErrorDb.AddError("Error reading " + SelectedUnit.Card);
+            ErrorDb.AddError(e.Message);
+        }
+        try
+        {
+            FactionSymbolImage = TgaToImageSource(SelectedUnit.FactionSymbol);
+        }
+        catch (Exception e)
+        {
+            ErrorDb.AddError("Error reading " + SelectedUnit.FactionSymbol);
+            ErrorDb.AddError(e.Message);
+        }
+
+
         foreach (var effect in SelectedUnit.Mount_effect)
         {
             mountEffectString += effect;
@@ -253,7 +281,8 @@ public class UnitTab : ITab.Tab
             return null;
         }
         Bitmap bitmap;
-        var image = Pfimage.FromFile(source);
+        var image = Pfimage.FromFile(source, new PfimConfig(bufferSize: 65536));
+
         PixelFormat format;
         switch (image.Format)
         {

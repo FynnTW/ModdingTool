@@ -18,19 +18,20 @@ The following is a modding tool for the game Medieval II: Total War.
 - Import/Export BMDB as JSON
 
 ## Build
-Open `Developer Powershell for Visual Studio 2022` and run the following command
 
-```powershell
- msbuild -t:restore
-```
+#### [Install .NET 7.0 and verify installation](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
 
-```powershell
- msbuild
-```
+`dotnet --version`
 
-## Usage
-1. Open `ModdingTool.exe` in the `bin\Debug\net7.0-windows` directory.
-2. `File -> Load Mod` and select your mod's folder
+#### Install the dependencies
+`dotnet restore`
+
+#### Build the executable
+
+`dotnet publish -c Release --no-restore`
+
+#### Run the executable
+`bin\Release\net7.0-windows\win-x86\publish\ModdingTool.exe`
 
 ## Screenshots
 ![](https://i.imgur.com/dneVvyt.png)

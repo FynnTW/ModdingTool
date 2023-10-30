@@ -15,7 +15,7 @@
         <Setter Property="ContentTemplate">
             <Setter.Value>
                 <DataTemplate DataType="models:LanguageItem">
-                    <Border Background="White" BorderThickness="0" Margin="-6,-4" Padding="2">
+                    <Border Background="#ededec" BorderThickness="0" Margin="-6,-4" Padding="2">
                         <Grid Margin="2">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />

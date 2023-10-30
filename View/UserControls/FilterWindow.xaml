@@ -41,7 +41,7 @@
                 <DataGridTemplateColumn  Header="Remove" >
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button x:Name="RemoveButton" Click="RemoveButton_OnClick"></Button>
+                            <Button x:Name="RemoveButton" Click="RemoveButton_OnClick">X</Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

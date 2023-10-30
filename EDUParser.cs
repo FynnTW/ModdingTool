@@ -17,6 +17,7 @@ namespace ModdingTool
 
         private const string UNIT_CARD_PATH = "\\data\\ui\\units";
         private const string UNIT_INFO_CARD_PATH = "\\data\\ui\\unit_info";
+        private const string FACTION_SYMBOL_PATH = "\\data\\ui\\faction_symbols";
         private static int _lineNum;
         private static string _fileName = "";
         public static List<string> EduEndComments = new();
@@ -542,6 +543,7 @@ namespace ModdingTool
                         var cards = GetCards(newUnit.Dictionary, newUnit.Ownership, newUnit.Card_dict, newUnit.Info_dict, newUnit.Mercenary_unit);
                         newUnit.Card = cards[0];
                         newUnit.CardInfo = cards[1];
+                        newUnit.FactionSymbol = cards[2];
 
                         if (newUnit.Type != null)
                         {
@@ -697,6 +699,37 @@ namespace ModdingTool
                 }
             }
 
+            // Faction Symbols
+            var factionSymbol = "";
+            var factionSymbolPath = ModPath + FACTION_SYMBOL_PATH + "\\";
+
+            // If the unit is slave only, just set to slave and move on
+            if (factions.Count == 1 && factions[0] == "slave")
+            {
+                factionSymbolPath += "slave";
+            }
+            // Otherwise, add the first non-slave faction
+            else if (factions.Count == 1 && factions[0] != "slave")
+            {
+                factionSymbolPath += factions[0];
+            }
+            else if (factions.Count > 1)
+            {
+                foreach (var faction in factions)
+                {
+                    if (faction != "slave")
+                    {
+                        factionSymbolPath += faction;
+                        break;
+                    }
+                }
+            }
+
+            if (File.Exists(factionSymbolPath + ".tga"))
+            {
+                factionSymbol = factionSymbolPath + ".tga";
+            }
+
             if (unitCard.Equals(""))
             {
                 ErrorDb.AddError($@"!!no unit card at all found for unit: {unit}");
@@ -705,7 +738,7 @@ namespace ModdingTool
             {
                 ErrorDb.AddError($@"!!no unit info card at all found for unit: {unit}");
             }
-            return new[] { unitCard, unitInfoCard };
+            return new[] { unitCard, unitInfoCard, factionSymbol };
         }
 
         private static void AddUnitStringEntry(string?[] parts)
@@ -728,17 +761,28 @@ namespace ModdingTool
             if (identifier != null && identifier.Contains("_descr_short"))
             {
                 var split = identifier.Split("_descr_short", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                UnitDescrShort.Add(split[0], text);
+                var result = UnitDescrShort.TryAdd(split[0], text);
+                // if (!result)
+                // {
+                //     ErrorDb.AddError($@"Duplicate _descr_short entries found for {split[0]}", split[0], _fileName);
+                // }
             }
             else if (identifier != null && identifier.Contains("_descr"))
             {
                 var split = identifier.Split("_descr", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                UnitDescr.Add(split[0], text);
+                var result = UnitDescr.TryAdd(split[0], text);
+                // if (!result)
+                // {
+                //     ErrorDb.AddError($@"Duplicate _descr entries found for {split[0]}", split[0], _fileName);
+                // }
             }
             else
             {
                 if (text == null || identifier == null) return;
-                UnitNames.Add(identifier, text);
+                if (!UnitNames.ContainsKey(identifier))
+                {
+                    UnitNames.Add(identifier, text);
+                }
             }
         }
 
