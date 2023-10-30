@@ -6,6 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ModdingTool"
         mc:Ignorable="d"
+        Background="#ededec"
         Title="Medieval II Total War Modding Tool" Height="1080" Width="1920" WindowState="Maximized">
     <Window.InputBindings>
         <KeyBinding Key="Z" Modifiers="Control"
@@ -32,7 +33,8 @@
         <!-- Menu -->
         <usercontrols:Menubar  x:Name="MenuBarCustom"  Grid.ColumnSpan="5" Grid.Row="0" FontFamily="Verdana" Loaded="MenuBarCustom_Loaded" Grid.RowSpan="1" FontWeight="Bold" FontSize="16">
             <usercontrols:Menubar.Background>
-                <ImageBrush/>
+                <ImageBrush  ImageSource="pack://application:,,,/Images/blank_parchment.jpg"
+                AlignmentY="Top" AlignmentX="Center" Stretch="UniformToFill" />
             </usercontrols:Menubar.Background>
         </usercontrols:Menubar>
 

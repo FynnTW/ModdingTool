@@ -8,8 +8,8 @@
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <DockPanel>
-        <ToolBarTray DockPanel.Dock="Top" HorizontalAlignment="Stretch">
-            <ToolBar HorizontalAlignment="Stretch">
+        <ToolBarTray Background="#ededec" DockPanel.Dock="Top" HorizontalAlignment="Stretch">
+            <ToolBar Background="#ededec" HorizontalAlignment="Stretch">
                 <!-- <Button Command="Save" Content="Save as JSON" ></Button> -->
                 <Button Click="Filter" Content="Filter" ></Button>
                 <Button x:Name="SortButton" Click="SortList" Content="Sort" ></Button>

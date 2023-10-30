@@ -444,7 +444,7 @@
                     </sdl:MultiSelectComboBox>
                     <Button x:Name="btn" Content="Add Attribute"  Height="25" Width="80" Click="btn_Click"/>
                     <Popup x:Name="popup"  PlacementTarget="{Binding ElementName=btn}" Placement="Bottom"  Width="200" Height="100" Margin="0,20,0,0">
-                        <Border BorderBrush="Black" BorderThickness="2" Background="White">
+                        <Border BorderBrush="Black" BorderThickness="2" Background="#ededec">
                             <StackPanel VerticalAlignment="Center">
                                 <TextBox x:Name="txtBox" VerticalAlignment="Center" Margin="15,0,15,0"/>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">

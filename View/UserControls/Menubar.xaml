@@ -9,11 +9,7 @@
              d:DataContext="{d:DesignInstance local:Menubar}">
 
     <DockPanel Grid.ColumnSpan="4" Grid.Row="0">
-        <Menu DockPanel.Dock="Top">
-            <Menu.Background>
-                <ImageBrush  ImageSource="pack://application:,,,/Images/blank_parchment.jpg"
-                AlignmentY="Top" AlignmentX="Center" Stretch="Fill" />
-            </Menu.Background>
+        <Menu Background="#ededec" DockPanel.Dock="Top">
             <MenuItem Header="_Load Mod" Click="loadMod_Click"/>
             <MenuItem Header="_Import/Export">
                 <MenuItem Header="_Export BMDB (JSON)" Click="Export_Click"/>
