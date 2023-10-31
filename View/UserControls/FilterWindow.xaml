@@ -3,19 +3,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:ModdingTool.View.UserControls"
+             xmlns:local="clr-namespace:ModdingTool.ViewModel"
+             d:DataContext="{d:DesignInstance local:FilterViewModel}"
              xmlns:mvvm="clr-namespace:ModdingTool.View.InterfaceData"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800"
-            d:DataContext="{d:DesignInstance local:FilterWindow}">
+             d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel>
         <StackPanel Orientation="Horizontal">
-            <ComboBox x:Name="ChooseAttrBox" Width="200" ItemsSource="{Binding AttributeList}"></ComboBox>
-            <ComboBox x:Name="ChooseCondBox" Width="200" ItemsSource="{Binding ConditionList}"></ComboBox>
-            <TextBox x:Name="ChooseValueBox" Width="200"></TextBox>
-            <Button x:Name="AddFilter" Click="AddFilter_OnClick" >Add Filter</Button>
+            <ComboBox x:Name="ChooseAttrBox" Width="200" SelectedItem="{Binding SelectedAttribute}" ItemsSource="{Binding AttributeList}"></ComboBox>
+            <ComboBox x:Name="ChooseCondBox" Width="200" SelectedItem="{Binding SelectedCondition}" ItemsSource="{Binding ConditionList}"></ComboBox>
+            <TextBox x:Name="ChooseValueBox" Text="{Binding Value}" Width="200"></TextBox>
+            <Button x:Name="AddFilterButton" Command="{Binding AddFilterCommand}" >Add Filter</Button>
         </StackPanel>
-        <DataGrid x:Name="Filtergrid" AutoGenerateColumns="False" ItemsSource="{Binding localFilterList}">
+        <DataGrid x:Name="FilterGrid" AutoGenerateColumns="False" ItemsSource="{Binding LocalFilterList}">
             <DataGrid.Columns>
                 <DataGridTemplateColumn x:Name="FilterType" Header="Filter Type" >
                     <DataGridTemplateColumn.CellTemplate>
@@ -41,7 +41,9 @@
                 <DataGridTemplateColumn  Header="Remove" >
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button x:Name="RemoveButton" Click="RemoveButton_OnClick">X</Button>
+                            <Button Content="Remove" 
+                                    Command="{Binding Path=DataContext.RemoveButtonCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" 
+                                    CommandParameter="{Binding}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

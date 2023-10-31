@@ -1,5 +1,7 @@
 ﻿using ModdingTool.View.InterfaceData;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,19 +17,16 @@ namespace ModdingTool.View.UserControls
 
         public static string Selected { get; set; }
         public string SelectedType { get; set; }
-        public List<Filter> FilterList { get; set; } = new List<Filter>();
-        public List<string> sortTypes { get; set; } = new List<string>();
-        public List<string> sortDirections { get; set; } = new List<string>() { "Decreasing", "Increasing" };
-        public List<string> UnitList { get; set; } = new List<string>();
-        public List<string> ModelList { get; set; } = new List<string>();
-        public List<string> MountList { get; set; } = new List<string>();
-        public List<string> ProjectileList { get; set; } = new List<string>();
+
+        public event EventHandler<ListChangedEventArgs>? ListChanged;
+        public ObservableCollection<string> DisplayedItems { get; } = new ObservableCollection<string>();
 
         public DataList()
         {
             Selected = "";
             SelectedType = "";
             InitializeComponent();
+            this.DataContext = this;
         }
 
         public void InitItems()
@@ -35,77 +34,83 @@ namespace ModdingTool.View.UserControls
             var pickList = new List<string> { "Units", "Model Entries", "Mounts", "Projectiles", "Factions", "Cultures" };
             DataPicker.ItemsSource = pickList;
             DataPicker.SelectedIndex = 0;
-            UnitList = UnitDataBase.Keys.ToList();
-            ModelList = BattleModelDataBase.Keys.ToList();
-            MountList = MountDataBase.Keys.ToList();
         }
-
-
 
         private void DataPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var selected = DataPicker.SelectedItem.ToString();
-            Print(selected);
+            if (selected == null || selected.Equals(SelectedType)) return;
             switch (selected)
             {
                 case "Units":
-                    UnitList = UnitDataBase.Keys.ToList();
-                    DataListPicker.ItemsSource = UnitList;
-                    SelectedType = selected;
+                    UpdateDisplayedItems(UnitDataBase.Keys.ToList());
                     break;
                 case "Model Entries":
-                    ModelList = BattleModelDataBase.Keys.ToList();
-                    DataListPicker.ItemsSource = ModelList;
-                    SelectedType = selected;
+                    UpdateDisplayedItems(BattleModelDataBase.Keys.ToList());
                     break;
                 case "Factions":
-                    DataListPicker.ItemsSource = FactionDataBase.Keys;
-                    SelectedType = selected;
+                    UpdateDisplayedItems(FactionDataBase.Keys.ToList());
                     break;
                 case "Cultures":
-                    DataListPicker.ItemsSource = CultureDataBase.Keys;
-                    SelectedType = selected;
+                    UpdateDisplayedItems(CultureDataBase.Keys.ToList());
                     break;
                 case "Mounts":
-                    MountList = MountDataBase.Keys.ToList();
-                    DataListPicker.ItemsSource = MountList;
-                    SelectedType = selected;
+                    UpdateDisplayedItems(MountDataBase.Keys.ToList());
                     break;
                 case "Projectiles":
-                    ProjectileList = ProjectileDataBase.Keys.ToList();
-                    DataListPicker.ItemsSource = ProjectileList;
-                    SelectedType = selected;
+                    UpdateDisplayedItems(ProjectileDataBase.Keys.ToList());
                     break;
+            }
+            SelectedType = selected;
+            ListChanged?.Invoke(this, new ListChangedEventArgs(SelectedType, DisplayedItems));
+        }
+
+        public void UpdateDisplayedItems(List<string> items)
+        {
+            DisplayedItems.Clear();
+            foreach (var item in items)
+            {
+                DisplayedItems.Add(item);
             }
         }
 
         private void DataListPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (DataListPicker.SelectedItem == null) return;
-            Window window = Window.GetWindow(this);
+            var window = Window.GetWindow(this) ?? throw new InvalidOperationException();
             var dataTabs = window.FindName("DataTabLive") as DataTab;
             var selected = DataListPicker.SelectedItem.ToString();
             if (selected != null)
-            {
                 Selected = selected;
-            }
 
-            if (SelectedType == "Units")
+            switch (SelectedType)
             {
-                dataTabs.AddTab(new UnitTab(selected));
+                case "Units":
+                    dataTabs?.AddTab(new UnitTab(Selected));
+                    break;
+                case "Model Entries":
+                    dataTabs?.AddTab(new ModelDbTab(Selected));
+                    break;
+                case "Mounts":
+                    dataTabs?.AddTab(new MountTab(Selected));
+                    break;
+                case "Projectiles":
+                    dataTabs?.AddTab(new ProjectileTab(Selected));
+                    break;
             }
-            else if (SelectedType == "Model Entries")
-            {
-                dataTabs.AddTab(new ModelDbTab(selected));
-            }
-            else if (SelectedType == "Mounts")
-            {
-                dataTabs.AddTab(new MountTab(selected));
-            }
-            else if (SelectedType == "Projectiles")
-            {
-                dataTabs.AddTab(new ProjectileTab(selected));
-            }
+        }
+    }
+
+
+    public class ListChangedEventArgs : EventArgs
+    {
+        public string SelectedListType { get; }
+        public ObservableCollection<string> SelectedList { get; }
+
+        public ListChangedEventArgs(string selectedListType, ObservableCollection<string> selectedList)
+        {
+            SelectedListType = selectedListType;
+            SelectedList = selectedList;
         }
     }
 }
