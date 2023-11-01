@@ -26,10 +26,6 @@ namespace ModdingTool.View.UserControls
 
         private void Field_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            if (sender is not TextBox { DataContext: MountTab tab } box) return;
-            if (tab.iLogic.Changes == null) return;
-            if (tab.iLogic.Changes.Contains(box)) return;
-            tab.iLogic.Changes?.Add(box);
         }
 
         private void ModelGoto_OnClick(object sender, RoutedEventArgs e)

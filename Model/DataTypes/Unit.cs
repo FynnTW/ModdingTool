@@ -223,9 +223,6 @@ namespace ModdingTool
 
         #endregion Public properties
 
-        public Dictionary<string, IProperty> UnitPropsDictionary = new()
-        {
-        };
 
         public double CalculateUnitValue()
         {

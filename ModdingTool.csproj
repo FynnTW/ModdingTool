@@ -5,13 +5,14 @@
     <TargetFramework>net7.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>ModdingTool.ico</ApplicationIcon>
+    <ApplicationIcon>Images\ModdingTool.ico</ApplicationIcon>
     <Configurations>Debug;Release;Release64</Configurations>
     <PublishSingleFile>true</PublishSingleFile>
     <SelfContained>false</SelfContained>
     <RuntimeIdentifier>win-x86</RuntimeIdentifier>
   	<RollForward>Major</RollForward>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <PackageIcon>ModdingTool.ico</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="ModdingTool.ico" />
+    <Content Include="Images\ModdingTool.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,12 +48,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="log4net.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="Sdl.MultiSelectComboBox">
       <HintPath>Resources\Sdl.MultiSelectComboBox.dll</HintPath>
     </Reference>
@@ -62,6 +57,13 @@
     <Compile Update="View\UserControls\ProjectileTabView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Images\ModdingTool.ico">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
