@@ -267,62 +267,64 @@ namespace ModdingTool
             double extrasStats = 0.0;
             if (Category != null)
             {
-                if (Category.Equals("siege"))
+                switch (Category)
                 {
-                    var rangeModifier = Sec_range <= 210 ? Sec_range * 0.01429 : 3.0;
-                    attackValue = Sec_attack * 1.5 * rangeModifier + Sec_attack * 1.5;
-                    if (Sec_attr != null)
-                    {
-                        if (Sec_attr.Contains("ap"))
-                            attackValue += 3.0;
-                        if (Sec_attr.Contains("launching"))
-                            attackValue += 3.0;
-                        if (!Sec_attr.Contains("area"))
+                    case "siege":
                         {
-                            if (Sec_attr.Contains("bp"))
-                                attackValue *= 1.4;
-                        }
-                        else
-                            attackValue *= 2.5;
-                    }
-                    extrasStats = ExtrasCount * attackValue * moraleModifier;
-                    //if (Pri_armour < 8)
-                    //   statsTotal += 3.0;
-
-                }
-                else if (Category.Equals("handler"))
-                {
-
-                }
-                else if (Category.Equals("cavalry"))
-                {
-                    if (Mount != null)
-                    {
-                        var mountType = Globals.MountDataBase[Mount].mount_class;
-                        switch (mountType)
-                        {
-                            case "horse":
-                            case "camel":
-                                statsTotal += 4.0;
-                                break;
-                            case "elephant":
+                            var rangeModifier = Sec_range <= 210 ? Sec_range * 0.01429 : 3.0;
+                            attackValue = Sec_attack * 1.5 * rangeModifier + Sec_attack * 1.5;
+                            if (Sec_attr != null)
+                            {
+                                if (Sec_attr.Contains("ap"))
+                                    attackValue += 3.0;
+                                if (Sec_attr.Contains("launching"))
+                                    attackValue += 3.0;
+                                if (!Sec_attr.Contains("area"))
                                 {
-                                    extrasStats = Sec_attack + (Sec_charge / 2.0);
-                                    if (Sec_attr != null)
-                                    {
-                                        if (Sec_attr.Contains("ap"))
-                                            extrasStats += 5.0;
-                                        if (Sec_attr.Contains("launching"))
-                                            extrasStats += 1.0;
-                                        if (Sec_attr.Contains("launching"))
-                                            extrasStats += 2.0;
-                                    }
-
-                                    extrasStats = extrasStats * (ExtrasCount * Mount_hitpoints) * moraleModifier;
-                                    break;
+                                    if (Sec_attr.Contains("bp"))
+                                        attackValue *= 1.4;
                                 }
+                                else
+                                    attackValue *= 2.5;
+                            }
+                            extrasStats = ExtrasCount * attackValue * moraleModifier;
+                            //if (Pri_armour < 8)
+                            //   statsTotal += 3.0;
+                            break;
                         }
-                    }
+                    case "handler":
+                        break;
+                    case "cavalry":
+                        {
+                            if (Mount != null)
+                            {
+                                var mountType = Globals.MountDataBase[Mount].mount_class;
+                                switch (mountType)
+                                {
+                                    case "horse":
+                                    case "camel":
+                                        statsTotal += 4.0;
+                                        break;
+                                    case "elephant":
+                                        {
+                                            extrasStats = Sec_attack + (Sec_charge / 2.0);
+                                            if (Sec_attr != null)
+                                            {
+                                                if (Sec_attr.Contains("ap"))
+                                                    extrasStats += 5.0;
+                                                if (Sec_attr.Contains("launching"))
+                                                    extrasStats += 1.0;
+                                                if (Sec_attr.Contains("launching"))
+                                                    extrasStats += 2.0;
+                                            }
+
+                                            extrasStats = extrasStats * (ExtrasCount * Mount_hitpoints) * moraleModifier;
+                                            break;
+                                        }
+                                }
+                            }
+                            break;
+                        }
                 }
             }
 
