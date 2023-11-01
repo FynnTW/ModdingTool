@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace ModdingTool
 {
@@ -211,6 +212,8 @@ namespace ModdingTool
         public bool General_unit { get; set; } = false;
         public int Edu_index { get; set; }
 
+        public double AIUnitValue { get; set; } = 0;
+
         public string CardInfo { get; set; } = "";
         public string FactionSymbol { get; set; } = "";
 
@@ -223,6 +226,118 @@ namespace ModdingTool
         public Dictionary<string, IProperty> UnitPropsDictionary = new()
         {
         };
+
+        public double CalculateUnitValue()
+        {
+            double attackValue = 0;
+            double hasMissileModifier = 1.0;
+            if (Category != null)
+            {
+                if ((Pri_attr != null && Pri_attr.Contains("prec")) || string.IsNullOrWhiteSpace(Pri_projectile))
+                {
+                    var attackStat = string.IsNullOrWhiteSpace(Pri_projectile) ? Pri_attack : Sec_attack + 2.0;
+                    var chargeStat = string.IsNullOrWhiteSpace(Pri_projectile) ? Pri_charge / 2.0 : Sec_charge / 2.0;
+                    attackValue = attackStat + chargeStat;
+                }
+                else
+                {
+                    double rangeModifier = Pri_range <= 200 ? Pri_range * 0.02 : 4.0;
+                    attackValue = Pri_attack * 0.5 * rangeModifier + Pri_attack * 0.5;
+                    if (Pri_attr != null && Pri_attr.Contains("ap"))
+                    {
+                        attackValue += 5.0;
+                        if (Pri_tech_type is "missile_gunpowder")
+                            attackValue += 5.0;
+                    }
+                    hasMissileModifier = 0.8;
+                }
+            }
+            double statsTotal = attackValue + (4 * Pri_armour) + (2 * Pri_defense) + (2 * Pri_shield);
+
+            const double MAX_MORALE = 12.0;
+            const double ADJUSTMENT_SCALE = 0.55;
+            const double BASE_OFFSET = 0.25;
+
+            double moraleValue = Math.Clamp(Morale, 0.0, MAX_MORALE);
+            double normalizedMorale = moraleValue / MAX_MORALE;
+            double adjustedMorale = normalizedMorale * ADJUSTMENT_SCALE + BASE_OFFSET;
+            double moraleEffect = 1.0 - adjustedMorale;
+
+            double moraleModifier = 1.0 - (moraleEffect * hasMissileModifier);
+            double extrasStats = 0.0;
+            if (Category != null)
+            {
+                if (Category.Equals("siege"))
+                {
+                    var rangeModifier = Sec_range <= 210 ? Sec_range * 0.01429 : 3.0;
+                    attackValue = Sec_attack * 1.5 * rangeModifier + Sec_attack * 1.5;
+                    if (Sec_attr != null)
+                    {
+                        if (Sec_attr.Contains("ap"))
+                            attackValue += 3.0;
+                        if (Sec_attr.Contains("launching"))
+                            attackValue += 3.0;
+                        if (!Sec_attr.Contains("area"))
+                        {
+                            if (Sec_attr.Contains("bp"))
+                                attackValue *= 1.4;
+                        }
+                        else
+                            attackValue *= 2.5;
+                    }
+                    extrasStats = ExtrasCount * attackValue * moraleModifier;
+                    //if (Pri_armour < 8)
+                    //   statsTotal += 3.0;
+
+                }
+                else if (Category.Equals("handler"))
+                {
+
+                }
+                else if (Category.Equals("cavalry"))
+                {
+                    if (Mount != null)
+                    {
+                        var mountType = Globals.MountDataBase[Mount].mount_class;
+                        switch (mountType)
+                        {
+                            case "horse":
+                            case "camel":
+                                statsTotal += 4.0;
+                                break;
+                            case "elephant":
+                                {
+                                    extrasStats = Sec_attack + (Sec_charge / 2.0);
+                                    if (Sec_attr != null)
+                                    {
+                                        if (Sec_attr.Contains("ap"))
+                                            extrasStats += 5.0;
+                                        if (Sec_attr.Contains("launching"))
+                                            extrasStats += 1.0;
+                                        if (Sec_attr.Contains("launching"))
+                                            extrasStats += 2.0;
+                                    }
+
+                                    extrasStats = extrasStats * (ExtrasCount * Mount_hitpoints) * moraleModifier;
+                                    break;
+                                }
+                        }
+                    }
+                }
+            }
+
+            var officerCount = 0;
+            if (!string.IsNullOrWhiteSpace(Officer1))
+                officerCount++;
+            if (!string.IsNullOrWhiteSpace(Officer2))
+                officerCount++;
+            if (!string.IsNullOrWhiteSpace(Officer3))
+                officerCount++;
+            if (Attributes.Contains("general_unit"))
+                officerCount++;
+            var aiUnitValue = ((SoldierCount * Hitpoints + officerCount * (Hitpoints + 1)) * (moraleModifier * statsTotal) + extrasStats) * 0.45;
+            return aiUnitValue;
+        }
 
     }
 }

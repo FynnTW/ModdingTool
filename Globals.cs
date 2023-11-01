@@ -23,6 +23,7 @@ namespace ModdingTool
         public static Dictionary<string, Faction> FactionDataBase = new();
         public static Dictionary<string, Culture> CultureDataBase = new();
         public static Dictionary<string, Projectile> ProjectileDataBase = new();
+        public static Dictionary<string, Engine> EngineDataBase = new();
         public static Dictionary<string, Mount> MountDataBase = new();
         public static Dictionary<string, string> ExpandedEntries = new();
         public static Dictionary<string, CharacterType> CharacterTypes = new();

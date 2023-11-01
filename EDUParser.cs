@@ -575,6 +575,7 @@ namespace ModdingTool
         private static void AddUnit(Unit unit)
         {
             if (unit.Type == null) return;
+            unit.AIUnitValue = Math.Round(unit.CalculateUnitValue());
             UnitDataBase.Add(unit.Type, unit);
             Console.WriteLine(unit.Type);
 
