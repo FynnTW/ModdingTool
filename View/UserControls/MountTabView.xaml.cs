@@ -1,4 +1,5 @@
 ﻿using ModdingTool.View.InterfaceData;
+using ModdingTool.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -41,7 +42,8 @@ namespace ModdingTool.View.UserControls
             var model = mount?.SelectedMount.GetType().GetProperty(attribute)?.GetValue(mount.SelectedMount, null);
             if (model?.ToString() == null) return;
             var newTab = new ModelDbTab(model.ToString());
-            datatab?.AddTab(newTab);
+            var dataViewModel = datatab?.DataContext as DataTabViewModel;
+            dataViewModel?.AddTab(newTab);
         }
 
         private void RiderOffsetGrid_OnSizeChanged(object sender, SizeChangedEventArgs e)

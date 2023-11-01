@@ -83,7 +83,7 @@ namespace ModdingTool.View.UserControls
             }
 
             var dataPickerBox = window?.FindName("DataListLive") as DataList;
-            dataPickerBox?.InitItems();
+            ModLoadedTrigger();
         }
 
         private void WriteEDU_Click(object sender, RoutedEventArgs e)
@@ -105,7 +105,7 @@ namespace ModdingTool.View.UserControls
             System.Diagnostics.Process.Start(new ProcessStartInfo(popupText.Text) { UseShellExecute = true });
             donePopup.IsOpen = false;
         }
-        
+
         private void Open_GitHub_Click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start(new ProcessStartInfo("https://github.com/FynnTW/ModdingTool#readme") { UseShellExecute = true });

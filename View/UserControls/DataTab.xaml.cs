@@ -1,21 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ModdingTool.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Xceed.Wpf.AvalonDock.Layout;
-using CommunityToolkit.Mvvm.Input;
-using ModdingTool.View.InterfaceData;
 
 namespace ModdingTool.View.UserControls
 {
@@ -24,35 +9,15 @@ namespace ModdingTool.View.UserControls
     /// </summary>
     public partial class DataTab : UserControl
     {
-        public ICollection<ITab> Tabs { get; }
-        public ICommand NewTabCommand;
-        public ITab selectedTab = null;
-
+        public DataTabViewModel ViewModel;
         public DataTab()
         {
-            NewTabCommand = new RelayCommand(NewTab);
-            Tabs = new ObservableCollection<ITab>();
             InitializeComponent();
-        }
-
-        private void NewTab()
-        {
-
-        }
-
-        public void AddTab(ITab tab)
-        {
-            Tabs.Add(tab);
-            AllTabs.DocumentsSource = Tabs;
-            selectedTab = tab;
-            AllTabs.ActiveContent = tab;
-            //if (documentPane.SelectedContent != null) documentPane.SelectedContent.Title = tab.Title;
-        }
-
-        public void RemoveTab(ITab tab)
-        {
-            Tabs.Remove(tab);
-            AllTabs.DocumentsSource = Tabs;
+            var window = (MainWindow)Application.Current?.MainWindow!;
+            if (window?.FindName("DataListLive") is DataList dataList)
+                DataContext = ViewModel = new DataTabViewModel(dataList);
+            else
+                throw new System.Exception("DataListLive not found");
         }
     }
 }

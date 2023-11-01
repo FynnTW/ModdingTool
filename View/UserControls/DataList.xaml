@@ -3,16 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:ModdingTool.View.UserControls"
+             xmlns:local="clr-namespace:ModdingTool.ViewModel"
              mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance local:DataListViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="27*"></RowDefinition>
             <RowDefinition Height="965*"></RowDefinition>
         </Grid.RowDefinitions>
-        <ComboBox Name="DataPicker" Text="Data" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" SelectionChanged="DataPicker_SelectionChanged"/>
-        <ListBox Name="DataListPicker" ItemsSource="{Binding DisplayedItems}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" SelectionChanged="DataListPicker_SelectionChanged" FontSize="18" FontFamily="Verdana">
+        <ComboBox Name="DataPicker" ItemsSource="{Binding PickList}" Text="Data" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" SelectedItem="{Binding SelectedType, Mode=TwoWay }"/>
+        <ListBox Name="DataListPicker" ItemsSource="{Binding DisplayedItems}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" FontSize="18" FontFamily="Verdana" MouseDoubleClick="DataListPicker_OnMouseDoubleClick" SelectedItem="{Binding Selected, Mode=TwoWay}">
             <ListBox.Background>
                 <ImageBrush ImageSource="pack://application:,,,/Images/blank_parchment.jpg" Stretch="None"/>
             </ListBox.Background>

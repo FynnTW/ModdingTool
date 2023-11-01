@@ -1,4 +1,5 @@
 ﻿using ModdingTool.View.InterfaceData;
+using ModdingTool.ViewModel;
 using Sdl.MultiSelectComboBox.EventArgs;
 using Sdl.MultiSelectComboBox.Themes.Generic;
 using System;
@@ -84,7 +85,8 @@ namespace ModdingTool.View.UserControls
             var model = unit?.SelectedUnit.GetType().GetProperty(attribute)?.GetValue(unit.SelectedUnit, null);
             if (model?.ToString() == null) return;
             var newTab = new ModelDbTab(model.ToString());
-            datatab?.AddTab(newTab);
+            var dataViewModel = datatab?.DataContext as DataTabViewModel;
+            dataViewModel?.AddTab(newTab);
         }
 
         private void Field_OnTextChanged(object sender, TextChangedEventArgs e)
@@ -177,7 +179,8 @@ namespace ModdingTool.View.UserControls
             var model = unit?.SelectedUnit.GetType().GetProperty("Mount")?.GetValue(unit.SelectedUnit, null);
             if (model?.ToString() == null) return;
             var newTab = new MountTab(model.ToString());
-            datatab?.AddTab(newTab);
+            var dataViewModel = datatab?.DataContext as DataTabViewModel;
+            dataViewModel?.AddTab(newTab);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using ModdingTool.View.UserControls;
-using ModdingTool.ViewModel;
+﻿using ModdingTool.ViewModel;
 using System.Windows;
 
 namespace ModdingTool
@@ -12,7 +11,7 @@ namespace ModdingTool
         public MainWindow()
         {
             InitializeComponent();
-            DataListLive.ListChanged += OnListChanged;
+            DataListLive.ViewModel.ListChanged += OnListChanged;
         }
 
         private void OnListChanged(object? sender, ListChangedEventArgs e)

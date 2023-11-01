@@ -1,8 +1,8 @@
-﻿using System;
-using System.Data;
-using System.Windows.Input;
-using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.Input;
 using ModdingTool.View.UserControls;
+using ModdingTool.ViewModel;
+using System;
+using System.Windows.Input;
 
 namespace ModdingTool.View.InterfaceData;
 
@@ -39,7 +39,8 @@ public interface ITab
             MainWindow window = (ModdingTool.MainWindow)App.Current.MainWindow;
             var datatab = window?.FindName("DataTabLive") as DataTab;
             // Remove the tab from the collection of tabs
-            datatab.Tabs.Remove(this);
+            var dataViewModel = datatab?.DataContext as DataTabViewModel;
+            dataViewModel?.Tabs.Remove(this);
 
             // Trigger the CloseRequested event
             CloseRequested?.Invoke(this, EventArgs.Empty);

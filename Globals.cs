@@ -31,6 +31,8 @@ namespace ModdingTool
         public static List<string> UsedMounts = new();
         public static readonly Errors ErrorDb = new();
 
+        public static event EventHandler<EventArgs>? ModLoadedEvent;
+
         public static void Print(string message)
         {
             Console.WriteLine(message);
@@ -44,6 +46,10 @@ namespace ModdingTool
         public static void PrintInt(int statement)
         {
             Console.WriteLine(statement);
+        }
+        public static void ModLoadedTrigger()
+        {
+            ModLoadedEvent?.Invoke(null, EventArgs.Empty);
         }
 
         public static void ImportJson(string fileName)

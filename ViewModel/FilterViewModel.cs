@@ -96,7 +96,7 @@ namespace ModdingTool.ViewModel
                     AttributeList = GetSortTypes<Projectile>();
                     break;
                 default:
-                    throw new InvalidOperationException("Unsupported type");
+                    return;
             }
             SelectedAttribute = AttributeList[0];
             if (LocalFilterList.Count > 0)
