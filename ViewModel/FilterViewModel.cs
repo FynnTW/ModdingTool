@@ -158,10 +158,6 @@ namespace ModdingTool.ViewModel
                 var filtered = false;
                 foreach (var filter in LocalFilterList)
                 {
-                    if (filtered)
-                    {
-                        continue;
-                    }
                     var attribute = "";
                     foreach (var attr in _uiText.Where(attr => attr.Value == filter.Attribute))
                     {
@@ -169,18 +165,17 @@ namespace ModdingTool.ViewModel
                     }
                     var value = database[dataItem]?.GetType().GetProperty(attribute)?.GetValue(database[dataItem], null);
                     if (value == null)
+                    {
                         continue;
+                    }
                     switch (filter.Condition)
                     {
                         case "Equals":
-                            if (value.ToString() != filter.Value && filteredItems.Contains(dataItem))
-                            {
+                            if (value.ToString()?.ToLower() != filter.Value.ToLower() && filteredItems.Contains(dataItem))
                                 filteredItems.Remove(dataItem);
-                                filtered = true;
-                            }
                             break;
                         case "Not Equals":
-                            if (value.ToString() == filter.Value && filteredItems.Contains(dataItem))
+                            if (value.ToString()?.ToLower() == filter.Value.ToLower() && filteredItems.Contains(dataItem))
                             {
                                 filteredItems.Remove(dataItem);
                                 filtered = true;
@@ -196,7 +191,7 @@ namespace ModdingTool.ViewModel
                                 }
                                 break;
                             }
-                            if (!value.ToString()!.Contains(filter.Value) && filteredItems.Contains(dataItem))
+                            if (!value.ToString()!.ToLower().Contains(filter.Value.ToLower()) && filteredItems.Contains(dataItem))
                             {
                                 filteredItems.Remove(dataItem);
                                 filtered = true;
@@ -212,7 +207,7 @@ namespace ModdingTool.ViewModel
                                 }
                                 break;
                             }
-                            if (value.ToString()!.Contains(filter.Value) && filteredItems.Contains(dataItem))
+                            if (value.ToString()!.ToLower().Contains(filter.Value.ToLower()) && filteredItems.Contains(dataItem))
                             {
                                 filteredItems.Remove(dataItem);
                                 filtered = true;
