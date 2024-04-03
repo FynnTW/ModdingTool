@@ -12,7 +12,9 @@ namespace ModdingTool
         {
             InitializeComponent();
             DataListLive.ViewModel.ListChanged += OnListChanged;
+            Globals.AppStarted();
         }
+        
 
         private void OnListChanged(object? sender, ListChangedEventArgs e)
         {

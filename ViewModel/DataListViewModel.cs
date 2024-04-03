@@ -59,6 +59,7 @@ namespace ModdingTool.ViewModel
         {
             if (Selected == "")
                 return;
+            OpenTabType = SelectedType;
             ITab? addedTab = SelectedType switch
             {
                 "Units" => new UnitTab(Selected),
@@ -68,7 +69,28 @@ namespace ModdingTool.ViewModel
                 _ => null
             };
             if (addedTab != null)
+            {
                 SelectionChanged?.Invoke(this, new TabPickedEventArgs(addedTab));
+            }
+        }
+
+        public void OpenNewTab(string type, string name)
+        {
+            if (type == "")
+                return;
+            ITab? addedTab = type switch
+            {
+                "Units" => new UnitTab(name),
+                "Model Entries" => new ModelDbTab(name),
+                "Mounts" => new MountTab(name),
+                "Projectiles" => new ProjectileTab(name),
+                _ => null
+            };
+            if (addedTab == null) return;
+            SelectedType = type;
+            DataListSelectionChanged();
+            Selected = name;
+            SelectionChanged?.Invoke(this, new TabPickedEventArgs(addedTab));
         }
 
         partial void OnSelectedTypeChanged(string value) => DataListSelectionChanged();
@@ -97,6 +119,7 @@ namespace ModdingTool.ViewModel
                     UpdateDisplayedItems(ProjectileDataBase.Keys.ToList());
                     break;
             }
+            OpenListType = SelectedType;
             ListChanged?.Invoke(this, new ListChangedEventArgs(SelectedType, DisplayedItems));
             Selected = "";
         }

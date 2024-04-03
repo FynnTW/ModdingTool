@@ -76,6 +76,7 @@ public class MountParser
 
         //Add last faction
         AddMount(mount);
+        CommentCache.Clear();
 
         //Reset Line Counter
         Console.WriteLine($@"end parse {_fileName}");

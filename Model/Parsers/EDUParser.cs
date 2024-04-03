@@ -15,11 +15,16 @@ namespace ModdingTool
     internal class EduParser
     {
 
+        class options
+        {
+            public static bool addUnitValue { get; set; } = true;
+        }
         private const string UNIT_CARD_PATH = "\\data\\ui\\units";
         private const string UNIT_INFO_CARD_PATH = "\\data\\ui\\unit_info";
         private const string FACTION_SYMBOL_PATH = "\\data\\ui\\faction_symbols";
         private static int _lineNum;
         private static string _fileName = "";
+        
         public static List<string> EduEndComments = new();
         public static List<string> EduIdentifiers = new()
         {
@@ -71,9 +76,16 @@ namespace ModdingTool
 
         public static void WriteEdu()
         {
-            var newEdu = UnitDataBase.Values.Aggregate("", (current, unit) => current + WriteEduEntry(unit));
+            var newEdu = UnitDataBase.Values.Where(x => x.IsEopUnit == false).Aggregate("", (current, unit) => current + WriteEduEntry(unit));
             newEdu += EduEndComments.Aggregate("", (current, comment) => current + (comment + "\n"));
             File.WriteAllText(@"export_descr_unit.txt", newEdu);
+            foreach (var unit in UnitDataBase.Values.Where(x => x.IsEopUnit))
+            {
+                var path = unit.FilePath;
+                var newEduEop = WriteEduEntry(unit);
+                File.WriteAllText(path, newEduEop);
+            }
+            
         }
 
         private static string AddComment(string identifier, Unit unit)
@@ -453,6 +465,10 @@ namespace ModdingTool
             identifier = "recruit_priority_offset";
             entry += AddComment(identifier, unit);
             entry += "recruit_priority_offset\t" + unit.Recruit_priority_offset + " " + unit.CommentsInLine[identifier] + "\n";
+            if (options.addUnitValue)
+            {
+                entry += ";ai_unit_value\t\t\t" + unit.AiUnitValue + "\n";
+            }
             entry += "\n";
             entry += "\n";
             entry += "\n";
@@ -492,20 +508,13 @@ namespace ModdingTool
             return input == 0 ? "0" : input.ToString("0.0", CultureInfo.InvariantCulture);
         }
 
-        public static void ParseEdu()
+        public static void ParseEduEntry(string[] lines, bool isEop = false, string filePath = "")
         {
-            _fileName = "export_descr_unit.txt";
-            Console.WriteLine($@"start parse {_fileName}");
-
-            //Try read file
-            var lines = FileReader("\\data\\export_descr_unit.txt", _fileName, Encoding.UTF8);
-            if (lines == null) { return; }
-
-            //Initialize Global Unit Database
-            UnitDataBase = new Dictionary<string, Unit>();
-
             //Make first entry
             var newUnit = new Unit();
+            newUnit.IsEopUnit = isEop;
+            if (isEop)
+                newUnit.FilePath = filePath;
             var first = true;
 
             //Reset line counter and EDU index tracker
@@ -539,7 +548,7 @@ namespace ModdingTool
                 {
                     if (!first)
                     {
-                        newUnit.Edu_index = index;
+                        newUnit.EduIndex = index;
                         var cards = GetCards(newUnit.Dictionary, newUnit.Ownership, newUnit.Card_dict, newUnit.Info_dict, newUnit.Mercenary_unit);
                         newUnit.Card = cards[0];
                         newUnit.CardInfo = cards[1];
@@ -554,6 +563,9 @@ namespace ModdingTool
                     }
                     first = false;
                     newUnit = new Unit();
+                    newUnit.IsEopUnit = isEop;
+                    if (isEop)
+                        newUnit.FilePath = filePath;
                 }
 
                 //assign field line is about
@@ -561,21 +573,46 @@ namespace ModdingTool
             }
 
             //Add last unit
-            newUnit.Edu_index = index;
+            newUnit.EduIndex = index;
             AddUnit(newUnit);
 
             EduEndComments.AddRange(CommentCache);
             CommentCache.Clear();
+        }
 
+        public static void ParseEdu()
+        {
+            _fileName = "export_descr_unit.txt";
+            Console.WriteLine($@"start parse {_fileName}");
 
+            //Try read file
+            var lines = FileReader("\\data\\export_descr_unit.txt", _fileName, Encoding.UTF8);
+            if (lines == null) { return; }
+
+            //Initialize Global Unit Database
+            UnitDataBase = new Dictionary<string, Unit>();
+
+            ParseEduEntry(lines);
+            
             Console.WriteLine($@"end parse {_fileName}");
+
+            foreach (var file in ModOptionsInstance.EopDirectories.SelectMany(path => 
+                         Directory.GetFiles(path, "*.txt", SearchOption.AllDirectories)))
+            {
+                _fileName = file.Split('/', '\\').Last();
+                Console.WriteLine($@"start parse {_fileName}");
+                lines = FileReaderNonMod(file, _fileName, Encoding.UTF8);
+                if (lines == null) { continue; }
+                ParseEduEntry(lines, true, file);
+                Console.WriteLine($@"end parse {_fileName}");
+            }
 
         }
 
-        private static void AddUnit(Unit unit)
+        public static void AddUnit(Unit unit)
         {
             if (unit.Type == null) return;
-            unit.AIUnitValue = Math.Round(unit.CalculateUnitValue());
+            unit.AiUnitValue = Math.Round(unit.CalculateUnitValue());
             UnitDataBase.Add(unit.Type, unit);
             Console.WriteLine(unit.Type);
 

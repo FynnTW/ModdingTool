@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using static ModdingTool.Globals;
@@ -67,6 +68,7 @@ namespace ModdingTool.View.UserControls
             var result = dialog.ShowDialog();
             if (result != CommonFileDialogResult.Ok) return;
             if (dialog.FileName != null) ModPath = dialog.FileName;
+            ModName = new DirectoryInfo(ModPath).Name;
             LoadMod();
             Print("Mod path set to: " + ModPath);
             ModLoaded = true;
@@ -74,6 +76,7 @@ namespace ModdingTool.View.UserControls
 
         public void LoadMod()
         {
+            LoadOptions();
             ParseFiles();
             var window = Window.GetWindow(this);
             if (window != null)
@@ -81,7 +84,6 @@ namespace ModdingTool.View.UserControls
                 var statusBar = window.FindName("StatusBarLive") as StatusBarCustom;
                 statusBar?.SetStatusModPath(ModPath);
             }
-
             var dataPickerBox = window?.FindName("DataListLive") as DataList;
             ModLoadedTrigger();
         }
@@ -109,6 +111,12 @@ namespace ModdingTool.View.UserControls
         private void Open_GitHub_Click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start(new ProcessStartInfo("https://github.com/FynnTW/ModdingTool#readme") { UseShellExecute = true });
+        }
+
+        private void Options_Click(object sender, RoutedEventArgs e)
+        {
+            var optionsWindow = new OptionsWindow();
+            optionsWindow.Show();
         }
     }
 }

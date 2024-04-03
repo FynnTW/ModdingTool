@@ -108,6 +108,22 @@ namespace ModdingTool
             }
             return lines;
         }
+        
+        public static string[]? FileReaderNonMod(string filePath, string filename, Encoding encoding)
+        {
+            string[]? lines;
+            try
+            {
+                lines = File.ReadAllLines(filePath, encoding);
+            }
+            catch (Exception e)
+            {
+                ErrorDb.AddError("Error reading " + filename);
+                ErrorDb.AddError(e.Message);
+                return null;
+            }
+            return lines;
+        }
 
         public static double ParseDouble(string? value)
         {

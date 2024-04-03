@@ -26,9 +26,9 @@ namespace ModdingTool.View.UserControls
                 DataGridRow row = FindVisualParent<DataGridRow>(button);
                 if (row != null)
                 {
-                    if (row.Item is not LOD dataItem)
+                    if (row.Item is not Lod dataItem)
                     {
-                        dataItem = new LOD();
+                        dataItem = new Lod();
                     };
                     var dialog = new OpenFileDialog();
                     dialog.Filter = "Mesh files (*.mesh)|*.mesh";
@@ -41,10 +41,10 @@ namespace ModdingTool.View.UserControls
                     filename = filename.Replace("\\", "/");
                     dataItem.Mesh = filename;
                     row.Item = dataItem;
-                    var lods = LodGrid.ItemsSource as List<LOD>;
+                    var lods = LodGrid.ItemsSource as List<Lod>;
                     lods?.Add(dataItem);
                     LodGrid.ItemsSource = lods;
-                    LodGrid.Items.Refresh();
+                    //LodGrid.Items.Refresh();
                 }
             }
         }

@@ -1,0 +1,34 @@
+﻿<Window x:Class="ModdingTool.View.UserControls.CreationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:ModdingTool.ViewModel"
+        d:DataContext="{d:DesignInstance local:CreationViewModel}"
+        mc:Ignorable="d"
+        Title="CreationWindow" Height="100" Width="600">
+    <Grid>
+        <StackPanel Orientation="Vertical">
+            <Label> </Label>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Base Unit :" Width="100"></TextBlock>
+                <ComboBox Name="UnitPicker" Width="400" ItemsSource="{Binding ValuesList}"
+                          HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                          FontSize="18" FontFamily="Verdana" MouseDoubleClick="CreateWindowSelector_OnMouseDoubleClick" SelectedItem="{Binding BaseValue, Mode=TwoWay}">
+</ComboBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Name :" Width="100"></TextBlock>
+                <TextBox x:Name="EduTypeInputBox" Text="{Binding NameValue}" Width="400"></TextBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Localized Name :" Width="100"></TextBlock>
+                <TextBox x:Name="NameInputBox" Text="{Binding LocalizedNameValue}" Width="400"></TextBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button x:Name="ConfirmButton" Content="Confirm" Width="100" Height="30" Click="ConfirmButton_OnClick"></Button>
+                <Button x:Name="CancelButton" Content="Cancel" Width="100" Height="30" Click="CancelButton_OnClick"></Button>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>

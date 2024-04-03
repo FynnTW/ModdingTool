@@ -1,0 +1,70 @@
+﻿<Window x:Class="ModdingTool.View.UserControls.OptionsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:ModdingTool.ViewModel"
+        d:DataContext="{d:DesignInstance local:OptionsViewModel}"
+        mc:Ignorable="d"
+        Title="OptionsWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.Background>
+            <ImageBrush  ImageSource="pack://application:,,,/Images/blank_parchment.jpg"
+                         AlignmentY="Top" AlignmentX="Center" />
+        </Grid.Background>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5*"></RowDefinition>
+            <RowDefinition Height="5*"></RowDefinition>
+            <RowDefinition Height="5*"></RowDefinition>
+            <RowDefinition Height="5*"></RowDefinition>
+            <RowDefinition Height="30*"></RowDefinition>
+            <RowDefinition Height="30*"></RowDefinition>
+            <RowDefinition Height="10*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Row="0">
+            <TextBlock>Global Options: </TextBlock>
+        </Grid>
+        <Grid Row="1">
+            <StackPanel Orientation ="Horizontal">
+                <CheckBox IsChecked="{Binding UseEop}">Use EOP</CheckBox>
+            </StackPanel>
+        </Grid>
+        <Grid Row="2">
+            <TextBlock>Mod Options: </TextBlock>
+        </Grid>
+        <Grid Row="3">
+            <TextBlock>EOP Directories: </TextBlock>
+        </Grid>
+        <Grid Row="4">
+            <DataGrid x:Name="Directories" ItemsSource="{Binding EopDirectories}"  
+                      AutoGenerateColumns="False" RowHeight="25" CanUserResizeRows="False" ColumnHeaderHeight="25">
+                <DataGrid.Columns>
+                    <DataGridTextColumn x:Name="Path" Header="Path" Binding="{Binding}" />
+                    <DataGridTemplateColumn Header="Browse" >
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Name="Browse" Click="Browse_OnClick">
+                                    <Button.Background>
+                                        <ImageBrush ImageSource="pack://application:,,,/Images/folder.jpg"/>
+                                    </Button.Background>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+        <Grid Row="6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="SaveButton" Grid.Column="0" Click="ConfirmButton_OnClick"> Save </Button>
+            <Button x:Name="CancelButton" Grid.Column="1" Click="CancelButton_OnClick"> Cancel </Button>
+            
+        </Grid>
+    </Grid>
+</Window>

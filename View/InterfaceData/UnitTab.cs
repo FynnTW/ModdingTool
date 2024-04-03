@@ -221,11 +221,14 @@ public class UnitTab : ITab.Tab
     public BitmapImage UnitImage { get; set; }
     public BitmapImage UnitInfoImage { get; set; }
     public BitmapImage FactionSymbolImage { get; set; }
-    public string mountEffectString { get; set; } = "";
+    public string MountEffectString { get; set; } = "";
     public List<string> FormationStylesX { get; set; } = new List<string> { "square", "horde", "phalanx" };
     public List<string> SpecialFormationStylesX { get; set; } = new List<string> { "wedge", "phalanx", "schiltrom", "shield_wall" };
 
-
+    public string ToString()
+    {
+        return "Units";
+    }
 
     public UnitTab(string name)
     {
@@ -271,10 +274,10 @@ public class UnitTab : ITab.Tab
 
         foreach (var effect in SelectedUnit.Mount_effect)
         {
-            mountEffectString += effect;
+            MountEffectString += effect;
             if (effect != SelectedUnit.Mount_effect.Last())
             {
-                mountEffectString += ", ";
+                MountEffectString += ", ";
             }
         }
     }
@@ -285,7 +288,7 @@ public class UnitTab : ITab.Tab
     {
         if (string.IsNullOrWhiteSpace(source))
         {
-            return null;
+            return null!;
         }
         Bitmap bitmap;
         var image = Pfimage.FromFile(source, new PfimConfig(bufferSize: 65536));
@@ -293,27 +296,27 @@ public class UnitTab : ITab.Tab
         PixelFormat format;
         switch (image.Format)
         {
-            case Pfim.ImageFormat.Rgb24:
+            case ImageFormat.Rgb24:
                 format = PixelFormat.Format24bppRgb;
                 break;
 
-            case Pfim.ImageFormat.Rgba32:
+            case ImageFormat.Rgba32:
                 format = PixelFormat.Format32bppArgb;
                 break;
 
-            case Pfim.ImageFormat.R5g5b5:
+            case ImageFormat.R5g5b5:
                 format = PixelFormat.Format16bppRgb555;
                 break;
 
-            case Pfim.ImageFormat.R5g6b5:
+            case ImageFormat.R5g6b5:
                 format = PixelFormat.Format16bppRgb565;
                 break;
 
-            case Pfim.ImageFormat.R5g5b5a1:
+            case ImageFormat.R5g5b5a1:
                 format = PixelFormat.Format16bppArgb1555;
                 break;
 
-            case Pfim.ImageFormat.Rgb8:
+            case ImageFormat.Rgb8:
                 format = PixelFormat.Format8bppIndexed;
                 break;
 
@@ -341,12 +344,12 @@ public class UnitTab : ITab.Tab
         using var memory = new MemoryStream();
         bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
         memory.Position = 0;
-        var bitmapimage = new BitmapImage();
-        bitmapimage.BeginInit();
-        bitmapimage.StreamSource = memory;
-        bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
-        bitmapimage.EndInit();
+        var bitMapImage = new BitmapImage();
+        bitMapImage.BeginInit();
+        bitMapImage.StreamSource = memory;
+        bitMapImage.CacheOption = BitmapCacheOption.OnLoad;
+        bitMapImage.EndInit();
 
-        return bitmapimage;
+        return bitMapImage;
     }
 }

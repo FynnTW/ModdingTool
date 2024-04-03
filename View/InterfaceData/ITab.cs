@@ -16,14 +16,25 @@ public interface ITab
     {
         public Tab()
         {
+            TabType = Globals.OpenTabType;
             CloseCommand = new RelayCommand(Close);
         }
 
         public Tab(string name)
         {
+            TabType = Globals.OpenTabType;
             CloseCommand = new RelayCommand(Close);
             Title = name;
         }
+
+        public Tab(string name, string tabType)
+        {
+            TabType = tabType;
+            CloseCommand = new RelayCommand(Close);
+            Title = name;
+        }
+    
+        public string TabType { get; set; } = "";
 
         public string Title { get; set; }
         public ICommand CloseCommand { get; private set; }

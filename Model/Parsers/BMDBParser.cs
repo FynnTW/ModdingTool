@@ -84,10 +84,10 @@ namespace ModdingTool
                 if (firstEntry) { pad = GetInt(); pad = GetInt(); }
                 entry.LodCount = GetInt();
                 if (firstEntry) { pad = GetInt(); pad = GetInt(); }
-                entry.LodTable = new List<LOD>();
+                entry.LodTable = new List<Lod>();
                 for (var i = 0; i < entry.LodCount; i++)
                 {
-                    entry.LodTable.Add(new LOD
+                    entry.LodTable.Add(new Lod
                     {
                         Mesh = GetString(),
                         Distance = GetInt()

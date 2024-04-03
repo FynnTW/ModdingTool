@@ -46,6 +46,13 @@ namespace ModdingTool.ViewModel
             };
             w.Show();
         }
+        
+        [RelayCommand]
+        private void Create()
+        {
+            var w = new CreationWindow(TabType);
+            w.Show();
+        }
 
         partial void OnTabTypeChanged(string value)
         {
@@ -55,7 +62,7 @@ namespace ModdingTool.ViewModel
         [RelayCommand]
         private void SortListPopUp()
         {
-            switch (_tabType)
+            switch (TabType)
             {
                 case "Units":
                     _uiText = UnitTab.UnitUiText;
@@ -105,19 +112,20 @@ namespace ModdingTool.ViewModel
 
             object? GetAttributeValue(string x)
             {
-                switch (_tabType)
+                return TabType switch
                 {
-                    case "Units":
-                        return UnitDataBase[x]?.GetType().GetProperty(attribute)?.GetValue(UnitDataBase[x]);
-                    case "Model Entries":
-                        return BattleModelDataBase[x]?.GetType().GetProperty(attribute)?.GetValue(BattleModelDataBase[x]);
-                    case "Mounts":
-                        return MountDataBase[x]?.GetType().GetProperty(attribute)?.GetValue(MountDataBase[x]);
-                    case "Projectiles":
-                        return ProjectileDataBase[x]?.GetType().GetProperty(attribute)?.GetValue(ProjectileDataBase[x]);
-                    default:
-                        throw new InvalidOperationException("Unsupported type");
-                }
+                    "Units" => UnitDataBase[x]?.GetType().GetProperty(attribute)?.GetValue(UnitDataBase[x]),
+                    "Model Entries" => BattleModelDataBase[x]
+                        ?.GetType()
+                        .GetProperty(attribute)
+                        ?.GetValue(BattleModelDataBase[x]),
+                    "Mounts" => MountDataBase[x]?.GetType().GetProperty(attribute)?.GetValue(MountDataBase[x]),
+                    "Projectiles" => ProjectileDataBase[x]
+                        ?.GetType()
+                        .GetProperty(attribute)
+                        ?.GetValue(ProjectileDataBase[x]),
+                    _ => throw new InvalidOperationException("Unsupported type")
+                };
             }
 
             var sortedList = SelectedSortDirection switch

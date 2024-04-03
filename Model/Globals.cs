@@ -10,11 +10,14 @@ namespace ModdingTool
     public class Globals
     {
         public static string ModPath = null!;
+        public static string ModName = "";
         public static bool ModLoaded = false;
         public static int ProjectileDelayStandard = 0;
         public static int ProjectileDelayFlaming = 0;
         public static int ProjectileDelayGunpowder = 0;
         public static int StartingActionPoints = 250;
+        public static string OpenListType { get; set; } = "";
+        public static string OpenTabType { get; set; } = "";
         public static Dictionary<string, Unit> UnitDataBase = new();
         public static Dictionary<string, string> UnitNames = new();
         public static Dictionary<string, string?> UnitDescr = new();
@@ -30,13 +33,25 @@ namespace ModdingTool
         public static List<string> UsedModels = new();
         public static List<string> UsedMounts = new();
         public static readonly Errors ErrorDb = new();
+        public static GlobalOptions GlobalOptionsInstance = new();
+
+        public static ModOptions ModOptionsInstance = new();
+
+        public class GlobalOptions
+        {
+            public bool UseEop = false;
+        }
+        public class ModOptions
+        {
+            public List<string> EopDirectories = new();
+        }
 
         public static event EventHandler<EventArgs>? ModLoadedEvent;
 
         public static void Print(string message)
         {
             Console.WriteLine(message);
-        }
+        } 
 
         public static void PrintFinal()
         {
@@ -47,8 +62,10 @@ namespace ModdingTool
         {
             Console.WriteLine(statement);
         }
+        
         public static void ModLoadedTrigger()
         {
+            LoadOptions();
             ModLoadedEvent?.Invoke(null, EventArgs.Empty);
         }
 
@@ -125,5 +142,45 @@ namespace ModdingTool
             menubar?.LoadMod();
         }
 
+        public static void LoadOptions()
+        {
+            if (!File.Exists("config/globalConfig.json"))
+                File.WriteAllText("config/globalConfig.json", JsonConvert.SerializeObject(GlobalOptionsInstance));
+            else
+            {
+                var jsonString = File.ReadAllText("config/globalConfig.json");
+                GlobalOptionsInstance = JsonConvert.DeserializeObject<GlobalOptions>(jsonString) ?? new GlobalOptions();
+            }
+            if (string.IsNullOrEmpty(ModName)) return;
+            var configFileName = ModName + ".json";
+            if (!File.Exists("config/" + configFileName))
+                File.WriteAllText("config/" + configFileName, JsonConvert.SerializeObject(ModOptionsInstance));
+            else
+            {
+                var jsonString = File.ReadAllText("config/" + configFileName);
+                ModOptionsInstance = JsonConvert.DeserializeObject<ModOptions>(jsonString) ?? new ModOptions();
+            }
+        }
+
+        public static void SaveOptions()
+        {
+            if (File.Exists("config/globalConfig.json"))
+                File.Delete("config/globalConfig.json");
+            File.WriteAllText("config/globalConfig.json", JsonConvert.SerializeObject(GlobalOptionsInstance));
+            if (string.IsNullOrEmpty(ModName)) return;
+            var configFileName = ModName + ".json";
+            if (File.Exists("config/" + configFileName))
+                File.Delete("config/" + configFileName);
+            File.WriteAllText("config/" + configFileName, JsonConvert.SerializeObject(ModOptionsInstance));
+        }
+
+        public static void AppStarted()
+        {
+            if (!Directory.Exists("config"))
+                Directory.CreateDirectory("config");
+            LoadOptions();
+            if (!Directory.Exists("changelogs"))
+                Directory.CreateDirectory("changelogs");
+        }
     }
 }

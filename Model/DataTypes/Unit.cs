@@ -210,9 +210,11 @@ namespace ModdingTool
         public string Card { get; set; } = "";
         public bool Mercenary_unit { get; set; } = false;
         public bool General_unit { get; set; } = false;
-        public int Edu_index { get; set; }
+        public bool IsEopUnit { get; set; } = false;
+        public string FilePath { get; set; } = "";
+        public int EduIndex { get; set; }
 
-        public double AIUnitValue { get; set; } = 0;
+        public double AiUnitValue { get; set; } = 0;
 
         public string CardInfo { get; set; } = "";
         public string FactionSymbol { get; set; } = "";
@@ -223,11 +225,40 @@ namespace ModdingTool
 
         #endregion Public properties
 
+        public static Unit? CloneUnit(string name, string localizedName, Unit unit)
+        {
+            var newUnit = (Unit)unit.MemberwiseClone();
+            foreach(var existingUnit in Globals.UnitDataBase)
+            {
+                if (existingUnit.Value.Type == null) continue;
+                if (!existingUnit.Value.Type.Equals(name)) continue;
+                return null;
+            }
+
+            newUnit.Mount_effect = new List<string>(unit.Mount_effect);
+            newUnit.Attributes = new List<string>(unit.Attributes);
+            newUnit.Comments = new Dictionary<string, List<string>>(unit.Comments);
+            newUnit.CommentsInLine = new Dictionary<string, string>(unit.CommentsInLine);
+            newUnit.Ownership = new List<string>(unit.Ownership);
+            newUnit.EraZero = new List<string>(unit.EraZero);
+            newUnit.EraOne = new List<string>(unit.EraOne);
+            newUnit.EraTwo = new List<string>(unit.EraTwo);
+            newUnit.Pri_attr = unit.Pri_attr != null ? new List<string>(unit.Pri_attr) : new List<string>();
+            newUnit.Sec_attr = unit.Sec_attr != null ? new List<string>(unit.Sec_attr) : new List<string>();
+            newUnit.Ter_attr = unit.Ter_attr != null ? new List<string>(unit.Ter_attr) : new List<string>();
+            newUnit.Name = localizedName;
+            newUnit.Type = name;
+            newUnit.Dictionary = name.Replace(" ", "_").ToLower();
+            newUnit.Card = name.Replace(" ", "_").ToLower();
+            newUnit.CardInfo = name.Replace(" ", "_").ToLower();
+            return newUnit;
+        }
+
 
         public double CalculateUnitValue()
         {
             double attackValue = 0;
-            double hasMissileModifier = 1.0;
+            var hasMissileModifier = 1.0;
             if (Category != null)
             {
                 if ((Pri_attr != null && Pri_attr.Contains("prec")) || string.IsNullOrWhiteSpace(Pri_projectile))

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ModdingTool
 {
@@ -8,7 +9,7 @@ namespace ModdingTool
         private string name;
         private float scale;
         private int lodCount;
-        private List<LOD> lodTable;
+        private List<Lod> lodTable;
         private int mainTexturesCount;
         private List<Texture> mainTextures = new List<Texture>();
         private int attachTexturesCount;
@@ -26,7 +27,7 @@ namespace ModdingTool
         public string Name { get => name; set => name = value; }
         public float Scale { get => scale; set => scale = value; }
         public int LodCount { get => lodCount; set => lodCount = value; }
-        public List<LOD> LodTable { get => lodTable; set => lodTable = value; }
+        public List<Lod> LodTable { get => lodTable; set => lodTable = value; }
         public int MainTexturesCount { get => mainTexturesCount; set => mainTexturesCount = value; }
         public List<Texture> MainTextures { get => mainTextures; set => mainTextures = value; }
         public int AttachTexturesCount { get => attachTexturesCount; set => attachTexturesCount = value; }
@@ -163,15 +164,82 @@ namespace ModdingTool
             }
             return input == 0 ? "0" : input.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
         }
+        
+        public static BattleModel? CloneModel(string name, BattleModel oldModel)
+        {
+            if (Globals.BattleModelDataBase.Any(model => model.Key == name))
+            {
+                return null;
+            }
+            var newModel = new BattleModel
+            {
+                Name = name,
+                Scale = oldModel.Scale,
+                LodCount = oldModel.LodCount,
+                LodTable = new List<Lod>(),
+                MainTexturesCount = oldModel.MainTexturesCount,
+                MainTextures = new List<Texture>(),
+                AttachTexturesCount = oldModel.AttachTexturesCount,
+                AttachTextures = new List<Texture>(),
+                MountTypeCount = oldModel.MountTypeCount,
+                Animations = new List<Animation>(),
+                TorchIndex = oldModel.TorchIndex,
+                TorchBoneX = oldModel.TorchBoneX,
+                TorchBoneY = oldModel.TorchBoneY,
+                TorchBoneZ = oldModel.TorchBoneZ,
+                TorchspriteX = oldModel.TorchspriteX,
+                TorchspriteY = oldModel.TorchspriteY,
+                TorchspriteZ = oldModel.TorchspriteZ
+            };
+            foreach (var lod in oldModel.LodTable)
+            {
+                newModel.LodTable.Add(new Lod
+                {
+                    Mesh = lod.Mesh,
+                    Distance = lod.Distance
+                });
+            }
+            foreach (var texture in oldModel.MainTextures)
+            {
+                newModel.MainTextures.Add(new Texture
+                {
+                    Faction = texture.Faction,
+                    TexturePath = texture.TexturePath,
+                    Normal = texture.Normal,
+                    Sprite = texture.Sprite
+                });
+            }
+            foreach (var texture in oldModel.AttachTextures)
+            {
+                newModel.AttachTextures.Add(new Texture
+                {
+                    Faction = texture.Faction,
+                    TexturePath = texture.TexturePath,
+                    Normal = texture.Normal,
+                    Sprite = texture.Sprite
+                });
+            }
+            foreach (var animation in oldModel.Animations)
+            {
+                newModel.Animations.Add(new Animation
+                {
+                    MountType = animation.MountType,
+                    Primary_skeleton = animation.Primary_skeleton,
+                    Secondary_skeleton = animation.Secondary_skeleton,
+                    PriWeaponCount = animation.PriWeaponCount,
+                    PriWeapons = new List<string>(),
+                    SecWeaponCount = animation.SecWeaponCount,
+                    SecWeapons = new List<string>()
+                });
+            }
+            return newModel;
+        }
     }
 
-    public class LOD
+    public class Lod
     {
-        private string mesh;
-        private int distance;
-
-        public string Mesh { get => mesh; set => mesh = value; }
-        public int Distance { get => distance; set => distance = value; }
+        public string Mesh { get; set; } = "";
+        public int Distance { get; set; } = 6400;
     }
 
     public class Texture
@@ -209,4 +277,5 @@ namespace ModdingTool
         public int SecWeaponCount { get => secWeaponCount; set => secWeaponCount = value; }
         public List<string> SecWeapons { get => secWeapons; set => secWeapons = value; }
     }
+    
 }

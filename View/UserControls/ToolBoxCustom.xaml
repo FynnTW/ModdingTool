@@ -33,6 +33,7 @@
                         </StackPanel>
                     </Border>
                 </Popup>
+                <Button Command="{Binding CreateCommand}" Content="Create" ></Button>
                 <!--  <Button Click="Undo_Last" Content="Undo" ></Button> -->
             </ToolBar>
         </ToolBarTray>
