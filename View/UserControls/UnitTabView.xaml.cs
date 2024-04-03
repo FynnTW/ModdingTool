@@ -63,28 +63,49 @@ namespace ModdingTool.View.UserControls
             var textblock = menu?.PlacementTarget as TextBlock;
             if (textblock?.Text == null) return;
             var attribute = "";
-            if (textblock.Text.Contains("Officer"))
+            attribute = textblock.Name switch
             {
-                attribute = textblock.Name switch
-                {
-                    "Officer1a" => "Officer1",
-                    "Officer2a" => "Officer2",
-                    "Officer3a" => "Officer3",
-                    _ => attribute
-                };
-            }
-            else
-            {
-                foreach (var attr in UnitTab.UnitUiText.Where(attr => attr.Value == textblock?.Text))
-                {
-                    attribute = attr.Key;
-                }
-            }
+                "Officer1a" => "Officer1",
+                "Officer2a" => "Officer2",
+                "Officer3a" => "Officer3",
+                "Soldiera" => "Soldier",
+                "ArmourModelOnea" => "ArmourModelOne",
+                "ArmourModelBasea" => "ArmourModelBase",
+                "ArmourModelTwoa" => "ArmourModelTwo",
+                "ArmourModelThreea" => "ArmourModelThree",
+                _ => attribute
+            };
             if (attribute == null) return;
             var unit = menu?.DataContext as UnitTab;
-            var model = unit?.SelectedUnit.GetType().GetProperty(attribute)?.GetValue(unit.SelectedUnit, null);
-            if (model?.ToString() == null) return;
-            var newTab = new ModelDbTab(model.ToString());
+            var model = (string) unit?.SelectedUnit.GetType().GetProperty(attribute)?.GetValue(unit.SelectedUnit, null)!;
+            if (string.IsNullOrWhiteSpace(model)) return;
+            var newTab = new ModelDbTab(model);
+            var dataViewModel = datatab?.DataContext as DataTabViewModel;
+            dataViewModel?.AddTab(newTab);
+        }
+
+        private void SoldierGotoHyper_OnClick(object sender, RoutedEventArgs e)
+        {
+            var textblock = (sender as Hyperlink)?.Parent as TextBlock;
+            if (textblock?.Text == null) return;
+            var attribute = "";
+            attribute = textblock.Name switch
+            {
+                "Officer1a" => "Officer1",
+                "Officer2a" => "Officer2",
+                "Officer3a" => "Officer3",
+                "Soldiera" => "Soldier",
+                "ArmourModelOnea" => "ArmourModelOne",
+                "ArmourModelBasea" => "ArmourModelBase",
+                "ArmourModelTwoa" => "ArmourModelTwo",
+                "ArmourModelThreea" => "ArmourModelThree",
+                _ => attribute
+            };
+            if (attribute == null) return;
+            var unit = textblock?.DataContext as UnitTab;
+            var model = (string) unit?.SelectedUnit.GetType().GetProperty(attribute)?.GetValue(unit.SelectedUnit, null)!;
+            if (string.IsNullOrWhiteSpace(model)) return;
+            var newTab = new ModelDbTab(model);
             var dataViewModel = datatab?.DataContext as DataTabViewModel;
             dataViewModel?.AddTab(newTab);
         }
@@ -172,9 +193,42 @@ namespace ModdingTool.View.UserControls
         private void MountGoto_OnClick(object sender, RoutedEventArgs e)
         {
             var unit = (sender as Hyperlink)?.DataContext as UnitTab;
-            var model = unit?.SelectedUnit.GetType().GetProperty("Mount")?.GetValue(unit.SelectedUnit, null);
-            if (model?.ToString() == null) return;
-            var newTab = new MountTab(model.ToString());
+            var model = unit?.SelectedUnit.Mount;
+            if (string.IsNullOrWhiteSpace(model)) return;
+            var newTab = new MountTab(model);
+            var dataViewModel = datatab?.DataContext as DataTabViewModel;
+            dataViewModel?.AddTab(newTab);
+        }
+
+        private void ProjectileGoto_OnClick(object sender, RoutedEventArgs e)
+        {
+            var unit = (sender as Hyperlink)?.DataContext as UnitTab;
+            var model = unit?.SelectedUnit.Pri_projectile;
+            if (string.IsNullOrWhiteSpace(model)) return;
+            if (model.Trim().Equals("no")) return;
+            var newTab = new ProjectileTab(model);
+            var dataViewModel = datatab?.DataContext as DataTabViewModel;
+            dataViewModel?.AddTab(newTab);
+        }
+
+        private void Projectile2Goto_OnClick(object sender, RoutedEventArgs e)
+        {
+            var unit = (sender as Hyperlink)?.DataContext as UnitTab;
+            var model = unit?.SelectedUnit.Sec_projectile;
+            if (string.IsNullOrWhiteSpace(model)) return;
+            if (model.Trim().Equals("no")) return;
+            var newTab = new ProjectileTab(model);
+            var dataViewModel = datatab?.DataContext as DataTabViewModel;
+            dataViewModel?.AddTab(newTab);
+        }
+
+        private void Projectile3Goto_OnClick(object sender, RoutedEventArgs e)
+        {
+            var unit = (sender as Hyperlink)?.DataContext as UnitTab;
+            var model = unit?.SelectedUnit.Ter_projectile;
+            if (string.IsNullOrWhiteSpace(model)) return;
+            if (model.Trim().Equals("no")) return;
+            var newTab = new ProjectileTab(model);
             var dataViewModel = datatab?.DataContext as DataTabViewModel;
             dataViewModel?.AddTab(newTab);
         }

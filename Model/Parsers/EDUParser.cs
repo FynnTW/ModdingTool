@@ -17,6 +17,9 @@ namespace ModdingTool
 
         class options
         {
+            public static bool addUnitValuePerUpkeep { get; set; } = true;
+            
+            public static bool addUnitValuePerCost { get; set; } = true;
             public static bool addUnitValue { get; set; } = true;
         }
         private const string UNIT_CARD_PATH = "\\data\\ui\\units";
@@ -76,16 +79,58 @@ namespace ModdingTool
 
         public static void WriteEdu()
         {
+            if (!Directory.Exists(ModPath + "\\ModdingToolBackup\\data"))
+                Directory.CreateDirectory(ModPath + "\\ModdingToolBackup\\data");
+            if (!Directory.Exists(ModPath + "\\ModdingToolBackup\\data\\text"))
+                Directory.CreateDirectory(ModPath + "\\ModdingToolBackup\\data\\text");
+            var backupName = "export_descr_unit_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt";
+            File.Copy(ModPath + "/data/export_descr_unit.txt", ModPath + "/ModdingToolBackup/data/" + backupName, true);
+            backupName = "export_units_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt";
+            File.Copy(ModPath + "/data/text/export_units.txt", ModPath + "/ModdingToolBackup/data/text/" + backupName, true);
+            
             var newEdu = UnitDataBase.Values.Where(x => x.IsEopUnit == false).Aggregate("", (current, unit) => current + WriteEduEntry(unit));
             newEdu += EduEndComments.Aggregate("", (current, comment) => current + (comment + "\n"));
-            File.WriteAllText(@"export_descr_unit.txt", newEdu);
+            File.WriteAllText(ModPath + @"/data/export_descr_unit.txt", newEdu);
+            var dicEntries = new List<string>();
+            var newEu = "";
+            foreach (var unit in UnitDataBase.Values.Where(unit => !string.IsNullOrWhiteSpace(unit.Dictionary)))
+            {
+                if (unit.Dictionary != null && dicEntries.Contains(unit.Dictionary))
+                {
+                    ErrorDb.AddError("Same Dictionary names for unit " + unit.Type + " are you sure these units should use the same localisation?");
+                    continue;
+                }
+                if (unit.Dictionary != null) dicEntries.Add(unit.Dictionary);
+                newEu += WriteEuEntry(unit);
+            }
+
+            newEu += "\u00ac-----\n";
+            File.WriteAllText(ModPath + @"/data/text/export_units.txt", newEu, Encoding.Unicode);
             foreach (var unit in UnitDataBase.Values.Where(x => x.IsEopUnit))
             {
                 var path = unit.FilePath;
+                if (string.IsNullOrWhiteSpace(path))
+                {
+                    path = Globals.ModOptionsInstance.EopDirectories.First();
+                    if (string.IsNullOrWhiteSpace(path))
+                    {
+                        ErrorDb.AddError("No EOP directory found to export unit");
+                        continue;
+                    }
+                }
                 var newEduEop = WriteEduEntry(unit);
                 File.WriteAllText(path, newEduEop);
             }
             
+        }
+
+        public static string WriteEuEntry(Unit unit)
+        {
+            var entry = "\u00ac-----\n";
+            entry += "{" + unit.Dictionary + "}" + unit.Name + "\n";
+            entry += "{" + unit.Dictionary + "_descr}" + unit.Descr + "\n";
+            entry += "{" + unit.Dictionary + "_descr_short}" + unit.DescrShort + "\n";
+            return entry;
         }
 
         private static string AddComment(string identifier, Unit unit)
@@ -465,9 +510,20 @@ namespace ModdingTool
             identifier = "recruit_priority_offset";
             entry += AddComment(identifier, unit);
             entry += "recruit_priority_offset\t" + unit.Recruit_priority_offset + " " + unit.CommentsInLine[identifier] + "\n";
-            if (options.addUnitValue)
+            if (!unit.IsEopUnit)
             {
-                entry += ";ai_unit_value\t\t\t" + unit.AiUnitValue + "\n";
+                if (GlobalOptionsInstance.AddUnitValue)
+                {
+                    entry += ";ai_unit_value\t\t\t" + FormatFloat(unit.AiUnitValue) + "\n";
+                }
+                if (GlobalOptionsInstance.AddUnitValuePerCost)
+                {
+                    entry += ";value_per_cost\t\t\t" + FormatFloat(unit.ValuePerCost) + "\n";
+                }
+                if (GlobalOptionsInstance.AddUnitValuePerUpkeep)
+                {
+                    entry += ";value_per_upkeep\t\t" + FormatFloat(unit.ValuePerUpkeep) + "\n";
+                }
             }
             entry += "\n";
             entry += "\n";
@@ -596,7 +652,7 @@ namespace ModdingTool
             
             Console.WriteLine($@"end parse {_fileName}");
 
-            foreach (var file in ModOptionsInstance.EopDirectories.SelectMany(path => 
+            foreach (var file in ModOptionsInstance.EopDirectories.Where(Directory.Exists).SelectMany(path => 
                          Directory.GetFiles(path, "*.txt", SearchOption.AllDirectories)))
             {
                 _fileName = file.Split('/', '\\').Last();

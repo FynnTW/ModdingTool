@@ -144,7 +144,9 @@ public class UnitTab : ITab.Tab
             { "Mercenary_unit", "Is a Mercenary Unit" },
             { "General_unit", "Is a General's Unit" },
             { "Edu_index", "Edu Index" },
-            {"AIUnitValue", "AI Unit Value"},
+            {"AiUnitValue", "AI Unit Value"},
+            {"ValuePerUpkeep", "Value Per Upkeep"},
+            {"ValuePerCost", "Value Per Cost"},
             { "CardInfo", "Unit Info Card" }
         };
     public Unit SelectedUnit { get; set; }

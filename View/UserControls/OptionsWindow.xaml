@@ -17,7 +17,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="5*"></RowDefinition>
-            <RowDefinition Height="5*"></RowDefinition>
+            <RowDefinition Height="15*"></RowDefinition>
             <RowDefinition Height="5*"></RowDefinition>
             <RowDefinition Height="5*"></RowDefinition>
             <RowDefinition Height="30*"></RowDefinition>
@@ -28,8 +28,11 @@
             <TextBlock>Global Options: </TextBlock>
         </Grid>
         <Grid Row="1">
-            <StackPanel Orientation ="Horizontal">
+            <StackPanel Orientation ="Vertical">
                 <CheckBox IsChecked="{Binding UseEop}">Use EOP</CheckBox>
+                <CheckBox IsChecked="{Binding AddUnitValues}">Add unit value to EDU</CheckBox>
+                <CheckBox IsChecked="{Binding AddValuePerCost}">Add value/cost value to EDU</CheckBox>
+                <CheckBox IsChecked="{Binding AddValuePerUpkeep}">Add value/upkeep to EDU</CheckBox>
             </StackPanel>
         </Grid>
         <Grid Row="2">

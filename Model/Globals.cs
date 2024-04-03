@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using ModdingTool.View.UserControls;
 
 namespace ModdingTool
 {
@@ -40,6 +41,10 @@ namespace ModdingTool
         public class GlobalOptions
         {
             public bool UseEop = false;
+            public string StartMod { get; set; }  = "";
+            public bool AddUnitValuePerUpkeep { get; set; } = true;
+            public bool AddUnitValuePerCost { get; set; } = true;
+            public bool AddUnitValue { get; set; } = true;
         }
         public class ModOptions
         {
@@ -65,7 +70,8 @@ namespace ModdingTool
         
         public static void ModLoadedTrigger()
         {
-            LoadOptions();
+            GlobalOptionsInstance.StartMod = ModPath;
+            SaveOptions();
             ModLoadedEvent?.Invoke(null, EventArgs.Empty);
         }
 
@@ -145,7 +151,7 @@ namespace ModdingTool
         public static void LoadOptions()
         {
             if (!File.Exists("config/globalConfig.json"))
-                File.WriteAllText("config/globalConfig.json", JsonConvert.SerializeObject(GlobalOptionsInstance));
+                File.WriteAllText("config/globalConfig.json", JsonConvert.SerializeObject(GlobalOptionsInstance, Formatting.Indented));
             else
             {
                 var jsonString = File.ReadAllText("config/globalConfig.json");
@@ -154,7 +160,7 @@ namespace ModdingTool
             if (string.IsNullOrEmpty(ModName)) return;
             var configFileName = ModName + ".json";
             if (!File.Exists("config/" + configFileName))
-                File.WriteAllText("config/" + configFileName, JsonConvert.SerializeObject(ModOptionsInstance));
+                File.WriteAllText("config/" + configFileName, JsonConvert.SerializeObject(ModOptionsInstance, Formatting.Indented));
             else
             {
                 var jsonString = File.ReadAllText("config/" + configFileName);
@@ -181,6 +187,12 @@ namespace ModdingTool
             LoadOptions();
             if (!Directory.Exists("changelogs"))
                 Directory.CreateDirectory("changelogs");
+            if (!Directory.Exists(GlobalOptionsInstance.StartMod)) return;
+            ModPath = GlobalOptionsInstance.StartMod;
+            ModName = new DirectoryInfo(ModPath).Name;
+            var window = (MainWindow)Application.Current.MainWindow;
+            var menubar = window.FindName("MenuBarCustom") as Menubar;
+            menubar?.LoadMod();
         }
     }
 }

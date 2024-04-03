@@ -22,7 +22,7 @@ namespace ModdingTool
             {
                 return line;
             }
-            else
+            else if(!line.Contains("ai_unit_value") && !line.Contains("value_per"))
             {
                 CommentCacheInLine = line[line.IndexOf(';')..];
             }
@@ -132,7 +132,7 @@ namespace ModdingTool
 
         public static string? CleanLine(string line)
         {
-            if (line.StartsWith(';'))
+            if (line.StartsWith(';') && !line.Contains("ai_unit_value") && !line.Contains("value_per"))
             {
                 CommentCache.Add(line);
                 return null;

@@ -92,7 +92,7 @@ namespace ModdingTool.View.UserControls
         {
             if (!ModLoaded) return;
             EduParser.WriteEdu();
-            popupText.Text = System.AppDomain.CurrentDomain.BaseDirectory + "export_descr_unit.txt";
+            popupText.Text = ModPath + @"/data/export_descr_unit.txt";
             donePopup.IsOpen = true;
         }
 

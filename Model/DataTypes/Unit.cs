@@ -215,6 +215,10 @@ namespace ModdingTool
         public int EduIndex { get; set; }
 
         public double AiUnitValue { get; set; } = 0;
+        
+        public double ValuePerCost => AiUnitValue / RecruitCost;
+
+        public double ValuePerUpkeep => AiUnitValue / Upkeep;
 
         public string CardInfo { get; set; } = "";
         public string FactionSymbol { get; set; } = "";
