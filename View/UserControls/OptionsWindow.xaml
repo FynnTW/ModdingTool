@@ -18,7 +18,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="5*"></RowDefinition>
             <RowDefinition Height="15*"></RowDefinition>
-            <RowDefinition Height="5*"></RowDefinition>
+            <RowDefinition Height="10*"></RowDefinition>
             <RowDefinition Height="5*"></RowDefinition>
             <RowDefinition Height="30*"></RowDefinition>
             <RowDefinition Height="30*"></RowDefinition>
@@ -36,7 +36,10 @@
             </StackPanel>
         </Grid>
         <Grid Row="2">
-            <TextBlock>Mod Options: </TextBlock>
+            <StackPanel Orientation ="Vertical">
+                <TextBlock>Mod Options: </TextBlock>
+                <CheckBox IsChecked="{Binding DisableCardImages}">Disable card images(crashes with some mods)</CheckBox>
+            </StackPanel>
         </Grid>
         <Grid Row="3">
             <TextBlock>EOP Directories: </TextBlock>

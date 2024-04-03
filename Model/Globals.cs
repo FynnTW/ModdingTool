@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using ModdingTool.View.InterfaceData;
 using ModdingTool.View.UserControls;
 
 namespace ModdingTool
@@ -49,6 +50,7 @@ namespace ModdingTool
         public class ModOptions
         {
             public List<string> EopDirectories = new();
+            public bool DisableCardImages { get; set; } = false;
         }
 
         public static event EventHandler<EventArgs>? ModLoadedEvent;
@@ -106,8 +108,73 @@ namespace ModdingTool
             File.WriteAllText(@"bmdb.json", JsonConvert.SerializeObject(BattleModelDataBase));
         }
 
+        public static void ClearDatabases()
+        {
+            UnitDataBase.Clear();
+            UnitNames.Clear();
+            UnitDescr.Clear();
+            UnitDescrShort.Clear();
+            BattleModelDataBase.Clear();
+            FactionDataBase.Clear();
+            CultureDataBase.Clear();
+            ProjectileDataBase.Clear();
+            EngineDataBase.Clear();
+            MountDataBase.Clear();
+            ExpandedEntries.Clear();
+            CharacterTypes.Clear();
+            UsedModels.Clear();
+            UsedMounts.Clear();
+            UnitTab.AttributeTypes = new List<string>
+            {
+                "can_withdraw",
+                "can_sap",
+                "hide_long_grass",
+                "hide_anywhere",
+                "sea_faring",
+                "gunpowder_unit",
+                "screeching_women",
+                "druid",
+                "cantabrian_circle",
+                "is_peasant",
+                "no_custom",
+                "start_not_skirmishing",
+                "fire_by_rank",
+                "gunpowder_artillery_unit",
+                "command",
+                "free_upkeep_unit",
+                "heavy",
+                "hardy",
+                "mercenary_unit",
+                "frighten_foot",
+                "frighten_mounted",
+                "very_hardy",
+                "slave",
+                "power_charge",
+                "hide_forest",
+                "can_horde",
+                "can_swim",
+                "can_formed_charge",
+                "can_feign_rout",
+                "can_run_amok",
+                "warcry",
+                "stakes",
+                "general_unit",
+                "general_unit_upgrade",
+                "legionary_name",
+                "wagon_fort",
+                "cannot_skirmish",
+                "hide_improved_forest"
+            };
+            ModOptionsInstance.EopDirectories.Clear();
+            ProjectileDelayStandard = 0;
+            ProjectileDelayFlaming = 0;
+            ProjectileDelayGunpowder = 0;
+            StartingActionPoints = 250;
+        }
+
         public static void ParseFiles()
         {
+            ClearDatabases();
             ErrorDb.ClearErrors();
             FactionParser.ParseExpanded();
             FactionParser.ParseCultures();

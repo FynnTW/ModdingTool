@@ -380,10 +380,6 @@ namespace ModdingTool
             //Reset Line Counter
             Console.WriteLine($@"end parse {_fileName}");
             _lineNum = 0;
-            UsedModels.Add("dunforgoil_warlords");
-            UsedModels.Add("dun_elite_horse");
-            UsedModels.Add("frekkalingir");
-            UsedModels.Add("dunland_banner");
             PrintFinal();
         }
     }

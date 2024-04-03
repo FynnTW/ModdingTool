@@ -245,32 +245,35 @@ public class UnitTab : ITab.Tab
         projectilesList.Add("no");
         ProjectileEntries = projectilesList.ToArray();
 
-        try
+        if (!ModOptionsInstance.DisableCardImages)
         {
-            UnitInfoImage = TgaToImageSource(SelectedUnit.CardInfo);
-        }
-        catch (Exception e)
-        {
-            ErrorDb.AddError("Error reading " + SelectedUnit.CardInfo);
-            ErrorDb.AddError(e.Message);
-        }
-        try
-        {
-            UnitImage = TgaToImageSource(SelectedUnit.Card);
-        }
-        catch (Exception e)
-        {
-            ErrorDb.AddError("Error reading " + SelectedUnit.Card);
-            ErrorDb.AddError(e.Message);
-        }
-        try
-        {
-            FactionSymbolImage = TgaToImageSource(SelectedUnit.FactionSymbol);
-        }
-        catch (Exception e)
-        {
-            ErrorDb.AddError("Error reading " + SelectedUnit.FactionSymbol);
-            ErrorDb.AddError(e.Message);
+            try
+            {
+                UnitInfoImage = TgaToImageSource(SelectedUnit.CardInfo);
+            }
+            catch (Exception e)
+            {
+                ErrorDb.AddError("Error reading " + SelectedUnit.CardInfo);
+                ErrorDb.AddError(e.Message);
+            }
+            try
+            {
+                UnitImage = TgaToImageSource(SelectedUnit.Card);
+            }
+            catch (Exception e)
+            {
+                ErrorDb.AddError("Error reading " + SelectedUnit.Card);
+                ErrorDb.AddError(e.Message);
+            }
+            try
+            {
+                FactionSymbolImage = TgaToImageSource(SelectedUnit.FactionSymbol);
+            }
+            catch (Exception e)
+            {
+                ErrorDb.AddError("Error reading " + SelectedUnit.FactionSymbol);
+                ErrorDb.AddError(e.Message);
+            }
         }
 
 

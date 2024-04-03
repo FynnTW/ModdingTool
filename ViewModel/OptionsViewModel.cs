@@ -14,6 +14,8 @@ public partial class OptionsViewModel : ObservableObject
     [ObservableProperty]
     private bool _addValuePerCost;
     [ObservableProperty]
+    private bool _disableCardImages;
+    [ObservableProperty]
     private bool _addValuePerUpkeep;
 
     [ObservableProperty] 
@@ -26,6 +28,7 @@ public partial class OptionsViewModel : ObservableObject
         AddValuePerCost = Globals.GlobalOptionsInstance.AddUnitValuePerCost;
         AddValuePerUpkeep = Globals.GlobalOptionsInstance.AddUnitValuePerUpkeep;
         EopDirectories = Globals.ModOptionsInstance.EopDirectories;
+        DisableCardImages = Globals.ModOptionsInstance.DisableCardImages;
         if (EopDirectories.Count == 0)
         {
             EopDirectories.Add(" ");
@@ -40,6 +43,7 @@ public partial class OptionsViewModel : ObservableObject
         Globals.GlobalOptionsInstance.AddUnitValuePerCost = AddValuePerCost;
         Globals.GlobalOptionsInstance.AddUnitValuePerUpkeep = AddValuePerUpkeep;
         Globals.ModOptionsInstance.EopDirectories = EopDirectories;
+        Globals.ModOptionsInstance.DisableCardImages = DisableCardImages;
         Globals.SaveOptions();
     }
 

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ModdingTool.ViewModel"
         d:DataContext="{d:DesignInstance local:CreationViewModel}"
         mc:Ignorable="d"
-        Title="CreationWindow" Height="100" Width="600">
+        Title="CreationWindow" Height="300" Width="600">
     <Grid>
         <StackPanel Orientation="Vertical">
             <Label> </Label>
@@ -20,10 +20,6 @@
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Name :" Width="100"></TextBlock>
                 <TextBox x:Name="EduTypeInputBox" Text="{Binding NameValue}" Width="400"></TextBox>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Localized Name :" Width="100"></TextBlock>
-                <TextBox x:Name="NameInputBox" Text="{Binding LocalizedNameValue}" Width="400"></TextBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button x:Name="ConfirmButton" Content="Confirm" Width="100" Height="30" Click="ConfirmButton_OnClick"></Button>

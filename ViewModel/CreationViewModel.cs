@@ -7,7 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 public class CreationViewModel : ObservableObject
 {
     public string NameValue { get; set; } = "";
-    public string LocalizedNameValue { get; set; } = "";
+   // public string LocalizedNameValue { get; set; } = "";
     private string TabType { get; set; }
     public string BaseValue { get; set; } = Globals.UnitDataBase.First().Key;
     public List<string> ValuesList { get; private set; } = Globals.UnitDataBase.Keys.ToList();
@@ -52,7 +52,7 @@ public class CreationViewModel : ObservableObject
 
         public void Create(CreationViewModel viewModel)
         {
-            var newUnit = Unit.CloneUnit(viewModel.NameValue, viewModel.LocalizedNameValue, Globals.UnitDataBase[viewModel.BaseValue]);
+            var newUnit = Unit.CloneUnit(viewModel.NameValue, viewModel.NameValue, Globals.UnitDataBase[viewModel.BaseValue]);
             if (newUnit == null) return;
             EduParser.AddUnit(newUnit);
         }
