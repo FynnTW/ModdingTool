@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using RGiesecke.DllExport;
 
@@ -23,14 +24,20 @@ public static class LuaAPI
     {
         // Make sure you load the CLR package to allow importing .NET namespaces
         _luaState.LoadCLRPackage();
-
-        // Expose the GetModel function to Lua
-        _luaState.RegisterFunction("GetModel", null, typeof(LuaAPI).GetMethod("GetModel"));
-        // Expose the GetModel function to Lua
         
-        _luaState.RegisterFunction("GetModelByIndex", null, typeof(LuaAPI).GetMethod("GetModelByIndex"));
+        _luaState.NewTable("modelDb");
         
-        _luaState.RegisterFunction("GetModelCount", null, typeof(LuaAPI).GetMethod("GetModelCount"));
+        var modelDb = _luaState.GetTable("modelDb");
+        var getMethod = typeof(LuaAPI).GetMethod("GetModel");
+        var getByIndexMethod = typeof(LuaAPI).GetMethod("GetModelByIndex");
+        var getCountMethod = typeof(LuaAPI).GetMethod("GetModelCount");
+        var addModelMethod = typeof(LuaAPI).GetMethod("AddModel");
+        
+        modelDb["GetModel"] = _luaState.RegisterFunction("modelDb.GetModel", null, getMethod);
+        modelDb["GetModelByIndex"] = _luaState.RegisterFunction("modelDb.GetModelByIndex", null, getByIndexMethod);
+        modelDb["GetModelCount"] = _luaState.RegisterFunction("modelDb.GetModelCount", null, getCountMethod);
+        modelDb["AddModel"] = _luaState.RegisterFunction("modelDb.AddModel", null, addModelMethod);
+        _luaState["modelDb"] = modelDb;
         
         // You can also expose the BattleModel class to Lua
         // Note: Replace 'YourAssemblyName' and 'YourNamespace' with the actual values.
@@ -40,6 +47,14 @@ public static class LuaAPI
     public static BattleModel? GetModel(string name)
     {
         return Globals.BattleModelDataBase.GetValueOrDefault(name);
+    }
+    
+    public static BattleModel? AddModel(string name, BattleModel model)
+    {
+        var newModel = BattleModel.CloneModel(name, model);
+        if (newModel == null) return null;
+        Globals.BattleModelDataBase.Add(newModel.Name, newModel);
+        return newModel;
     }
     
     public static BattleModel? GetModelByIndex(int index)

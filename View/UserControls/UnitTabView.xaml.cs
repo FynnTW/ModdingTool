@@ -203,7 +203,7 @@ namespace ModdingTool.View.UserControls
         private void ProjectileGoto_OnClick(object sender, RoutedEventArgs e)
         {
             var unit = (sender as Hyperlink)?.DataContext as UnitTab;
-            var model = unit?.SelectedUnit.Pri_projectile;
+            var model = unit?.SelectedUnit.PriProjectile;
             if (string.IsNullOrWhiteSpace(model)) return;
             if (model.Trim().Equals("no")) return;
             var newTab = new ProjectileTab(model);
@@ -214,7 +214,7 @@ namespace ModdingTool.View.UserControls
         private void Projectile2Goto_OnClick(object sender, RoutedEventArgs e)
         {
             var unit = (sender as Hyperlink)?.DataContext as UnitTab;
-            var model = unit?.SelectedUnit.Sec_projectile;
+            var model = unit?.SelectedUnit.SecProjectile;
             if (string.IsNullOrWhiteSpace(model)) return;
             if (model.Trim().Equals("no")) return;
             var newTab = new ProjectileTab(model);
@@ -225,7 +225,7 @@ namespace ModdingTool.View.UserControls
         private void Projectile3Goto_OnClick(object sender, RoutedEventArgs e)
         {
             var unit = (sender as Hyperlink)?.DataContext as UnitTab;
-            var model = unit?.SelectedUnit.Ter_projectile;
+            var model = unit?.SelectedUnit.TerProjectile;
             if (string.IsNullOrWhiteSpace(model)) return;
             if (model.Trim().Equals("no")) return;
             var newTab = new ProjectileTab(model);

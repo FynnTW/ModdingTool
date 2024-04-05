@@ -137,7 +137,7 @@ public class MountParser : FileParser
             switch (identifier)
             {
                 case "type":
-                    mount.type = value.ToLower().Trim();
+                    mount.type = value.Trim();
                     break;
                 case "class":
                     mount.mount_class = value;

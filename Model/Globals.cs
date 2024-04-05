@@ -93,6 +93,7 @@ namespace ModdingTool
             GlobalOptionsInstance.StartMod = ModPath;
             SaveOptions();
             ModLoadedEvent?.Invoke(null, EventArgs.Empty);
+            ModLoaded = true;
         }
 
         public static void ImportJson(string fileName)

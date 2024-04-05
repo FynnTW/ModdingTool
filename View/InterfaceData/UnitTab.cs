@@ -277,10 +277,10 @@ public class UnitTab : ITab.Tab
         }
 
 
-        foreach (var effect in SelectedUnit.Mount_effect)
+        foreach (var effect in SelectedUnit.MountEffect)
         {
             MountEffectString += effect;
-            if (effect != SelectedUnit.Mount_effect.Last())
+            if (effect != SelectedUnit.MountEffect.Last())
             {
                 MountEffectString += ", ";
             }

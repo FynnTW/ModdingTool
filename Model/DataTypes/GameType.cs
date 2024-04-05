@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace ModdingTool;
 
@@ -43,5 +46,72 @@ public abstract class GameType
         var newV = FormatFloat(newValue);
         if (oldV == newV) return;
         Changes.AddChange(attribute, DataType, _name, oldV, newV);
+    }
+    
+    public static bool FloatNotEqual(float a, float b) => Math.Abs(a - b) > 0.001;
+    
+    public Dictionary<string, List<string>> Comments { get; set; } = new();
+    
+    public string ConditionalString(string? text, string returnText = "") => 
+        string.IsNullOrWhiteSpace(text) ? "" : string.IsNullOrWhiteSpace(returnText) ? text : returnText;
+
+    public virtual string GetTypeTextField(string identifier) => "";
+
+    public string GetTextField(string identifier)
+    {
+        var text = "";
+        text += AddComment(identifier);
+        text += GetTypeTextField(identifier);
+        if (string.IsNullOrWhiteSpace(text)) return "";
+        return string.IsNullOrWhiteSpace(CommentsInLine[identifier]) ? 
+            text + "\n" : text + " " + CommentsInLine[identifier] + "\n";
+    }
+
+    public static string FormatFloatSingle(double input)
+    {
+        if (Math.Abs(input - 1) < 0.01)
+        {
+            return "1";
+        }
+        return input == 0 ? "0" : input.ToString("0.0", CultureInfo.InvariantCulture);
+    }
+    
+    public static string MakeCommaString(List<string> list)
+    {
+        var commaString = "";
+        if (list.Count == 0) return commaString;
+        foreach (var element in list)
+        {
+            commaString += element;
+            if (element != list.Last())
+            {
+                commaString += ", ";
+            }
+        }
+        return commaString;
+    }
+    
+    public string GetTabLength(string text) 
+        => text.Length switch
+            {
+                0 => "",
+                < 4 => "\t\t\t\t\t\t",
+                < 8 => "\t\t\t\t\t",
+                < 12 => "\t\t\t\t",
+                < 16 => "\t\t\t",
+                < 20 => "\t\t",
+                _ => "\t",
+            };
+    
+    
+
+    public Dictionary<string, string> CommentsInLine { get; set; } = new();
+    
+    public string AddComment(string identifier)
+    {
+        if (!Comments.TryGetValue(identifier, out var value)) return "";
+        if (value.Count == 0) return "";
+        var comment = value.Aggregate("", (current, c) => current + (c + "\n"));
+        return comment;
     }
 }
