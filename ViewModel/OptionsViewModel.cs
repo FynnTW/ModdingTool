@@ -2,6 +2,7 @@
 using System.Xml.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Windows.Forms;
 
 namespace ModdingTool.ViewModel;
 
@@ -50,7 +51,7 @@ public partial class OptionsViewModel : ObservableObject
     [RelayCommand]
     public void BrowseDirectories()
     {
-        var dialog = new System.Windows.Forms.FolderBrowserDialog();
+        var dialog = new FolderBrowserDialog();
         dialog.ShowDialog();
         EopDirectories.Add(dialog.SelectedPath);
         

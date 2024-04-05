@@ -405,7 +405,7 @@
                             <RowDefinition Height="25*"></RowDefinition>
                             <RowDefinition Height="25*"></RowDefinition>
                         </Grid.RowDefinitions>
-                        <TextBlock Height="25" Grid.Row="0">
+                        <TextBlock x:Name="ArmourModelBasea" Height="25" Grid.Row="0">
                             <TextBlock.ContextMenu>
                                 <ContextMenu>
                                     <MenuItem Header="Go to entry" Click="SoldierGoto_OnClick"/>

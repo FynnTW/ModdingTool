@@ -1,0 +1,13 @@
+﻿<Window x:Class="ModdingTool.View.ChangesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:ModdingTool.ViewModel"
+        d:DataContext="{d:DesignInstance local:ChangesViewModel}"
+        mc:Ignorable="d"
+        Title="Changelog" Height="450" Width="800">
+    <Grid>
+        <ListBox x:Name="ChangesLogBox" MouseDoubleClick="ChangesLogBox_OnMouseDoubleClick" ItemsSource="{Binding ChangeList}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ></ListBox>
+    </Grid>
+</Window>

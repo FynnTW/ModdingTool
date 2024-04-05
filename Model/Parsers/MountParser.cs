@@ -7,26 +7,22 @@ namespace ModdingTool;
 using static ModdingTool.Globals;
 using static ModdingTool.ParseHelpers;
 
-public class MountParser
+public class MountParser : FileParser
 {
 
     //Parsing line number and file name used for error logging
-    private static int _lineNum;
-    private static string _fileName = "";
     private static int rider = 0;
-
-
-    public static void ParseMounts()
+    
+    public static void Parse()
     {
-        _fileName = "descr_mount.txt";
-        Console.WriteLine($@"start parse {_fileName}");
-
-
-        var lines = FileReader("\\data\\descr_mount.txt", _fileName, Encoding.Default);
+        s_fileName = "descr_mount.txt";
+        Console.WriteLine($@"start parse {s_fileName}");
+        
+        var lines = FileReader("\\data\\descr_mount.txt", s_fileName, Encoding.Default);
         if (lines == null) { return; } //something very wrong if you hit this
 
         //Reset line counter
-        _lineNum = 0;
+        s_lineNum = 0;
 
         //Initialize Global Mounts Database
         MountDataBase = new Dictionary<string, Mount>();
@@ -39,7 +35,7 @@ public class MountParser
         foreach (var line in lines)
         {
             //Increase line counter
-            _lineNum++;
+            s_lineNum++;
 
             //Remove Comments and Faulty lines
             var newline = CleanLine(line);
@@ -53,7 +49,7 @@ public class MountParser
             if (parts.Length < 1)
             {
                 //Should be something wrong with line if you hit this
-                ErrorDb.AddError("Unrecognized content", _lineNum.ToString(), _fileName);
+                ErrorDb.AddError("Unrecognized content", s_lineNum.ToString(), s_fileName);
                 continue;
             }
 
@@ -79,8 +75,8 @@ public class MountParser
         CommentCache.Clear();
 
         //Reset Line Counter
-        Console.WriteLine($@"end parse {_fileName}");
-        _lineNum = 0;
+        Console.WriteLine($@"end parse {s_fileName}");
+        s_lineNum = 0;
 
     }
 
@@ -88,17 +84,18 @@ public class MountParser
     {
         if (MountDataBase.ContainsKey(mount.type))
         {
-            ErrorDb.AddError("Mount name already exists", _lineNum.ToString(), _fileName);
+            ErrorDb.AddError("Mount name already exists", s_lineNum.ToString(), s_fileName);
             return;
         }
         MountDataBase.Add(mount.type, mount);
         Console.WriteLine(mount.type);
     }
+    
     private static string[] LineSplitterMounts(string line)
     {
         if (string.IsNullOrWhiteSpace(line))
         {
-            ErrorDb.AddError("Warning empty line send on", _lineNum.ToString(), _fileName);
+            ErrorDb.AddError("Warning empty line send on", s_lineNum.ToString(), s_fileName);
             return Array.Empty<string>();
         }
 
@@ -205,10 +202,10 @@ public class MountParser
         }
         catch (Exception e)
         {
-            ErrorDb.AddError(e.Message, _lineNum.ToString(), _fileName);
+            ErrorDb.AddError(e.Message, s_lineNum.ToString(), s_fileName);
             Console.WriteLine(e);
             Console.WriteLine(identifier);
-            Console.WriteLine(@"on line: " + _lineNum);
+            Console.WriteLine(@"on line: " + s_lineNum);
             Console.WriteLine(@"====================================================================================");
         }
     }

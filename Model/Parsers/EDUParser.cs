@@ -7,29 +7,24 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows;
+using ModdingTool.View.UserControls;
 using static ModdingTool.Globals;
 using static ModdingTool.ParseHelpers;
 
 namespace ModdingTool
 {
-    internal class EduParser
+    internal static class EduParser
     {
+        private const string UnitCardPath = "\\data\\ui\\units";
+        private const string UnitInfoCardPath = "\\data\\ui\\unit_info";
+        private const string FactionSymbolPath = "\\data\\ui\\faction_symbols";
+        private static int s_lineNum;
+        private static string s_fileName = "";
 
-        class options
-        {
-            public static bool addUnitValuePerUpkeep { get; set; } = true;
-            
-            public static bool addUnitValuePerCost { get; set; } = true;
-            public static bool addUnitValue { get; set; } = true;
-        }
-        private const string UNIT_CARD_PATH = "\\data\\ui\\units";
-        private const string UNIT_INFO_CARD_PATH = "\\data\\ui\\unit_info";
-        private const string FACTION_SYMBOL_PATH = "\\data\\ui\\faction_symbols";
-        private static int _lineNum;
-        private static string _fileName = "";
-        
-        public static List<string> EduEndComments = new();
-        public static List<string> EduIdentifiers = new()
+        private static readonly List<string> EduEndComments = new();
+
+        private static readonly List<string> EduIdentifiers = new()
         {
             "type",
             "dictionary",
@@ -88,6 +83,16 @@ namespace ModdingTool
             backupName = "export_units_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt";
             File.Copy(ModPath + "/data/text/export_units.txt", ModPath + "/ModdingToolBackup/data/text/" + backupName, true);
             
+            if (UnitDataBase.Values.Count(x => x.IsEopUnit == false) > 500)
+            {
+                ErrorDb.AddError("Exceeded unit limit!");
+                var window = Application.Current.MainWindow;
+                if (window != null)
+                {
+                    var statusBar = window.FindName("StatusBarLive") as StatusBarCustom;
+                    statusBar?.SetStatusModPath("Exceeded unit limit!");
+                }
+            }
             var newEdu = UnitDataBase.Values.Where(x => x.IsEopUnit == false).Aggregate("", (current, unit) => current + WriteEduEntry(unit));
             newEdu += EduEndComments.Aggregate("", (current, comment) => current + (comment + "\n"));
             File.WriteAllText(ModPath + @"/data/export_descr_unit.txt", newEdu);
@@ -124,7 +129,7 @@ namespace ModdingTool
             
         }
 
-        public static string WriteEuEntry(Unit unit)
+        private static string WriteEuEntry(Unit unit)
         {
             var entry = "\u00ac-----\n";
             entry += "{" + unit.Dictionary + "}" + unit.Name + "\n";
@@ -564,24 +569,26 @@ namespace ModdingTool
             return input == 0 ? "0" : input.ToString("0.0", CultureInfo.InvariantCulture);
         }
 
-        public static void ParseEduEntry(string[] lines, bool isEop = false, string filePath = "")
+        private static void ParseEduEntry(IEnumerable<string> lines, bool isEop = false, string filePath = "")
         {
             //Make first entry
-            var newUnit = new Unit();
-            newUnit.IsEopUnit = isEop;
+            var newUnit = new Unit
+            {
+                IsEopUnit = isEop
+            };
             if (isEop)
                 newUnit.FilePath = filePath;
             var first = true;
 
             //Reset line counter and EDU index tracker
             var index = 0;
-            _lineNum = 0;
+            s_lineNum = 0;
 
             //Loop through lines
             foreach (var line in lines)
             {
                 //Increase line counter
-                _lineNum++;
+                s_lineNum++;
 
                 //Remove Comments and Faulty lines
                 var newline = CleanLine(line);
@@ -595,7 +602,7 @@ namespace ModdingTool
                 if (lineParts is { Length: < 2 })
                 {
                     //Should be something wrong with line if you hit this
-                    ErrorDb.AddError("Unrecognized content", _lineNum.ToString(), _fileName);
+                    ErrorDb.AddError("Unrecognized content", s_lineNum.ToString(), s_fileName);
                     continue;
                 }
 
@@ -618,8 +625,10 @@ namespace ModdingTool
                         index++;
                     }
                     first = false;
-                    newUnit = new Unit();
-                    newUnit.IsEopUnit = isEop;
+                    newUnit = new Unit
+                    {
+                        IsEopUnit = isEop
+                    };
                     if (isEop)
                         newUnit.FilePath = filePath;
                 }
@@ -638,11 +647,11 @@ namespace ModdingTool
 
         public static void ParseEdu()
         {
-            _fileName = "export_descr_unit.txt";
-            Console.WriteLine($@"start parse {_fileName}");
+            s_fileName = "export_descr_unit.txt";
+            Console.WriteLine($@"start parse {s_fileName}");
 
             //Try read file
-            var lines = FileReader("\\data\\export_descr_unit.txt", _fileName, Encoding.UTF8);
+            var lines = FileReader("\\data\\export_descr_unit.txt", s_fileName, Encoding.UTF8);
             if (lines == null) { return; }
 
             //Initialize Global Unit Database
@@ -650,17 +659,17 @@ namespace ModdingTool
 
             ParseEduEntry(lines);
             
-            Console.WriteLine($@"end parse {_fileName}");
+            Console.WriteLine($@"end parse {s_fileName}");
 
             foreach (var file in ModOptionsInstance.EopDirectories.Where(Directory.Exists).SelectMany(path => 
                          Directory.GetFiles(path, "*.txt", SearchOption.AllDirectories)))
             {
-                _fileName = file.Split('/', '\\').Last();
-                Console.WriteLine($@"start parse {_fileName}");
-                lines = FileReaderNonMod(file, _fileName, Encoding.UTF8);
+                s_fileName = file.Split('/', '\\').Last();
+                Console.WriteLine($@"start parse {s_fileName}");
+                lines = FileReaderNonMod(file, s_fileName, Encoding.UTF8);
                 if (lines == null) { continue; }
                 ParseEduEntry(lines, true, file);
-                Console.WriteLine($@"end parse {_fileName}");
+                Console.WriteLine($@"end parse {s_fileName}");
             }
 
         }
@@ -694,7 +703,7 @@ namespace ModdingTool
                 }
                 else
                 {
-                    ErrorDb.AddError($@"Faction not found {faction}", _lineNum.ToString(), _fileName);
+                    ErrorDb.AddError($@"Faction not found {faction}", s_lineNum.ToString(), s_fileName);
                     Console.WriteLine(@"faction not found: " + faction);
                 }
             }
@@ -702,15 +711,15 @@ namespace ModdingTool
 
         public static void ParseEu()
         {
-            _fileName = "export_units.txt";
-            Console.WriteLine($@"start parse {_fileName}");
+            s_fileName = "export_units.txt";
+            Console.WriteLine($@"start parse {s_fileName}");
 
             //Try read file
-            var lines = FileReader("\\data\\text\\export_units.txt", _fileName, Encoding.Unicode);
+            var lines = FileReader("\\data\\text\\export_units.txt", s_fileName, Encoding.Unicode);
             if (lines == null) { return; }
 
             //Reset line counter
-            _lineNum = 0;
+            s_lineNum = 0;
 
             //Initialize Global names and descriptions database
             UnitNames = new Dictionary<string, string>();
@@ -721,14 +730,14 @@ namespace ModdingTool
             foreach (var line in lines)
             {
                 //Increase line counter
-                _lineNum++;
+                s_lineNum++;
                 //Clean up line
-                var parts = LocalTextLineCleaner(line, _lineNum, _fileName);
+                var parts = LocalTextLineCleaner(line, s_lineNum, s_fileName);
                 if (parts != null)
                     AddUnitStringEntry(parts);
 
             }
-            Console.WriteLine($@"end parse {_fileName}");
+            Console.WriteLine($@"end parse {s_fileName}");
         }
 
         private static string[] GetCards(string? unit, List<string> factions, string? cardPicDir, string? infoPicDir, bool merc)
@@ -736,6 +745,12 @@ namespace ModdingTool
             var unitCard = "";
             var cardSearchFactions = factions;
             var infoCardSearchFactions = factions;
+            
+            if (factions.Contains("all"))
+            {
+                cardSearchFactions = FactionDataBase.Keys.ToList();
+                infoCardSearchFactions = FactionDataBase.Keys.ToList();
+            }
 
             if (merc)
             {
@@ -754,11 +769,11 @@ namespace ModdingTool
 
             foreach (var faction in cardSearchFactions)
             {
-                var cardPath = ModPath + UNIT_CARD_PATH + "\\";
+                var cardPath = ModPath + UnitCardPath + "\\";
                 cardPath += faction;
                 if (!(Directory.Exists(cardPath)))
                 {
-                    ErrorDb.AddError($@"Card path not found {cardPath}", _lineNum.ToString(), _fileName);
+                    ErrorDb.AddError($@"Card path not found {cardPath}", s_lineNum.ToString(), s_fileName);
                     continue;
                 }
 
@@ -775,11 +790,11 @@ namespace ModdingTool
             var unitInfoCard = "";
             foreach (var faction in infoCardSearchFactions)
             {
-                var cardInfoPath = ModPath + UNIT_INFO_CARD_PATH + "\\";
+                var cardInfoPath = ModPath + UnitInfoCardPath + "\\";
                 cardInfoPath += faction;
                 if (!(Directory.Exists(cardInfoPath)))
                 {
-                    ErrorDb.AddError($@"Info Card path not found {cardInfoPath}", _lineNum.ToString(), _fileName);
+                    ErrorDb.AddError($@"Info Card path not found {cardInfoPath}", s_lineNum.ToString(), s_fileName);
                     continue;
                 }
 
@@ -795,27 +810,27 @@ namespace ModdingTool
 
             // Faction Symbols
             var factionSymbol = "";
-            var factionSymbolPath = ModPath + FACTION_SYMBOL_PATH + "\\";
+            var factionSymbolPath = ModPath + FactionSymbolPath + "\\";
 
             // If the unit is slave only, just set to slave and move on
-            if (factions.Count == 1 && factions[0] == "slave")
+            if (factions is ["slave"])
             {
                 factionSymbolPath += "slave";
             }
-            // Otherwise, add the first non-slave faction
-            else if (factions.Count == 1 && factions[0] != "slave")
+            else switch (factions.Count)
             {
-                factionSymbolPath += factions[0];
-            }
-            else if (factions.Count > 1)
-            {
-                foreach (var faction in factions)
+                // Otherwise, add the first non-slave faction
+                case 1:
+                    factionSymbolPath += factions[0];
+                    break;
+                case > 1:
                 {
-                    if (faction != "slave")
+                    foreach (var faction in factions.Where(faction => faction != "slave"))
                     {
                         factionSymbolPath += faction;
                         break;
                     }
+                    break;
                 }
             }
 
@@ -849,34 +864,23 @@ namespace ModdingTool
             }
             else
             {
-                ErrorDb.AddError($@"Unit localization is empty {identifier}", _lineNum.ToString(), _fileName);
+                ErrorDb.AddError($@"Unit localization is empty {identifier}", s_lineNum.ToString(), s_fileName);
             }
 
             if (identifier != null && identifier.Contains("_descr_short"))
             {
                 var split = identifier.Split("_descr_short", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                var result = UnitDescrShort.TryAdd(split[0], text);
-                // if (!result)
-                // {
-                //     ErrorDb.AddError($@"Duplicate _descr_short entries found for {split[0]}", split[0], _fileName);
-                // }
+                UnitDescrShort.TryAdd(split[0], text);
             }
             else if (identifier != null && identifier.Contains("_descr"))
             {
                 var split = identifier.Split("_descr", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                var result = UnitDescr.TryAdd(split[0], text);
-                // if (!result)
-                // {
-                //     ErrorDb.AddError($@"Duplicate _descr entries found for {split[0]}", split[0], _fileName);
-                // }
+                UnitDescr.TryAdd(split[0], text);
             }
             else
             {
                 if (text == null || identifier == null) return;
-                if (!UnitNames.ContainsKey(identifier))
-                {
-                    UnitNames.Add(identifier, text);
-                }
+                UnitNames.TryAdd(identifier, text);
             }
         }
 
@@ -947,7 +951,7 @@ namespace ModdingTool
                     case "soldier":
                         AssignComments(identifier, unit);
                         unit.Soldier = parts?[1]?.Trim().ToLower();
-                        UsedModels.Add(unit.Soldier);
+                        if (unit.Soldier != null) UsedModels.Add(unit.Soldier);
                         unit.SoldierCount = int.Parse(parts?[2] ?? string.Empty);
                         unit.ExtrasCount = int.Parse(parts?[3] ?? string.Empty);
                         unit.Mass = double.Parse(parts?[4] ?? string.Empty, CultureInfo.InvariantCulture.NumberFormat);
@@ -966,19 +970,19 @@ namespace ModdingTool
                         if (unit.Officer1 is "")
                         {
                             unit.Officer1 = parts?[1]?.Trim().ToLower();
-                            UsedModels.Add(unit.Officer1);
+                            if (unit.Officer1 != null) UsedModels.Add(unit.Officer1);
                             break;
                         }
                         if (unit.Officer2 is "")
                         {
                             unit.Officer2 = parts?[1]?.Trim().ToLower();
-                            UsedModels.Add(unit.Officer2);
+                            if (unit.Officer2 != null) UsedModels.Add(unit.Officer2);
                             break;
                         }
                         if (unit.Officer3 is "")
                         {
                             unit.Officer3 = parts?[1]?.Trim().ToLower();
-                            UsedModels.Add(unit.Officer3);
+                            if (unit.Officer3 != null) UsedModels.Add(unit.Officer3);
                         }
                         break;
 
@@ -1005,8 +1009,12 @@ namespace ModdingTool
                     case "mount":
                         AssignComments(identifier, unit);
                         unit.Mount = parts?[1]?.Trim().ToLower();
-                        UsedModels.Add(MountDataBase[unit.Mount].model.Trim().ToLower());
-                        UsedMounts.Add(unit.Mount);
+                        if (unit.Mount != null)
+                        {
+                            UsedModels.Add(MountDataBase[unit.Mount].model.Trim().ToLower());
+                            UsedMounts.Add(unit.Mount);
+                        }
+
                         break;
 
                     case "mount_effect":
@@ -1025,10 +1033,8 @@ namespace ModdingTool
                     case "attributes":
                         AssignComments(identifier, unit);
                         if (parts == null || parts.Length < 2)
-                        {
                             break;
-                        }
-                        foreach (var attr in parts?[1..]!)
+                        foreach (var attr in parts[1..])
                         {
                             if (attr == null) break;
                             unit.Attributes.Add(attr);
@@ -1265,48 +1271,48 @@ namespace ModdingTool
                         AssignComments(identifier, unit);
                         if (parts != null)
                         {
-                            var lvlbase = 0;
-                            var lvlone = 0;
-                            var lvltwo = 0;
-                            var lvlthree = 0;
+                            var baseLvl = 0;
+                            var lvlOne = 0;
+                            var lvlTwo = 0;
+                            var lvlThree = 0;
                             foreach (var level in parts[1..])
                             {
-                                var lvlint = int.Parse(level ?? string.Empty);
+                                var lvl = int.Parse(level ?? string.Empty);
                                 if (string.IsNullOrWhiteSpace(unit.ArmourlvlBase))
                                 {
-                                    lvlbase = lvlint;
-                                    unit.ArmourlvlBase = lvlbase.ToString();
+                                    baseLvl = lvl;
+                                    unit.ArmourlvlBase = baseLvl.ToString();
                                 }
-                                else if (lvlbase == lvlint)
+                                else if (baseLvl == lvl)
                                 {
-                                    unit.ArmourlvlBase += ", " + lvlint;
+                                    unit.ArmourlvlBase += ", " + lvl;
                                 }
                                 else if (string.IsNullOrWhiteSpace(unit.ArmourlvlOne))
                                 {
-                                    lvlone = lvlint;
-                                    unit.ArmourlvlOne = lvlone.ToString();
+                                    lvlOne = lvl;
+                                    unit.ArmourlvlOne = lvlOne.ToString();
                                 }
-                                else if (lvlone == lvlint)
+                                else if (lvlOne == lvl)
                                 {
-                                    unit.ArmourlvlOne += ", " + lvlint;
+                                    unit.ArmourlvlOne += ", " + lvl;
                                 }
                                 else if (string.IsNullOrWhiteSpace(unit.ArmourlvlTwo))
                                 {
-                                    lvltwo = lvlint;
-                                    unit.ArmourlvlTwo = lvltwo.ToString();
+                                    lvlTwo = lvl;
+                                    unit.ArmourlvlTwo = lvlTwo.ToString();
                                 }
-                                else if (lvltwo == lvlint)
+                                else if (lvlTwo == lvl)
                                 {
-                                    unit.ArmourlvlTwo += ", " + lvlint;
+                                    unit.ArmourlvlTwo += ", " + lvl;
                                 }
                                 else if (string.IsNullOrWhiteSpace(unit.ArmourlvlThree))
                                 {
-                                    lvlthree = lvlint;
-                                    unit.ArmourlvlThree = lvlthree.ToString();
+                                    lvlThree = lvl;
+                                    unit.ArmourlvlThree = lvlThree.ToString();
                                 }
-                                else if (lvlthree == lvlint)
+                                else if (lvlThree == lvl)
                                 {
-                                    unit.ArmourlvlThree += ", " + lvlint;
+                                    unit.ArmourlvlThree += ", " + lvl;
                                 }
                             }
                         }
@@ -1320,25 +1326,25 @@ namespace ModdingTool
                             if (string.IsNullOrWhiteSpace(unit.ArmourModelBase))
                             {
                                 unit.ArmourModelBase = model?.ToLower();
-                                UsedModels.Add(unit.ArmourModelBase);
+                                if (unit.ArmourModelBase != null) UsedModels.Add(unit.ArmourModelBase);
                             }
                             else if (string.IsNullOrWhiteSpace(unit.ArmourModelOne))
                             {
                                 unit.ArmourModelOne = model?.ToLower();
-                                UsedModels.Add(unit.ArmourModelOne);
+                                if (unit.ArmourModelOne != null) UsedModels.Add(unit.ArmourModelOne);
                             }
                             else if (string.IsNullOrWhiteSpace(unit.ArmourModelTwo))
                             {
                                 unit.ArmourModelTwo = model?.ToLower();
-                                UsedModels.Add(unit.ArmourModelTwo);
+                                if (unit.ArmourModelTwo != null) UsedModels.Add(unit.ArmourModelTwo);
                             }
                             else if (string.IsNullOrWhiteSpace(unit.ArmourModelThree))
                             {
                                 unit.ArmourModelThree = model?.ToLower();
-                                UsedModels.Add(unit.ArmourModelThree);
+                                if (unit.ArmourModelThree != null) UsedModels.Add(unit.ArmourModelThree);
                             }
                         }
-                        unit.Armour_ug_models = parts?[1..];
+                        unit.Armour_ug_models = parts[1..];
                         break;
 
                     case "ownership":
@@ -1396,10 +1402,10 @@ namespace ModdingTool
             }
             catch (Exception e)
             {
-                ErrorDb.AddError(e.Message + " " + identifier, _lineNum.ToString(), _fileName);
+                ErrorDb.AddError(e.Message + " " + identifier, s_lineNum.ToString(), s_fileName);
                 Console.WriteLine(e);
                 Console.WriteLine(identifier);
-                Console.WriteLine(@"on line: " + _lineNum);
+                Console.WriteLine(@"on line: " + s_lineNum);
                 Console.WriteLine(@"====================================================================================");
             }
         }

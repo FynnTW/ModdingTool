@@ -9,27 +9,24 @@ using static ModdingTool.ParseHelpers;
 
 namespace ModdingTool
 {
-    internal class BmdbParser
+    internal class BmdbParser : FileParser
     {
-        private static string _fileName = "";
-
         //Position in Bmdb
         private static int _stringPos;
 
         //Lenght of next string
         private static int _nextLenght;
-        private static int _lineNum;
 
         //bmdb loaded as string
         private static string? _bmdb = null!;
 
         public static void ParseBmdb()
         {
-            _fileName = "battle_models.modeldb";
-            Console.WriteLine($@"start parse {_fileName}");
+            s_fileName = "battle_models.modeldb";
+            Console.WriteLine($@"start parse {s_fileName}");
 
             //Try read file
-            _bmdb = BmdbReader("\\data\\unit_models\\battle_models.modeldb", _fileName, Encoding.UTF8);
+            _bmdb = BmdbReader("\\data\\unit_models\\battle_models.modeldb", s_fileName, Encoding.UTF8);
             if (_bmdb == null) return;
 
             //First entry in vanilla has extra ints
@@ -53,7 +50,7 @@ namespace ModdingTool
                 //failsafe for out of bounds
                 if (_stringPos >= _bmdb.Length - 1)
                 {
-                    ErrorDb.AddError("Bmdb parsing error", _stringPos.ToString(), _fileName); continue;
+                    ErrorDb.AddError("Bmdb parsing error", _stringPos.ToString(), s_fileName); continue;
                 }
 
                 //Create new entry
@@ -90,7 +87,8 @@ namespace ModdingTool
                     entry.LodTable.Add(new Lod
                     {
                         Mesh = GetString(),
-                        Distance = GetInt()
+                        Distance = GetInt(),
+                        Name = entry.Name
                     });
                 }
                 if (firstEntry) { pad = GetInt(); pad = GetInt(); }
@@ -103,6 +101,7 @@ namespace ModdingTool
                     {
                         entry.MainTextures.Add(new Texture
                         {
+                            Name = entry.Name,
                             Faction = facname,
                             TexturePath = GetString(),
                             Normal = GetString(),
@@ -125,6 +124,7 @@ namespace ModdingTool
                     {
                         entry.AttachTextures.Add(new Texture
                         {
+                            Name = entry.Name,
                             Faction = facname,
                             TexturePath = GetString(),
                             Normal = GetString(),
@@ -148,9 +148,10 @@ namespace ModdingTool
                 {
                     entry.Animations.Add(new Animation
                     {
+                        Name = entry.Name,
                         MountType = GetString().ToLower(),
-                        Primary_skeleton = GetString(),
-                        Secondary_skeleton = GetString(),
+                        PrimarySkeleton = GetString(),
+                        SecondarySkeleton = GetString(),
                         PriWeaponCount = GetInt()
                     });
                     entry.Animations[i].PriWeapons = new List<string>();
@@ -185,20 +186,20 @@ namespace ModdingTool
                 entry.TorchBoneX = GetFloat();
                 entry.TorchBoneY = GetFloat();
                 entry.TorchBoneZ = GetFloat();
-                entry.TorchspriteX = GetFloat();
-                entry.TorchspriteY = GetFloat();
-                entry.TorchspriteZ = GetFloat();
+                entry.TorchSpriteX = GetFloat();
+                entry.TorchSpriteY = GetFloat();
+                entry.TorchSpriteZ = GetFloat();
                 if (firstEntry) { pad = GetInt(); pad = GetInt(); }
                 firstEntry = false;
                 if (BattleModelDataBase.ContainsKey(entry.Name))
                 {
-                    ErrorDb.AddError($"Duplicate entry {entry.Name} in {_fileName}");
+                    ErrorDb.AddError($"Duplicate entry {entry.Name} in {s_fileName}");
                     Console.WriteLine(@"====================================================================================");
                 }
                 BattleModelDataBase[entry.Name] = entry;
                 Console.WriteLine(entry.Name);
             }
-            Console.WriteLine($@"end parse {_fileName}");
+            Console.WriteLine($@"end parse {s_fileName}");
         }
 
         private static string GetString()
@@ -293,23 +294,23 @@ namespace ModdingTool
 
         public static void checkModelUsage()
         {
-            _fileName = "campaign_script.txt";
-            Console.WriteLine($@"start parse {_fileName}");
+            s_fileName = "campaign_script.txt";
+            Console.WriteLine($@"start parse {s_fileName}");
 
 
-            var lines = FileReader("\\data\\world\\maps\\campaign\\imperial_campaign\\campaign_script.txt", _fileName, Encoding.Default);
+            var lines = FileReader("\\data\\world\\maps\\campaign\\imperial_campaign\\campaign_script.txt", s_fileName, Encoding.Default);
             if (lines == null)
             {
                 return;
             } //something very wrong if you hit this
 
             //Reset line counter
-            _lineNum = 0;
+            s_lineNum = 0;
             //Loop through lines
             foreach (var line in lines)
             {
                 //Increase line counter
-                _lineNum++;
+                s_lineNum++;
 
                 //Remove Comments and Faulty lines
                 var newline = CleanLine(line);
@@ -334,27 +335,27 @@ namespace ModdingTool
             }
 
             //Reset Line Counter
-            Console.WriteLine($@"end parse {_fileName}");
-            _lineNum = 0;
+            Console.WriteLine($@"end parse {s_fileName}");
+            s_lineNum = 0;
 
 
-            _fileName = "descr_strat.txt";
-            Console.WriteLine($@"start parse {_fileName}");
+            s_fileName = "descr_strat.txt";
+            Console.WriteLine($@"start parse {s_fileName}");
             //Reset line counter
-            _lineNum = 0;
-            lines = FileReader("\\data\\world\\maps\\campaign\\imperial_campaign\\descr_strat.txt", _fileName, Encoding.Default);
+            s_lineNum = 0;
+            lines = FileReader("\\data\\world\\maps\\campaign\\imperial_campaign\\descr_strat.txt", s_fileName, Encoding.Default);
             if (lines == null)
             {
                 return;
             } //something very wrong if you hit this
 
             //Reset line counter
-            _lineNum = 0;
+            s_lineNum = 0;
             //Loop through lines
             foreach (var line in lines)
             {
                 //Increase line counter
-                _lineNum++;
+                s_lineNum++;
 
                 //Remove Comments and Faulty lines
                 var newline = CleanLine(line);
@@ -378,8 +379,8 @@ namespace ModdingTool
             }
 
             //Reset Line Counter
-            Console.WriteLine($@"end parse {_fileName}");
-            _lineNum = 0;
+            Console.WriteLine($@"end parse {s_fileName}");
+            s_lineNum = 0;
             PrintFinal();
         }
     }

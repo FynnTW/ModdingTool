@@ -18,7 +18,10 @@
                 <MenuItem Header="_Export EDU (txt)" Click="WriteEDU_Click"/>
             </MenuItem>
             <MenuItem Header="_Error Log" Click="ErrorLog_Click"/>
+            <MenuItem Header="_Change Log" Click="ChangeLog_Click"/>
             <MenuItem Header="_Options" Click="Options_Click"/>
+            <MenuItem Header="_Run LUA script" Click="RunScript_Click"/>
+            <!-- <MenuItem Header="_Run Python script" Click="RunScriptPy_Click"/> -->
             <MenuItem Header="Open README" Click="Open_GitHub_Click"/>
             <Popup x:Name="donePopup" Margin="5,5,5,5" Placement="Bottom" Width="Auto" Height="125">
                 <Border x:Name="borderPopup" BorderBrush="Black" BorderThickness="5" >

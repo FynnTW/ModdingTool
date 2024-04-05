@@ -120,8 +120,8 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="Primary_skeleton" Binding="{Binding Primary_skeleton}" IsReadOnly="False"/>
-                        <DataGridTextColumn Header="Secondary_skeleton" Binding="{Binding Secondary_skeleton}" IsReadOnly="False"/>
+                        <DataGridTextColumn Header="Primary_skeleton" Binding="{Binding PrimarySkeleton}" IsReadOnly="False"/>
+                        <DataGridTextColumn Header="Secondary_skeleton" Binding="{Binding SecondarySkeleton}" IsReadOnly="False"/>
                         <DataGridTextColumn Header="Primary Weapon 1" Binding="{Binding PriWeaponOne}" IsReadOnly="False" />
                         <DataGridTextColumn Header="Primary Weapon 2" Binding="{Binding PriWeaponTwo}" IsReadOnly="False"/>
                         <DataGridTextColumn Header="Secondary Weapon 1" Binding="{Binding SecWeaponOne}" IsReadOnly="False"/>
@@ -157,11 +157,11 @@
                     <TextBlock Text="Torch Sprite Offsets" Height="25" Grid.Column="0" Grid.Row="3"/>
                     <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="0" >
                         <TextBlock Text="X" Height="25" MinWidth="20"/>
-                        <TextBox x:Name="TorchspriteX" Text="{Binding SelectedModel.TorchspriteX}" MinWidth="50" Height="25" HorizontalAlignment="Stretch" Margin="3"/>
+                        <TextBox x:Name="TorchspriteX" Text="{Binding SelectedModel.TorchSpriteX}" MinWidth="50" Height="25" HorizontalAlignment="Stretch" Margin="3"/>
                         <TextBlock Text="Y" Height="25" MinWidth="20"/>
-                        <TextBox x:Name="TorchspriteY" Text="{Binding SelectedModel.TorchspriteY}"  MinWidth="50" Height="25" HorizontalAlignment="Stretch" Margin="3"/>
+                        <TextBox x:Name="TorchspriteY" Text="{Binding SelectedModel.TorchSpriteY}"  MinWidth="50" Height="25" HorizontalAlignment="Stretch" Margin="3"/>
                         <TextBlock Text="Z" Height="25"  MinWidth="20"/>
-                        <TextBox x:Name="TorchspriteZ" Text="{Binding SelectedModel.TorchspriteZ}"  MinWidth="50" Height="25" HorizontalAlignment="Stretch" Margin="3"/>
+                        <TextBox x:Name="TorchspriteZ" Text="{Binding SelectedModel.TorchSpriteZ}"  MinWidth="50" Height="25" HorizontalAlignment="Stretch" Margin="3"/>
                     </StackPanel>
                 </Grid>
             </StackPanel>

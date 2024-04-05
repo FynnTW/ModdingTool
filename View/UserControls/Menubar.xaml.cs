@@ -1,10 +1,12 @@
-﻿using Microsoft.Win32;
-using Microsoft.WindowsAPICodePack.Dialogs;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Forms;
+using ModdingTool.API;
 using static ModdingTool.Globals;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+using UserControl = System.Windows.Controls.UserControl;
 
 namespace ModdingTool.View.UserControls
 {
@@ -67,8 +69,8 @@ namespace ModdingTool.View.UserControls
             dialog.IsFolderPicker = true;
             var result = dialog.ShowDialog();
             if (result != CommonFileDialogResult.Ok) return;
-            if (dialog.FileName != null) ModPath = dialog.FileName;
-            ModName = new DirectoryInfo(ModPath).Name;
+            if (dialog.FileName != null) 
+                SetModPath(dialog.FileName);
             LoadMod();
             Print("Mod path set to: " + ModPath);
             ModLoaded = true;
@@ -102,6 +104,13 @@ namespace ModdingTool.View.UserControls
             logWindow.Show();
             logWindow.WriteErrors();
         }
+
+        private void ChangeLog_Click(object sender, RoutedEventArgs e)
+        {
+            var changeWindow = new ChangesWindow();
+            changeWindow.Show();
+        }
+        
         private void ClosePopupOpen_Click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start(new ProcessStartInfo(popupText.Text) { UseShellExecute = true });
@@ -118,5 +127,25 @@ namespace ModdingTool.View.UserControls
             var optionsWindow = new OptionsWindow();
             optionsWindow.Show();
         }
+
+        private void RunScript_Click(object sender, RoutedEventArgs e)
+        {
+            
+            var dialog = new OpenFileDialog
+            {
+                Filter = "Lua script files (*.lua)|*.lua",
+                Title = "Please select a LUA script file"
+            };
+            dialog.ShowDialog();
+            var filename = dialog.FileName;
+            LuaAPI.ExecuteLuaScript(filename);
+        }
+
+        /*
+        private void RunScriptPy_Click(object sender, RoutedEventArgs e)
+        {
+            PythonAPI.RunPythonScript();
+        }
+        */
     }
 }

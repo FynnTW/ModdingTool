@@ -1,281 +1,562 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+// ReSharper disable RedundantDefaultMemberInitializer
 
-namespace ModdingTool
+namespace ModdingTool;
+
+public class BattleModel : GameType
 {
-    public class BattleModel
+    #region Strings
+    /**
+     * <summary>
+     * List of all mount types compatible in the battle_models.modeldb.
+     * </summary>
+     */
+    public static IEnumerable<string> MountTypes { get; } =
+        new List<string>{
+            "horse", 
+            "none", 
+            "elephant", 
+            "camel"
+        };
+    #endregion
+    
+    #region Properties
+    /**
+     * <summary>
+     * Name of the entry.
+     * </summary>
+     */
+    public string Name
     {
-        private string name;
-        private float scale;
-        private int lodCount;
-        private List<Lod> lodTable;
-        private int mainTexturesCount;
-        private List<Texture> mainTextures = new List<Texture>();
-        private int attachTexturesCount;
-        private List<Texture> attachTextures = new List<Texture>();
-        private int mountTypeCount;
-        private List<Animation> animations;
-        private int torchIndex;
-        private float torchBoneX;
-        private float torchBoneY;
-        private float torchBoneZ;
-        private float torchspriteX;
-        private float torchspriteY;
-        private float torchspriteZ;
-
-        public string Name { get => name; set => name = value; }
-        public float Scale { get => scale; set => scale = value; }
-        public int LodCount { get => lodCount; set => lodCount = value; }
-        public List<Lod> LodTable { get => lodTable; set => lodTable = value; }
-        public int MainTexturesCount { get => mainTexturesCount; set => mainTexturesCount = value; }
-        public List<Texture> MainTextures { get => mainTextures; set => mainTextures = value; }
-        public int AttachTexturesCount { get => attachTexturesCount; set => attachTexturesCount = value; }
-        public List<Texture> AttachTextures { get => attachTextures; set => attachTextures = value; }
-        public int MountTypeCount { get => mountTypeCount; set => mountTypeCount = value; }
-        public List<Animation> Animations { get => animations; set => animations = value; }
-        public int TorchIndex { get => torchIndex; set => torchIndex = value; }
-        public float TorchBoneX { get => torchBoneX; set => torchBoneX = value; }
-        public float TorchBoneY { get => torchBoneY; set => torchBoneY = value; }
-        public float TorchBoneZ { get => torchBoneZ; set => torchBoneZ = value; }
-        public float TorchspriteX { get => torchspriteX; set => torchspriteX = value; }
-        public float TorchspriteY { get => torchspriteY; set => torchspriteY = value; }
-        public float TorchspriteZ { get => torchspriteZ; set => torchspriteZ = value; }
-
-        public string WriteEntry(BattleModel model)
-        {
-            var entry = "";
-            entry += NumString(model.Name) + "\n";
-            entry += FormatFloat(model.Scale) + " " + model.LodTable.Count + "\n";
-            for (int i = 0; i < model.LodTable.Count; i++)
+        get => _name;
+        set {
+            var old = _name;
+            if (Globals.BattleModelDataBase.Any(model => model.Key == value))
+                Globals.ErrorDb.AddError("Model name already exists in the database. " + value + " is not unique.");
+            else
             {
-                entry += NumString(model.LodTable[i].Mesh) + " " + model.LodTable[i].Distance + "\n";
+                _name = value;
+                if (string.IsNullOrWhiteSpace(old) || !Globals.BattleModelDataBase.ContainsKey(old)) return;
+                AddChange(nameof(Name), old, value);
+                Globals.BattleModelDataBase.Remove(old);
+                Globals.BattleModelDataBase.Add(value, this);
             }
-            entry += model.MainTextures.Count + "\n";
-            foreach (var texture in model.MainTextures)
-            {
-                entry += NumString(texture.Faction) + "\n";
-                entry += NumString(texture.TexturePath) + "\n";
-                entry += NumString(texture.Normal) + "\n";
-                entry += NumString(texture.Sprite) + "\n";
-            }
-            entry += model.AttachTextures.Count + "\n";
-            foreach (var texture in model.AttachTextures)
-            {
-                entry += NumString(texture.Faction) + "\n";
-                entry += NumString(texture.TexturePath) + "\n";
-                entry += NumString(texture.Normal);
-                if (texture.Sprite != null && texture.Sprite != "0" && texture.Sprite != "")
-                {
-                    entry += "\n";
-                }
-                else
-                {
-                    entry += " ";
-                }
-                entry += NumString(texture.Sprite) + "\n";
-            }
-            entry += model.Animations.Count + "\n";
-            foreach (var animation in model.Animations)
-            {
-                animation.PriWeapons = new List<string>();
-                if (!string.IsNullOrWhiteSpace(animation.PriWeaponOne))
-                {
-                    animation.PriWeapons.Add(animation.PriWeaponOne);
-                }
-
-                if (!string.IsNullOrWhiteSpace(animation.PriWeaponTwo))
-                {
-                    animation.PriWeapons.Add(animation.PriWeaponTwo);
-                }
-                animation.SecWeapons = new List<string>();
-                if (!string.IsNullOrWhiteSpace(animation.SecWeaponOne))
-                {
-                    animation.SecWeapons.Add(animation.SecWeaponOne);
-                }
-
-                if (!string.IsNullOrWhiteSpace(animation.SecWeaponTwo))
-                {
-                    animation.SecWeapons.Add(animation.SecWeaponTwo);
-                }
-                entry += NumString(animation.MountType) + "\n";
-                entry += NumString(animation.Primary_skeleton) + " ";
-                entry += NumString(animation.Secondary_skeleton) + "\n";
-                entry += animation.PriWeapons.Count;
-                if (animation.PriWeapons.Count > 0)
-                {
-                    entry += "\n";
-                }
-                else
-                {
-                    entry += " ";
-                }
-                for (var i = 0; i < animation.PriWeapons.Count; i++)
-                {
-                    entry += i switch
-                    {
-                        0 => NumString(animation.PriWeaponOne) + "\n",
-                        1 => NumString(animation.PriWeaponTwo) + "\n",
-                        _ => NumString(animation.PriWeapons[i]) + "\n"
-                    };
-                }
-
-                entry += animation.SecWeapons.Count;
-                if (animation.SecWeapons.Count > 0)
-                {
-                    entry += "\n";
-                }
-                else
-                {
-                    entry += " ";
-                }
-                for (var i = 0; i < animation.SecWeapons.Count; i++)
-                {
-                    entry += i switch
-                    {
-                        0 => NumString(animation.SecWeaponOne) + "\n",
-                        1 => NumString(animation.SecWeaponTwo) + "\n",
-                        _ => NumString(animation.SecWeapons[i]) + "\n"
-                    };
-                }
-            }
-            entry += model.TorchIndex + " ";
-            entry += FormatFloat(model.TorchBoneX) + " " + FormatFloat(model.TorchBoneY) + " " + FormatFloat(model.TorchBoneZ) + " ";
-            entry += FormatFloat(model.TorchspriteX) + " " + FormatFloat(model.TorchspriteY) + " " + FormatFloat(model.TorchspriteZ) + "\n";
-
-            return entry;
-        }
-
-        private static string NumString(string input)
-        {
-            if (input == null) return "0";
-            if (input.Length > 0)
-            {
-                return input.Length + " " + input;
-            }
-            return input.Length + "";
-        }
-
-        private static string FormatFloat(float input)
-        {
-            if (Math.Abs(input - 1) < 0.001)
-            {
-                return "1";
-            }
-            return input == 0 ? "0" : input.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
-        }
-        
-        public static BattleModel? CloneModel(string name, BattleModel oldModel)
-        {
-            if (Globals.BattleModelDataBase.Any(model => model.Key == name))
-            {
-                return null;
-            }
-            var newModel = new BattleModel
-            {
-                Name = name,
-                Scale = oldModel.Scale,
-                LodCount = oldModel.LodCount,
-                LodTable = new List<Lod>(),
-                MainTexturesCount = oldModel.MainTexturesCount,
-                MainTextures = new List<Texture>(),
-                AttachTexturesCount = oldModel.AttachTexturesCount,
-                AttachTextures = new List<Texture>(),
-                MountTypeCount = oldModel.MountTypeCount,
-                Animations = new List<Animation>(),
-                TorchIndex = oldModel.TorchIndex,
-                TorchBoneX = oldModel.TorchBoneX,
-                TorchBoneY = oldModel.TorchBoneY,
-                TorchBoneZ = oldModel.TorchBoneZ,
-                TorchspriteX = oldModel.TorchspriteX,
-                TorchspriteY = oldModel.TorchspriteY,
-                TorchspriteZ = oldModel.TorchspriteZ
-            };
-            foreach (var lod in oldModel.LodTable)
-            {
-                newModel.LodTable.Add(new Lod
-                {
-                    Mesh = lod.Mesh,
-                    Distance = lod.Distance
-                });
-            }
-            foreach (var texture in oldModel.MainTextures)
-            {
-                newModel.MainTextures.Add(new Texture
-                {
-                    Faction = texture.Faction,
-                    TexturePath = texture.TexturePath,
-                    Normal = texture.Normal,
-                    Sprite = texture.Sprite
-                });
-            }
-            foreach (var texture in oldModel.AttachTextures)
-            {
-                newModel.AttachTextures.Add(new Texture
-                {
-                    Faction = texture.Faction,
-                    TexturePath = texture.TexturePath,
-                    Normal = texture.Normal,
-                    Sprite = texture.Sprite
-                });
-            }
-            foreach (var animation in oldModel.Animations)
-            {
-                newModel.Animations.Add(new Animation
-                {
-                    MountType = animation.MountType,
-                    Primary_skeleton = animation.Primary_skeleton,
-                    Secondary_skeleton = animation.Secondary_skeleton,
-                    PriWeaponCount = animation.PriWeaponCount,
-                    PriWeapons = new List<string>(),
-                    SecWeaponCount = animation.SecWeaponCount,
-                    SecWeapons = new List<string>()
-                });
-            }
-            return newModel;
-        }
-    }
-
-    public class Lod
-    {
-        public string Mesh { get; set; } = "";
-        public int Distance { get; set; } = 6400;
-    }
-
-    public class Texture
-    {
-        private string faction;
-        private string texturePath;
-        private string normal;
-        private string sprite;
-
-        public string TexturePath { get => texturePath; set => texturePath = value; }
-        public string Normal { get => normal; set => normal = value; }
-        public string Sprite { get => sprite; set => sprite = value; }
-        public string Faction { get => faction; set => faction = value; }
-    }
-
-    public class Animation
-    {
-        private string mountType;
-        private string primary_skeleton;
-        private string secondary_skeleton;
-        private int priWeaponCount;
-        private List<string> priWeapons;
-        private int secWeaponCount;
-        private List<string> secWeapons;
-
-        public string MountType { get => mountType; set => mountType = value; }
-        public string Primary_skeleton { get => primary_skeleton; set => primary_skeleton = value; }
-        public string Secondary_skeleton { get => secondary_skeleton; set => secondary_skeleton = value; }
-        public int PriWeaponCount { get => priWeaponCount; set => priWeaponCount = value; }
-        public List<string> PriWeapons { get => priWeapons; set => priWeapons = value; }
-        public string PriWeaponOne { get; set; }
-        public string PriWeaponTwo { get; set; }
-        public string SecWeaponOne { get; set; }
-        public string SecWeaponTwo { get; set; }
-        public int SecWeaponCount { get => secWeaponCount; set => secWeaponCount = value; }
-        public List<string> SecWeapons { get => secWeapons; set => secWeapons = value; }
+        } 
     }
     
+    /**
+     * <summary>
+     * Scale of the model.
+     * </summary>
+     */
+    public float Scale
+    {
+        get => _scale;
+        set
+        {
+            if (value < 0)
+                Globals.ErrorDb.AddError("Scale must be positive. " + value + " is not valid.");
+            else
+            {
+                AddChange(nameof(Scale), _scale, value);
+                _scale = value;
+            }
+        }
+    }
+    public int LodCount { get; set; }
+    public List<Lod> LodTable { get; set; } = new();
+    public int MainTexturesCount { get; set; }
+    public List<Texture> MainTextures { get; private init; } = new();
+    public int AttachTexturesCount { get; set; }
+    public List<Texture> AttachTextures { get; private init; } = new ();
+    public int MountTypeCount { get; set; }
+    public List<Animation> Animations { get; set; } = new ();
+
+    public int TorchIndex
+    {
+        get => _torchIndex;
+        set
+        {
+            AddChange(nameof(TorchIndex), _torchIndex, value);
+            _torchIndex = value;
+        }
+    }
+
+    public float TorchBoneX
+    {
+        get => _torchBoneX;
+        set
+        {
+            AddChange(nameof(TorchBoneX), _torchBoneX, value);
+            _torchBoneX = value;
+        }
+    }
+
+    public float TorchBoneY
+    {
+        get => _torchBoneY;
+        set
+        {
+            AddChange(nameof(TorchBoneY), _torchBoneY, value);
+            _torchBoneY = value;
+        }
+    }
+
+    public float TorchBoneZ
+    {
+        get => _torchBoneZ;
+        set
+        {
+            AddChange(nameof(TorchBoneZ), _torchBoneZ, value);
+            _torchBoneZ = value;
+        }
+    }
+
+    public float TorchSpriteX
+    {
+        get => _torchSpriteX;
+        set
+        {
+            AddChange(nameof(TorchSpriteX), _torchSpriteX, value);
+            _torchSpriteX = value;
+        }
+    }
+
+    public float TorchSpriteY
+    {
+        get => _torchSpriteY;
+        set
+        {
+            AddChange(nameof(TorchSpriteY), _torchSpriteY, value);
+            _torchSpriteY = value;
+        }
+    }
+
+    public float TorchSpriteZ
+    { 
+        get => _torchSpriteZ;
+        set
+        {
+            AddChange(nameof(TorchSpriteZ), _torchSpriteZ, value);
+            _torchSpriteZ = value;
+        }
+    }
+    #endregion Properties
+
+    #region Fields
+    private float _scale = 1;
+    private int _torchIndex = -1;
+    private float _torchBoneX= 0;
+    private float _torchBoneY = 0;
+    private float _torchBoneZ  = 0;
+    private float _torchSpriteX = 0;
+    private float _torchSpriteY = 0;
+    private float _torchSpriteZ = 0;
+    #endregion
+
+    #region Methods
+    /**
+     * <summary>
+     * Writes the entry in a format compatible with the battle_modelds.modeldb and returns it.
+     * </summary>
+     * <returns>Entry as string</returns>
+     */
+    public string WriteEntry()
+    {
+        var entry = "";
+        entry += NumString(Name) + "\n";
+        entry += FormatFloat(Scale) + " " + LodTable.Count + "\n";
+        entry = LodTable.Aggregate(entry, (current, lod) => current + NumString(lod.Mesh) + " " + lod.Distance + "\n");
+        entry += MainTextures.Count + "\n";
+        foreach (var texture in MainTextures)
+        {
+            entry += NumString(texture.Faction) + "\n";
+            entry += NumString(texture.TexturePath) + "\n";
+            entry += NumString(texture.Normal) + "\n";
+            entry += NumString(texture.Sprite) + "\n";
+        }
+        entry += AttachTextures.Count + "\n";
+        foreach (var texture in AttachTextures)
+        {
+            entry += NumString(texture.Faction) + "\n";
+            entry += NumString(texture.TexturePath) + "\n";
+            entry += NumString(texture.Normal);
+            if (!string.IsNullOrWhiteSpace(texture.Sprite) && texture.Sprite != "0")
+                entry += "\n";
+            else
+                entry += " ";
+            entry += NumString(texture.Sprite) + "\n";
+        }
+        entry += Animations.Count + "\n";
+        foreach (var animation in Animations)
+        {
+            animation.PriWeapons = new List<string>();
+            if (!string.IsNullOrWhiteSpace(animation.PriWeaponOne))
+            {
+                animation.PriWeapons.Add(animation.PriWeaponOne);
+            }
+
+            if (!string.IsNullOrWhiteSpace(animation.PriWeaponTwo))
+            {
+                animation.PriWeapons.Add(animation.PriWeaponTwo);
+            }
+            animation.SecWeapons = new List<string>();
+            if (!string.IsNullOrWhiteSpace(animation.SecWeaponOne))
+            {
+                animation.SecWeapons.Add(animation.SecWeaponOne);
+            }
+
+            if (!string.IsNullOrWhiteSpace(animation.SecWeaponTwo))
+            {
+                animation.SecWeapons.Add(animation.SecWeaponTwo);
+            }
+            entry += NumString(animation.MountType) + "\n";
+            entry += NumString(animation.PrimarySkeleton) + " ";
+            entry += NumString(animation.SecondarySkeleton) + "\n";
+            entry += animation.PriWeapons.Count;
+            if (animation.PriWeapons.Count > 0)
+            {
+                entry += "\n";
+            }
+            else
+            {
+                entry += " ";
+            }
+            for (var i = 0; i < animation.PriWeapons.Count; i++)
+            {
+                entry += i switch
+                {
+                    0 => NumString(animation.PriWeaponOne) + "\n",
+                    1 => NumString(animation.PriWeaponTwo) + "\n",
+                    _ => NumString(animation.PriWeapons[i]) + "\n"
+                };
+            }
+
+            entry += animation.SecWeapons.Count;
+            if (animation.SecWeapons.Count > 0)
+            {
+                entry += "\n";
+            }
+            else
+            {
+                entry += " ";
+            }
+            for (var i = 0; i < animation.SecWeapons.Count; i++)
+            {
+                entry += i switch
+                {
+                    0 => NumString(animation.SecWeaponOne) + "\n",
+                    1 => NumString(animation.SecWeaponTwo) + "\n",
+                    _ => NumString(animation.SecWeapons[i]) + "\n"
+                };
+            }
+        }
+        entry += TorchIndex + " ";
+        entry += FormatFloat(TorchBoneX) + " " + FormatFloat(TorchBoneY) + " " + FormatFloat(TorchBoneZ) + " ";
+        entry += FormatFloat(TorchSpriteX) + " " + FormatFloat(TorchSpriteY) + " " + FormatFloat(TorchSpriteZ) + "\n";
+
+        return entry;
+    }
+
+    /**
+     * <summary>
+     * Returns the length of the input string and the string itself.
+     * </summary>
+     * <param name="input">String to be counted</param>
+     * <returns>Length of the string and the string itself</returns>
+     */
+    private static string NumString(string input) 
+        => string.IsNullOrWhiteSpace(input) || input.Length < 1 ? "0" : input.Length + " " + input;
+    
+    /**
+     * <summary>
+     * Creates a new BattleModel with the given name and the same properties as the old model.
+     * </summary>
+     * <param name="name">New name of the entry</param>
+     * <param name="oldModel">Old entry to get the data from</param>
+     * <returns>The new BattleModel</returns>
+     */
+    public static BattleModel? CloneModel(string name, BattleModel oldModel)
+    {
+        if (Globals.BattleModelDataBase.Any(model => model.Key == name))
+        {
+            Globals.ErrorDb.AddError("Model name already exists in the database. " + name + " is not unique.");
+            return null;
+        }
+        var newModel = new BattleModel
+        {
+            Name = name,
+            Scale = oldModel.Scale,
+            LodCount = oldModel.LodCount,
+            LodTable = new List<Lod>(),
+            MainTexturesCount = oldModel.MainTexturesCount,
+            MainTextures = new List<Texture>(),
+            AttachTexturesCount = oldModel.AttachTexturesCount,
+            AttachTextures = new List<Texture>(),
+            MountTypeCount = oldModel.MountTypeCount,
+            Animations = new List<Animation>(),
+            TorchIndex = oldModel.TorchIndex,
+            TorchBoneX = oldModel.TorchBoneX,
+            TorchBoneY = oldModel.TorchBoneY,
+            TorchBoneZ = oldModel.TorchBoneZ,
+            TorchSpriteX = oldModel.TorchSpriteX,
+            TorchSpriteY = oldModel.TorchSpriteY,
+            TorchSpriteZ = oldModel.TorchSpriteZ
+        };
+        foreach (var lod in oldModel.LodTable)
+        {
+            newModel.LodTable.Add(new Lod
+            {
+                Mesh = lod.Mesh,
+                Distance = lod.Distance,
+                Name = name
+            });
+        }
+        foreach (var texture in oldModel.MainTextures)
+        {
+            newModel.MainTextures.Add(new Texture
+            {
+                Faction = texture.Faction,
+                TexturePath = texture.TexturePath,
+                Normal = texture.Normal,
+                Sprite = texture.Sprite,
+                Name = name
+            });
+        }
+        foreach (var texture in oldModel.AttachTextures)
+        {
+            newModel.AttachTextures.Add(new Texture
+            {
+                Faction = texture.Faction,
+                TexturePath = texture.TexturePath,
+                Normal = texture.Normal,
+                Sprite = texture.Sprite,
+                Name = name
+            });
+        }
+        foreach (var animation in oldModel.Animations)
+        {
+            newModel.Animations.Add(new Animation
+            {
+                MountType = animation.MountType,
+                PrimarySkeleton = animation.PrimarySkeleton,
+                SecondarySkeleton = animation.SecondarySkeleton,
+                PriWeaponCount = animation.PriWeaponCount,
+                PriWeapons = new List<string>(),
+                SecWeaponCount = animation.SecWeaponCount,
+                SecWeapons = new List<string>(),
+                Name = name
+            });
+        }
+        return newModel;
+    }
+    #endregion
+}
+
+public class Lod : GameType
+{
+    private string _mesh = "";
+    private int _distance = 6400;
+        
+    public string Name { init => _name = value; }
+
+    public string Mesh
+    {
+        get => _mesh;
+        set
+        {
+            FileExistsData(value, _name);
+            AddChange(nameof(Mesh), _mesh, value);
+            _mesh = value;
+        }
+    }
+
+    public int Distance
+    {
+        get => _distance;
+        set
+        {
+            AddChange(nameof(Distance), _distance, value);
+            _distance = value;
+        }
+    }
+}
+
+public class Texture : GameType
+{
+
+    private string _faction = string.Empty;
+    private string _texturePath = string.Empty;
+    private string _normal = string.Empty;
+    private string _sprite = string.Empty;
+    public string Name { init => _name = value; }
+
+    public string TexturePath
+    {
+        get => _texturePath;
+        set
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                _texturePath = value;
+                return;
+            }
+
+            FileExistsData(value, _name);
+            AddChange(nameof(TexturePath), _texturePath, value);
+            _texturePath = value;
+        }
+    }
+
+    public string Normal
+    {
+        get => _normal;
+        set
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                _normal = value;
+                return;
+            }
+            FileExistsData(value, _name);
+            AddChange(nameof(Normal), _normal, value);
+            _normal = value;
+        }
+    }
+
+    public string Sprite
+    {
+        get => _sprite;
+        set
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                _sprite = value;
+                return;
+            }
+            FileExistsData(value, _name);
+            AddChange(nameof(Sprite), _sprite, value);
+            _sprite = value;
+        }
+    }
+    public string Faction
+    {
+        get => _faction;
+        set
+        {
+            if (!Globals.FactionDataBase.ContainsKey(value) && value != "merc")
+                Globals.ErrorDb.AddError("Faction " + value + " does not exist.");
+            AddChange(nameof(Faction), _faction, value);
+            _faction = value;
+        }
+    }
+}
+
+public class Animation : GameType
+{
+    private string _mountType = "none";
+    private string _primarySkeleton = string.Empty;
+    private string _secondarySkeleton = string.Empty;
+    private readonly int _priWeaponCount;
+    private List<string> _priWeapons = new();
+    private int _secWeaponCount;
+    private List<string> _secWeapons = new();
+    public string Name  { init => _name = value; }
+
+    public string MountType
+    {
+        get => _mountType;
+        set
+        {
+            if (!BattleModel.MountTypes.Contains(value))
+                Globals.ErrorDb.AddError("Mount type " + value + " does not exist.");
+            AddChange(nameof(MountType), _mountType, value);
+            _mountType = value;
+        }
+    }
+
+    public string PrimarySkeleton
+    {
+        get => _primarySkeleton;
+        set
+        {
+            AddChange(nameof(PrimarySkeleton), _primarySkeleton, value);
+            _primarySkeleton = value;
+        }
+    }
+
+    public string SecondarySkeleton
+    {
+        get => _secondarySkeleton;
+        set
+        {
+            AddChange(nameof(SecondarySkeleton), _secondarySkeleton, value);
+            _secondarySkeleton = value;
+        }
+    }
+
+    public int PriWeaponCount
+    {
+        get =>!Globals.IsParsing ? _priWeapons.Count(x => !string.IsNullOrWhiteSpace(x)) : _priWeaponCount;
+        init => _priWeaponCount = value;
+    }
+
+    public List<string> PriWeapons
+    {
+        get => _priWeapons; 
+        set => _priWeapons = value;
+    }
+
+    public string PriWeaponOne
+    {
+        get => _priWeapons.Count > 0 ? _priWeapons[0] : "";
+        set
+        { 
+            AddChange(nameof(PriWeaponOne), _priWeapons[0], value);
+            _priWeapons[0] = value;
+        } 
+    }
+
+    public string PriWeaponTwo
+    {
+        get => _priWeapons.Count > 1 ? _priWeapons[1] : "";
+        set
+        {
+            AddChange(nameof(PriWeaponTwo), _priWeapons[1], value);
+            _priWeapons[1] = value;
+        }
+    }
+
+    public string SecWeaponOne
+    {
+        get => _secWeapons.Count > 0 ? _secWeapons[0] : "";
+        set
+        {
+            AddChange(nameof(SecWeaponOne), _secWeapons[0], value);
+            _secWeapons[0] = value;
+        }
+    }
+
+    public string SecWeaponTwo
+    {
+        get => _secWeapons.Count > 1 ? _secWeapons[1] : "";
+        set
+        {
+            AddChange(nameof(SecWeaponTwo), _secWeapons[1], value);
+            _secWeapons[1] = value;
+        }
+    }
+        
+    public int SecWeaponCount
+    {
+        get =>!Globals.IsParsing ? _secWeapons.Count(x => !string.IsNullOrWhiteSpace(x)) : _secWeaponCount;
+        set => _secWeaponCount = value;
+    }
+    public List<string> SecWeapons
+    {
+        get => _secWeapons; 
+        set => _secWeapons = value;
+    }
 }

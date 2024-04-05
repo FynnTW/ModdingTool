@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using ModdingTool.API;
 using ModdingTool.View.InterfaceData;
 using ModdingTool.View.UserControls;
 
@@ -12,8 +13,10 @@ namespace ModdingTool
     public class Globals
     {
         public static string ModPath = null!;
+        public static string GamePath = null!;
         public static string ModName = "";
         public static bool ModLoaded = false;
+        public static bool IsParsing = false;
         public static int ProjectileDelayStandard = 0;
         public static int ProjectileDelayFlaming = 0;
         public static int ProjectileDelayGunpowder = 0;
@@ -70,6 +73,21 @@ namespace ModdingTool
             Console.WriteLine(statement);
         }
         
+        public static void SetModPath(string path)
+        {
+            ModPath = path;
+            var dirInfo = new DirectoryInfo(ModPath);
+            if (!dirInfo.Exists)
+            {
+                ErrorDb.AddError("Mod path does not exist");
+                return;
+            }
+            ModName = dirInfo.Name;
+            if (dirInfo.Parent is { Parent: not null })
+                GamePath = dirInfo.Parent.Parent.FullName;
+            GlobalOptionsInstance.StartMod = ModPath;
+        }
+        
         public static void ModLoadedTrigger()
         {
             GlobalOptionsInstance.StartMod = ModPath;
@@ -99,7 +117,7 @@ namespace ModdingTool
             newBmdb += "22 serialization::archive 3 0 0 0 0 ";
             newBmdb += (BattleModelDataBase.Count + 1) + " 0 0\n";
             newBmdb += "5 blank 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n";
-            newBmdb = BattleModelDataBase.Aggregate(newBmdb, (current, entry) => current + entry.Value.WriteEntry(entry.Value));
+            newBmdb = BattleModelDataBase.Aggregate(newBmdb, (current, entry) => current + entry.Value.WriteEntry());
             File.WriteAllText(@"battle_models.modeldb", newBmdb);
         }
 
@@ -174,6 +192,7 @@ namespace ModdingTool
 
         public static void ParseFiles()
         {
+            IsParsing = true;
             ClearDatabases();
             ErrorDb.ClearErrors();
             FactionParser.ParseExpanded();
@@ -181,7 +200,7 @@ namespace ModdingTool
             FactionParser.ParseSmFactions();
             BmdbParser.ParseBmdb();
             EduParser.ParseEu();
-            MountParser.ParseMounts();
+            MountParser.Parse();
             EduParser.ParseEdu();
             CharacterTypesParser.parseCharacterTypes();
             BmdbParser.checkModelUsage();
@@ -199,7 +218,7 @@ namespace ModdingTool
                 Print(entry.Key);
                 ErrorDb.AddError("Mount " + entry.Key + " is not used");
             }
-
+            IsParsing = false;
             //FileRemover.CheckFiles();
         }
 
@@ -255,8 +274,7 @@ namespace ModdingTool
             if (!Directory.Exists("changelogs"))
                 Directory.CreateDirectory("changelogs");
             if (!Directory.Exists(GlobalOptionsInstance.StartMod)) return;
-            ModPath = GlobalOptionsInstance.StartMod;
-            ModName = new DirectoryInfo(ModPath).Name;
+            SetModPath(GlobalOptionsInstance.StartMod);
             var window = (MainWindow)Application.Current.MainWindow;
             var menubar = window.FindName("MenuBarCustom") as Menubar;
             menubar?.LoadMod();

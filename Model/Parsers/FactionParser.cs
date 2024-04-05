@@ -40,10 +40,9 @@ namespace ModdingTool
 
                 //Remove Comments and Faulty lines
                 var newline = CleanLine(line);
+                
                 if (string.IsNullOrWhiteSpace(newline))
-                {
                     continue;
-                }
 
                 //Split line into parts
                 var parts = LineSplitterFactions(newline);
