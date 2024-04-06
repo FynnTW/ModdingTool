@@ -98,6 +98,7 @@ namespace ModdingTool.ViewModel
                 default:
                     return;
             }
+            AttributeList.Sort();
             SelectedAttribute = AttributeList[0];
             if (LocalFilterList.Count > 0)
                 CallApplyFilters();
@@ -128,10 +129,10 @@ namespace ModdingTool.ViewModel
             switch (_tabType)
             {
                 case "Units":
-                    ApplyFilters(UnitDataBase);
+                    ApplyFilters(ModData.Units.GetUnits());
                     break;
                 case "Model Entries":
-                    ApplyFilters(BattleModelDataBase);
+                    ApplyFilters(ModData.BattleModelDb.GetBattleModels());
                     break;
                 case "Mounts":
                     ApplyFilters(MountDataBase);

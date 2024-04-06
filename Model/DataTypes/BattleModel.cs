@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using static ModdingTool.Globals;
 // ReSharper disable RedundantDefaultMemberInitializer
 
 namespace ModdingTool;
@@ -33,15 +33,15 @@ public class BattleModel : GameType
         get => _name;
         set {
             var old = _name;
-            if (Globals.BattleModelDataBase.Any(model => model.Key == value))
-                Globals.ErrorDb.AddError("Model name already exists in the database. " + value + " is not unique.");
+            if (ModData.BattleModelDb.Contains(value))
+                ErrorDb.AddError("Model name already exists in the database. " + value + " is not unique.");
             else
             {
                 _name = value;
-                if (string.IsNullOrWhiteSpace(old) || !Globals.BattleModelDataBase.ContainsKey(old)) return;
+                if (string.IsNullOrWhiteSpace(old) || !ModData.BattleModelDb.Contains(old)) return;
                 AddChange(nameof(Name), old, value);
-                Globals.BattleModelDataBase.Remove(old);
-                Globals.BattleModelDataBase.Add(value, this);
+                ModData.BattleModelDb.Remove(old);
+                ModData.BattleModelDb.Add(this);
             }
         } 
     }
@@ -57,7 +57,7 @@ public class BattleModel : GameType
         set
         {
             if (value < 0)
-                Globals.ErrorDb.AddError("Scale must be positive. " + value + " is not valid.");
+                ErrorDb.AddError("Scale must be positive. " + value + " is not valid.");
             else
             {
                 AddChange(nameof(Scale), _scale, value);
@@ -65,15 +65,41 @@ public class BattleModel : GameType
             }
         }
     }
-    public int LodCount { get; set; }
+    
+    public int LodCount
+    {
+        get => !IsParsing ? LodTable.Count : _lodCount;
+        set => _lodCount = value;
+    }
     public List<Lod> LodTable { get; set; } = new();
-    public int MainTexturesCount { get; set; }
+    public int MainTexturesCount
+    {
+        get => !IsParsing ? MainTextures.Count : _mainTexturesCount;
+        set => _mainTexturesCount = value;
+    }
     public List<Texture> MainTextures { get; private init; } = new();
-    public int AttachTexturesCount { get; set; }
+    public int AttachTexturesCount
+    {
+        get => !IsParsing ? AttachTextures.Count : _attachTexturesCount;
+        set => _attachTexturesCount = value;
+    }
     public List<Texture> AttachTextures { get; private init; } = new ();
-    public int MountTypeCount { get; set; }
+    public int MountTypeCount
+    {
+        get => !IsParsing ? Animations.Count : _mountTypeCount;
+        set => _mountTypeCount = value;
+    }
     public List<Animation> Animations { get; set; } = new ();
-
+    
+    /// <summary>
+    /// Gets or sets the TorchIndex of the BattleModel.
+    /// </summary>
+    /// <value>
+    /// The TorchIndex of the BattleModel.
+    /// </value>
+    /// <remarks>
+    /// When setting this property, it logs the change using the AddChange method.
+    /// </remarks>
     public int TorchIndex
     {
         get => _torchIndex;
@@ -154,6 +180,11 @@ public class BattleModel : GameType
     private float _torchSpriteX = 0;
     private float _torchSpriteY = 0;
     private float _torchSpriteZ = 0;
+    private int _lodCount;
+    private int _mainTexturesCount;
+    private int _attachTexturesCount;
+    private int _mountTypeCount;
+
     #endregion
 
     #region Methods
@@ -280,9 +311,9 @@ public class BattleModel : GameType
      */
     public static BattleModel? CloneModel(string name, BattleModel oldModel)
     {
-        if (Globals.BattleModelDataBase.Any(model => model.Key == name))
+        if (ModData.BattleModelDb.Contains(name))
         {
-            Globals.ErrorDb.AddError("Model name already exists in the database. " + name + " is not unique.");
+            ErrorDb.AddError("Model name already exists in the database. " + name + " is not unique.");
             return null;
         }
         var newModel = new BattleModel
@@ -446,8 +477,8 @@ public class Texture : GameType
         get => _faction;
         set
         {
-            if (!Globals.FactionDataBase.ContainsKey(value) && value != "merc")
-                Globals.ErrorDb.AddError("Faction " + value + " does not exist.");
+            if (!FactionDataBase.ContainsKey(value) && value != "merc")
+                ErrorDb.AddError("Faction " + value + " does not exist.");
             AddChange(nameof(Faction), _faction, value);
             _faction = value;
         }
@@ -471,7 +502,7 @@ public class Animation : GameType
         set
         {
             if (!BattleModel.MountTypes.Contains(value))
-                Globals.ErrorDb.AddError("Mount type " + value + " does not exist.");
+                ErrorDb.AddError("Mount type " + value + " does not exist.");
             AddChange(nameof(MountType), _mountType, value);
             _mountType = value;
         }
@@ -499,7 +530,7 @@ public class Animation : GameType
 
     public int PriWeaponCount
     {
-        get =>!Globals.IsParsing ? _priWeapons.Count(x => !string.IsNullOrWhiteSpace(x)) : _priWeaponCount;
+        get =>!IsParsing ? _priWeapons.Count(x => !string.IsNullOrWhiteSpace(x)) : _priWeaponCount;
         init => _priWeaponCount = value;
     }
 
@@ -551,7 +582,7 @@ public class Animation : GameType
         
     public int SecWeaponCount
     {
-        get =>!Globals.IsParsing ? _secWeapons.Count(x => !string.IsNullOrWhiteSpace(x)) : _secWeaponCount;
+        get =>!IsParsing ? _secWeapons.Count(x => !string.IsNullOrWhiteSpace(x)) : _secWeaponCount;
         set => _secWeaponCount = value;
     }
     public List<string> SecWeapons

@@ -35,9 +35,21 @@ public abstract class GameType
     }
     protected static string FormatFloat(float input)
     {
-        if (Math.Abs(input - 1) < 0.001)
-            return "1";
-        return input == 0 ? "0" : input.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
+        if (Math.Abs(input - Math.Round(input)) < 0.001)
+            return Math.Round(input).ToString(CultureInfo.InvariantCulture);
+
+        var formattedInput = input.ToString("0.##", CultureInfo.InvariantCulture);
+
+        return formattedInput;
+    }
+    protected static string FormatFloat(double input)
+    {
+        if (Math.Abs(input - Math.Round(input)) < 0.001)
+            return Math.Round(input).ToString(CultureInfo.InvariantCulture);
+
+        var formattedInput = input.ToString("0.##", CultureInfo.InvariantCulture);
+
+        return formattedInput;
     }
     protected void AddChange(string attribute, float oldValue, float newValue)
     {
@@ -47,8 +59,17 @@ public abstract class GameType
         if (oldV == newV) return;
         Changes.AddChange(attribute, DataType, _name, oldV, newV);
     }
+    protected void AddChange(string attribute, double oldValue, double newValue)
+    {
+        if (Globals.IsParsing) return;
+        var oldV = FormatFloat(oldValue);
+        var newV = FormatFloat(newValue);
+        if (oldV == newV) return;
+        Changes.AddChange(attribute, DataType, _name, oldV, newV);
+    }
     
     public static bool FloatNotEqual(float a, float b) => Math.Abs(a - b) > 0.001;
+    public static bool FloatNotEqual(double a, double b) => Math.Abs(a - b) > 0.001;
     
     public Dictionary<string, List<string>> Comments { get; set; } = new();
     
@@ -57,6 +78,17 @@ public abstract class GameType
 
     public virtual string GetTypeTextField(string identifier) => "";
 
+
+    public void AssignComments(string identifier, ref List<string> commentCache, ref string commentCacheInLine)
+    {
+        Comments[identifier] = new List<string>();
+        Comments[identifier].AddRange(commentCache);
+        commentCache.Clear();
+        CommentsInLine[identifier] = "";
+        CommentsInLine[identifier] = commentCacheInLine;
+        commentCacheInLine = "";
+    }
+    
     public string GetTextField(string identifier)
     {
         var text = "";

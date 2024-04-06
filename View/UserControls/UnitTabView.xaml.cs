@@ -35,17 +35,17 @@ namespace ModdingTool.View.UserControls
 
         private void btn_Click(object sender, RoutedEventArgs e)
         {
-            popup.IsOpen = true;
+            Popup.IsOpen = true;
         }
 
         private void acceptAttr_Click(object sender, RoutedEventArgs e)
         {
-            UnitTab.AttributeTypes.Add(txtBox.Text);
-            popup.IsOpen = false;
+            UnitTab.AttributeTypes.Add(TxtBox.Text);
+            Popup.IsOpen = false;
             Attributes.ItemsSource = UnitTab.AttributeTypes;
-            Attributes.SelectedItems.Add(txtBox.Text);
-            FocusManager.SetFocusedElement(this, Pri_armour);
-            txtBox.Text = "";
+            Attributes.SelectedItems.Add(TxtBox.Text);
+            FocusManager.SetFocusedElement(this, PriArmour);
+            TxtBox.Text = "";
             if (tabcontroller == null) return;
             tabcontroller.Visibility = Visibility.Hidden;
             tabcontroller.Visibility = Visibility.Visible;
@@ -53,8 +53,8 @@ namespace ModdingTool.View.UserControls
 
         private void CancelAttr_Click(object sender, RoutedEventArgs e)
         {
-            txtBox.Text = "";
-            popup.IsOpen = false;
+            TxtBox.Text = "";
+            Popup.IsOpen = false;
         }
 
         private void SoldierGoto_OnClick(object sender, RoutedEventArgs e)
@@ -156,38 +156,38 @@ namespace ModdingTool.View.UserControls
 
         private void Special_formation_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (Special_formation.SelectedItem == null) return;
-            if (Formation_style.SelectedItem == null) return;
+            if (SpecialFormation.SelectedItem == null) return;
+            if (FormationStyle.SelectedItem == null) return;
             if ((sender as ComboBox)?.DataContext is not UnitTab utab) return;
 
             utab.SpecialFormationStylesX = UnitTab.SpecialFormationStyles;
             utab.FormationStylesX = UnitTab.FormationStyles;
 
-            if (UnitTab.SpecialFormationStyles.Contains(Formation_style.SelectedItem))
+            if (UnitTab.SpecialFormationStyles.Contains(FormationStyle.SelectedItem))
             {
                 utab.SpecialFormationStylesX = UnitTab.FormationStyles;
-                if (Formation_style.SelectedItem != null && utab.SpecialFormationStylesX.Contains(Formation_style.SelectedItem))
-                    utab.SpecialFormationStylesX.Remove((string)Formation_style.SelectedItem);
+                if (FormationStyle.SelectedItem != null && utab.SpecialFormationStylesX.Contains(FormationStyle.SelectedItem))
+                    utab.SpecialFormationStylesX.Remove((string)FormationStyle.SelectedItem);
             }
             else
             {
                 utab.SpecialFormationStylesX = UnitTab.SpecialFormationStyles;
             }
 
-            if (UnitTab.FormationStyles.Contains(Special_formation.SelectedItem))
+            if (UnitTab.FormationStyles.Contains(SpecialFormation.SelectedItem))
             {
-                if (Special_formation.SelectedItem != null)
-                    utab.FormationStylesX.Remove((string)Special_formation.SelectedItem);
+                if (SpecialFormation.SelectedItem != null)
+                    utab.FormationStylesX.Remove((string)SpecialFormation.SelectedItem);
             }
             else
             {
                 utab.FormationStylesX = UnitTab.FormationStyles;
             }
 
-            Formation_style.ItemsSource = utab.FormationStylesX;
-            Special_formation.ItemsSource = utab.SpecialFormationStylesX;
-            Formation_style.Items.Refresh();
-            Special_formation.Items.Refresh();
+            FormationStyle.ItemsSource = utab.FormationStylesX;
+            SpecialFormation.ItemsSource = utab.SpecialFormationStylesX;
+            FormationStyle.Items.Refresh();
+            SpecialFormation.Items.Refresh();
         }
 
         private void MountGoto_OnClick(object sender, RoutedEventArgs e)

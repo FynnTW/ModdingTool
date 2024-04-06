@@ -181,7 +181,7 @@ namespace ModdingTool
                         break;
                     case "battle_model":
                         FactionDataBase[active_faction].FactionCharacterTypes[chartype.type].battle_model = value.Trim().ToLower();
-                        UsedModels.Add(value.Trim().ToLower());
+                        ModData.BattleModelDb.UsedModels.Add(value.Trim().ToLower());
                         break;
                     case "battle_equip":
                         FactionDataBase[active_faction].FactionCharacterTypes[chartype.type].battle_equip = parts[1..].ToString();

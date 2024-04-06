@@ -29,39 +29,6 @@ namespace ModdingTool
             return line.StartsWith(';') ? "" : line[..line.IndexOf(';')];
         }
 
-        public static string?[]? SplitEduLine(string line)
-        {
-            if (line.Equals(""))
-            {
-                return null;
-            }
-            char[] delimiters = { ',' };
-            char[] delimitersWhite = { ' ', '\t' };
-            var lineParts = line.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
-            var firstParts = lineParts[0].Split(delimitersWhite, 2, StringSplitOptions.RemoveEmptyEntries);
-
-            //some first edu lines have multiple words in the first part
-            if (firstParts[0].Equals("banner"))
-            {
-                var bannerSplit = firstParts[1].Split(delimitersWhite, 2, StringSplitOptions.RemoveEmptyEntries);
-                firstParts[0] = "banner " + bannerSplit[0];
-                firstParts[1] = bannerSplit[1];
-            }
-            if (firstParts[0].Equals("era"))
-            {
-                var eraSplit = firstParts[1].Split(delimitersWhite, 2, StringSplitOptions.RemoveEmptyEntries);
-                firstParts[0] = "era " + eraSplit[0];
-                firstParts[1] = eraSplit[1];
-            }
-
-            lineParts = firstParts.Concat(lineParts[1..]).ToArray();
-            for (var i = 0; i < lineParts.Length; i++)
-            {
-                lineParts[i] = lineParts[i].Trim();
-            }
-            return lineParts;
-        }
-
         public static bool ToBool(string value)
         {
             return value.Equals("yes");

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using static ModdingTool.Globals;
 
 namespace ModdingTool
 {
@@ -15,14 +17,18 @@ namespace ModdingTool
             "voice_type",
             "accent",
             "banner faction",
+            "banner unit",
             "banner holy",
+            "banner main",
+            "banner secondary",
+            "banner mini",
             "soldier",
             "officer",
+            "mounted_engine",
+            "mount",
             "ship",
             "engine",
             "animal",
-            "mount",
-            "mounted_engine",
             "mount_effect",
             "attributes",
             "move_speed_mod",
@@ -60,7 +66,7 @@ namespace ModdingTool
         public static string[] DamageTypes { get; set; } = { "piercing", "slashing", "blunt", "fire" };
         public static string[] WeaponTypes { get; set; } = { "melee", "thrown", "missile", "siege_missile", "no" };
         public static string[] SoundTypes { get; set; } = { "none", "knife", "mace", "axe", "sword", "spear" };
-        public static string[] VoiceTypes { get; set; } = { "General", "Heavy", "Light", "Female", "Medium" };
+        public static string[] VoiceTypes { get; set; } = { "general", "heavy", "medium", "light", "female", "general_1", "heavy_1", "medium_1", "light_1", "female_1" };
         
         #region Public properties
         
@@ -69,38 +75,55 @@ namespace ModdingTool
         private string _category = "infantry";
         private string _class = "light";
         private string _voiceType = "Light";
+        private string _soldier = "";
+        private string? _accent;
+        private string? _bannerFaction = "main_infantry";
+        private string? _bannerUnit;
+        private string? _bannerMain;
+        private string? _bannerSecondary;
+        private string? _bannerHoly;
+        private int _soldierCount = 4;
+        private int _extrasCount;
+        private double _mass = 1.0;
+        private double _radius = 0.40;
+        private double _height = 1.70;
+        private string _officer1 = "";
+        private string _officer2 = "";
+        private string _officer3 = "";
+        private string _mountedEngine = "";
+        private string _mount = "";
+        private string _ship = "";
+        private string _engine = "";
+        private string _animal = "";
+
 
         public string LocalizedName
         {
             get => _localizedName;
             set
             {
-                if (Globals.UnitDataBase.ContainsKey(value))
-                {
-                    Globals.ErrorDb.AddError($"Unit {value} already exists.");
-                    return;
-                }
                 AddChange(nameof(LocalizedName), _localizedName, value);
                 _localizedName = value;
             }
         }
 
-        public string? Type
+        public string Type
         {
             get => _name;
             set
             {
-                if (value == null) return;
                 var old = _name;
-                if (Globals.UnitDataBase.ContainsKey(value))
-                    Globals.ErrorDb.AddError($"Unit {value} already exists.");
+                if (ModData.Units.Contains(value))
+                    ErrorDb.AddError($"Unit {value} already exists.");
                 else
                 {
                     _name = value;
-                    if (string.IsNullOrWhiteSpace(old) || !Globals.UnitDataBase.ContainsKey(old)) return;
+                    if (string.IsNullOrWhiteSpace(old) || !ModData.Units.Contains(old)) return;
                     AddChange(nameof(Type), old, value);
-                    Globals.UnitDataBase.Remove(old);
-                    Globals.UnitDataBase.Add(value, this);
+                    var index = EduIndex;
+                    ModData.Units.Remove(old);
+                    ModData.Units.Add(this);
+                    EduIndex = index;
                 }
             }
         }
@@ -122,9 +145,9 @@ namespace ModdingTool
             set
             {
                 if (value == null) return;
-                if (!Categories.Contains(value))
+                if (!Categories.Contains(value.ToLower()))
                 {
-                    Globals.ErrorDb.AddError($"Category {value} does not exist.");
+                    ErrorDb.AddError($"Category {value} does not exist.");
                     return;
                 }
                 AddChange(nameof(Category), _category, value);
@@ -138,9 +161,9 @@ namespace ModdingTool
             set
             {
                 if (value == null) return;
-                if (!Classes.Contains(value))
+                if (!Classes.Contains(value.ToLower()))
                 {
-                    Globals.ErrorDb.AddError($"Class {value} does not exist.");
+                    ErrorDb.AddError($"Class {value} does not exist.");
                     return;
                 }
                 AddChange(nameof(ClassType), _class, value);
@@ -153,27 +176,248 @@ namespace ModdingTool
             set
             {
                 if (value == null) return;
-                if (!VoiceTypes.Contains(value))
+                if (!VoiceTypes.Contains(value.ToLower()))
                 {
-                    Globals.ErrorDb.AddError($"Voice Type {value} does not exist.");
+                    ErrorDb.AddError($"Voice Type {value} does not exist.");
                     return;
                 }
                 AddChange(nameof(ClassType), _voiceType, value);
                 _voiceType = value;
             }
         }
-        public string? Soldier { get; set; } = "";
-        public int SoldierCount { get; set; } = 0;
-        public int ExtrasCount { get; set; } = 0;
-        public double Mass { get; set; } = 1.0;
-        public string? Officer1 { get; set; } = "";
-        public string? Officer2 { get; set; } = "";
-        public string? Officer3 { get; set; } = "";
-        public string? Ship { get; set; } = "";
-        public string? Engine { get; set; } = "";
-        public string? Animal { get; set; } = "";
-        public string? Mount { get; set; } = "";
-        public string? MountedEngine { get; set; } = "";
+
+        public string? Accent
+        {
+            get => _accent;
+            set
+            {
+                if (value == null) return;
+                AddChange(nameof(Accent), _accent ?? "", value);
+                _accent = value;
+            }
+        }
+
+        public string? BannerFaction
+        {
+            get => _bannerFaction;
+            set
+            {
+                if (value == null) return;
+                AddChange(nameof(BannerFaction), _bannerFaction ?? "", value);
+                _bannerFaction = value;
+            }
+        } 
+        public string? BannerUnit
+        {
+            get => _bannerUnit;
+            set
+            {
+                if (value == null) return;
+                AddChange(nameof(BannerUnit), _bannerUnit ?? "", value);
+                _bannerUnit = value;
+            }
+        } 
+        public string? BannerMain
+        {
+            get => _bannerMain;
+            set
+            {
+                if (value == null) return;
+                AddChange(nameof(BannerMain), _bannerMain ?? "", value);
+                _bannerMain = value;
+            }
+        } 
+        public string? BannerSecondary
+        {
+            get => _bannerSecondary;
+            set
+            {
+                if (value == null) return;
+                AddChange(nameof(BannerSecondary), _bannerSecondary ?? "", value);
+                _bannerSecondary = value;
+            }
+        } 
+        public string? BannerHoly 
+        {
+            get => _bannerHoly;
+            set
+            {
+                if (value == null) return;
+                AddChange(nameof(BannerHoly), _bannerHoly ?? "", value);
+                _bannerHoly = value;
+            }
+        } 
+
+        public string? Soldier
+        {
+            get => _soldier;
+            set
+            {
+                if (value == null) return;
+                if (!ModData.BattleModelDb.Contains(value))
+                    ErrorDb.AddError($"Soldier {value} does not exist in battle models database.");
+                AddChange(nameof(Soldier), _soldier, value);
+                _soldier = value;
+            }
+        }
+
+        public int SoldierCount
+        {
+            get => _soldierCount;
+            set
+            {
+                if (Category == "non_combatant")
+                {
+                    if (value is 0 or > 300)
+                        ErrorDb.AddError($"Invalid number of soldiers {value} for unit {Type}.");
+                }
+                else
+                {
+                    if (value is < 4 or > 100)
+                        ErrorDb.AddError($"Invalid number of soldiers {value} for unit {Type}.");
+                }
+                AddChange(nameof(SoldierCount), _soldierCount, value);
+                _soldierCount = value;
+            }
+        }
+
+        public int ExtrasCount
+        {
+            get => _extrasCount;
+            set
+            {
+                if (value is < 0 or > 300)
+                    ErrorDb.AddError($"Invalid number of extras {value} for unit {Type}.");
+                if (Category == "handler" && value / SoldierCount > 3)
+                    ErrorDb.AddError($"Invalid number of animals {value} for handler unit {Type}.");
+                AddChange(nameof(ExtrasCount), _extrasCount, value);
+                _extrasCount = value;
+            }
+        }
+
+        public double Mass
+        {
+            get => _mass;
+            set
+            {
+                AddChange(nameof(Mass), _mass, value);
+                _mass = value;
+            }
+        }
+
+        public double Radius
+        {
+            get => _radius;
+            set
+            {
+                AddChange(nameof(Radius), _radius, value);
+                _radius = value;
+            }
+        }
+
+        public double Height
+        {
+            get => _height;
+            set
+            {
+                AddChange(nameof(Height), _height, value);
+                _height = value;
+            }
+        }
+
+        public string? Officer1
+        {
+            get => _officer1;
+            set
+            {
+                if (value == null) return;
+                if (!ModData.BattleModelDb.Contains(value))
+                    ErrorDb.AddError($"Officer {value} does not exist in battle models database.");
+                AddChange(nameof(Officer1), _officer1, value);
+                _officer1 = value;
+            }
+        }
+
+        public string? Officer2
+        {
+            get => _officer2;
+            set
+            {
+                if (value == null) return;
+                if (!ModData.BattleModelDb.Contains(value))
+                    ErrorDb.AddError($"Officer {value} does not exist in battle models database.");
+                AddChange(nameof(Officer2), _officer2, value);
+                _officer2 = value;
+            }
+        }
+        public string? Officer3
+        {
+            get => _officer3;
+            set
+            {
+                if (value == null) return;
+                if (!ModData.BattleModelDb.Contains(value))
+                    ErrorDb.AddError($"Officer {value} does not exist in battle models database.");
+                AddChange(nameof(Officer3), _officer3, value);
+                _officer3 = value;
+            }
+        }
+        public string? MountedEngine
+        {
+            get => _mountedEngine;
+            set
+            {
+                if (value == null) return;
+                AddChange(nameof(MountedEngine), _mountedEngine, value);
+                _mountedEngine = value;
+            }
+        }
+
+        public string? Mount
+        {
+            get => _mount;
+            set
+            {
+                if (value == null) return;
+                if (!MountDataBase.ContainsKey(value))
+                    ErrorDb.AddError($"Mount {value} does not exist in mounts database.");
+                AddChange(nameof(Mount), _mount, value);
+                _mount = value;
+            }
+        }
+
+        public string? Ship
+        {
+            get => _ship;
+            set
+            {
+                if (value == null) return;
+                AddChange(nameof(Ship), _ship, value);
+                _ship = value;
+            }
+        }
+
+        public string? Engine
+        {
+            get => _engine;
+            set
+            {
+                if (value == null) return;
+                AddChange(nameof(Engine), _engine, value);
+                _engine = value;
+            }
+        }
+
+        public string? Animal
+        {
+            get => _animal;
+            set
+            {
+                if (value == null) return;
+                AddChange(nameof(Animal), _animal, value);
+                _animal = value;
+            }
+        }
         public List<string> MountEffect { get; set; } = new List<string>();
 
         public List<string> Attributes { get; set; } = new List<string>();
@@ -244,9 +488,6 @@ namespace ModdingTool
         public List<string>? TerAttr { get; set; } = new List<string>();
 
         public int PriArmour { get; set; } = 0;
-
-        public string? BannerFaction { get; set; } = "main_infantry";
-        public string? BannerHoly { get; set; } = "crusade";
         public string? FormationStyle { get; set; } = "square";
         public int PriDefense { get; set; } = 0;
 
@@ -336,12 +577,6 @@ namespace ModdingTool
         public string? CardDict { get; set; }
 
         public double CrusadeUpkeep { get; set; } = 1.0;
-
-        public double? Radius { get; set; } = 0.4;
-
-        public double? Height { get; set; } = 1.7;
-
-        public string? Accent { get; set; } = "";
         public int SpacingRanks { get; set; }
 
         public bool LockMorale { get; set; } = false;
@@ -358,11 +593,11 @@ namespace ModdingTool
         public string FilePath { get; set; } = "";
         public int EduIndex { get; set; }
 
-        public double AiUnitValue { get; set; } = 0;
+        public double AiUnitValue { get; set; }
         
-        public double ValuePerCost => AiUnitValue / RecruitCost;
+        public double ValuePerCost => Math.Round(AiUnitValue / RecruitCost, 2);
 
-        public double ValuePerUpkeep => AiUnitValue / Upkeep;
+        public double ValuePerUpkeep => Math.Round(AiUnitValue / Upkeep, 2);
 
         public string CardInfo { get; set; } = "";
         public string FactionSymbol { get; set; } = "";
@@ -371,14 +606,9 @@ namespace ModdingTool
 
         public static Unit? CloneUnit(string name, string localizedName, Unit unit)
         {
-            var newUnit = (Unit)unit.MemberwiseClone();
-            foreach(var existingUnit in Globals.UnitDataBase)
-            {
-                if (existingUnit.Value.Type == null) continue;
-                if (!existingUnit.Value.Type.Equals(name)) continue;
+            if (ModData.Units.Contains(name))
                 return null;
-            }
-
+            var newUnit = (Unit)unit.MemberwiseClone();
             newUnit.MountEffect = new List<string>(unit.MountEffect);
             newUnit.Attributes = new List<string>(unit.Attributes);
             newUnit.Comments = new Dictionary<string, List<string>>(unit.Comments);
@@ -398,6 +628,15 @@ namespace ModdingTool
             return newUnit;
         }
 
+        public static string WriteEuEntry(Unit unit)
+        {
+            var entry = "\u00ac-----\n";
+            entry += "{" + unit.Dictionary + "}" + unit.LocalizedName + "\n";
+            entry += "{" + unit.Dictionary + "_descr}" + unit.Descr + "\n";
+            entry += "{" + unit.Dictionary + "_descr_short}" + unit.DescrShort + "\n";
+            return entry;
+        }
+
         public override string GetTypeTextField(string identifier)
         {
             return identifier switch
@@ -414,10 +653,13 @@ namespace ModdingTool
                                         + Soldier + ", " 
                                         + SoldierCount + ", " 
                                         + ExtrasCount + ", " 
-                                        + FormatFloat((float)Mass)
-                                        + (Radius != null && FloatNotEqual((float)Radius, 0.40f) ? ", " + FormatFloat((float)Radius) : "")
-                                        + (Height != null && FloatNotEqual((float)Height, 1.70f) 
-                                            ? (Radius != null && FloatNotEqual((float)Radius, 0.40f) ? ", " + FormatFloat((float)Height) : ", 0.35, " + FormatFloat((float)Height)) : ""),
+                                        + FormatFloat(Mass)
+                                        + (FloatNotEqual(Radius, 0.40f) ? ", " + FormatFloat(Radius) : "")
+                                        + (FloatNotEqual(Height, 1.70f) 
+                                            ? FloatNotEqual(Radius, 0.40f) 
+                                            ? ", " + FormatFloat(Height) 
+                                            : ", 0.40, " + FormatFloat(Height) 
+                                            : ""),
                 "officer" => ConditionalString(Officer1, identifier + GetTabLength(identifier) + Officer1)
                              + ConditionalString(Officer2, "\n" + identifier + GetTabLength(identifier) + Officer2)
                              + ConditionalString(Officer3, "\n" + identifier + GetTabLength(identifier) + Officer3),
@@ -428,11 +670,11 @@ namespace ModdingTool
                 "mounted_engine" => ConditionalString(MountedEngine, identifier + GetTabLength(identifier) + MountedEngine),
                 "mount_effect" => ConditionalString(MakeCommaString(MountEffect), identifier + GetTabLength(identifier) + MakeCommaString(MountEffect)),
                 "attributes" => ConditionalString(MakeCommaString(Attributes), identifier + GetTabLength(identifier) + MakeCommaString(Attributes)),
-                "move_speed_mod" => identifier + GetTabLength(identifier) + FormatFloat((float)MoveSpeed),
-                "formation" => identifier + GetTabLength(identifier) + FormatFloatSingle(SpacingWidth) + ", " 
-                               + FormatFloatSingle(SpacingDepth)+ ", " 
-                               + FormatFloatSingle(SpacingWidthLoose) + ", " 
-                               + FormatFloatSingle(SpacingDepthLoose) + ", " 
+                "move_speed_mod" => FloatNotEqual(MoveSpeed, 1.0) ? identifier + GetTabLength(identifier) + FormatFloat(MoveSpeed) : "",
+                "formation" => identifier + GetTabLength(identifier) + FormatFloat(SpacingWidth) + ", " 
+                               + FormatFloat(SpacingDepth)+ ", " 
+                               + FormatFloat(SpacingWidthLoose) + ", " 
+                               + FormatFloat(SpacingDepthLoose) + ", " 
                                + SpacingRanks + ", " 
                                + FormationStyle
                                + ConditionalString(SpecialFormation, ", "  + SpecialFormation),
@@ -448,7 +690,7 @@ namespace ModdingTool
                               + PriSoundType + ", "
                               + ConditionalString(PriFireType, ", "  + PriFireType)
                               + PriAttDelay + ", "
-                              + FormatFloat((float)PriSkelFactor),
+                              + FormatFloat(PriSkelFactor),
                 "stat_pri_attr" => identifier + GetTabLength(identifier) + (PriAttr is { Count: > 0 } ? MakeCommaString(PriAttr) : "no"),
                 "stat_sec" => 
                     SecWeaponType == "no" || string.IsNullOrWhiteSpace(SecWeaponType) ? 
@@ -464,7 +706,7 @@ namespace ModdingTool
                               + SecSoundType + ", "
                               + ConditionalString(SecFireType, ", "  + SecFireType)
                               + SecAttDelay + ", "
-                              + FormatFloat((float)SecSkelFactor) + "\n" 
+                              + FormatFloat(SecSkelFactor) + "\n" 
                               + "stat_sec_attr\t\t\t" + (SecAttr is { Count: > 0 } ? MakeCommaString(SecAttr) : "no"),
                 "stat_ter" => 
                     TerWeaponType == "no" || string.IsNullOrWhiteSpace(TerWeaponType) ? "" :
@@ -479,7 +721,7 @@ namespace ModdingTool
                               + TerSoundType + ", "
                               + ConditionalString(TerFireType, ", "  + TerFireType)
                               + TerAttDelay + ", "
-                              + FormatFloat((float)TerSkelFactor) + "\n" 
+                              + FormatFloat(TerSkelFactor) + "\n" 
                               + "stat_ter_attr\t\t\t" + (TerAttr is { Count: > 0 } ? MakeCommaString(TerAttr) : "no"),
                 "stat_pri_armour" => identifier + GetTabLength(identifier) + PriArmour + ", "
                                      + PriDefense + ", "
@@ -523,7 +765,7 @@ namespace ModdingTool
                 "era 2" => ConditionalString(MakeCommaString(EraTwo), identifier + GetTabLength(identifier) + MakeCommaString(EraTwo)),
                 "info_pic_dir" => ConditionalString(InfoDict, identifier + GetTabLength(identifier) + InfoDict),
                 "card_pic_dir" => ConditionalString(CardDict, identifier + GetTabLength(identifier) + CardDict),
-                "crusading_upkeep_modifier" => (Math.Abs(CrusadeUpkeep - 1.0) > 0.001 ? identifier + GetTabLength(identifier) + FormatFloat((float)CrusadeUpkeep) : ""),
+                "crusading_upkeep_modifier" => FloatNotEqual(CrusadeUpkeep, 1.0) ? identifier + GetTabLength(identifier) + FormatFloat(CrusadeUpkeep) : "",
                 "recruit_priority_offset" => identifier + GetTabLength(identifier) + RecruitPriorityOffset,
                 _ => "",
             };
@@ -539,17 +781,17 @@ namespace ModdingTool
                 
             }if (!IsEopUnit)
             {
-                if (Globals.GlobalOptionsInstance.AddUnitValue)
+                if (GlobalOptionsInstance.AddUnitValue)
                 {
-                    entry += ";ai_unit_value\t\t\t" + FormatFloat((float)AiUnitValue) + "\n";
+                    entry += ";ai_unit_value\t\t\t" + FormatFloat(AiUnitValue) + "\n";
                 }
-                if (Globals.GlobalOptionsInstance.AddUnitValuePerCost)
+                if (GlobalOptionsInstance.AddUnitValuePerCost)
                 {
-                    entry += ";value_per_cost\t\t\t" + FormatFloat((float)ValuePerCost) + "\n";
+                    entry += ";value_per_cost\t\t\t" + FormatFloat(ValuePerCost) + "\n";
                 }
-                if (Globals.GlobalOptionsInstance.AddUnitValuePerUpkeep)
+                if (GlobalOptionsInstance.AddUnitValuePerUpkeep)
                 {
-                    entry += ";value_per_upkeep\t\t" + FormatFloat((float)ValuePerUpkeep) + "\n";
+                    entry += ";value_per_upkeep\t\t" + FormatFloat(ValuePerUpkeep) + "\n";
                 }
             }
             entry += "\n";
@@ -630,7 +872,7 @@ namespace ModdingTool
                         {
                             if (Mount != null)
                             {
-                                var mountType = Globals.MountDataBase[Mount].mount_class;
+                                var mountType = MountDataBase[Mount].mount_class;
                                 switch (mountType)
                                 {
                                     case "horse":
@@ -671,6 +913,121 @@ namespace ModdingTool
                 officerCount++;
             var aiUnitValue = ((SoldierCount * HitPoints + officerCount * (HitPoints + 1)) * (moraleModifier * statsTotal) + extrasStats) * 0.45;
             return aiUnitValue;
+        }
+        
+        
+        private const string UnitCardPath = "\\data\\ui\\units";
+        private const string UnitInfoCardPath = "\\data\\ui\\unit_info";
+        private const string FactionSymbolPath = "\\data\\ui\\faction_symbols";
+
+        public string[] GetCards()
+        {
+            var unitCard = "";
+            var cardSearchFactions = Ownership;
+            var infoCardSearchFactions = Ownership;
+            
+            if (Ownership.Contains("all"))
+            {
+                cardSearchFactions = FactionDataBase.Keys.ToList();
+                infoCardSearchFactions = FactionDataBase.Keys.ToList();
+            }
+
+            if (MercenaryUnit)
+            {
+                cardSearchFactions = new List<string> { "mercs" };
+                infoCardSearchFactions = new List<string> { "merc" };
+            }
+
+            if (CardDict != null)
+            {
+                cardSearchFactions = new List<string> { CardDict };
+            }
+            if (InfoDict != null)
+            {
+                infoCardSearchFactions = new List<string> { InfoDict };
+            }
+
+            foreach (var faction in cardSearchFactions)
+            {
+                var cardPath = ModPath + UnitCardPath + "\\";
+                cardPath += faction;
+                if (!(Directory.Exists(cardPath)))
+                {
+                    ErrorDb.AddError($@"Card path not found {cardPath}");
+                    continue;
+                }
+
+                if (File.Exists(cardPath + "\\#" + Dictionary + ".tga"))
+                {
+                    unitCard = cardPath + "\\#" + Dictionary + ".tga";
+                }
+                else
+                {
+                    ErrorDb.AddError($@"no unit card found for unit: {Type} in faction: {faction}");
+                }
+            }
+
+            var unitInfoCard = "";
+            foreach (var faction in infoCardSearchFactions)
+            {
+                var cardInfoPath = ModPath + UnitInfoCardPath + "\\";
+                cardInfoPath += faction;
+                if (!(Directory.Exists(cardInfoPath)))
+                {
+                    ErrorDb.AddError($@"Info Card path not found {cardInfoPath}");
+                    continue;
+                }
+
+                if (File.Exists(cardInfoPath + "\\" + Dictionary + "_info.tga"))
+                {
+                    unitInfoCard = cardInfoPath + "\\" + Dictionary + "_info.tga";
+                }
+                else
+                {
+                    ErrorDb.AddError($@"no unit info card found for unit: {Type} in faction: {faction}");
+                }
+            }
+
+            // Faction Symbols
+            var factionSymbol = "";
+            var factionSymbolPath = ModPath + FactionSymbolPath + "\\";
+
+            // If the unit is slave only, just set to slave and move on
+            if (Ownership is ["slave"])
+            {
+                factionSymbolPath += "slave";
+            }
+            else switch (Ownership.Count)
+            {
+                // Otherwise, add the first non-slave faction
+                case 1:
+                    factionSymbolPath += Ownership[0];
+                    break;
+                case > 1:
+                {
+                    foreach (var faction in Ownership.Where(faction => faction != "slave"))
+                    {
+                        factionSymbolPath += faction;
+                        break;
+                    }
+                    break;
+                }
+            }
+
+            if (File.Exists(factionSymbolPath + ".tga"))
+            {
+                factionSymbol = factionSymbolPath + ".tga";
+            }
+
+            if (unitCard.Equals(""))
+            {
+                ErrorDb.AddError($@"!!no unit card at all found for unit: {Type}");
+            }
+            if (unitInfoCard.Equals(""))
+            {
+                ErrorDb.AddError($@"!!no unit info card at all found for unit: {Type}");
+            }
+            return new[] { unitCard, unitInfoCard, factionSymbol };
         }
 
     }

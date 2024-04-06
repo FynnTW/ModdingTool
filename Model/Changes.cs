@@ -55,11 +55,11 @@ public static class Changes
         {
             dynamic? dataBase = DataType switch
             {
-                "Unit" => Globals.UnitDataBase,
-                "BattleModel" => Globals.BattleModelDataBase,
-                "Lod" => Globals.BattleModelDataBase,
-                "Texture" => Globals.BattleModelDataBase,
-                "Animation" => Globals.BattleModelDataBase,
+                "Unit" => Globals.ModData.Units.GetUnits(),
+                "BattleModel" => Globals.ModData.BattleModelDb.GetBattleModels(),
+                "Lod" => Globals.ModData.BattleModelDb.GetBattleModels(),
+                "Texture" => Globals.ModData.BattleModelDb.GetBattleModels(),
+                "Animation" => Globals.ModData.BattleModelDb.GetBattleModels(),
                 "Mount" => Globals.MountDataBase,
                 "Projectile" => Globals.ProjectileDataBase,
                 "Faction" => Globals.FactionDataBase,

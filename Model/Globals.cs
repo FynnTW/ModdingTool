@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using ModdingTool.API;
+using ModdingTool.Databases;
 using ModdingTool.View.InterfaceData;
 using ModdingTool.View.UserControls;
 
@@ -23,11 +24,8 @@ namespace ModdingTool
         public static int StartingActionPoints = 250;
         public static string OpenListType { get; set; } = "";
         public static string OpenTabType { get; set; } = "";
-        public static Dictionary<string, Unit> UnitDataBase = new();
-        public static Dictionary<string, string> UnitNames = new();
-        public static Dictionary<string, string?> UnitDescr = new();
-        public static Dictionary<string, string?> UnitDescrShort = new();
-        public static Dictionary<string, BattleModel> BattleModelDataBase = new();
+        //public static Dictionary<string, Unit> UnitDataBase = new();
+        //public static Dictionary<string, BattleModel> BattleModelDataBase = new();
         public static Dictionary<string, Faction> FactionDataBase = new();
         public static Dictionary<string, Culture> CultureDataBase = new();
         public static Dictionary<string, Projectile> ProjectileDataBase = new();
@@ -35,10 +33,16 @@ namespace ModdingTool
         public static Dictionary<string, Mount> MountDataBase = new();
         public static Dictionary<string, string> ExpandedEntries = new();
         public static Dictionary<string, CharacterType> CharacterTypes = new();
-        public static List<string> UsedModels = new();
         public static List<string> UsedMounts = new();
         public static readonly Errors ErrorDb = new();
         public static GlobalOptions GlobalOptionsInstance = new();
+        public static Data ModData = new();
+
+        public class Data
+        {
+            public BattleModelDb BattleModelDb { get; } = new();
+            public UnitDb Units { get; } = new();
+        }
 
         public static ModOptions ModOptionsInstance = new();
 
@@ -72,7 +76,16 @@ namespace ModdingTool
         {
             Console.WriteLine(statement);
         }
-        
+        /// <summary>
+        /// Sets the mod path and updates related global variables.
+        /// </summary>
+        /// <param name="path">The path to the mod.</param>
+        /// <remarks>
+        /// This method sets the ModPath to the provided path, checks if the directory exists, and if it does, 
+        /// it sets the ModName to the directory's name and the GamePath to the grandparent directory's full name.
+        /// If the directory does not exist, it logs an error and returns.
+        /// Regardless, it sets the StartMod of the GlobalOptionsInstance to the ModPath.
+        /// </remarks>
         public static void SetModPath(string path)
         {
             ModPath = path;
@@ -95,45 +108,18 @@ namespace ModdingTool
             ModLoadedEvent?.Invoke(null, EventArgs.Empty);
             ModLoaded = true;
         }
-
-        public static void ImportJson(string fileName)
+        
+        public static void BackupFile(string path, string fileName)
         {
-            var jsonString = File.ReadAllText(fileName);
-            var imported = JsonConvert.DeserializeObject<Dictionary<string, BattleModel>>(jsonString);
-            if (imported == null)
-            {
-                ErrorDb.AddError("Imported JSON is null");
-                return;
-            }
-            BattleModelDataBase = new Dictionary<string, BattleModel>();
-            foreach (var entry in imported)
-            {
-                BattleModelDataBase.Add(entry.Key, entry.Value);
-            }
+            if (!Directory.Exists(ModPath + "\\ModdingToolBackup" + path))
+                Directory.CreateDirectory(ModPath + "\\ModdingToolBackup" + path);  
+            var backupName = fileName + "_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt";
+            File.Copy(ModPath + path + fileName, ModPath + "/ModdingToolBackup" + path + backupName, true);
         }
-
-        public static void WriteBmdb()
-        {
-            var newBmdb = "";
-            newBmdb += "22 serialization::archive 3 0 0 0 0 ";
-            newBmdb += (BattleModelDataBase.Count + 1) + " 0 0\n";
-            newBmdb += "5 blank 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n";
-            newBmdb = BattleModelDataBase.Aggregate(newBmdb, (current, entry) => current + entry.Value.WriteEntry());
-            File.WriteAllText(@"battle_models.modeldb", newBmdb);
-        }
-
-        public static void ExportJson()
-        {
-            File.WriteAllText(@"bmdb.json", JsonConvert.SerializeObject(BattleModelDataBase));
-        }
-
+        
         public static void ClearDatabases()
         {
-            UnitDataBase.Clear();
-            UnitNames.Clear();
-            UnitDescr.Clear();
-            UnitDescrShort.Clear();
-            BattleModelDataBase.Clear();
+            ModData = new Data();
             FactionDataBase.Clear();
             CultureDataBase.Clear();
             ProjectileDataBase.Clear();
@@ -141,7 +127,6 @@ namespace ModdingTool
             MountDataBase.Clear();
             ExpandedEntries.Clear();
             CharacterTypes.Clear();
-            UsedModels.Clear();
             UsedMounts.Clear();
             UnitTab.AttributeTypes = new List<string>
             {
@@ -190,7 +175,15 @@ namespace ModdingTool
             ProjectileDelayGunpowder = 0;
             StartingActionPoints = 250;
         }
-
+        /// <summary>
+        /// Parses the files related to the game mod.
+        /// </summary>
+        /// <remarks>
+        /// This method sets the IsParsing flag to true, clears all databases and errors, and then parses various game data files.
+        /// It parses expanded factions, cultures, factions, battle models, unit entries, mounts, character types, and projectiles.
+        /// It also checks for model usage and removes unused models and mounts from the respective databases.
+        /// After all parsing and cleaning operations are done, it sets the IsParsing flag back to false.
+        /// </remarks>
         public static void ParseFiles()
         {
             IsParsing = true;
@@ -199,42 +192,25 @@ namespace ModdingTool
             FactionParser.ParseExpanded();
             FactionParser.ParseCultures();
             FactionParser.ParseSmFactions();
-            BmdbParser.ParseBmdb();
-            EduParser.ParseEu();
+            ModData.BattleModelDb.ParseFile();
             MountParser.Parse();
-            EduParser.ParseEdu();
+            ModData.Units.ParseFile();
             CharacterTypesParser.parseCharacterTypes();
-            BmdbParser.checkModelUsage();
+            ModData.BattleModelDb.CheckModelUsage();
             ProjectileParser.ParseProjectiles();
-            UsedModels = UsedModels.Distinct().ToList();
-            foreach (var entry in BattleModelDataBase.Where(entry => !UsedModels.Contains(entry.Key)))
-            {
-                Print(entry.Key);
-                ErrorDb.AddError("Model " + entry.Key + " is not used");
-                BattleModelDataBase.Remove(entry.Key);
-            }
-            UsedMounts = UsedMounts.Distinct().ToList();
-            foreach (var entry in MountDataBase.Where(entry => !UsedMounts.Contains(entry.Key)))
-            {
-                Print(entry.Key);
-                ErrorDb.AddError("Mount " + entry.Key + " is not used");
-            }
             IsParsing = false;
             //FileRemover.CheckFiles();
         }
-
-        public static void AutoStart()
-        {
-            if (Application.Current.MainWindow == null)
-            {
-                return;
-            }
-            var window = (MainWindow)Application.Current.MainWindow;
-            var menubar = window.FindName("MenuBarCustom") as View.UserControls.Menubar;
-            ModPath = "E:\\SteamLibrary\\steamapps\\common\\Medieval II Total War\\mods\\ago_beta";
-            menubar?.LoadMod();
-        }
-
+        /// <summary>
+        /// Loads the global and mod-specific options from their respective JSON files.
+        /// </summary>
+        /// <remarks>
+        /// This method first checks if the global configuration file exists. If it does not, it creates a new file and writes the current GlobalOptionsInstance into it.
+        /// If the file does exist, it reads the file and deserializes the JSON into a GlobalOptions object, which is then assigned to the GlobalOptionsInstance.
+        /// The method then checks if the ModName is not null or empty. If it is, the method returns and does not proceed to load the mod-specific options.
+        /// If the ModName is not null or empty, it checks if the mod-specific configuration file exists. If it does not, it creates a new file and writes the current ModOptionsInstance into it.
+        /// If the file does exist, it reads the file and deserializes the JSON into a ModOptions object, which is then assigned to the ModOptionsInstance.
+        /// </remarks>
         public static void LoadOptions()
         {
             if (!File.Exists("config/globalConfig.json"))

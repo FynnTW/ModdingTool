@@ -101,10 +101,10 @@ namespace ModdingTool.ViewModel
             switch (SelectedType)
             {
                 case "Units":
-                    UpdateDisplayedItems(UnitDataBase.Keys.ToList());
+                    UpdateDisplayedItems(ModData.Units.GetNames());
                     break;
                 case "Model Entries":
-                    UpdateDisplayedItems(BattleModelDataBase.Keys.ToList());
+                    UpdateDisplayedItems(ModData.BattleModelDb.GetNames());
                     break;
                 case "Factions":
                     UpdateDisplayedItems(FactionDataBase.Keys.ToList());

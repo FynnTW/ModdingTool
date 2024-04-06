@@ -39,7 +39,7 @@ namespace ModdingTool.View.InterfaceData
         {
             Title = name;
             SelectedMount = MountDataBase[Title];
-            ModelEntries = BattleModelDataBase.Keys.ToArray();
+            ModelEntries = ModData.BattleModelDb.GetNames().ToArray();
         }
     }
 }

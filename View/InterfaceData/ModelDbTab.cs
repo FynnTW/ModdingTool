@@ -44,6 +44,6 @@ public class ModelDbTab : ITab.Tab
         Factions = FactionDataBase.Keys.ToList();
         Factions.Add("merc");
         Title = name;
-        SelectedModel = BattleModelDataBase[Title];
+        SelectedModel = ModData.BattleModelDb.Get(Title)!;
     }
 }

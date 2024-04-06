@@ -66,6 +66,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="ModToolLib\ModToolLib.vcxproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="Sdl.MultiSelectComboBox">
       <HintPath>Resources\Sdl.MultiSelectComboBox.dll</HintPath>
     </Reference>

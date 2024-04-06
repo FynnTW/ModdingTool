@@ -14,7 +14,7 @@ namespace ModdingTool
         {
             var unitModelsPath = ModPath + @"\data\unit_models";
 
-            foreach (var model in BattleModelDataBase)
+            foreach (var model in ModData.BattleModelDb.GetBattleModels())
             {
                 foreach (var mesh in model.Value.LodTable)
                 {

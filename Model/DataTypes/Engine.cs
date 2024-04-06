@@ -4,6 +4,18 @@ namespace ModdingTool
 {
     public class Engine
     {
+        
+        public List<string> CrewAnimationTypes { get; } = new()
+        {
+            "crank",
+            "fire",
+            "special_crank",
+            "special_fire",
+            "crank_attachment",
+            "fire_attachment",
+            "special_crank_attachment",
+            "special_fire_attachment"
+        };
         public string type { get; set; } = "";
         public string culture { get; set; } = "";
         public string engine_class { get; set; } = "";
@@ -77,6 +89,13 @@ namespace ModdingTool
     {
         public string path { get; set; } = "";
         public string distance { get; set; } = "";
+    }
+
+    public class EnginePoint
+    {
+        public string Text { get; set; } = "";
+        public float X { get; set; } = 0;
+        public float Y { get; set; } = 0;
     }
 
     public class CrewAnimation

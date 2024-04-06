@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Forms;
+using ModToolLib;
 using ModdingTool.API;
 using static ModdingTool.Globals;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
@@ -25,7 +26,7 @@ namespace ModdingTool.View.UserControls
         {
             if (!ModLoaded) return;
             popupText.Text = System.AppDomain.CurrentDomain.BaseDirectory + "battle_models.json";
-            ExportJson();
+            ModData.BattleModelDb.ExportJson();
             donePopup.IsOpen = true;
         }
 
@@ -47,14 +48,14 @@ namespace ModdingTool.View.UserControls
             dialog.ShowDialog();
             var filename = dialog.FileName;
             if (filename == "") return;
-            ImportJson(filename);
+            ModData.BattleModelDb.ImportJson(filename);
         }
 
         private void WriteBMDB_Click(object sender, RoutedEventArgs e)
         {
             if (!ModLoaded) return;
-            WriteBmdb();
-            popupText.Text = System.AppDomain.CurrentDomain.BaseDirectory + "battle_models.modeldb";
+            ModData.BattleModelDb.WriteFile();
+            popupText.Text = ModPath + @"/data/unit_models/battle_models.modeldb";
             donePopup.IsOpen = true;
         }
 
@@ -93,7 +94,7 @@ namespace ModdingTool.View.UserControls
         private void WriteEDU_Click(object sender, RoutedEventArgs e)
         {
             if (!ModLoaded) return;
-            EduParser.WriteEdu();
+            ModData.Units.WriteFile();
             popupText.Text = ModPath + @"/data/export_descr_unit.txt";
             donePopup.IsOpen = true;
         }
@@ -103,6 +104,8 @@ namespace ModdingTool.View.UserControls
             var logWindow = new ErrorLog();
             logWindow.Show();
             logWindow.WriteErrors();
+            var classs = new Class1();
+            Print(classs.Add(1, 1).ToString());
         }
 
         private void ChangeLog_Click(object sender, RoutedEventArgs e)

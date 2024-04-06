@@ -83,7 +83,7 @@ namespace ModdingTool.ViewModel
                 default:
                     throw new InvalidOperationException("Unsupported type");
             }
-
+            SortTypes.Sort();
             SelectedSortType = SortTypes[0];
             IsPopupOpen = true;
         }
@@ -114,11 +114,11 @@ namespace ModdingTool.ViewModel
             {
                 return TabType switch
                 {
-                    "Units" => UnitDataBase[x]?.GetType().GetProperty(attribute)?.GetValue(UnitDataBase[x]),
-                    "Model Entries" => BattleModelDataBase[x]
+                    "Units" => ModData.Units.Get(x)?.GetType().GetProperty(attribute)?.GetValue(ModData.Units.Get(x)),
+                    "Model Entries" => ModData.BattleModelDb.Get(x)
                         ?.GetType()
                         .GetProperty(attribute)
-                        ?.GetValue(BattleModelDataBase[x]),
+                        ?.GetValue(ModData.BattleModelDb.Get(x)),
                     "Mounts" => MountDataBase[x]?.GetType().GetProperty(attribute)?.GetValue(MountDataBase[x]),
                     "Projectiles" => ProjectileDataBase[x]
                         ?.GetType()
