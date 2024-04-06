@@ -82,12 +82,12 @@ public class MountParser : FileParser
 
     private static void AddMount(Mount mount)
     {
-        if (MountDataBase.ContainsKey(mount.type))
+        if (!MountDataBase.TryAdd(mount.type, mount))
         {
             ErrorDb.AddError("Mount name already exists", s_lineNum.ToString(), s_fileName);
             return;
         }
-        MountDataBase.Add(mount.type, mount);
+
         Console.WriteLine(mount.type);
     }
     

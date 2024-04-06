@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using static ModdingTool.Globals;
@@ -241,7 +240,7 @@ public partial class BattleModelDb
         CheckUseInFile("\\data\\world\\maps\\campaign\\imperial_campaign\\", "campaign_script.txt");
         CheckUseInFile("\\data\\world\\maps\\campaign\\imperial_campaign\\", "descr_strat.txt");
         
-        UsedModels = ModData.BattleModelDb.UsedModels.Distinct().ToList();
+        UsedModels = UsedModels.Distinct().ToList();
         foreach (var entry in BattleModels.Where(entry => !UsedModels.Contains(entry.Key)))
         {
             Print(entry.Key);

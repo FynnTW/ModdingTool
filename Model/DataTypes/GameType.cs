@@ -27,6 +27,14 @@ public abstract class GameType
         if (oldValue == newValue) return;
         Changes.AddChange(attribute, DataType, _name, oldValue, newValue);
     }
+        
+    protected void AddChange(string attribute, bool oldValue, bool newValue)
+    {
+        if (Globals.IsParsing) return;
+        if (oldValue == newValue) return;
+        Changes.AddChange(attribute, DataType, _name, oldValue.ToString(), newValue.ToString());
+    }
+    
     protected void AddChange(string attribute, int oldValue, int newValue)
     {
         if (Globals.IsParsing) return;

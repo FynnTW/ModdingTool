@@ -397,6 +397,53 @@ public class UnitDb
             
         fileStream.LogEnd();
     }
+    
+    
+    /// <summary>
+    /// A list of strings representing the different attributes a unit can have in the game.
+    /// These attributes can define various behaviors and characteristics of a unit.
+    /// </summary>
+    public List<string> AttributeTypes { get; set; } = new()
+    {
+        "can_withdraw",
+        "can_sap",
+        "hide_long_grass",
+        "hide_anywhere",
+        "sea_faring",
+        "gunpowder_unit",
+        "screeching_women",
+        "druid",
+        "cantabrian_circle",
+        "is_peasant",
+        "no_custom",
+        "start_not_skirmishing",
+        "fire_by_rank",
+        "gunpowder_artillery_unit",
+        "command",
+        "free_upkeep_unit",
+        "heavy",
+        "hardy",
+        "mercenary_unit",
+        "frighten_foot",
+        "frighten_mounted",
+        "very_hardy",
+        "slave",
+        "power_charge",
+        "hide_forest",
+        "can_horde",
+        "can_swim",
+        "can_formed_charge",
+        "can_feign_rout",
+        "can_run_amok",
+        "warcry",
+        "stakes",
+        "general_unit",
+        "general_unit_upgrade",
+        "legionary_name",
+        "wagon_fort",
+        "cannot_skirmish",
+        "hide_improved_forest"
+    };
 
     /// <summary>
     /// Adds a unit localization entry to the appropriate dictionary.
@@ -582,22 +629,26 @@ public class UnitDb
                     foreach (var attr in parts[1..])
                     {
                         if (attr == null) break;
-                        unit.Attributes.Add(attr);
-                        if (!UnitTab.AttributeTypes.Contains(attr))
+                        if (attr.Contains(','))
                         {
-                            if (attr.Contains(','))
+                            var split = attr.Split(',');
+                            foreach (var s in split)
                             {
-                                var split = attr.Split(',');
-                                foreach (var s in split)
+                                unit.AddAttribute(s);
+                                switch (attr)
                                 {
-                                    if (!UnitTab.AttributeTypes.Contains(s))
-                                    {
-                                        UnitTab.AttributeTypes.Add(s);
-                                    }
+                                    case "mercenary_unit":
+                                        unit.MercenaryUnit = true;
+                                        continue;
+                                    case "general_unit":
+                                        unit.GeneralUnit = true;
+                                        continue;
                                 }
                             }
-                            else
-                                UnitTab.AttributeTypes.Add(attr);
+                        }
+                        else
+                        {
+                            unit.AddAttribute(attr);
                         }
                         switch (attr)
                         {

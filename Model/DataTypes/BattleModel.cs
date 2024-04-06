@@ -72,24 +72,99 @@ public class BattleModel : GameType
         set => _lodCount = value;
     }
     public List<Lod> LodTable { get; set; } = new();
+    
+    public void AddLod(string mesh, int distance, int index)
+    {
+        if (LodTable.Count > index)
+        {
+            LodTable[index].Mesh = mesh;
+            LodTable[index].Distance = distance;
+            return;
+        }
+        LodTable.Add(new Lod
+        {
+            Mesh = mesh,
+            Distance = distance,
+            Name = Name
+        });
+    }
     public int MainTexturesCount
     {
         get => !IsParsing ? MainTextures.Count : _mainTexturesCount;
         set => _mainTexturesCount = value;
     }
     public List<Texture> MainTextures { get; private init; } = new();
+    public Texture AddMainTexture(string faction, string texturePath, string normal, string sprite)
+    {
+        var texture = MainTextures.Find(fac => fac.Faction == faction);
+        if (texture != null)
+        {
+            texture.TexturePath = texturePath;
+            texture.Normal = normal;
+            texture.Sprite = sprite;
+            return texture;
+        }
+        MainTextures.Add(new Texture
+        {
+            Faction = faction,
+            TexturePath = texturePath,
+            Normal = normal,
+            Sprite = sprite,
+            Name = Name
+        });
+        return MainTextures.Last();
+    }
     public int AttachTexturesCount
     {
         get => !IsParsing ? AttachTextures.Count : _attachTexturesCount;
         set => _attachTexturesCount = value;
     }
     public List<Texture> AttachTextures { get; private init; } = new ();
+    public Texture AddAttachTexture(string faction, string texturePath, string normal, string sprite)
+    {
+        var texture = AttachTextures.Find(fac => fac.Faction == faction);
+        if (texture != null)
+        {
+            texture.TexturePath = texturePath;
+            texture.Normal = normal;
+            texture.Sprite = sprite;
+            return texture;
+        }
+        AttachTextures.Add(new Texture
+        {
+            Faction = faction,
+            TexturePath = texturePath,
+            Normal = normal,
+            Sprite = sprite,
+            Name = Name
+        });
+        return AttachTextures.Last();
+    }
     public int MountTypeCount
     {
         get => !IsParsing ? Animations.Count : _mountTypeCount;
         set => _mountTypeCount = value;
     }
     public List<Animation> Animations { get; set; } = new ();
+
+    public Animation AddAnimation(string mountType, string primarySkeleton, string secondarySkeleton)
+    {
+        var anim = Animations.Find(mount => mount.MountType == mountType);
+        if (anim != null)
+        {
+            anim.PrimarySkeleton = primarySkeleton;
+            anim.SecondarySkeleton = secondarySkeleton;
+            return anim;
+        }
+        Animations.Add(new Animation
+        {
+            MountType = mountType,
+            PrimarySkeleton = primarySkeleton,
+            SecondarySkeleton = secondarySkeleton,
+            Name = Name
+        });
+        return Animations.Last();
+    }
     
     /// <summary>
     /// Gets or sets the TorchIndex of the BattleModel.

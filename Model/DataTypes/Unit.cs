@@ -6,8 +6,22 @@ using static ModdingTool.Globals;
 
 namespace ModdingTool
 {
+    /// <summary>
+    /// Represents a unit in the game. A unit is a type of game entity that has various properties and behaviors.
+    /// This class inherits from the GameType class.
+    /// </summary>
     public class Unit : GameType
     {
+        // Static members for various categorizations and definitions related to game units.
+        #region strings
+        
+        private const string UnitCardPath = "\\data\\ui\\units";
+        private const string UnitInfoCardPath = "\\data\\ui\\unit_info";
+        private const string FactionSymbolPath = "\\data\\ui\\faction_symbols";
+        /// <summary>
+        /// A list of identifiers used in the EDU file in the game.
+        /// These identifiers are used to define various properties of a unit in the game.
+        /// </summary>
         private static readonly List<string> EduIdentifiers = new()
         {
             "type",
@@ -61,14 +75,73 @@ namespace ModdingTool
             "crusading_upkeep_modifier",
             "recruit_priority_offset"
         };
-        public static string[] Categories { get; set; } = { "infantry", "cavalry", "siege", "handler", "ship", "non_combatant" };
-        public static string[] Classes { get; set; } = { "light", "heavy", "missile", "spearmen", "skirmish" };
-        public static string[] DamageTypes { get; set; } = { "piercing", "slashing", "blunt", "fire" };
-        public static string[] WeaponTypes { get; set; } = { "melee", "thrown", "missile", "siege_missile", "no" };
-        public static string[] SoundTypes { get; set; } = { "none", "knife", "mace", "axe", "sword", "spear" };
-        public static string[] VoiceTypes { get; set; } = { "general", "heavy", "medium", "light", "female", "general_1", "heavy_1", "medium_1", "light_1", "female_1" };
+        /// <summary>
+        /// An array of strings representing the different categories a unit can belong to.
+        /// </summary>
+        private static readonly string[] Categories = { "infantry", "cavalry", "siege", "handler", "ship", "non_combatant" };
+
+        /// <summary>
+        /// An array of strings representing the different classes a unit can belong to.
+        /// </summary>
+        private static readonly string[] Classes = { "light", "heavy", "missile", "spearmen", "skirmish" };
+
+        /// <summary>
+        /// An array of strings representing the different types of damage a unit can inflict.
+        /// </summary>
+        private static readonly string[] DamageTypes = { "piercing", "slashing", "blunt", "fire" };
+
+        /// <summary>
+        /// An array of strings representing the different types of weapons a unit can use.
+        /// </summary>
+        private static readonly string[] WeaponTypes = { "melee", "thrown", "missile", "siege_missile", "no" };
+
+        /// <summary>
+        /// An array of strings representing the different types of sounds a unit can make.
+        /// </summary>
+        private static readonly string[] SoundTypes = { "none", "knife", "mace", "axe", "sword", "spear" };
+
+        /// <summary>
+        /// An array of strings representing the different types of voices a unit can have.
+        /// </summary>
+        private static readonly string[] VoiceTypes = { "general", "heavy", "medium", "light", "female", "general_1", "heavy_1", "medium_1", "light_1", "female_1" };
+
+        /// <summary>
+        /// An array of strings representing the different types of sound effects a unit can make.
+        /// </summary>
+        private static readonly string[] SoundTypesDef = { "flesh", "leather", "ground", "building", "metal" };
         
-        #region Public properties
+        /// <summary>
+        /// An array of strings representing the different technology types a unit can have.
+        /// </summary>
+        private static readonly string[] TechTypes = { "melee_simple", "missile_mechanical", "melee_blade", "missile_gunpowder", "artillery_mechanical", "artillery_gunpowder" };
+
+        /// <summary>
+        /// A list of strings representing the different formation styles a unit can adopt.
+        /// </summary>
+        private static readonly List<string> FormationStyles = new (){ "square", "horde", "phalanx" };
+
+        /// <summary>
+        /// A list of strings representing the different special formation styles a unit can adopt.
+        /// </summary>
+        private static readonly List<string> SpecialFormationStyles = new (){ "wedge", "phalanx", "schiltrom", "shield_wall" };
+
+        /// <summary>
+        /// A list of strings representing the different attack attributes a unit can have.
+        /// </summary>
+        private static readonly List<string> AttackAttr = new (){ "spear", "light_spear", "prec", "ap", "bp", "area", "fire", "launching", "thrown", "short_pike", "long_pike", "spear_bonus_12", "spear_bonus_10", "spear_bonus_8", "spear_bonus_6", "spear_bonus_4" };
+
+        /// <summary>
+        /// An array of strings representing the different discipline types a unit can have.
+        /// </summary>
+        private static readonly string[] DisciplineTypes = { "impetuous", "normal", "disciplined", "berserker","low" };
+
+        /// <summary>
+        /// An array of strings representing the different training levels a unit can have.
+        /// </summary>
+        private static readonly string[] TrainedTypes = { "trained", "highly_trained", "untrained" };
+        #endregion
+        
+        #region fields
         
         private string _localizedName = "";
         private string _dictionary = "";
@@ -95,8 +168,118 @@ namespace ModdingTool
         private string _ship = "";
         private string _engine = "";
         private string _animal = "";
+        private double _spacingWidth = 1.4;
+        private double _spacingDepth = 1.4;
+        private double _spacingWidthLoose = 2.4;
+        private double _spacingDepthLoose = 2.4;
+        private string? _specialFormation;
+        private int _hitPoints;
+        private int _mountHitPoints;
+        private int _priAttack;
+        private int _priCharge;
+        private int _secAttack;
+        private string? _priProjectile;
+        private int _priRange;
+        private int _priAmmunition;
+        private string? _priWeaponType;
+        private string? _priTechType = "melee_blade";
+        private string? _priDamageType = "blunt";
+        private string? _priSoundType = "none";
+        private int _priAttDelay = 0;
+        private double _priSkelFactor = 1.0;
+        private int _secCharge = 0;
+        private string? _secProjectile = "";
+        private int _secRange = 0;
+        private int _secAmmunition = 0;
+        private string? _secWeaponType = "no";
+        private string? _secTechType = "melee_simple";
+        private string? _secDamageType = "blunt";
+        private string? _secSoundType = "none";
+        private int _secAttDelay = 0;
+        private double _secSkelFactor = 1;
+        private int _terAttack = 0;
+        private int _terCharge = 0;
+        private string? _terProjectile = "";
+        private int _terRange = 0;
+        private int _terAmmunition = 0;
+        private string? _terWeaponType = "no";
+        private string? _terTechType = "melee_simple";
+        private List<string>? _priAttr = new List<string>();
+        private List<string>? _secAttr = new List<string>();
+        private string? _terDamageType = "blunt";
+        private string? _terSoundType = "none";
+        private int _terAttDelay = 0;
+        private double _terSkelFactor = 0;
+        private List<string>? _terAttr = new List<string>();
+        private int _priArmour = 0;
+        private string? _formationStyle = "square";
+        private int _priDefense = 0;
+        private int _priShield = 0;
+        private string? _priDefSound = "flesh";
+        private int _secArmour = 0;
+        private int _secDefense = 0;
+        private string? _secDefSound = "flesh";
+        private int _statHeat = 0;
+        private int _statScrub = 0;
+        private int _statForest = 0;
+        private int _statSnow = 0;
+        private int _statSand = 0;
+        private int _morale = 1;
+        private string? _discipline = "normal";
+        private string? _training = "untrained";
+        private int _statChargeDist = 10;
+        private int _statFireDelay = 0;
+        private int _statFood = 60;
+        private int _statFoodSec = 300;
+        private int _recruitTime = 1;
+        private int _recruitCost = 500;
+        private int _upkeep = 200;
+        private int _wpnCost = 100;
+        private int _armourCost = 100;
+        private int _customCost = 500;
+        private int _customLimit = 3;
+        private int _customIncrease = 50;
+        private double _moveSpeed = 1.0;
+        private int _statStl = 0;
+        private int[]? _armourUgLevels;
+        private string? _armourlvlBase;
+        private string? _armourlvlOne;
+        private string? _armourlvlTwo;
+        private string? _armourlvlThree;
+        private string?[]? _armourUgModels;
+        private string? _armourModelBase;
+        private string? _armourModelOne;
+        private string? _armourModelTwo;
+        private string? _armourModelThree;
+        private List<string> _ownership = new List<string>();
+        private List<string> _eraZero = new List<string>();
+        private List<string> _eraOne = new List<string>();
+        private List<string> _eraTwo = new List<string>();
+        private double _recruitPriorityOffset = 0;
+        private string? _infoDict;
+        private string? _cardDict;
+        private double _crusadeUpkeep = 1.0;
+        private int _spacingRanks;
+        private bool _lockMorale = false;
+        private string? _priFireType = "";
+        private string? _secFireType = "";
+        private string? _terFireType = "";
+        private string? _descr = "";
+        private string? _descrShort = "";
+        private string _card = "";
+        private bool _mercenaryUnit = false;
+        private bool _generalUnit = false;
+        private bool _isEopUnit = false;
+        private string _filePath = "";
+        private int _eduIndex;
+        private double _aiUnitValue;
 
+        #endregion fields
 
+        #region Properties
+        /// <summary>
+        /// Gets or sets the localized name of the unit. This is the name that will be displayed in the game.
+        /// </summary>
         public string LocalizedName
         {
             get => _localizedName;
@@ -106,7 +289,10 @@ namespace ModdingTool
                 _localizedName = value;
             }
         }
-
+        
+        /// <summary>
+        /// Gets or sets the type of the unit. This is the unique identifier for the unit in the game.
+        /// </summary>
         public string Type
         {
             get => _name;
@@ -128,6 +314,9 @@ namespace ModdingTool
             }
         }
 
+        /// <summary>
+        /// Gets or sets the dictionary entry for the unit. This is used for localization and is typically the unit's name with spaces replaced by underscores and all lowercase.
+        /// </summary>
         public string? Dictionary
         {
             get => _dictionary;
@@ -138,7 +327,11 @@ namespace ModdingTool
                 _dictionary = value;
             }
         }
-
+        
+        /// <summary>
+        /// Gets or sets the category of the unit. This is a string representing the category a unit belongs to.
+        /// The setter validates the input against a predefined list of categories. If the category does not exist, an error is logged.
+        /// </summary>
         public string? Category
         {
             get => _category;
@@ -155,6 +348,10 @@ namespace ModdingTool
             }
         }
 
+        /// <summary>
+        /// Gets or sets the class type of the unit. This is a string representing the class a unit belongs to.
+        /// The setter validates the input against a predefined list of classes. If the class does not exist, an error is logged.
+        /// </summary>
         public string? ClassType
         {
             get => _class;
@@ -170,6 +367,11 @@ namespace ModdingTool
                 _class = value;
             }
         }
+
+        /// <summary>
+        /// Gets or sets the voice type of the unit. This is a string representing the voice type a unit has.
+        /// The setter validates the input against a predefined list of voice types. If the voice type does not exist, an error is logged.
+        /// </summary>
         public string? VoiceType 
         {
             get => _voiceType;
@@ -186,6 +388,10 @@ namespace ModdingTool
             }
         }
 
+        /// <summary>
+        /// Gets or sets the accent of the unit. This is a string representing the accent a unit has.
+        /// The setter validates the input and logs changes.
+        /// </summary>
         public string? Accent
         {
             get => _accent;
@@ -197,6 +403,10 @@ namespace ModdingTool
             }
         }
 
+        /// <summary>
+        /// Gets or sets the banner faction of the unit. This is a string representing the faction banner a unit has.
+        /// The setter validates the input and logs changes.
+        /// </summary>
         public string? BannerFaction
         {
             get => _bannerFaction;
@@ -207,6 +417,11 @@ namespace ModdingTool
                 _bannerFaction = value;
             }
         } 
+
+        /// <summary>
+        /// Gets or sets the banner unit of the unit. This is a string representing the unit banner a unit has.
+        /// The setter validates the input and logs changes.
+        /// </summary>
         public string? BannerUnit
         {
             get => _bannerUnit;
@@ -217,6 +432,11 @@ namespace ModdingTool
                 _bannerUnit = value;
             }
         } 
+
+        /// <summary>
+        /// Gets or sets the main banner of the unit. This is a string representing the main banner a unit has.
+        /// The setter validates the input and logs changes.
+        /// </summary>
         public string? BannerMain
         {
             get => _bannerMain;
@@ -227,6 +447,11 @@ namespace ModdingTool
                 _bannerMain = value;
             }
         } 
+
+        /// <summary>
+        /// Gets or sets the secondary banner of the unit. This is a string representing the secondary banner a unit has.
+        /// The setter validates the input and logs changes.
+        /// </summary>
         public string? BannerSecondary
         {
             get => _bannerSecondary;
@@ -237,6 +462,11 @@ namespace ModdingTool
                 _bannerSecondary = value;
             }
         } 
+
+        /// <summary>
+        /// Gets or sets the holy banner of the unit. This is a string representing the holy banner a unit has.
+        /// The setter validates the input and logs changes.
+        /// </summary>
         public string? BannerHoly 
         {
             get => _bannerHoly;
@@ -246,8 +476,13 @@ namespace ModdingTool
                 AddChange(nameof(BannerHoly), _bannerHoly ?? "", value);
                 _bannerHoly = value;
             }
-        } 
-
+        }
+        
+        
+        /// <summary>
+        /// Gets or sets the soldier model for the unit. This is a string representing the soldier model a unit uses.
+        /// The setter validates the input against the battle models database. If the model does not exist, an error is logged.
+        /// </summary>
         public string? Soldier
         {
             get => _soldier;
@@ -261,6 +496,10 @@ namespace ModdingTool
             }
         }
 
+        /// <summary>
+        /// Gets or sets the soldier count for the unit. This is an integer representing the number of soldiers in a unit.
+        /// The setter validates the input. If the unit category is "non_combatant", the soldier count must be between 0 and 300. For other categories, the soldier count must be between 4 and 100. If the count is not within these ranges, an error is logged.
+        /// </summary>
         public int SoldierCount
         {
             get => _soldierCount;
@@ -281,6 +520,10 @@ namespace ModdingTool
             }
         }
 
+        /// <summary>
+        /// Gets or sets the extras count for the unit. This is an integer representing the number of extras in a unit.
+        /// The setter validates the input. The extras count must be between 0 and 300. If the unit category is "handler", the number of animals (extras count divided by soldier count) must not exceed 3. If these conditions are not met, an error is logged.
+        /// </summary>
         public int ExtrasCount
         {
             get => _extrasCount;
@@ -295,6 +538,9 @@ namespace ModdingTool
             }
         }
 
+        /// <summary>
+        /// Gets or sets the mass of the unit. This is a double representing the mass of a unit.
+        /// </summary>
         public double Mass
         {
             get => _mass;
@@ -305,6 +551,9 @@ namespace ModdingTool
             }
         }
 
+        /// <summary>
+        /// Gets or sets the radius of the unit. This is a double representing the radius of a unit.
+        /// </summary>
         public double Radius
         {
             get => _radius;
@@ -315,6 +564,9 @@ namespace ModdingTool
             }
         }
 
+        /// <summary>
+        /// Gets or sets the height of the unit. This is a double representing the height of a unit.
+        /// </summary>
         public double Height
         {
             get => _height;
@@ -325,6 +577,10 @@ namespace ModdingTool
             }
         }
 
+        /// <summary>
+        /// Gets or sets the first officer model for the unit. This is a string representing the first officer model a unit uses.
+        /// The setter validates the input against the battle models database. If the model does not exist, an error is logged.
+        /// </summary>
         public string? Officer1
         {
             get => _officer1;
@@ -338,6 +594,10 @@ namespace ModdingTool
             }
         }
 
+        /// <summary>
+        /// Gets or sets the second officer model for the unit. This is a string representing the second officer model a unit uses.
+        /// The setter validates the input against the battle models database. If the model does not exist, an error is logged.
+        /// </summary>
         public string? Officer2
         {
             get => _officer2;
@@ -350,6 +610,11 @@ namespace ModdingTool
                 _officer2 = value;
             }
         }
+
+        /// <summary>
+        /// Gets or sets the third officer model for the unit. This is a string representing the third officer model a unit uses.
+        /// The setter validates the input against the battle models database. If the model does not exist, an error is logged.
+        /// </summary>
         public string? Officer3
         {
             get => _officer3;
@@ -362,6 +627,10 @@ namespace ModdingTool
                 _officer3 = value;
             }
         }
+
+        /// <summary>
+        /// Gets or sets the mounted engine for the unit. This is a string representing the mounted engine a unit uses.
+        /// </summary>
         public string? MountedEngine
         {
             get => _mountedEngine;
@@ -373,6 +642,10 @@ namespace ModdingTool
             }
         }
 
+        /// <summary>
+        /// Gets or sets the mount for the unit. This is a string representing the mount a unit uses.
+        /// The setter validates the input against the mounts database. If the mount does not exist, an error is logged.
+        /// </summary>
         public string? Mount
         {
             get => _mount;
@@ -386,6 +659,9 @@ namespace ModdingTool
             }
         }
 
+        /// <summary>
+        /// Gets or sets the ship for the unit. This is a string representing the ship a unit uses.
+        /// </summary>
         public string? Ship
         {
             get => _ship;
@@ -397,6 +673,9 @@ namespace ModdingTool
             }
         }
 
+        /// <summary>
+        /// Gets or sets the engine for the unit. This is a string representing the engine a unit uses.
+        /// </summary>
         public string? Engine
         {
             get => _engine;
@@ -408,6 +687,9 @@ namespace ModdingTool
             }
         }
 
+        /// <summary>
+        /// Gets or sets the animal for the unit. This is a string representing the animal a unit uses.
+        /// </summary>
         public string? Animal
         {
             get => _animal;
@@ -418,192 +700,1739 @@ namespace ModdingTool
                 _animal = value;
             }
         }
-        public List<string> MountEffect { get; set; } = new List<string>();
 
-        public List<string> Attributes { get; set; } = new List<string>();
-
-        public double SpacingWidth { get; set; } = 1.4;
-
-        public double SpacingDepth { get; set; } = 1.4;
-
-        public double SpacingWidthLoose { get; set; } = 2.4;
-
-        public double SpacingDepthLoose { get; set; } = 2.4;
-
-        public string? SpecialFormation { get; set; } = "";
-
-        public int HitPoints { get; set; } = 1;
-
-        public int MountHitPoints { get; set; } = 1;
-
-        public int PriAttack { get; set; } = 1;
-
-        public int PriCharge { get; set; } = 1;
-
-        public string? PriProjectile { get; set; } = "";
-        public int PriRange { get; set; } = 0;
-
-        public int PriAmmunition { get; set; } = 0;
-
-        public string? PriWeaponType { get; set; } = "melee";
-        public string? PriTechType { get; set; } = "melee_blade";
-        public string? PriDamageType { get; set; } = "blunt";
-        public string? PriSoundType { get; set; } = "none";
-        public int PriAttDelay { get; set; } = 0;
-
-        public double PriSkelFactor { get; set; } = 1.0;
-
-        public List<string>? PriAttr { get; set; } = new List<string>();
-
-        public int SecAttack { get; set; } = 0;
-
-        public int SecCharge { get; set; } = 0;
-
-        public string? SecProjectile { get; set; } = "";
-        public int SecRange { get; set; } = 0;
-
-        public int SecAmmunition { get; set; } = 0;
-
-        public string? SecWeaponType { get; set; } = "no";
-        public string? SecTechType { get; set; } = "melee_simple";
-        public string? SecDamageType { get; set; } = "blunt";
-        public string? SecSoundType { get; set; } = "none";
-        public int SecAttDelay { get; set; } = 0;
-
-        public double SecSkelFactor { get; set; } = 1;
-
-        public List<string>? SecAttr { get; set; } = new List<string>();
-
-        public int TerAttack { get; set; } = 0;
-        public int TerCharge { get; set; } = 0;
-        public string? TerProjectile { get; set; } = "";
-        public int TerRange { get; set; } = 0;
-        public int TerAmmunition { get; set; } = 0;
-        public string? TerWeaponType { get; set; } = "no";
-        public string? TerTechType { get; set; } = "melee_simple";
-        public string? TerDamageType { get; set; } = "blunt";
-        public string? TerSoundType { get; set; } = "none";
-        public int TerAttDelay { get; set; } = 0;
-        public double TerSkelFactor { get; set; } = 0;
-        public List<string>? TerAttr { get; set; } = new List<string>();
-
-        public int PriArmour { get; set; } = 0;
-        public string? FormationStyle { get; set; } = "square";
-        public int PriDefense { get; set; } = 0;
-
-        public int PriShield { get; set; } = 0;
-
-        public string? PriDefSound { get; set; } = "flesh";
-        public int SecArmour { get; set; } = 0;
-
-        public int SecDefense { get; set; } = 0;
-
-        public string? SecDefSound { get; set; } = "flesh";
-        public int StatHeat { get; set; } = 0;
-
-        public int StatScrub { get; set; } = 0;
-
-        public int StatForest { get; set; } = 0;
-
-        public int StatSnow { get; set; } = 0;
-
-        public int StatSand { get; set; } = 0;
-
-        public int Morale { get; set; } = 1;
-
-        public string? Discipline { get; set; } = "normal";
-
-        public string? Training { get; set; } = "untrained";
-
-        public int StatChargeDist { get; set; } = 10;
-
-        public int StatFireDelay { get; set; } = 0;
-
-        public int StatFood { get; set; } = 60;
-
-        public int StatFoodSec { get; set; } = 300;
-
-        public int RecruitTime { get; set; } = 1;
-
-        public int RecruitCost { get; set; } = 500;
-
-        public int Upkeep { get; set; } = 200;
-
-        public int WpnCost { get; set; } = 100;
-
-        public int ArmourCost { get; set; } = 100;
-
-        public int CustomCost { get; set; } = 500;
-
-        public int CustomLimit { get; set; } = 3;
-
-        public int CustomIncrease { get; set; } = 50;
-
-        public double MoveSpeed { get; set; } = 1.0;
-        public int StatStl { get; set; } = 0;
-
-        public int[]? ArmourUgLevels { get; set; }
-
-        public string? ArmourlvlBase { get; set; }
-
-        public string? ArmourlvlOne { get; set; }
-
-        public string? ArmourlvlTwo { get; set; }
-
-        public string? ArmourlvlThree { get; set; }
-
-        public string?[]? ArmourUgModels { get; set; }
-
-        public string? ArmourModelBase { get; set; }
-
-        public string? ArmourModelOne { get; set; }
-
-        public string? ArmourModelTwo { get; set; }
-
-        public string? ArmourModelThree { get; set; }
-
-        public List<string> Ownership { get; set; } = new List<string>();
-
-        public List<string> EraZero { get; set; } = new List<string>();
-
-        public List<string> EraOne { get; set; } = new List<string>();
-
-        public List<string> EraTwo { get; set; } = new List<string>();
-
-        public double RecruitPriorityOffset { get; set; } = 0;
-
-        public string? InfoDict { get; set; }
-
-        public string? CardDict { get; set; }
-
-        public double CrusadeUpkeep { get; set; } = 1.0;
-        public int SpacingRanks { get; set; }
-
-        public bool LockMorale { get; set; } = false;
-
-        public string? PriFireType { get; set; } = "";
-        public string? SecFireType { get; set; } = "";
-        public string? TerFireType { get; set; } = "";
-        public string? Descr { get; set; } = "";
-        public string? DescrShort { get; set; } = "";
-        public string Card { get; set; } = "";
-        public bool MercenaryUnit { get; set; } = false;
-        public bool GeneralUnit { get; set; } = false;
-        public bool IsEopUnit { get; set; } = false;
-        public string FilePath { get; set; } = "";
-        public int EduIndex { get; set; }
-
-        public double AiUnitValue { get; set; }
+        /// <summary>
+        /// Gets or sets the mount effect for the unit. This is a list of strings representing the mount effects a unit has.
+        /// </summary>
+        public List<string> MountEffect { get; set; } = new();
+
+        /// <summary>
+        /// Adds a new mount effect to the unit. If the effect already exists, it will not be added.
+        /// </summary>
+        /// <param name="effect">The mount effect to add.</param>
+        public void AddMountEffect(string effect)
+        {
+            if (MountEffect.Contains(effect))
+                return;
+            MountEffect.Add(effect);
+        }
+
+        /// <summary>
+        /// Gets or sets the attributes for the unit. This is a list of strings representing the attributes a unit has.
+        /// </summary>
+        public List<string> Attributes { get; set; } = new();
+
+        /// <summary>
+        /// Adds a new attribute to the unit. If the attribute already exists, it will not be added.
+        /// If the attribute does not exist in the global attribute types, it will be added there as well.
+        /// </summary>
+        /// <param name="attribute">The attribute to add.</param>
+        public void AddAttribute(string attribute)
+        {
+            if (Attributes.Contains(attribute))
+                return;
+            if (!ModData.Units.AttributeTypes.Contains(attribute))
+                ModData.Units.AttributeTypes.Add(attribute);
+            Attributes.Add(attribute);
+        }
+
+        /// <summary>
+        /// Gets or sets the spacing width of the unit. This is a double representing the horizontal spacing between soldiers in a unit.
+        /// The setter logs changes to the spacing width.
+        /// </summary>
+        public double SpacingWidth
+        {
+            get => _spacingWidth; 
+            set 
+            {
+                AddChange(nameof(SpacingWidth), _spacingWidth, value);
+                _spacingWidth = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the spacing depth of the unit. This is a double representing the vertical spacing between soldiers in a unit.
+        /// The setter logs changes to the spacing depth.
+        /// </summary>
+        public double SpacingDepth
+        {
+            get => _spacingDepth;
+            set
+            {
+                AddChange(nameof(SpacingDepth), _spacingDepth, value);
+                _spacingDepth = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the loose spacing width of the unit. This is a double representing the horizontal spacing between soldiers in a unit when in loose formation.
+        /// The setter logs changes to the loose spacing width.
+        /// </summary>
+        public double SpacingWidthLoose
+        {
+            get => _spacingWidthLoose;
+            set
+            {
+                AddChange(nameof(SpacingWidthLoose), _spacingWidthLoose, value);
+                _spacingWidthLoose = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the loose spacing depth of the unit. This is a double representing the vertical spacing between soldiers in a unit when in loose formation.
+        /// The setter logs changes to the loose spacing depth.
+        /// </summary>
+        public double SpacingDepthLoose
+        {
+            get => _spacingDepthLoose;
+            set
+            {
+                AddChange(nameof(SpacingDepthLoose), _spacingDepthLoose, value);
+                _spacingDepthLoose = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the special formation of the unit. This is a string representing the special formation a unit can adopt.
+        /// The setter validates the input against a predefined list of special formations. If the formation does not exist, an error is logged.
+        /// </summary>
+        public string? SpecialFormation
+        {
+            get => _specialFormation;
+            set
+            {
+                if (value == null) return;
+                if (!SpecialFormationStyles.Contains(value.ToLower()))
+                {
+                    ErrorDb.AddError($"Special formation {value} does not exist.");
+                    return;
+                }
+                AddChange(nameof(SpecialFormation), _specialFormation ?? "", value);
+                _specialFormation = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the hit points of the unit. This is an integer representing the health of a unit.
+        /// The setter clamps the value between a predefined minimum and maximum, and logs changes to the hit points.
+        /// </summary>
+        public int HitPoints
+        {
+            get => _hitPoints;
+            set
+            {
+                value = ClampUnitStat(value);
+                AddChange(nameof(HitPoints), _hitPoints, value);
+                _hitPoints = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the mount hit points of the unit. This is an integer representing the health of a unit's mount.
+        /// The setter clamps the value between a predefined minimum and maximum, and logs changes to the mount hit points.
+        /// </summary>
+        public int MountHitPoints
+        {
+            get => _mountHitPoints;
+            set
+            {
+                value = ClampUnitStat(value);
+                AddChange(nameof(MountHitPoints), _mountHitPoints, value);
+                _mountHitPoints = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the primary attack value of the unit. This is an integer representing the primary attack power of a unit.
+        /// The setter clamps the value between a predefined minimum and maximum, and logs changes to the primary attack value.
+        /// </summary>
+        public int PriAttack
+        {
+            get => _priAttack;
+            set
+            {
+                value = ClampUnitStat(value);
+                AddChange(nameof(PriAttack), _priAttack, value);
+                _priAttack = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the primary charge value of the unit. This is an integer representing the primary charge power of a unit.
+        /// The setter clamps the value between a predefined minimum and maximum, and logs changes to the primary charge value.
+        /// </summary>
+        public int PriCharge
+        {
+            get => _priCharge;
+            set
+            {
+                value = ClampUnitStat(value);
+                AddChange(nameof(PriCharge), _priCharge, value);
+                _priCharge = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the primary projectile type of the unit. This is a string representing the type of projectile used in a unit's primary attack.
+        /// The setter validates the input and logs changes. If the value is null, it defaults to "no".
+        /// </summary>
+        public string? PriProjectile
+        {
+            get => _priProjectile;
+            set
+            {
+                value ??= "no";
+                AddChange(nameof(PriProjectile), _priProjectile ?? "", value);
+                _priProjectile = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the primary range of the unit. This is an integer representing the range of a unit's primary attack.
+        /// The setter logs changes to the primary range.
+        /// </summary>
+        public int PriRange
+        {
+            get => _priRange;
+            set
+            {
+                AddChange(nameof(PriRange), _priRange, value);
+                _priRange = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the primary ammunition of the unit. This is an integer representing the amount of ammunition for a unit's primary attack.
+        /// The setter logs changes to the primary ammunition.
+        /// </summary>
+        public int PriAmmunition
+        {
+            get => _priAmmunition;
+            set
+            {
+                AddChange(nameof(PriAmmunition), _priAmmunition, value);
+                _priAmmunition = value;
+            }
+        }
         
+        /// <summary>
+        /// Gets or sets the primary weapon type of the unit. This is a string representing the type of weapon used in a unit's primary attack.
+        /// The setter validates the input against a predefined list of weapon types. If the weapon type does not exist, an error is logged.
+        /// </summary>
+        public string? PriWeaponType
+        {
+            get => _priWeaponType;
+            set
+            {
+                if (value == null) return;
+                if (!WeaponTypes.Contains(value.ToLower()))
+                {
+                    ErrorDb.AddError($"Weapon type {value} does not exist.");
+                    return;
+                }
+                AddChange(nameof(PriWeaponType), _priWeaponType ?? "", value);
+                _priWeaponType = value;
+            }
+        }
+        
+        /// <summary>
+        /// Gets or sets the primary technology type of the unit. This is a string representing the technology type of a unit's primary attack.
+        /// The setter validates the input against a predefined list of technology types. If the technology type does not exist, an error is logged.
+        /// </summary>
+        public string? PriTechType
+        {
+            get => _priTechType;
+            set
+            {
+                if (value == null) return;
+                if (!TechTypes.Contains(value.ToLower()))
+                {
+                    ErrorDb.AddError($"Weapon type {value} does not exist.");
+                    return;
+                }
+                AddChange(nameof(PriTechType), _priTechType ?? "", value);
+                _priTechType = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the primary damage type of the unit. This is a string representing the type of damage a unit's primary attack inflicts.
+        /// The setter validates the input against a predefined list of damage types. If the damage type does not exist, an error is logged.
+        /// </summary>
+        public string? PriDamageType
+        {
+            get => _priDamageType;
+            set
+            {
+                if (value == null) return;
+                if (!DamageTypes.Contains(value.ToLower()))
+                {
+                    ErrorDb.AddError($"Damage type {value} does not exist.");
+                    return;
+                }
+                AddChange(nameof(PriDamageType), _priDamageType ?? "", value);
+                _priDamageType = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the primary sound type of the unit. This is a string representing the sound type of a unit's primary attack.
+        /// The setter validates the input against a predefined list of sound types. If the sound type does not exist, an error is logged.
+        /// </summary>
+        public string? PriSoundType
+        {
+            get => _priSoundType;
+            set
+            {
+                if (value == null) return;
+                if (!SoundTypes.Contains(value.ToLower()))
+                {
+                    ErrorDb.AddError($"Sound type {value} does not exist.");
+                    return;
+                }
+                AddChange(nameof(PriSoundType), _priSoundType ?? "", value);
+                _priSoundType = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the primary attack delay of the unit. This is an integer representing the delay of a unit's primary attack.
+        /// The setter logs changes to the primary attack delay.
+        /// </summary>
+        public int PriAttDelay
+        {
+            get => _priAttDelay;
+            set
+            {
+                AddChange(nameof(PriAttDelay), _priAttDelay, value);
+                _priAttDelay = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the primary skeleton factor of the unit. This is a double representing the skeleton factor of a unit's primary attack.
+        /// The setter logs changes to the primary skeleton factor.
+        /// </summary>
+        public double PriSkelFactor
+        {
+            get => _priSkelFactor;
+            set
+            {
+                AddChange(nameof(PriSkelFactor), _priSkelFactor, value);
+                _priSkelFactor = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the primary attributes of the unit. This is a list of strings representing the attributes of a unit's primary attack.
+        /// </summary>
+        public List<string>? PriAttr
+        {
+            get => _priAttr;
+            set => _priAttr = value;
+        }
+
+        /// <summary>
+        /// Adds a new primary attribute to the unit. If the attribute already exists, it will not be added.
+        /// If the attribute does not exist in the global attribute types, an error is logged.
+        /// </summary>
+        /// <param name="attribute">The attribute to add.</param>
+        public void AddPriAttr(string attribute)
+        {
+            if (PriAttr != null && PriAttr.Contains(attribute))
+                return;
+            if (!AttackAttr.Contains(attribute))
+            {
+                ErrorDb.AddError($"Attack attribute {attribute} does not exist.");
+                return;
+            }
+            PriAttr ??= new List<string>();
+            PriAttr.Add(attribute);
+        }
+
+        /// <summary>
+        /// Gets or sets the secondary attack value of the unit. This is an integer representing the secondary attack power of a unit.
+        /// The setter clamps the value between a predefined minimum and maximum, and logs changes to the secondary attack value.
+        /// </summary>
+        public int SecAttack
+        {
+            get => _secAttack;
+            set
+            {
+                value = ClampUnitStat(value);
+                AddChange(nameof(SecAttack), _secAttack, value);
+                _secAttack = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the secondary charge value of the unit. This is an integer representing the secondary charge power of a unit.
+        /// The setter clamps the value between a predefined minimum and maximum, and logs changes to the secondary charge value.
+        /// </summary>
+        public int SecCharge
+        {
+            get => _secCharge;
+            set
+            {
+                value = ClampUnitStat(value);
+                AddChange(nameof(SecCharge), _secCharge, value);
+                _secCharge = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the secondary projectile type of the unit. This is a string representing the type of projectile used in a unit's secondary attack.
+        /// The setter validates the input and logs changes. If the value is null, it defaults to "no".
+        /// </summary>
+        public string? SecProjectile
+        {
+            get => _secProjectile;
+            set
+            {
+                value ??= "no";
+                AddChange(nameof(SecProjectile), _secProjectile ?? "", value);
+                _secProjectile = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the secondary range of the unit. This is an integer representing the range of a unit's secondary attack.
+        /// The setter logs changes to the secondary range.
+        /// </summary>
+        public int SecRange
+        {
+            get => _secRange;
+            set
+            {
+                AddChange(nameof(SecRange), _secRange, value);
+                _secRange = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the secondary ammunition of the unit. This is an integer representing the amount of ammunition for a unit's secondary attack.
+        /// The setter logs changes to the secondary ammunition.
+        /// </summary>
+        public int SecAmmunition
+        {
+            get => _secAmmunition;
+            set
+            {
+                AddChange(nameof(SecAmmunition), _secAmmunition, value);
+                _secAmmunition = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the secondary weapon type of the unit. This is a string representing the type of weapon used in a unit's secondary attack.
+        /// The setter validates the input against a predefined list of weapon types. If the weapon type does not exist, an error is logged.
+        /// </summary>
+        public string? SecWeaponType
+        {
+            get => _secWeaponType;
+            set
+            {
+                if (value == null) return;
+                if (!WeaponTypes.Contains(value.ToLower()))
+                {
+                    ErrorDb.AddError($"Weapon type {value} does not exist.");
+                    return;
+                }
+                AddChange(nameof(SecWeaponType), _secWeaponType ?? "", value);
+                _secWeaponType = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the secondary technology type of the unit. This is a string representing the technology type of a unit's secondary attack.
+        /// The setter validates the input against a predefined list of technology types. If the technology type does not exist, an error is logged.
+        /// </summary>
+        public string? SecTechType
+        {
+            get => _secTechType;
+            set
+            {
+                if (value == null) return;
+                if (!TechTypes.Contains(value.ToLower()))
+                {
+                    ErrorDb.AddError($"Weapon type {value} does not exist.");
+                    return;
+                }
+                AddChange(nameof(SecTechType), _secTechType ?? "", value);
+                _secTechType = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the secondary damage type of the unit. This is a string representing the type of damage a unit's secondary attack inflicts.
+        /// The setter validates the input against a predefined list of damage types. If the damage type does not exist, an error is logged.
+        /// </summary>
+        public string? SecDamageType
+        {
+            get => _secDamageType;
+            set
+            {
+                if (value == null) return;
+                if (!DamageTypes.Contains(value.ToLower()))
+                {
+                    ErrorDb.AddError($"Damage type {value} does not exist.");
+                    return;
+                }
+                AddChange(nameof(SecDamageType), _secDamageType ?? "", value);
+                _secDamageType = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the secondary sound type of the unit. This is a string representing the sound type of a unit's secondary attack.
+        /// The setter validates the input against a predefined list of sound types. If the sound type does not exist, an error is logged.
+        /// </summary>
+        public string? SecSoundType
+        {
+            get => _secSoundType;
+            set
+            {
+                if (value == null) return;
+                if (!SoundTypes.Contains(value.ToLower()))
+                {
+                    ErrorDb.AddError($"Sound type {value} does not exist.");
+                    return;
+                }
+                AddChange(nameof(SecSoundType), _secSoundType ?? "", value);
+                _secSoundType = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the secondary attack delay of the unit. This is an integer representing the delay of a unit's secondary attack.
+        /// The setter logs changes to the secondary attack delay.
+        /// </summary>
+        public int SecAttDelay
+        {
+            get => _secAttDelay;
+            set
+            {
+                AddChange(nameof(SecAttDelay), _secAttDelay, value);
+                _secAttDelay = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the secondary skeleton factor of the unit. This is a double representing the skeleton factor of a unit's secondary attack.
+        /// The setter logs changes to the secondary skeleton factor.
+        /// </summary>
+        public double SecSkelFactor
+        {
+            get => _secSkelFactor;
+            set
+            {
+                AddChange(nameof(SecSkelFactor), _secSkelFactor, value);
+                _secSkelFactor = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the secondary attributes of the unit. This is a list of strings representing the attributes of a unit's secondary attack.
+        /// </summary>
+        public List<string>? SecAttr
+        {
+            get => _secAttr;
+            set => _secAttr = value;
+        }
+
+        /// <summary>
+        /// Adds a new secondary attribute to the unit. If the attribute already exists, it will not be added.
+        /// If the attribute does not exist in the global attribute types, an error is logged.
+        /// </summary>
+        /// <param name="attribute">The attribute to add.</param>
+        public void AddSecAttr(string attribute)
+        {
+            if (SecAttr != null && SecAttr.Contains(attribute))
+                return;
+            if (!AttackAttr.Contains(attribute))
+            {
+                ErrorDb.AddError($"Attack attribute {attribute} does not exist.");
+                return;
+            }
+            SecAttr ??= new List<string>();
+            SecAttr.Add(attribute);
+        }
+
+        /// <summary>
+        /// Gets or sets the tertiary attack value of the unit. This is an integer representing the tertiary attack power of a unit.
+        /// The setter clamps the value between a predefined minimum and maximum, and logs changes to the tertiary attack value.
+        /// </summary>
+        public int TerAttack
+        {
+            get => _terAttack;
+            set
+            {
+                value = ClampUnitStat(value);
+                AddChange(nameof(TerAttack), _terAttack, value);
+                _terAttack = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the tertiary charge value of the unit. This is an integer representing the tertiary charge power of a unit.
+        /// The setter clamps the value between a predefined minimum and maximum, and logs changes to the tertiary charge value.
+        /// </summary>
+        public int TerCharge
+        {
+            get => _terCharge;
+            set
+            {
+                value = ClampUnitStat(value);
+                AddChange(nameof(TerCharge), _terCharge, value);
+                _terCharge = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the tertiary projectile type of the unit. This is a string representing the type of projectile used in a unit's tertiary attack.
+        /// The setter validates the input and logs changes. If the value is null, it defaults to "no".
+        /// </summary>
+        public string? TerProjectile
+        {
+            get => _terProjectile;
+            set
+            {
+                value ??= "no";
+                AddChange(nameof(TerProjectile), _terProjectile ?? "", value);
+                _terProjectile = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the tertiary range of the unit. This is an integer representing the range of a unit's tertiary attack.
+        /// The setter logs changes to the tertiary range.
+        /// </summary>
+        public int TerRange
+        {
+            get => _terRange;
+            set
+            {
+                AddChange(nameof(TerRange), _terRange, value);
+                _terRange = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the tertiary ammunition of the unit. This is an integer representing the amount of ammunition for a unit's tertiary attack.
+        /// The setter logs changes to the tertiary ammunition.
+        /// </summary>
+        public int TerAmmunition
+        {
+            get => _terAmmunition;
+            set
+            {
+                AddChange(nameof(TerAmmunition), _terAmmunition, value);
+                _terAmmunition = value;
+            }
+        }
+        
+        /// <summary>
+        /// Gets or sets the tertiary weapon type of the unit. This is a string representing the type of weapon used in a unit's tertiary attack.
+        /// The setter validates the input against a predefined list of weapon types. If the weapon type does not exist, an error is logged.
+        /// </summary>
+        public string? TerWeaponType
+        {
+            get => _terWeaponType;
+            set
+            {
+                if (value == null) return;
+                if (!WeaponTypes.Contains(value.ToLower()))
+                {
+                    ErrorDb.AddError($"Weapon type {value} does not exist.");
+                    return;
+                }
+                AddChange(nameof(TerWeaponType), _terWeaponType ?? "", value);
+                _terWeaponType = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the tertiary technology type of the unit. This is a string representing the technology type of a unit's tertiary attack.
+        /// The setter validates the input against a predefined list of technology types. If the technology type does not exist, an error is logged.
+        /// </summary>
+        public string? TerTechType
+        {
+            get => _terTechType;
+            set
+            {
+                if (value == null) return;
+                if (!TechTypes.Contains(value.ToLower()))
+                {
+                    ErrorDb.AddError($"Weapon type {value} does not exist.");
+                    return;
+                }
+                AddChange(nameof(TerTechType), _terTechType ?? "", value);
+                _terTechType = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the tertiary damage type of the unit. This is a string representing the type of damage a unit's tertiary attack inflicts.
+        /// The setter validates the input against a predefined list of damage types. If the damage type does not exist, an error is logged.
+        /// </summary>
+        public string? TerDamageType
+        {
+            get => _terDamageType;
+            set
+            {
+                if (value == null) return;
+                if (!DamageTypes.Contains(value.ToLower()))
+                {
+                    ErrorDb.AddError($"Damage type {value} does not exist.");
+                    return;
+                }
+                AddChange(nameof(TerDamageType), _terDamageType ?? "", value);
+                _terDamageType = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the tertiary sound type of the unit. This is a string representing the sound type of a unit's tertiary attack.
+        /// The setter validates the input against a predefined list of sound types. If the sound type does not exist, an error is logged.
+        /// </summary>
+        public string? TerSoundType
+        {
+            get => _terSoundType;
+            set
+            {
+                if (value == null) return;
+                if (!SoundTypes.Contains(value.ToLower()))
+                {
+                    ErrorDb.AddError($"Sound type {value} does not exist.");
+                    return;
+                }
+                AddChange(nameof(TerSoundType), _terSoundType ?? "", value);
+                _terSoundType = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the tertiary attack delay of the unit. This is an integer representing the delay of a unit's tertiary attack.
+        /// The setter logs changes to the tertiary attack delay.
+        /// </summary>
+        public int TerAttDelay
+        {
+            get => _terAttDelay;
+            set
+            {
+                AddChange(nameof(TerAttDelay), _terAttDelay, value);
+                _terAttDelay = value;
+            }
+        }
+        
+        /// <summary>
+        /// Gets or sets the tertiary skeleton factor of the unit. This is a double representing the skeleton factor of a unit's tertiary attack.
+        /// The setter logs changes to the tertiary skeleton factor.
+        /// </summary>
+        public double TerSkelFactor
+        {
+            get => _terSkelFactor;
+            set
+            {
+                AddChange(nameof(TerSkelFactor), _terSkelFactor, value);
+                _terSkelFactor = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the tertiary attributes of the unit. This is a list of strings representing the attributes of a unit's tertiary attack.
+        /// </summary>
+        public List<string>? TerAttr
+        {
+            get => _terAttr;
+            set => _terAttr = value;
+        }
+        
+        /// <summary>
+        /// Adds a new tertiary attribute to the unit. If the attribute already exists, it will not be added.
+        /// If the attribute does not exist in the global attribute types, an error is logged.
+        /// </summary>
+        /// <param name="attribute">The attribute to add.</param>
+        public void AddTerAttr(string attribute)
+        {
+            // Check if the tertiary attribute list is not null and contains the attribute
+            if (TerAttr != null && TerAttr.Contains(attribute))
+                return;
+
+            // Check if the attribute exists in the global attribute types
+            if (!AttackAttr.Contains(attribute))
+            {
+                // Log an error if the attribute does not exist
+                ErrorDb.AddError($"Attack attribute {attribute} does not exist.");
+                return;
+            }
+
+            // Initialize the tertiary attribute list if it is null
+            TerAttr ??= new List<string>();
+
+            // Add the attribute to the tertiary attribute list
+            TerAttr.Add(attribute);
+        }
+        
+        /// <summary>
+        /// Gets or sets the primary armour value of the unit. This is an integer representing the primary armour value of a unit.
+        /// The setter clamps the value to a minimum of 0 using the ClampUnitStat method, logs changes to the primary armour value, and then sets the primary armour value.
+        /// </summary>
+        public int PriArmour
+        {
+            get => _priArmour;
+            set
+            {
+                value = ClampUnitStat(value, 0);
+                AddChange(nameof(PriArmour), _priArmour, value);
+                _priArmour = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the formation style of the unit. This is a string representing the formation style a unit can adopt.
+        /// The setter validates the input against a predefined list of formation styles. If the formation style does not exist, an error is logged.
+        /// </summary>
+        public string? FormationStyle
+        {
+            get => _formationStyle;
+            set
+            {
+                if (value == null) return;
+                if (!FormationStyles.Contains(value.ToLower()))
+                {
+                    ErrorDb.AddError($"Formation style {value} does not exist.");
+                    return;
+                }
+                AddChange(nameof(FormationStyle), _formationStyle ?? "", value);
+                _formationStyle = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the primary defense value of the unit. This is an integer representing the primary defense power of a unit.
+        /// The setter clamps the value to a minimum of 0 using the ClampUnitStat method, logs changes to the primary defense value, and then sets the primary defense value.
+        /// </summary>
+        public int PriDefense
+        {
+            get => _priDefense;
+            set
+            {
+                value = ClampUnitStat(value, 0);
+                AddChange(nameof(PriDefense), _priDefense, value);
+                _priDefense = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the primary shield value of the unit. This is an integer representing the primary shield power of a unit.
+        /// The setter clamps the value to a minimum of 0 using the ClampUnitStat method, logs changes to the primary shield value, and then sets the primary shield value.
+        /// </summary>
+        public int PriShield
+        {
+            get => _priShield;
+            set
+            {
+                value = ClampUnitStat(value, 0);
+                AddChange(nameof(PriShield), _priShield, value);
+                _priShield = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the primary defense sound type of the unit. This is a string representing the sound type of a unit's primary defense.
+        /// The setter validates the input against a predefined list of sound types. If the sound type does not exist, an error is logged.
+        /// </summary>
+        public string? PriDefSound
+        {
+            get => _priDefSound;
+            set
+            {
+                if (value == null) return;
+                if (!SoundTypesDef.Contains(value.ToLower()))
+                {
+                    ErrorDb.AddError($"Defence sound {value} does not exist.");
+                    return;
+                }
+                AddChange(nameof(PriDefSound), _priDefSound ?? "", value);
+                _priDefSound = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the secondary armor value of the unit. This is an integer representing the secondary armor value of a unit.
+        /// The setter clamps the value to a minimum of 0 using the ClampUnitStat method, logs changes to the secondary armor value, and then sets the secondary armor value.
+        /// </summary>
+        public int SecArmour
+        {
+            get => _secArmour;
+            set
+            {
+                value = ClampUnitStat(value, 0);
+                AddChange(nameof(SecArmour), _secArmour, value);
+                _secArmour = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the secondary defense value of the unit. This is an integer representing the secondary defense power of a unit.
+        /// The setter clamps the value to a minimum of 0 using the ClampUnitStat method, logs changes to the secondary defense value, and then sets the secondary defense value.
+        /// </summary>
+        public int SecDefense
+        {
+            get => _secDefense;
+            set
+            {
+                value = ClampUnitStat(value, 0);
+                AddChange(nameof(SecDefense), _secDefense, value);
+                _secDefense = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the secondary defense sound type of the unit. This is a string representing the sound type of a unit's secondary defense.
+        /// The setter validates the input against a predefined list of sound types. If the sound type does not exist, an error is logged.
+        /// </summary>
+        public string? SecDefSound
+        {
+            get => _secDefSound;
+            set
+            {
+                if (value == null) return;
+                if (!SoundTypesDef.Contains(value.ToLower()))
+                {
+                    ErrorDb.AddError($"Defence sound {value} does not exist.");
+                    return;
+                }
+                AddChange(nameof(SecDefSound), _secDefSound ?? "", value);
+                _secDefSound = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the heat resistance of the unit. This is an integer representing the unit's resistance to heat.
+        /// The setter clamps the value to a minimum of 0 using the ClampUnitStat method, logs changes to the heat resistance, and then sets the heat resistance.
+        /// </summary>
+        public int StatHeat
+        {
+            get => _statHeat;
+            set
+            {
+                value = ClampUnitStat(value, 0);
+                AddChange(nameof(StatHeat), _statHeat, value);
+                _statHeat = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the scrub resistance of the unit. This is an integer representing the unit's resistance to scrub.
+        /// The setter clamps the value to a minimum of 0 using the ClampUnitStat method, logs changes to the scrub resistance, and then sets the scrub resistance.
+        /// </summary>
+        public int StatScrub
+        {
+            get => _statScrub;
+            set
+            {
+                value = ClampUnitStat(value, 0);
+                AddChange(nameof(StatScrub), _statScrub, value);
+                _statScrub = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the forest resistance of the unit. This is an integer representing the unit's resistance to forest.
+        /// The setter clamps the value to a minimum of 0 using the ClampUnitStat method, logs changes to the forest resistance, and then sets the forest resistance.
+        /// </summary>
+        public int StatForest
+        {
+            get => _statForest;
+            set
+            {
+                value = ClampUnitStat(value, 0);
+                AddChange(nameof(StatForest), _statForest, value);
+                _statForest = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the snow resistance of the unit. This is an integer representing the unit's resistance to snow.
+        /// The setter clamps the value to a minimum of 0 using the ClampUnitStat method, logs changes to the snow resistance, and then sets the snow resistance.
+        /// </summary>
+        public int StatSnow
+        {
+            get => _statSnow;
+            set
+            {
+                value = ClampUnitStat(value, 0);
+                AddChange(nameof(StatSnow), _statSnow, value);
+                _statSnow = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the sand resistance of the unit. This is an integer representing the unit's resistance to sand.
+        /// The setter clamps the value to a minimum of 0 using the ClampUnitStat method, logs changes to the sand resistance, and then sets the sand resistance.
+        /// </summary>
+        public int StatSand
+        {
+            get => _statSand;
+            set
+            {
+                value = ClampUnitStat(value, 0);
+                AddChange(nameof(StatSand), _statSand, value);
+                _statSand = value;
+            }
+        }
+        
+        /// <summary>
+        /// Gets or sets the morale of the unit. This is an integer representing the morale of a unit.
+        /// The setter clamps the value to a minimum of 0 using the ClampUnitStat method, logs changes to the morale, and then sets the morale.
+        /// </summary>
+        public int Morale
+        {
+            get => _morale;
+            set
+            {
+                value = ClampUnitStat(value, 0);
+                AddChange(nameof(Morale), _morale, value);
+                _morale = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the discipline of the unit. This is a string representing the discipline of a unit.
+        /// The setter validates the input against a predefined list of discipline types. If the discipline type does not exist, an error is logged.
+        /// </summary>
+        public string? Discipline
+        {
+            get => _discipline;
+            set
+            {
+                if (value == null) return;
+                if (!DisciplineTypes.Contains(value.ToLower()))
+                {
+                    ErrorDb.AddError($"Discipline type {value} does not exist.");
+                    return;
+                }
+                AddChange(nameof(Discipline), _discipline ?? "", value);
+                _discipline = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the training of the unit. This is a string representing the training of a unit.
+        /// The setter validates the input against a predefined list of training types. If the training type does not exist, an error is logged.
+        /// </summary>
+        public string? Training
+        {
+            get => _training;
+            set
+            {
+                if (value == null) return;
+                if (!TrainedTypes.Contains(value.ToLower()))
+                {
+                    ErrorDb.AddError($"Training type {value} does not exist.");
+                    return;
+                }
+                AddChange(nameof(Training), _training ?? "", value);
+                _training = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the charge distance of the unit. This is an integer representing the charge distance of a unit.
+        /// The setter logs changes to the charge distance.
+        /// </summary>
+        public int StatChargeDist
+        {
+            get => _statChargeDist;
+            set
+            {
+                AddChange(nameof(StatChargeDist), _statChargeDist, value);
+                _statChargeDist = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the fire delay of the unit. This is an integer representing the fire delay of a unit.
+        /// The setter logs changes to the fire delay.
+        /// </summary>
+        public int StatFireDelay
+        {
+            get => _statFireDelay;
+            set
+            {
+                AddChange(nameof(StatFireDelay), _statFireDelay, value);
+                _statFireDelay = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the food statistic of the unit. This is an integer representing the food statistic of a unit.
+        /// The setter logs changes to the food statistic.
+        /// </summary>
+        public int StatFood
+        {
+            get => _statFood;
+            set
+            {
+                AddChange(nameof(StatFood), _statFood, value);
+                _statFood = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the food per second statistic of the unit. This is an integer representing the food per second statistic of a unit.
+        /// The setter logs changes to the food per second statistic.
+        /// </summary>
+        public int StatFoodSec
+        {
+            get => _statFoodSec;
+            set
+            {
+                AddChange(nameof(StatFoodSec), _statFoodSec, value);
+                _statFoodSec = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the recruit time of the unit. This is an integer representing the time it takes to recruit a unit.
+        /// The setter logs changes to the recruit time.
+        /// </summary>
+        public int RecruitTime
+        {
+            get => _recruitTime;
+            set
+            {
+                AddChange(nameof(RecruitTime), _recruitTime, value);
+                _recruitTime = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the recruit cost of the unit. This is an integer representing the cost to recruit a unit.
+        /// The setter logs changes to the recruit cost.
+        /// </summary>
+        public int RecruitCost
+        {
+            get => _recruitCost;
+            set
+            {
+                AddChange(nameof(RecruitCost), _recruitCost, value);
+                _recruitCost = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the upkeep of the unit. This is an integer representing the upkeep cost of a unit.
+        /// The setter logs changes to the upkeep.
+        /// </summary>
+        public int Upkeep
+        {
+            get => _upkeep;
+            set
+            {
+                AddChange(nameof(Upkeep), _upkeep, value);
+                _upkeep = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the weapon cost of the unit. This is an integer representing the cost of the unit's weapon.
+        /// The setter logs changes to the weapon cost.
+        /// </summary>
+        public int WpnCost
+        {
+            get => _wpnCost;
+            set
+            {
+                AddChange(nameof(WpnCost), _wpnCost, value);
+                _wpnCost = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the armour cost of the unit. This is an integer representing the cost of the unit's armour.
+        /// The setter logs changes to the armour cost.
+        /// </summary>
+        public int ArmourCost
+        {
+            get => _armourCost;
+            set
+            {
+                AddChange(nameof(ArmourCost), _armourCost, value);
+                _armourCost = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the custom cost of the unit. This is an integer representing the custom cost of the unit.
+        /// The setter logs changes to the custom cost.
+        /// </summary>
+        public int CustomCost
+        {
+            get => _customCost;
+            set
+            {
+                AddChange(nameof(CustomCost), _customCost, value);
+                _customCost = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the custom limit of the unit. This is an integer representing the custom limit of the unit.
+        /// The setter logs changes to the custom limit.
+        /// </summary>
+        public int CustomLimit
+        {
+            get => _customLimit;
+            set
+            {
+                AddChange(nameof(CustomLimit), _customLimit, value);
+                _customLimit = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the custom increase of the unit. This is an integer representing the custom increase of the unit.
+        /// The setter logs changes to the custom increase.
+        /// </summary>
+        public int CustomIncrease
+        {
+            get => _customIncrease;
+            set
+            {
+                AddChange(nameof(CustomIncrease), _customIncrease, value);
+                _customIncrease = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the move speed of the unit. This is a double representing the move speed of a unit.
+        /// The setter logs changes to the move speed.
+        /// </summary>
+        public double MoveSpeed
+        {
+            get => _moveSpeed;
+            set
+            {
+                AddChange(nameof(MoveSpeed), _moveSpeed, value);
+                _moveSpeed = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the stat_stl statistic of the unit. This is the minimum numbers of soldiers that need to exist for the unit to not be killed off.
+        /// The setter logs changes to the stl statistic.
+        /// </summary>
+        public int StatStl
+        {
+            get => _statStl;
+            set
+            {
+                AddChange(nameof(StatStl), _statStl, value);
+                _statStl = value;
+            }
+        }
+        
+        /// <summary>
+        /// Gets or sets the Armour Upgrade Levels of the unit. This is an array of integers representing the different levels of armour upgrades a unit can have.
+        /// </summary>
+        public int[]? ArmourUgLevels
+        {
+            get => _armourUgLevels;
+            set => _armourUgLevels = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the base armour levels of the unit. This is a string representing the base armour level a unit has.
+        /// The setter validates the input, logs changes to the base armour level, and then sets the base armour level.
+        /// </summary>
+        public string? ArmourlvlBase
+        {
+            get => _armourlvlBase;
+            set
+            {
+                if (value == null) return;
+                AddChange(nameof(ArmourlvlBase), _armourlvlBase ?? "", value);
+                _armourlvlBase = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the first armour levels of the unit. This is a string representing the first armour level a unit has.
+        /// The setter validates the input, logs changes to the first armour level, and then sets the first armour level.
+        /// </summary>
+        public string? ArmourlvlOne
+        {
+            get => _armourlvlOne;
+            set
+            {
+                if (value == null) return;
+                AddChange(nameof(ArmourlvlOne), _armourlvlOne ?? "", value);
+                _armourlvlOne = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the second armour levels of the unit. This is a string representing the second armour level a unit has.
+        /// The setter validates the input, logs changes to the second armour level, and then sets the second armour level.
+        /// </summary>
+        public string? ArmourlvlTwo
+        {
+            get => _armourlvlTwo;
+            set
+            {
+                if (value == null) return;
+                AddChange(nameof(ArmourlvlTwo), _armourlvlTwo ?? "", value);
+                _armourlvlTwo = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the third armour levels of the unit. This is a string representing the third armour level a unit has.
+        /// The setter validates the input, logs changes to the third armour level, and then sets the third armour level.
+        /// </summary>
+        public string? ArmourlvlThree
+        {
+            get => _armourlvlThree;
+            set
+            {
+                if (value == null) return;
+                AddChange(nameof(ArmourlvlThree), _armourlvlThree ?? "", value);
+                _armourlvlThree = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the Armour Upgrade Models of the unit. This is an array of strings representing the different models of armour upgrades a unit can have.
+        /// </summary>
+        public string?[]? ArmourUgModels
+        {
+            get => _armourUgModels;
+            set => _armourUgModels = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the base armour model of the unit. This is a string representing the base armour model a unit has.
+        /// The setter validates the input against the battle models database. If the model does not exist, an error is logged.
+        /// </summary>
+        public string? ArmourModelBase
+        {
+            get => _armourModelBase;
+            set
+            {
+                if (value == null) return;
+                if (!ModData.BattleModelDb.Contains(value.ToLower()))
+                    ErrorDb.AddError($"Armour model {value} does not exist.");
+                AddChange(nameof(ArmourModelBase), _armourModelBase ?? "", value);
+                _armourModelBase = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the first armour model of the unit. This is a string representing the first armour model a unit has.
+        /// The setter validates the input against the battle models database. If the model does not exist, an error is logged.
+        /// </summary>
+        public string? ArmourModelOne
+        {
+            get => _armourModelOne;
+            set
+            {
+                if (value == null) return;
+                if (!ModData.BattleModelDb.Contains(value.ToLower()))
+                    ErrorDb.AddError($"Armour model {value} does not exist.");
+                AddChange(nameof(ArmourModelOne), _armourModelOne ?? "", value);
+                _armourModelOne = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the second armour model of the unit. This is a string representing the second armour model a unit has.
+        /// The setter validates the input against the battle models database. If the model does not exist, an error is logged.
+        /// </summary>
+        public string? ArmourModelTwo
+        {
+            get => _armourModelTwo;
+            set
+            {
+                if (value == null) return;
+                if (!ModData.BattleModelDb.Contains(value.ToLower()))
+                    ErrorDb.AddError($"Armour model {value} does not exist.");
+                AddChange(nameof(ArmourModelTwo), _armourModelTwo ?? "", value);
+                _armourModelTwo = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the third armour model of the unit. This is a string representing the third armour model a unit has.
+        /// The setter validates the input against the battle models database. If the model does not exist, an error is logged.
+        /// </summary>
+        public string? ArmourModelThree
+        {
+            get => _armourModelThree;
+            set
+            {
+                if (value == null) return;
+                if (!ModData.BattleModelDb.Contains(value.ToLower()))
+                    ErrorDb.AddError($"Armour model {value} does not exist.");
+                AddChange(nameof(ArmourModelThree), _armourModelThree ?? "", value);
+                _armourModelThree = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the Ownership of the unit. This is a list of strings representing the factions that own the unit.
+        /// </summary>
+        public List<string> Ownership
+        {
+            get => _ownership;
+            set => _ownership = value;
+        }
+
+        /// <summary>
+        /// Adds a new faction to the Ownership of the unit. If the faction already exists in the Ownership, it will not be added.
+        /// </summary>
+        /// <param name="faction">The faction to add.</param>
+        public void AddOwnership(string faction)
+        {
+            if (Ownership.Contains(faction))
+                return;
+            Ownership.Add(faction);
+        }
+
+        /// <summary>
+        /// Gets or sets the EraZero of the unit. This is a list of strings representing the factions that own the unit in EraZero.
+        /// </summary>
+        public List<string> EraZero
+        {
+            get => _eraZero;
+            set => _eraZero = value;
+        }
+
+        /// <summary>
+        /// Adds a new faction to the EraZero of the unit. If the faction already exists in the EraZero, it will not be added.
+        /// </summary>
+        /// <param name="faction">The faction to add.</param>
+        public void AddEraZero(string faction)
+        {
+            if (EraZero.Contains(faction))
+                return;
+            EraZero.Add(faction);
+        }
+
+        /// <summary>
+        /// Gets or sets the EraOne of the unit. This is a list of strings representing the factions that own the unit in EraOne.
+        /// </summary>
+        public List<string> EraOne
+        {
+            get => _eraOne;
+            set => _eraOne = value;
+        }
+
+        /// <summary>
+        /// Adds a new faction to the EraOne of the unit. If the faction already exists in the EraOne, it will not be added.
+        /// </summary>
+        /// <param name="faction">The faction to add.</param>
+        public void AddEraOne(string faction)
+        {
+            if (EraOne.Contains(faction))
+                return;
+            EraOne.Add(faction);
+        }
+
+        /// <summary>
+        /// Gets or sets the EraTwo of the unit. This is a list of strings representing the factions that own the unit in EraTwo.
+        /// </summary>
+        public List<string> EraTwo
+        {
+            get => _eraTwo;
+            set => _eraTwo = value;
+        }
+
+        /// <summary>
+        /// Adds a new faction to the EraTwo of the unit. If the faction already exists in the EraTwo, it will not be added.
+        /// </summary>
+        /// <param name="faction">The faction to add.</param>
+        public void AddEraTwo(string faction)
+        {
+            if (EraTwo.Contains(faction))
+                return;
+            EraTwo.Add(faction);
+        }
+
+        /// <summary>
+        /// Gets or sets the RecruitPriorityOffset of the unit. This is a double representing the priority offset for recruiting the unit.
+        /// The setter logs changes to the RecruitPriorityOffset.
+        /// </summary>
+        public double RecruitPriorityOffset
+        {
+            get => _recruitPriorityOffset;
+            set
+            {
+                AddChange(nameof(RecruitPriorityOffset),_recruitPriorityOffset, value);
+                _recruitPriorityOffset = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the InfoDict of the unit. This is a string representing the dictionary entry for the unit's information.
+        /// The setter validates the input, logs changes to the InfoDict, and then sets the InfoDict.
+        /// </summary>
+        public string? InfoDict
+        {
+            get => _infoDict;
+            set 
+            {
+                if (value == null) return;
+                AddChange(nameof(InfoDict),_infoDict ?? "", value);
+                _infoDict = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the CardDict of the unit. This is a string representing the dictionary entry for the unit's card.
+        /// The setter validates the input, logs changes to the CardDict, and then sets the CardDict.
+        /// </summary>
+        public string? CardDict
+        {
+            get => _cardDict;
+            set 
+            {
+                if (value == null) return;
+                AddChange(nameof(CardDict),_cardDict ?? "", value);
+                _cardDict = value;
+            }
+        }
+
+
+        /// <summary>
+        /// Gets or sets the CrusadeUpkeep value of the Unit.
+        /// </summary>
+        /// <remarks>
+        /// The CrusadeUpkeep property represents the upkeep cost of the Unit during a crusade.
+        /// </remarks>
+        public double CrusadeUpkeep
+        {
+            get => _crusadeUpkeep;
+            set
+            {
+                AddChange(nameof(CrusadeUpkeep),_crusadeUpkeep, value);
+                _crusadeUpkeep = value;
+            }
+        }
+            
+        /// <summary>
+        /// Gets or sets the SpacingRanks of the unit. This is an integer representing the number of ranks in the unit's formation.
+        /// The setter logs changes to the SpacingRanks.
+        /// </summary>
+        public int SpacingRanks
+        {
+            get => _spacingRanks;
+            set
+            {
+                AddChange(nameof(SpacingRanks),_spacingRanks, value);
+                _spacingRanks = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the LockMorale of the unit. This is a boolean indicating whether the unit's morale is locked.
+        /// The setter logs changes to the LockMorale.
+        /// </summary>
+        public bool LockMorale
+        {
+            get => _lockMorale;
+            set
+            {
+                AddChange(nameof(LockMorale),_lockMorale, value);
+                _lockMorale = value;
+            }
+        }
+        
+        /// <summary>
+        /// Gets or sets the PriFireType of the unit. This is a string representing the type of fire used in a unit's primary attack.
+        /// The setter logs changes to the PriFireType.
+        /// </summary>
+        public string? PriFireType
+        {
+            get => _priFireType;
+            set
+            {
+                AddChange(nameof(PriFireType),_priFireType, value);
+                _priFireType = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the SecFireType of the unit. This is a string representing the type of fire used in a unit's secondary attack.
+        /// The setter logs changes to the SecFireType.
+        /// </summary>
+        public string? SecFireType
+        {
+            get => _secFireType;
+            set
+            {
+                AddChange(nameof(SecFireType),_secFireType, value);
+                _secFireType = value;
+            }
+        }
+        
+        /// <summary>
+        /// Gets or sets the TerFireType of the unit. This is a string representing the type of fire used in a unit's tertiary attack.
+        /// The setter logs changes to the TerFireType.
+        /// </summary>
+        public string? TerFireType
+        {
+            get => _terFireType;
+            set
+            {
+                AddChange(nameof(TerFireType),_terFireType, value);
+                _terFireType = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the Descr of the unit. This is a string representing the description of the unit.
+        /// The setter validates the input, logs changes to the Descr, and then sets the Descr.
+        /// </summary>
+        public string? Descr
+        {
+            get => _descr;
+            set
+            {
+                if (value == null) return;
+                AddChange(nameof(Descr),_descr ?? "", value);
+                _descr = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the short description of the unit.
+        /// </summary>
+        public string? DescrShort
+        {
+            get => _descrShort;
+            set
+            {
+                if (value == null) return;
+                AddChange(nameof(DescrShort),_descrShort ?? "", value);
+                _descrShort = value;
+            }
+        }
+
+        /// <summary>
+        /// Represents a card for a unit in a game.
+        /// </summary>
+        public string Card
+        {
+            get => _card;
+            set => _card = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the MercenaryUnit property of the unit. This is a boolean indicating whether the unit is a mercenary.
+        /// </summary>
+        public bool MercenaryUnit
+        {
+            get => _mercenaryUnit;
+            set => _mercenaryUnit = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the GeneralUnit property of the unit. This is a boolean indicating whether the unit is a general.
+        /// </summary>
+        public bool GeneralUnit
+        {
+            get => _generalUnit;
+            set => _generalUnit = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the IsEopUnit property of the unit. This is a boolean indicating whether the unit is an EopUnit.
+        /// </summary>
+        public bool IsEopUnit
+        {
+            get => _isEopUnit;
+            set => _isEopUnit = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the FilePath of the unit. This is a string representing the file path of the unit.
+        /// </summary>
+        public string FilePath
+        {
+            get => _filePath;
+            set => _filePath = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the EduIndex of the unit. This is an integer representing the education index of the unit.
+        /// </summary>
+        public int EduIndex
+        {
+            get => _eduIndex;
+            set => _eduIndex = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the AiUnitValue of the unit. This is a double representing the AI unit value of the unit.
+        /// </summary>
+        public double AiUnitValue
+        {
+            get => _aiUnitValue;
+            set => _aiUnitValue = value;
+        }
+
+        /// <summary>
+        /// Gets the value per cost ratio of the unit.
+        /// </summary>
+        /// <remarks>
+        /// The value per cost ratio is calculated as the AI unit value divided by the recruit cost.
+        /// </remarks>
         public double ValuePerCost => Math.Round(AiUnitValue / RecruitCost, 2);
 
+        /// <summary>
+        /// The value of the unit divided by its upkeep cost.
+        /// </summary>
+        /// <remarks>
+        /// This property calculates the value per upkeep by dividing the aiUnitValue property of the unit by its upkeep property. The result is rounded to two decimal places.
+        /// </remarks>
         public double ValuePerUpkeep => Math.Round(AiUnitValue / Upkeep, 2);
 
+        /// <summary>
+        /// Gets or sets the card information picture for the unit.
+        /// </summary>
+        /// <value>
+        /// The card information.
+        /// </value>
         public string CardInfo { get; set; } = "";
+
+        /// <summary>
+        /// Gets or sets the symbol representing the faction.
+        /// </summary
         public string FactionSymbol { get; set; } = "";
 
-        #endregion Public properties
+        #endregion
 
+        #region Methods
+
+        /// <summary>
+        /// Clamps the unit stat value between the specified minimum and maximum values.
+        /// </summary>
+        /// <param name="value">The value of the unit stat.</param>
+        /// <param name="min">The minimum value the unit stat can have. Default is 1.</param>
+        /// <param name="max">The maximum value the unit stat can have. Default is 63.</param>
+        /// <returns>The clamped value of the unit stat.</returns>
+        private static int ClampUnitStat(int value, int min = 1, int max = 63) => Math.Clamp(value, min, max);
+
+        /// <summary>
+        /// Clones a Unit object with the specified name and localized name.
+        /// </summary>
+        /// <param name="name">The name of the new Unit object.</param>
+        /// <param name="localizedName">The localized name of the new Unit object.</param>
+        /// <param name="unit">The Unit object to clone.</param>
+        /// <returns>A cloned Unit object with the specified name and localized name.</returns
         public static Unit? CloneUnit(string name, string localizedName, Unit unit)
         {
             if (ModData.Units.Contains(name))
@@ -628,6 +2457,11 @@ namespace ModdingTool
             return newUnit;
         }
 
+        /// <summary>
+        /// Generates an export_units entry string for the given Unit object.
+        /// </summary>
+        /// <param name="unit">The Unit object to generate the export_units entry for.</param>
+        /// <returns>The generated export_units entry string.</returns>
         public static string WriteEuEntry(Unit unit)
         {
             var entry = "\u00ac-----\n";
@@ -636,7 +2470,15 @@ namespace ModdingTool
             entry += "{" + unit.Dictionary + "_descr_short}" + unit.DescrShort + "\n";
             return entry;
         }
-
+        /// <summary>
+        /// Returns a string representation of the unit's attribute based on the provided identifier.
+        /// </summary>
+        /// <param name="identifier">The identifier for the attribute.</param>
+        /// <returns>A string representation of the attribute.</returns>
+        /// <remarks>
+        /// This method uses a switch statement to determine which attribute to return based on the provided identifier.
+        /// It handles every edu field.
+        /// </remarks>
         public override string GetTypeTextField(string identifier)
         {
             return identifier switch
@@ -647,8 +2489,8 @@ namespace ModdingTool
                 "class" => identifier + GetTabLength(identifier) + ClassType,
                 "voice_type" => identifier + GetTabLength(identifier) + VoiceType,
                 "accent" => ConditionalString(Accent, identifier + GetTabLength(identifier) + Accent),
-                "banner faction" => identifier + GetTabLength(identifier) + BannerFaction,
-                "banner holy" => identifier + GetTabLength(identifier) + BannerHoly,
+                "banner faction" => ConditionalString(BannerFaction, identifier + GetTabLength(identifier) + BannerFaction),
+                "banner holy" => ConditionalString(BannerHoly, identifier + GetTabLength(identifier) + BannerHoly),
                 "soldier" => identifier + GetTabLength(identifier) 
                                         + Soldier + ", " 
                                         + SoldierCount + ", " 
@@ -771,36 +2613,57 @@ namespace ModdingTool
             };
         }
 
+        /// <summary>
+        /// Generates a string representation of the unit's attributes for export.
+        /// </summary>
+        /// <returns>A string containing the unit's attributes formatted for export.</returns>
+        /// <remarks>
+        /// This method iterates over the EduIdentifiers of the unit, adding each attribute to the export string.
+        /// If the unit is not an EopUnit, it also adds the AI unit value, value per cost, and value per upkeep to the export string.
+        /// </remarks>
         public string WriteEntry()
         {
             var entry = "";
+            // Iterate over the EduIdentifiers of the unit
             foreach (var id in EduIdentifiers)
             {
+                // Try to add the identifier to the CommentsInLine dictionary
                 CommentsInLine.TryAdd(id, "");
+                // Add the attribute to the export string
                 entry += GetTextField(id);
-                
-            }if (!IsEopUnit)
+            }
+            // If the unit is not an EopUnit, add additional attributes to the export string
+            if (!IsEopUnit)
             {
+                // If the AddUnitValue option is enabled, add the AI unit value to the export string
                 if (GlobalOptionsInstance.AddUnitValue)
                 {
                     entry += ";ai_unit_value\t\t\t" + FormatFloat(AiUnitValue) + "\n";
                 }
+                // If the AddUnitValuePerCost option is enabled, add the value per cost to the export string
                 if (GlobalOptionsInstance.AddUnitValuePerCost)
                 {
                     entry += ";value_per_cost\t\t\t" + FormatFloat(ValuePerCost) + "\n";
                 }
+                // If the AddUnitValuePerUpkeep option is enabled, add the value per upkeep to the export string
                 if (GlobalOptionsInstance.AddUnitValuePerUpkeep)
                 {
                     entry += ";value_per_upkeep\t\t" + FormatFloat(ValuePerUpkeep) + "\n";
                 }
             }
+            // Add line breaks to the end of the export string
             entry += "\n";
             entry += "\n";
             entry += "\n";
+            // Return the export string
             return entry;
         }
 
 
+        /// <summary>
+        /// Calculates the unit value based on various attributes and statistics.
+        /// </summary>
+        /// <returns>The calculated unit value.</returns>
         public double CalculateUnitValue()
         {
             double attackValue = 0;
@@ -914,12 +2777,11 @@ namespace ModdingTool
             var aiUnitValue = ((SoldierCount * HitPoints + officerCount * (HitPoints + 1)) * (moraleModifier * statsTotal) + extrasStats) * 0.45;
             return aiUnitValue;
         }
-        
-        
-        private const string UnitCardPath = "\\data\\ui\\units";
-        private const string UnitInfoCardPath = "\\data\\ui\\unit_info";
-        private const string FactionSymbolPath = "\\data\\ui\\faction_symbols";
 
+        /// <summary>
+        /// Retrieves the unit cards for the unit.
+        /// </summary>
+        /// <returns>An array of strings containing the paths to the unit card, unit info card, and faction symbol.</returns>
         public string[] GetCards()
         {
             var unitCard = "";
@@ -1029,6 +2891,6 @@ namespace ModdingTool
             }
             return new[] { unitCard, unitInfoCard, factionSymbol };
         }
-
+        #endregion
     }
 }
