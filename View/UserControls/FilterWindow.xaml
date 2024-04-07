@@ -1,53 +1,75 @@
-﻿<UserControl x:Class="ModdingTool.View.UserControls.FilterWindow"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:ModdingTool.ViewModel"
-             d:DataContext="{d:DesignInstance local:FilterViewModel}"
-             xmlns:mvvm="clr-namespace:ModdingTool.View.InterfaceData"
-             mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800">
-    <StackPanel>
+﻿<UserControl
+    d:DataContext="{d:DesignInstance local:FilterViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="ModdingTool.View.UserControls.FilterWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:ModdingTool.ViewModel"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mvvm="clr-namespace:ModdingTool.View.InterfaceData"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources />
+    <StackPanel Background="{StaticResource BackgroundBrush}">
         <StackPanel Orientation="Horizontal">
-            <ComboBox x:Name="ChooseAttrBox" Width="200" SelectedItem="{Binding SelectedAttribute}" ItemsSource="{Binding AttributeList}"></ComboBox>
-            <ComboBox x:Name="ChooseCondBox" Width="200" SelectedItem="{Binding SelectedCondition}" ItemsSource="{Binding ConditionList}"></ComboBox>
-            <TextBox x:Name="ChooseValueBox" Text="{Binding Value}" Width="200"></TextBox>
-            <Button x:Name="AddFilterButton" Command="{Binding AddFilterCommand}" >Add Filter</Button>
+            <ComboBox
+                FontFamily="Nirmala UI"
+                ItemsSource="{Binding AttributeList}"
+                SelectedItem="{Binding SelectedAttribute}"
+                Width="200"
+                x:Name="ChooseAttrBox" />
+            <ComboBox
+                FontFamily="Nirmala UI"
+                ItemsSource="{Binding ConditionList}"
+                SelectedItem="{Binding SelectedCondition}"
+                Width="200"
+                x:Name="ChooseCondBox" />
+            <TextBox
+                FontFamily="Nirmala UI"
+                Text="{Binding Value}"
+                Width="200"
+                x:Name="ChooseValueBox" />
+            <Button Command="{Binding AddFilterCommand}" x:Name="AddFilterButton">Add Filter</Button>
         </StackPanel>
-        <DataGrid x:Name="FilterGrid" AutoGenerateColumns="False" ItemsSource="{Binding LocalFilterList}">
+        <DataGrid
+            AutoGenerateColumns="False"
+            FontFamily="Nirmala UI"
+            ItemsSource="{Binding LocalFilterList}"
+            x:Name="FilterGrid">
             <DataGrid.Columns>
-                <DataGridTemplateColumn x:Name="FilterType" Header="Filter Type" >
+                <DataGridTemplateColumn Header="Filter Type" x:Name="FilterType">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBox x:Name="FilterTypeBox" Text="{Binding Attribute}" ></TextBox>
+                            <TextBox Text="{Binding Attribute}" x:Name="FilterTypeBox" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn x:Name="FilterCondition"  Header="Condition" >
+                <DataGridTemplateColumn Header="Condition" x:Name="FilterCondition">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBox x:Name="FilterCondBox" Text="{Binding Condition}" ></TextBox>
+                            <TextBox Text="{Binding Condition}" x:Name="FilterCondBox" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn x:Name="FilterValue"  Header="Value" >
+                <DataGridTemplateColumn Header="Value" x:Name="FilterValue">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBox x:Name="FilterValueBox" Text="{Binding Value}" ></TextBox>
+                            <TextBox Text="{Binding Value}" x:Name="FilterValueBox" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn  Header="Remove" >
+                <DataGridTemplateColumn Header="Remove">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Content="Remove" 
-                                    Command="{Binding Path=DataContext.RemoveButtonCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" 
-                                    CommandParameter="{Binding}" />
+                            <Button
+                                Command="{Binding Path=DataContext.RemoveButtonCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                CommandParameter="{Binding}"
+                                Content="Remove" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
-        </DataGrid >
+        </DataGrid>
     </StackPanel>
 </UserControl>

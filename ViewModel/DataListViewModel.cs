@@ -19,9 +19,12 @@ namespace ModdingTool.ViewModel
         public event EventHandler<ListChangedEventArgs>? ListChanged;
 
         public event EventHandler<TabPickedEventArgs>? SelectionChanged;
+        public static event EventHandler<SearchBoxEventArgs>? OnSearchBoxChanged;
 
         [ObservableProperty]
         private ObservableCollection<string> _displayedItems = new();
+        [ObservableProperty]
+        private string _searchBoxText = "";
 
         [ObservableProperty]
         private List<string> _pickList = new()
@@ -34,6 +37,11 @@ namespace ModdingTool.ViewModel
             "Cultures"
         };
 
+        partial void OnSearchBoxTextChanging(string value) =>
+            DataListSelectionChanged();
+        partial void OnSearchBoxTextChanged(string value) =>
+            DataListSelectionChanged();
+
         public DataListViewModel()
         {
             SelectedType = PickList[0];
@@ -45,13 +53,12 @@ namespace ModdingTool.ViewModel
             DataListSelectionChanged();
         }
 
-        public void UpdateDisplayedItems(List<string> items)
+        private void UpdateDisplayedItems(IEnumerable<string> items)
         {
             DisplayedItems.Clear();
-            foreach (var item in items)
-            {
+            foreach (var item in items.Where(item => string.IsNullOrWhiteSpace(SearchBoxText) 
+                                                     || item.ToLower().Contains(SearchBoxText.ToLower())))
                 DisplayedItems.Add(item);
-            }
         }
 
         [RelayCommand]
@@ -134,6 +141,14 @@ namespace ModdingTool.ViewModel
         {
             SelectedTab = selectedTab;
         }
+    }
+
+    public class SearchBoxEventArgs
+    {
+        public string Text { get; }
+
+        public SearchBoxEventArgs(string text)
+            => Text = text;
     }
     public class ListChangedEventArgs : EventArgs
     {

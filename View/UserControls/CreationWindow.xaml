@@ -1,29 +1,67 @@
-﻿<Window x:Class="ModdingTool.View.UserControls.CreationWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:local="clr-namespace:ModdingTool.ViewModel"
-        d:DataContext="{d:DesignInstance local:CreationViewModel}"
-        mc:Ignorable="d"
-        Title="CreationWindow" Height="300" Width="600">
-    <Grid>
+﻿<Window
+    Height="300"
+    Title="CreationWindow"
+    Width="600"
+    d:DataContext="{d:DesignInstance local:CreationViewModel}"
+    mc:Ignorable="d"
+    x:Class="ModdingTool.View.UserControls.CreationWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:ModdingTool.ViewModel"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Background="{StaticResource BackgroundBrush}">
         <StackPanel Orientation="Vertical">
-            <Label> </Label>
+            <Label />
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Base Unit :" Width="100"></TextBlock>
-                <ComboBox Name="UnitPicker" Width="400" ItemsSource="{Binding ValuesList}"
-                          HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                          FontSize="18" FontFamily="Verdana" MouseDoubleClick="CreateWindowSelector_OnMouseDoubleClick" SelectedItem="{Binding BaseValue, Mode=TwoWay}">
-</ComboBox>
+                <TextBlock
+                    FontFamily="Nirmala UI"
+                    FontSize="18"
+                    Foreground="Azure"
+                    Text="Base :"
+                    Width="100" />
+                <ComboBox
+                    FontFamily="Nirmala UI"
+                    FontSize="18"
+                    HorizontalAlignment="Stretch"
+                    ItemsSource="{Binding ValuesList}"
+                    MouseDoubleClick="CreateWindowSelector_OnMouseDoubleClick"
+                    Name="UnitPicker"
+                    SelectedItem="{Binding BaseValue, Mode=TwoWay}"
+                    VerticalAlignment="Stretch"
+                    Width="400" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Name :" Width="100"></TextBlock>
-                <TextBox x:Name="EduTypeInputBox" Text="{Binding NameValue}" Width="400"></TextBox>
+                <TextBlock
+                    FontFamily="Nirmala UI"
+                    FontSize="18"
+                    Foreground="Azure"
+                    Text="Name :"
+                    Width="100" />
+                <TextBox
+                    FontFamily="Nirmala UI"
+                    FontSize="18"
+                    Text="{Binding NameValue}"
+                    Width="400"
+                    x:Name="EduTypeInputBox" />
             </StackPanel>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button x:Name="ConfirmButton" Content="Confirm" Width="100" Height="30" Click="ConfirmButton_OnClick"></Button>
-                <Button x:Name="CancelButton" Content="Cancel" Width="100" Height="30" Click="CancelButton_OnClick"></Button>
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                <Button
+                    Click="ConfirmButton_OnClick"
+                    Content="Confirm"
+                    FontFamily="Nirmala UI"
+                    FontSize="18"
+                    Height="50"
+                    Width="100"
+                    x:Name="ConfirmButton" />
+                <Button
+                    Click="CancelButton_OnClick"
+                    Content="Cancel"
+                    FontFamily="Nirmala UI"
+                    FontSize="18"
+                    Height="50"
+                    Width="100"
+                    x:Name="CancelButton" />
             </StackPanel>
         </StackPanel>
     </Grid>

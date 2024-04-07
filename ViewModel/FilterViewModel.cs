@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using static ModdingTool.Globals;
+using static ModdingTool.ViewModel.DataListViewModel;
 
 namespace ModdingTool.ViewModel
 {
@@ -43,14 +44,16 @@ namespace ModdingTool.ViewModel
 
         private readonly Dictionary<string, string> _uiText = new();
 
-        private static Dictionary<string, ObservableCollection<Filter>>? _filterLists;
+        private static Dictionary<string, ObservableCollection<Filter>>? s_filterLists;
 
         private string _tabType = "";
-        public string TabType { get => _tabType; set => SetProperty(ref _tabType, value); }
+        private string TabType { get => _tabType; set => SetProperty(ref _tabType, value); }
 
         private ObservableCollection<string> _sortList = new();
+        
+        private string _searchBoxContent = string.Empty;
 
-        public ObservableCollection<string> SortList { get => _sortList; set => SetProperty(ref _sortList, value); }
+        private ObservableCollection<string> SortList { get => _sortList; set => SetProperty(ref _sortList, value); }
         #endregion
 
         #region Commands
@@ -70,13 +73,14 @@ namespace ModdingTool.ViewModel
         #endregion
 
         #region constructors
-        public FilterViewModel() => _filterLists ??= new();
+        public FilterViewModel() => s_filterLists ??= new();
         public FilterViewModel(ObservableCollection<string> itemList, string selectedType)
         {
+            _searchBoxContent = string.Empty;
             TabType = selectedType;
             SortList = itemList;
-            _filterLists ??= new();
-            LocalFilterList = _filterLists.TryGetValue(TabType, out var list) ? list : new ObservableCollection<Filter>();
+            s_filterLists ??= new();
+            LocalFilterList = s_filterLists.TryGetValue(TabType, out var list) ? list : new ObservableCollection<Filter>();
             switch (TabType)
             {
                 case "Units":
@@ -102,7 +106,16 @@ namespace ModdingTool.ViewModel
             SelectedAttribute = AttributeList[0];
             if (LocalFilterList.Count > 0)
                 CallApplyFilters();
+            
+            
         }
+
+        private void FilterViewModel_OnSearchBoxChanged(object? sender, SearchBoxEventArgs e)
+        {
+            _searchBoxContent = e.Text;
+            CallApplyFilters();
+        }
+
         #endregion
 
         #region Methods
@@ -124,7 +137,7 @@ namespace ModdingTool.ViewModel
 
         private void CallApplyFilters()
         {
-            if (_filterLists == null)
+            if (s_filterLists == null)
                 return;
             switch (_tabType)
             {
@@ -143,7 +156,7 @@ namespace ModdingTool.ViewModel
                 default:
                     throw new InvalidOperationException("Unsupported type");
             }
-            _filterLists[TabType] = LocalFilterList;
+            s_filterLists[TabType] = LocalFilterList;
         }
 
         private void ApplyFilters<T>(Dictionary<string, T> database)
@@ -153,10 +166,7 @@ namespace ModdingTool.ViewModel
             foreach (var dataItem in database.Keys)
             {
                 if (!filteredItems.Contains(dataItem))
-                {
                     continue;
-                }
-                var filtered = false;
                 foreach (var filter in LocalFilterList)
                 {
                     var attribute = "";
@@ -177,42 +187,27 @@ namespace ModdingTool.ViewModel
                             break;
                         case "Not Equals":
                             if (value.ToString()?.ToLower() == filter.Value.ToLower() && filteredItems.Contains(dataItem))
-                            {
                                 filteredItems.Remove(dataItem);
-                                filtered = true;
-                            }
                             break;
                         case "Contains":
                             if (value is List<string> valueList)
                             {
                                 if (!valueList.Contains(filter.Value) && filteredItems.Contains(dataItem))
-                                {
                                     filteredItems.Remove(dataItem);
-                                    filtered = true;
-                                }
                                 break;
                             }
                             if (!value.ToString()!.ToLower().Contains(filter.Value.ToLower()) && filteredItems.Contains(dataItem))
-                            {
                                 filteredItems.Remove(dataItem);
-                                filtered = true;
-                            }
                             break;
                         case "Not Contains":
                             if (value is List<string> valueList2)
                             {
                                 if (!valueList2.Contains(filter.Value) && filteredItems.Contains(dataItem))
-                                {
                                     filteredItems.Remove(dataItem);
-                                    filtered = true;
-                                }
                                 break;
                             }
                             if (value.ToString()!.ToLower().Contains(filter.Value.ToLower()) && filteredItems.Contains(dataItem))
-                            {
                                 filteredItems.Remove(dataItem);
-                                filtered = true;
-                            }
                             break;
                         case "Greater Than":
                             switch (value)
@@ -221,20 +216,14 @@ namespace ModdingTool.ViewModel
                                     {
                                         if (int.Parse(value.ToString() ?? throw new InvalidOperationException()) <=
                                             int.Parse(filter.Value) && filteredItems.Contains(dataItem))
-                                        {
                                             filteredItems.Remove(dataItem);
-                                            filtered = true;
-                                        }
                                         break;
                                     }
                                 case double:
                                     {
                                         if (double.Parse(value.ToString() ?? throw new InvalidOperationException()) <=
                                             double.Parse(filter.Value) && filteredItems.Contains(dataItem))
-                                        {
                                             filteredItems.Remove(dataItem);
-                                            filtered = true;
-                                        }
                                         break;
                                     }
                             }
@@ -246,20 +235,14 @@ namespace ModdingTool.ViewModel
                                     {
                                         if (int.Parse(value.ToString() ?? throw new InvalidOperationException()) >=
                                             int.Parse(filter.Value) && filteredItems.Contains(dataItem))
-                                        {
                                             filteredItems.Remove(dataItem);
-                                            filtered = true;
-                                        }
                                         break;
                                     }
                                 case double:
                                     {
                                         if (double.Parse(value.ToString() ?? throw new InvalidOperationException()) >=
                                             double.Parse(filter.Value) && filteredItems.Contains(dataItem))
-                                        {
                                             filteredItems.Remove(dataItem);
-                                            filtered = true;
-                                        }
                                         break;
                                     }
                             }
@@ -271,20 +254,14 @@ namespace ModdingTool.ViewModel
                                     {
                                         if (int.Parse(value.ToString() ?? throw new InvalidOperationException()) <
                                             int.Parse(filter.Value) && filteredItems.Contains(dataItem))
-                                        {
                                             filteredItems.Remove(dataItem);
-                                            filtered = true;
-                                        }
                                         break;
                                     }
                                 case double:
                                     {
                                         if (double.Parse(value.ToString() ?? throw new InvalidOperationException()) <
                                             double.Parse(filter.Value) && filteredItems.Contains(dataItem))
-                                        {
                                             filteredItems.Remove(dataItem);
-                                            filtered = true;
-                                        }
                                         break;
                                     }
                             }
@@ -296,20 +273,14 @@ namespace ModdingTool.ViewModel
                                     {
                                         if (int.Parse(value.ToString() ?? throw new InvalidOperationException()) >
                                             int.Parse(filter.Value) && filteredItems.Contains(dataItem))
-                                        {
                                             filteredItems.Remove(dataItem);
-                                            filtered = true;
-                                        }
                                         break;
                                     }
                                 case double:
                                     {
                                         if (double.Parse(value.ToString() ?? throw new InvalidOperationException()) >
                                             double.Parse(filter.Value) && filteredItems.Contains(dataItem))
-                                        {
                                             filteredItems.Remove(dataItem);
-                                            filtered = true;
-                                        }
                                         break;
                                     }
                             }

@@ -92,7 +92,8 @@ public class BattleModel : GameType
     /// <param name="mesh">The mesh associated with the LOD.</param>
     /// <param name="distance">The distance at which the LOD should be displayed.</param>
     /// <param name="index">The index of the LOD in the LOD table. For example 0 would change the lod0 etc</param>
-    public void AddLod(string mesh, int distance, int index)
+    /// <param name="name">Name of the model.</param>
+    public void AddLod(string mesh, int distance, int index, string name)
     {
         if (LodTable.Count > index)
         {
@@ -104,7 +105,7 @@ public class BattleModel : GameType
         {
             Mesh = mesh,
             Distance = distance,
-            Name = Name
+            Name = name
         });
     }
 
@@ -129,8 +130,9 @@ public class BattleModel : GameType
     /// <param name="texturePath">The path of the texture.</param>
     /// <param name="normal">The normal map of the texture.</param>
     /// <param name="sprite">The sprite associated with the texture.</param>
+    /// <param name="name">Name of the model.</param>
     /// <returns>The added or updated Texture object.</returns>
-    public Texture AddMainTexture(string faction, string texturePath, string normal, string sprite)
+    public Texture AddMainTexture(string faction, string texturePath, string normal, string sprite, string name)
     {
         var texture = MainTextures.Find(fac => fac.Faction == faction);
         if (texture != null)
@@ -146,7 +148,7 @@ public class BattleModel : GameType
             TexturePath = texturePath,
             Normal = normal,
             Sprite = sprite,
-            Name = Name,
+            Name = name,
             IsAttach = false
         });
         return MainTextures.Last();
@@ -173,8 +175,9 @@ public class BattleModel : GameType
     /// <param name="texturePath">The path of the texture.</param>
     /// <param name="normal">The normal map of the texture.</param>
     /// <param name="sprite">The sprite associated with the texture.</param>
+    /// <param name="name">Name of the model</param>
     /// <returns>The added or updated Texture object.</returns>
-    public Texture AddAttachTexture(string faction, string texturePath, string normal, string sprite)
+    public Texture AddAttachTexture(string faction, string texturePath, string normal, string sprite, string name)
     {
         var texture = AttachTextures.Find(fac => fac.Faction == faction);
         if (texture != null)
@@ -216,8 +219,9 @@ public class BattleModel : GameType
     /// <param name="mountType">The mount type associated with the animation.</param>
     /// <param name="primarySkeleton">The primary skeleton of the animation.</param>
     /// <param name="secondarySkeleton">The secondary skeleton of the animation.</param>
+    /// <param name="name">Name of the model.</param>
     /// <returns>The added or updated Animation object.</returns>
-    public Animation AddAnimation(string mountType, string primarySkeleton, string secondarySkeleton)
+    public Animation AddAnimation(string mountType, string primarySkeleton, string secondarySkeleton, string name)
     {
         var anim = Animations.Find(mount => mount.MountType == mountType);
         if (anim != null)

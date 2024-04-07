@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Forms;
 using ModdingTool.API;
 using ModdingTool.Databases;
 using ModdingTool.View.InterfaceData;
 using ModdingTool.View.UserControls;
+using Application = System.Windows.Application;
 
 namespace ModdingTool
 {
@@ -99,9 +101,20 @@ namespace ModdingTool
             if (dirInfo.Parent is { Parent: not null })
                 GamePath = dirInfo.Parent.Parent.FullName;
             GlobalOptionsInstance.StartMod = ModPath;
+            var window = (MainWindow)Application.Current.MainWindow!;
+            var statusBar = window.FindName("StatusBarLive") as StatusBarCustom;
+            statusBar?.SetStatusModPath(ModPath);
+            Print("Mod path set to: " + ModPath);
         }
         
-        public static void ModLoadedTrigger()
+        public static void LoadMod()
+        {
+            LoadOptions();
+            ParseFiles();
+            ModLoadedTrigger();
+        }
+
+        private static void ModLoadedTrigger()
         {
             GlobalOptionsInstance.StartMod = ModPath;
             SaveOptions();
@@ -252,9 +265,7 @@ namespace ModdingTool
                 Directory.CreateDirectory("changelogs");
             if (!Directory.Exists(GlobalOptionsInstance.StartMod)) return;
             SetModPath(GlobalOptionsInstance.StartMod);
-            var window = (MainWindow)Application.Current.MainWindow;
-            var menubar = window.FindName("MenuBarCustom") as Menubar;
-            menubar?.LoadMod();
+            LoadMod();
         }
     }
 }

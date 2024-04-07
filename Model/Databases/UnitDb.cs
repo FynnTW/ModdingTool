@@ -130,7 +130,7 @@ public class UnitDb
     /// This method serializes the Units dictionary into a JSON string and writes it to a file named "edu.json".
     /// </remarks>
     public void ExportJson() =>
-        File.WriteAllText(@"edu.json", JsonConvert.SerializeObject(Units));
+        File.WriteAllText(@"edu.json", JsonConvert.SerializeObject(Units, Formatting.Indented));
     
     /// <summary>
     /// Retrieves a list of the names of all units in the Units dictionary.

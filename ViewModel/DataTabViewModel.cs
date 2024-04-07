@@ -24,6 +24,8 @@ namespace ModdingTool.ViewModel
 
         private void OnTabPicked(object? sender, TabPickedEventArgs e) =>
             AddTab(e.SelectedTab);
+        
+        
 
 
         public void AddTab(Tab tab)

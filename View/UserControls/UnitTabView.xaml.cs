@@ -91,14 +91,14 @@ namespace ModdingTool.View.UserControls
             var attribute = "";
             attribute = textblock.Name switch
             {
-                "Officer1a" => "Officer1",
-                "Officer2a" => "Officer2",
-                "Officer3a" => "Officer3",
+                "Officer1A" => "Officer1",
+                "Officer2A" => "Officer2",
+                "Officer3A" => "Officer3",
                 "Soldiera" => "Soldier",
-                "ArmourModelOnea" => "ArmourModelOne",
-                "ArmourModelBasea" => "ArmourModelBase",
-                "ArmourModelTwoa" => "ArmourModelTwo",
-                "ArmourModelThreea" => "ArmourModelThree",
+                "ArmourModelOneA" => "ArmourModelOne",
+                "ArmourModelBaseA" => "ArmourModelBase",
+                "ArmourModelTwoA" => "ArmourModelTwo",
+                "ArmourModelThreeA" => "ArmourModelThree",
                 _ => attribute
             };
             if (attribute == null) return;
@@ -108,10 +108,6 @@ namespace ModdingTool.View.UserControls
             var newTab = new ModelDbTab(model);
             var dataViewModel = datatab?.DataContext as DataTabViewModel;
             dataViewModel?.AddTab(newTab);
-        }
-
-        private void Field_OnTextChanged(object sender, TextChangedEventArgs e)
-        {
         }
 
         private void Ownership_OnSelectedItemsChanged(object? sender, SelectedItemsChangedEventArgs e)

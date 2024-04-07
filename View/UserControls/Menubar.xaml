@@ -1,49 +1,71 @@
-﻿<UserControl x:Class="ModdingTool.View.UserControls.Menubar"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:ModdingTool.View.UserControls"
-             mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800"
-             d:DataContext="{d:DesignInstance local:Menubar}">
-
-    <DockPanel Grid.ColumnSpan="4" Grid.Row="0">
-        <Menu Background="#ededec" DockPanel.Dock="Top">
-            <MenuItem Header="_Load Mod" Click="loadMod_Click"/>
-            <MenuItem Header="_Import/Export">
-                <MenuItem Header="_Export BMDB (JSON)" Click="Export_Click"/>
-                <MenuItem Header="_Import BMBD (JSON)" Click="Import_Click"/>
-                <MenuItem Header="_Export BMDB (modeldb)" Click="WriteBMDB_Click"/>
-                <MenuItem Header="_Export EDU (txt)" Click="WriteEDU_Click"/>
-            </MenuItem>
-            <MenuItem Header="_Error Log" Click="ErrorLog_Click"/>
-            <MenuItem Header="_Change Log" Click="ChangeLog_Click"/>
-            <MenuItem Header="_Options" Click="Options_Click"/>
-            <MenuItem Header="_Run LUA script" Click="RunScript_Click"/>
-            <!-- <MenuItem Header="_Run Python script" Click="RunScriptPy_Click"/> -->
-            <MenuItem Header="Open README" Click="Open_GitHub_Click"/>
-            <Popup x:Name="donePopup" Margin="5,5,5,5" Placement="Bottom" Width="Auto" Height="125">
-                <Border x:Name="borderPopup" BorderBrush="Black" BorderThickness="5" >
-                    <Border.Background>
-                        <ImageBrush  ImageSource="pack://application:,,,/Images/blank_parchment.jpg"
-                AlignmentY="Top" AlignmentX="Center" />
-                    </Border.Background>
-    
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <TextBlock Foreground="Green" FontWeight="Bold" Margin="5,5,5,5"  Text="File exported successfully!" Width="Auto" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                        <TextBlock Foreground="Black" FontWeight="Bold" Margin="5,5,5,5"  Text="" Width="Auto" x:Name="popupText" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <Button Margin="0,0,0,0" x:Name="closePopupOpen" Content="Open file" Height="Auto" Width="125" Click="ClosePopupOpen_Click"/>
-                            <Button Margin="0,5,0,0" x:Name="closePopup" Content="Close" Height="Auto" Width="100" Click="ClosePopup_Click"/>
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
-            </Popup>
-            <!-- <MenuItem Header="_Window"> -->
-            <!-- </MenuItem> -->
-            <!-- <MenuItem Header="_Settings">
-            </MenuItem> -->
-        </Menu>
-    </DockPanel>
+﻿<UserControl
+    d:DataContext="{d:DesignInstance local:MenuBarViewModel}"
+    d:DesignHeight="50"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="ModdingTool.View.UserControls.Menubar"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:ModdingTool.ViewModel"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/ModdingToolStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="ui:MenuItem">
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="{StaticResource HighlightBrush}" />
+                    </Trigger>
+                </Style.Triggers>
+                <Setter Property="Margin" Value="0" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="VerticalContentAlignment" Value="Top" />
+                <Setter Property="VerticalAlignment" Value="Top" />
+                <Setter Property="FontFamily" Value="Nirmala UI" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="MinHeight" Value="0" />
+                <Setter Property="FontStretch" Value="Expanded" />
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Menu
+        Background="{StaticResource BackgroundBrush}"
+        Foreground="Azure"
+        HorizontalAlignment="Stretch"
+        HorizontalContentAlignment="Left"
+        Margin="0,0,0,0"
+        VerticalAlignment="Stretch"
+        VerticalContentAlignment="Center">
+        <ui:MenuItem Command="{Binding LoadModCommand}" Header="_Load Mod" />
+        <ui:MenuItem Header="_Import/Export">
+            <ui:MenuItem
+                Command="{Binding ExportJsonCommand}"
+                Header="_Export File (JSON)"
+                VerticalContentAlignment="Stretch" />
+            <ui:MenuItem
+                Command="{Binding ImportJsonCommand}"
+                Header="_Import File (JSON)"
+                Padding="0" />
+            <ui:MenuItem Command="{Binding SaveFileCommand}" Header="_Save Game File" />
+            <ui:MenuItem Command="{Binding LoadFileCommand}" Header="_Load Game File" />
+        </ui:MenuItem>
+        <ui:MenuItem
+            Command="{Binding OpenErrorLogCommand}"
+            Header="_Error Log"
+            Padding="0" />
+        <ui:MenuItem Command="{Binding OpenChangeLogCommand}" Header="_Change Log" />
+        <ui:MenuItem Command="{Binding OpenOptionsCommand}" Header="_Options" />
+        <ui:MenuItem Command="{Binding RunScriptCommand}" Header="_Run LUA script" />
+        <!-- <MenuItem Header="_Run Python script" Click="RunScriptPy_Click"/> -->
+        <ui:MenuItem Command="{Binding OpenGitHubCommand}" Header="Open README" />
+        <!-- <MenuItem Header="_Window"> -->
+        <!-- </MenuItem> -->
+        <!-- <MenuItem Header="_Settings">
+            </MenuItem>-->
+    </Menu>
 </UserControl>

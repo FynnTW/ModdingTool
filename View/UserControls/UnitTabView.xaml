@@ -1,749 +1,1392 @@
-﻿<UserControl x:Class="ModdingTool.View.UserControls.UnitTabView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:ModdingTool.View.UserControls"
-             xmlns:mvvm="clr-namespace:ModdingTool.View.InterfaceData"
-             xmlns:mt="clr-namespace:ModdingTool"
-             xmlns:sdl="http://schemas.sdl.com/xaml"
-             mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800"
-             d:DataContext="{d:DesignInstance mvvm:UnitTab}">
+﻿<UserControl
+    d:DataContext="{d:DesignInstance mvvm:UnitTab}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="ModdingTool.View.UserControls.UnitTabView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mvvm="clr-namespace:ModdingTool.View.InterfaceData"
+    xmlns:sdl="http://schemas.sdl.com/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-   
-    
+
+
     <ScrollViewer>
         <Grid>
             <Grid.Background>
-                            <ImageBrush  ImageSource="pack://application:,,,/Images/blank_parchment.jpg"
-                AlignmentY="Top" AlignmentX="Center" />
+                <ImageBrush
+                    AlignmentX="Center"
+                    AlignmentY="Top"
+                    ImageSource="pack://application:,,,/Images/blank_parchment.jpg" />
             </Grid.Background>
             <Grid.RowDefinitions>
-                <RowDefinition Height="40*"></RowDefinition>
-                <RowDefinition Height="20*"></RowDefinition>
-                <RowDefinition Height="35*"></RowDefinition>
+                <RowDefinition Height="40*" />
+                <RowDefinition Height="20*" />
+                <RowDefinition Height="35*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
+                    <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50*"></ColumnDefinition>
-                    <ColumnDefinition Width="50*"></ColumnDefinition>
+                    <ColumnDefinition Width="50*" />
+                    <ColumnDefinition Width="50*" />
                 </Grid.ColumnDefinitions>
                 <Grid ColumnSpan="2" Row="0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="25*"></ColumnDefinition>
-                        <ColumnDefinition Width="75*"></ColumnDefinition>
+                        <ColumnDefinition Width="25*" />
+                        <ColumnDefinition Width="75*" />
                     </Grid.ColumnDefinitions>
-                    <StackPanel  Grid.Column="0">
-                        <TextBlock Text="{Binding UnitUiText[LocalizedName] }" Height="25" />
-                        <TextBlock Text="{Binding UnitUiText[Type] }" Height="25"/>
-                        <TextBlock Text="{Binding UnitUiText[Dictionary] }" Height="25"/>
-                        <TextBlock Text="{Binding UnitUiText[Category] }" Height="25"/>
-                        <TextBlock Text="{Binding UnitUiText[ClassType] }" Height="25"/>
-                        <TextBlock Text="{Binding UnitUiText[VoiceType] }" Height="25"/>
-                        <TextBlock Text="{Binding UnitUiText[Accent] }" Height="25"/>
-                        <TextBlock Text="{Binding UnitUiText[BannerFaction] }" Height="25"/>
-                        <TextBlock Text="{Binding UnitUiText[BannerHoly] }" Height="25" />
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Height="25" Text="{Binding UnitUiText[LocalizedName]}" />
+                        <TextBlock Height="25" Text="{Binding UnitUiText[Type]}" />
+                        <TextBlock Height="25" Text="{Binding UnitUiText[Dictionary]}" />
+                        <TextBlock Height="25" Text="{Binding UnitUiText[Category]}" />
+                        <TextBlock Height="25" Text="{Binding UnitUiText[ClassType]}" />
+                        <TextBlock Height="25" Text="{Binding UnitUiText[VoiceType]}" />
+                        <TextBlock Height="25" Text="{Binding UnitUiText[Accent]}" />
+                        <TextBlock Height="25" Text="{Binding UnitUiText[BannerFaction]}" />
+                        <TextBlock Height="25" Text="{Binding UnitUiText[BannerHoly]}" />
                     </StackPanel>
-                    <StackPanel  Grid.Column="1">
-                        <TextBox x:Name="Name" Text="{Binding SelectedUnit.LocalizedName}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
-                        <TextBox x:Name="Type" Text="{Binding SelectedUnit.Type}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
-                        <TextBox x:Name="Dictionary" Text="{Binding SelectedUnit.Dictionary}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
-                        <ComboBox x:Name="Category" ItemsSource="{Binding Categories}" Height="25" SelectedItem="{Binding SelectedUnit.Category}" ></ComboBox>
-                        <ComboBox x:Name="ClassType" ItemsSource="{Binding Classes}" Height="25" SelectedItem="{Binding SelectedUnit.ClassType}"></ComboBox>
-                        <ComboBox x:Name="VoiceType" ItemsSource="{Binding VoiceTypes}" Height="25" SelectedItem="{Binding SelectedUnit.VoiceType}"></ComboBox>
-                        <TextBox x:Name="Accent" Text="{Binding SelectedUnit.Accent}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
-                        <TextBox x:Name="BannerFaction" Text="{Binding SelectedUnit.BannerFaction}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
-                        <TextBox x:Name="BannerHoly" Text="{Binding SelectedUnit.BannerHoly}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+                    <StackPanel Grid.Column="1">
+                        <TextBox
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding SelectedUnit.LocalizedName}"
+                            x:Name="Name" />
+                        <TextBox
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding SelectedUnit.Type}"
+                            x:Name="Type" />
+                        <TextBox
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding SelectedUnit.Dictionary}"
+                            x:Name="Dictionary" />
+                        <ComboBox
+                            Height="25"
+                            ItemsSource="{Binding Categories}"
+                            SelectedItem="{Binding SelectedUnit.Category}"
+                            x:Name="Category" />
+                        <ComboBox
+                            Height="25"
+                            ItemsSource="{Binding Classes}"
+                            SelectedItem="{Binding SelectedUnit.ClassType}"
+                            x:Name="ClassType" />
+                        <ComboBox
+                            Height="25"
+                            ItemsSource="{Binding VoiceTypes}"
+                            SelectedItem="{Binding SelectedUnit.VoiceType}"
+                            x:Name="VoiceType" />
+                        <TextBox
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding SelectedUnit.Accent}"
+                            x:Name="Accent" />
+                        <TextBox
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding SelectedUnit.BannerFaction}"
+                            x:Name="BannerFaction" />
+                        <TextBox
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding SelectedUnit.BannerHoly}"
+                            x:Name="BannerHoly" />
                     </StackPanel>
                 </Grid>
-                <Grid Row="1" ColumnSpan="2" VerticalAlignment="Top">
+                <Grid
+                    ColumnSpan="2"
+                    Grid.Column="0"
+                    Row="1"
+                    VerticalAlignment="Top">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="25*"></ColumnDefinition>
-                        <ColumnDefinition Width="25*"></ColumnDefinition>
-                        <ColumnDefinition Width="25*"></ColumnDefinition>
-                        <ColumnDefinition Width="25*"></ColumnDefinition>
+                        <ColumnDefinition Width="25*" />
+                        <ColumnDefinition Width="25*" />
+                        <ColumnDefinition Width="25*" />
+                        <ColumnDefinition Width="25*" />
                     </Grid.ColumnDefinitions>
-                    <StackPanel  Grid.Column="0">
-                        <TextBlock Text="{Binding UnitUiText[Ship] }" Height="25"  VerticalAlignment="Top"/>
-                        <TextBlock  Height="25"  VerticalAlignment="Top">
-                            <TextBlock.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem  Header="Go to entry" Click="MountGoto_OnClick"/>
-                                </ContextMenu>
-                            </TextBlock.ContextMenu>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock
+                            Height="25"
+                            Text="{Binding UnitUiText[Ship]}"
+                            VerticalAlignment="Top" />
+                        <TextBlock Height="25" VerticalAlignment="Top">
                             <Hyperlink Click="MountGoto_OnClick">
                                 Mount
                                 <Hyperlink.Style>
-                                    <Style TargetType="Hyperlink"
-                                           BasedOn="{StaticResource {x:Type Hyperlink}}">
-                                        <Setter Property="Foreground" Value="#000"/>
+                                    <Style BasedOn="{StaticResource {x:Type Hyperlink}}" TargetType="Hyperlink">
+                                        <Setter Property="Foreground" Value="#000" />
                                     </Style>
                                 </Hyperlink.Style>
                             </Hyperlink>
                         </TextBlock>
-                        <TextBlock Text="{Binding UnitUiText[StatFireDelay] }" Height="25"  VerticalAlignment="Top"/>
-                        <TextBlock Text="{Binding UnitUiText[Mass] }" Height="25"  VerticalAlignment="Top"/>
-                        <TextBlock Text="{Binding UnitUiText[Radius] }" Height="25"  VerticalAlignment="Top"/>
-                        <TextBlock Text="{Binding UnitUiText[HitPoints] }" Height="25"  VerticalAlignment="Top"/>
-                        <TextBlock Text="{Binding UnitUiText[SoldierCount] }" Height="25"  VerticalAlignment="Top"/>
-                        <TextBlock Text="{Binding UnitUiText[StatStl] }" Height="25"  VerticalAlignment="Top"/>
-                        <TextBlock Text="EDU Index" Height="25"  VerticalAlignment="Top"/>
+                        <TextBlock
+                            Height="25"
+                            Text="{Binding UnitUiText[StatFireDelay]}"
+                            VerticalAlignment="Top" />
+                        <TextBlock
+                            Height="25"
+                            Text="{Binding UnitUiText[Mass]}"
+                            VerticalAlignment="Top" />
+                        <TextBlock
+                            Height="25"
+                            Text="{Binding UnitUiText[Radius]}"
+                            VerticalAlignment="Top" />
+                        <TextBlock
+                            Height="25"
+                            Text="{Binding UnitUiText[HitPoints]}"
+                            VerticalAlignment="Top" />
+                        <TextBlock
+                            Height="25"
+                            Text="{Binding UnitUiText[SoldierCount]}"
+                            VerticalAlignment="Top" />
+                        <TextBlock
+                            Height="25"
+                            Text="{Binding UnitUiText[StatStl]}"
+                            VerticalAlignment="Top" />
+                        <TextBlock
+                            Height="25"
+                            Text="EDU Index"
+                            VerticalAlignment="Top" />
                     </StackPanel>
-                    <StackPanel  Grid.Column="1">
-                        <TextBox x:Name="Ship" Text="{Binding SelectedUnit.Ship}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
-                        <ComboBox x:Name="Mount" IsEditable="True" ItemsSource="{Binding MountEntries}" Height="25" SelectedItem="{Binding SelectedUnit.Mount}"></ComboBox>
-                        <TextBox x:Name="StatFireDelay" Text="{Binding SelectedUnit.StatFireDelay}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
-                        <TextBox x:Name="Mass" Text="{Binding SelectedUnit.Mass}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
-                        <TextBox x:Name="Radius" Text="{Binding SelectedUnit.Radius}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
-                        <TextBox x:Name="HitPoints" Text="{Binding SelectedUnit.HitPoints}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
-                        <TextBox x:Name="SoldierCount" Text="{Binding SelectedUnit.SoldierCount}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
-                        <TextBox x:Name="StatStl" Text="{Binding SelectedUnit.StatStl}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
-                        <TextBox IsReadOnly="True" Background="DarkGray" x:Name="EduIndex" Text="{Binding SelectedUnit.EduIndex}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top"/>
+                    <StackPanel Grid.Column="1">
+                        <TextBox
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding SelectedUnit.Ship}"
+                            VerticalAlignment="Top"
+                            x:Name="Ship" />
+                        <ComboBox
+                            Height="25"
+                            IsEditable="True"
+                            ItemsSource="{Binding MountEntries}"
+                            SelectedItem="{Binding SelectedUnit.Mount}"
+                            x:Name="Mount" />
+                        <TextBox
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding SelectedUnit.StatFireDelay}"
+                            VerticalAlignment="Top"
+                            x:Name="StatFireDelay" />
+                        <TextBox
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding SelectedUnit.Mass}"
+                            VerticalAlignment="Top"
+                            x:Name="Mass" />
+                        <TextBox
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding SelectedUnit.Radius}"
+                            VerticalAlignment="Top"
+                            x:Name="Radius" />
+                        <TextBox
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding SelectedUnit.HitPoints}"
+                            VerticalAlignment="Top"
+                            x:Name="HitPoints" />
+                        <TextBox
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding SelectedUnit.SoldierCount}"
+                            VerticalAlignment="Top"
+                            x:Name="SoldierCount" />
+                        <TextBox
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding SelectedUnit.StatStl}"
+                            VerticalAlignment="Top"
+                            x:Name="StatStl" />
+                        <TextBox
+                            Background="DarkGray"
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            IsReadOnly="True"
+                            Text="{Binding SelectedUnit.EduIndex}"
+                            VerticalAlignment="Top"
+                            x:Name="EduIndex" />
                     </StackPanel>
-                    <StackPanel  Grid.Column="2">
-                        <TextBlock Text="{Binding UnitUiText[Engine] }" Height="25"  VerticalAlignment="Top"/>
-                        <TextBlock Text="{Binding UnitUiText[Animal] }" Height="25"  VerticalAlignment="Top"/>
-                        <TextBlock Text="{Binding UnitUiText[StatChargeDist] }" Height="25"  VerticalAlignment="Top"/>
-                        <TextBlock Text="{Binding UnitUiText[MoveSpeed] }" Height="25"  VerticalAlignment="Top"/>
-                        <TextBlock Text="{Binding UnitUiText[Height] }" Height="25"  VerticalAlignment="Top"/>
-                        <TextBlock Text="{Binding UnitUiText[MountHitPoints] }" Height="25"  VerticalAlignment="Top"/>
-                        <TextBlock Text="{Binding UnitUiText[ExtrasCount] }" Height="25"  VerticalAlignment="Top"/>
-                        <TextBlock Text="{Binding UnitUiText[MountedEngine] }" Height="25"  VerticalAlignment="Top"/>
-                        <TextBlock Text="{Binding UnitUiText[AiUnitValue] }" Height="25"  VerticalAlignment="Top"/>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock
+                            Height="25"
+                            Text="{Binding UnitUiText[Engine]}"
+                            VerticalAlignment="Top" />
+                        <TextBlock
+                            Height="25"
+                            Text="{Binding UnitUiText[Animal]}"
+                            VerticalAlignment="Top" />
+                        <TextBlock
+                            Height="25"
+                            Text="{Binding UnitUiText[StatChargeDist]}"
+                            VerticalAlignment="Top" />
+                        <TextBlock
+                            Height="25"
+                            Text="{Binding UnitUiText[MoveSpeed]}"
+                            VerticalAlignment="Top" />
+                        <TextBlock
+                            Height="25"
+                            Text="{Binding UnitUiText[Height]}"
+                            VerticalAlignment="Top" />
+                        <TextBlock
+                            Height="25"
+                            Text="{Binding UnitUiText[MountHitPoints]}"
+                            VerticalAlignment="Top" />
+                        <TextBlock
+                            Height="25"
+                            Text="{Binding UnitUiText[ExtrasCount]}"
+                            VerticalAlignment="Top" />
+                        <TextBlock
+                            Height="25"
+                            Text="{Binding UnitUiText[MountedEngine]}"
+                            VerticalAlignment="Top" />
+                        <TextBlock
+                            Height="25"
+                            Text="{Binding UnitUiText[AiUnitValue]}"
+                            VerticalAlignment="Top" />
                     </StackPanel>
-                    <StackPanel  Grid.Column="3">
-                        <TextBox x:Name="Engine" Text="{Binding SelectedUnit.Engine}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
-                        <TextBox x:Name="Animal" Text="{Binding SelectedUnit.Animal}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
-                        <TextBox x:Name="StatChargeDist" Text="{Binding SelectedUnit.StatChargeDist}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
-                        <TextBox x:Name="MoveSpeed" Text="{Binding SelectedUnit.MoveSpeed}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
-                        <TextBox x:Name="Height" Text="{Binding SelectedUnit.Height}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
-                        <TextBox x:Name="MountHitPoints" Text="{Binding SelectedUnit.MountHitPoints}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
-                        <TextBox x:Name="ExtrasCount" Text="{Binding SelectedUnit.ExtrasCount}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
-                        <TextBox x:Name="MountedEngine" Text="{Binding SelectedUnit.MountedEngine}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top" TextChanged="Field_OnTextChanged"/>
-                        <TextBox IsReadOnly="True" Background="DarkGray" x:Name="UnitValue" Text="{Binding SelectedUnit.AiUnitValue}" Height="25" HorizontalAlignment="Stretch"  VerticalAlignment="Top"/>
+                    <StackPanel Grid.Column="3">
+                        <TextBox
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding SelectedUnit.Engine}"
+                            VerticalAlignment="Top"
+                            x:Name="Engine" />
+                        <TextBox
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding SelectedUnit.Animal}"
+                            VerticalAlignment="Top"
+                            x:Name="Animal" />
+                        <TextBox
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding SelectedUnit.StatChargeDist}"
+                            VerticalAlignment="Top"
+                            x:Name="StatChargeDist" />
+                        <TextBox
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding SelectedUnit.MoveSpeed}"
+                            VerticalAlignment="Top"
+                            x:Name="MoveSpeed" />
+                        <TextBox
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding SelectedUnit.Height}"
+                            VerticalAlignment="Top"
+                            x:Name="Height" />
+                        <TextBox
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding SelectedUnit.MountHitPoints}"
+                            VerticalAlignment="Top"
+                            x:Name="MountHitPoints" />
+                        <TextBox
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding SelectedUnit.ExtrasCount}"
+                            VerticalAlignment="Top"
+                            x:Name="ExtrasCount" />
+                        <TextBox
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding SelectedUnit.MountedEngine}"
+                            VerticalAlignment="Top"
+                            x:Name="MountedEngine" />
+                        <TextBox
+                            Background="DarkGray"
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            IsReadOnly="True"
+                            Text="{Binding SelectedUnit.AiUnitValue}"
+                            VerticalAlignment="Top"
+                            x:Name="UnitValue" />
                     </StackPanel>
                 </Grid>
             </Grid>
 
 
-            <Grid ColumnSpan="1" Row="1" Column="1" Margin="5">
+            <Grid
+                Column="1"
+                Margin="5"
+                Row="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="25*"></ColumnDefinition>
-                    <ColumnDefinition Width="25*"></ColumnDefinition>
-                    <ColumnDefinition Width="25*"></ColumnDefinition>
-                    <ColumnDefinition Width="25*"></ColumnDefinition>
+                    <ColumnDefinition Width="25*" />
+                    <ColumnDefinition Width="25*" />
+                    <ColumnDefinition Width="25*" />
+                    <ColumnDefinition Width="25*" />
                 </Grid.ColumnDefinitions>
-                <Border BorderThickness="1" BorderBrush="Black" Grid.ColumnSpan="4" Margin="-5"></Border>
-                <StackPanel  Grid.Column="0">
-                    <TextBlock Text="{Binding UnitUiText[SecAttack] }" Height="25"/>
+                <Border
+                    BorderBrush="Black"
+                    BorderThickness="1"
+                    Grid.ColumnSpan="4"
+                    Margin="-5" />
+                <StackPanel Grid.Column="0">
+                    <TextBlock Height="25" Text="{Binding UnitUiText[SecAttack]}" />
                     <TextBlock Height="25">
                         <Hyperlink Click="Projectile2Goto_OnClick">
                             Sec Projectile
                             <Hyperlink.Style>
-                                <Style TargetType="Hyperlink"
-                                       BasedOn="{StaticResource {x:Type Hyperlink}}">
-                                    <Setter Property="Foreground" Value="#000"/>
+                                <Style BasedOn="{StaticResource {x:Type Hyperlink}}" TargetType="Hyperlink">
+                                    <Setter Property="Foreground" Value="#000" />
                                 </Style>
                             </Hyperlink.Style>
                         </Hyperlink>
                     </TextBlock>
-                    <TextBlock Text="{Binding UnitUiText[SecAmmunition] }" Height="25"/>
-                    <TextBlock Text="{Binding UnitUiText[SecTechType] }" Height="25"/>
-                    <TextBlock Text="{Binding UnitUiText[SecSoundType] }" Height="25"/>
-                    <TextBlock Text="{Binding UnitUiText[SecFireType] }" Height="25"/>
+                    <TextBlock Height="25" Text="{Binding UnitUiText[SecAmmunition]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[SecTechType]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[SecSoundType]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[SecFireType]}" />
                 </StackPanel>
-                <StackPanel  Grid.Column="1">
-                    <TextBox x:Name="SecAttack" Text="{Binding SelectedUnit.SecAttack}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
-                    <ComboBox x:Name="SecProjectile" IsEditable="True" ItemsSource="{Binding ProjectileEntries}" Height="25" SelectedItem="{Binding SelectedUnit.SecProjectile}"></ComboBox>
-                    <TextBox x:Name="SecAmmunition" Text="{Binding SelectedUnit.SecAmmunition}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
-                    <ComboBox x:Name="SecTechType" ItemsSource="{Binding TechTypes}" Height="25" SelectedItem="{Binding SelectedUnit.SecTechType}"></ComboBox>
-                    <ComboBox x:Name="SecSoundType" ItemsSource="{Binding SoundTypes}" Height="25" SelectedItem="{Binding SelectedUnit.SecSoundType}"></ComboBox>
-                    <TextBox x:Name="SecFireType" Text="{Binding SelectedUnit.SecFireType}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
+                <StackPanel Grid.Column="1">
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.SecAttack}"
+                        x:Name="SecAttack" />
+                    <ComboBox
+                        Height="25"
+                        IsEditable="True"
+                        ItemsSource="{Binding ProjectileEntries}"
+                        SelectedItem="{Binding SelectedUnit.SecProjectile}"
+                        x:Name="SecProjectile" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.SecAmmunition}"
+                        x:Name="SecAmmunition" />
+                    <ComboBox
+                        Height="25"
+                        ItemsSource="{Binding TechTypes}"
+                        SelectedItem="{Binding SelectedUnit.SecTechType}"
+                        x:Name="SecTechType" />
+                    <ComboBox
+                        Height="25"
+                        ItemsSource="{Binding SoundTypes}"
+                        SelectedItem="{Binding SelectedUnit.SecSoundType}"
+                        x:Name="SecSoundType" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.SecFireType}"
+                        x:Name="SecFireType" />
                 </StackPanel>
-                <StackPanel  Grid.Column="2">
-                    <TextBlock Text="{Binding UnitUiText[SecCharge] }" Height="25"/>
-                    <TextBlock Text="{Binding UnitUiText[SecRange] }" Height="25"/>
-                    <TextBlock Text="{Binding UnitUiText[SecWeaponType] }" Height="25" />
-                    <TextBlock Text="{Binding UnitUiText[SecDamageType] }" Height="25" />
-                    <TextBlock Text="{Binding UnitUiText[SecAttDelay] }" Height="25"/>
-                    <TextBlock Text="{Binding UnitUiText[SecSkelFactor] }" Height="25"/>
+                <StackPanel Grid.Column="2">
+                    <TextBlock Height="25" Text="{Binding UnitUiText[SecCharge]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[SecRange]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[SecWeaponType]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[SecDamageType]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[SecAttDelay]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[SecSkelFactor]}" />
                 </StackPanel>
-                <StackPanel  Grid.Column="3">
-                    <TextBox x:Name="SecCharge" Text="{Binding SelectedUnit.SecCharge}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
-                    <TextBox x:Name="SecRange" Text="{Binding SelectedUnit.SecRange}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
-                    <ComboBox x:Name="SecWeaponType" ItemsSource="{Binding WeaponTypes}" Height="25" SelectedItem="{Binding SelectedUnit.SecWeaponType}"></ComboBox>
-                    <ComboBox x:Name="SecDamageType" ItemsSource="{Binding DamageTypes}" Height="25" SelectedItem="{Binding SelectedUnit.SecDamageType}"></ComboBox>
-                    <TextBox x:Name="SecAttDelay" Text="{Binding SelectedUnit.SecAttDelay}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
-                    <TextBox x:Name="SecSkelFactor" Text="{Binding SelectedUnit.SecSkelFactor}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
+                <StackPanel Grid.Column="3">
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.SecCharge}"
+                        x:Name="SecCharge" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.SecRange}"
+                        x:Name="SecRange" />
+                    <ComboBox
+                        Height="25"
+                        ItemsSource="{Binding WeaponTypes}"
+                        SelectedItem="{Binding SelectedUnit.SecWeaponType}"
+                        x:Name="SecWeaponType" />
+                    <ComboBox
+                        Height="25"
+                        ItemsSource="{Binding DamageTypes}"
+                        SelectedItem="{Binding SelectedUnit.SecDamageType}"
+                        x:Name="SecDamageType" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.SecAttDelay}"
+                        x:Name="SecAttDelay" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.SecSkelFactor}"
+                        x:Name="SecSkelFactor" />
                 </StackPanel>
                 <sdl:MultiSelectComboBox
-                    x:Name="SecAttr"
+                    Grid.Column="0"
                     Grid.ColumnSpan="4"
                     Height="25"
-                    ItemsSource="{Binding AttackAttr}"
                     IsEditable="True"
+                    ItemsSource="{Binding AttackAttr}"
+                    SelectedItems="{Binding SelectedUnit.SecAttr}"
                     SelectionMode="Multiple"
                     VerticalAlignment="Bottom"
-                    SelectedItems="{Binding SelectedUnit.SecAttr}">
-                </sdl:MultiSelectComboBox>
+                    x:Name="SecAttr" />
             </Grid>
 
 
-            <Grid ColumnSpan="1" Row="1" Column="2" Margin="5">
+            <Grid
+                Column="2"
+                Margin="5"
+                Row="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="25*"></ColumnDefinition>
-                    <ColumnDefinition Width="25*"></ColumnDefinition>
-                    <ColumnDefinition Width="25*"></ColumnDefinition>
-                    <ColumnDefinition Width="25*"></ColumnDefinition>
+                    <ColumnDefinition Width="25*" />
+                    <ColumnDefinition Width="25*" />
+                    <ColumnDefinition Width="25*" />
+                    <ColumnDefinition Width="25*" />
                 </Grid.ColumnDefinitions>
-                <Border BorderThickness="1" BorderBrush="Black" Grid.ColumnSpan="4" Margin="-5"></Border>
-                <StackPanel  Grid.Column="0">
-                    <TextBlock Text="{Binding UnitUiText[TerAttack] }" Height="25" />
+                <Border
+                    BorderBrush="Black"
+                    BorderThickness="1"
+                    Grid.ColumnSpan="4"
+                    Margin="-5" />
+                <StackPanel Grid.Column="0">
+                    <TextBlock Height="25" Text="{Binding UnitUiText[TerAttack]}" />
                     <TextBlock Height="25">
                         <Hyperlink Click="Projectile3Goto_OnClick">
                             Ter Projectile
                             <Hyperlink.Style>
-                                <Style TargetType="Hyperlink"
-                                       BasedOn="{StaticResource {x:Type Hyperlink}}">
-                                    <Setter Property="Foreground" Value="#000"/>
+                                <Style BasedOn="{StaticResource {x:Type Hyperlink}}" TargetType="Hyperlink">
+                                    <Setter Property="Foreground" Value="#000" />
                                 </Style>
                             </Hyperlink.Style>
                         </Hyperlink>
                     </TextBlock>
-                    <TextBlock Text="{Binding UnitUiText[TerAmmunition] }" Height="25" />
-                    <TextBlock Text="{Binding UnitUiText[TerTechType] }" Height="25" />
-                    <TextBlock Text="{Binding UnitUiText[TerSoundType] }" Height="25" />
-                    <TextBlock Text="{Binding UnitUiText[TerFireType] }" Height="25" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[TerAmmunition]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[TerTechType]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[TerSoundType]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[TerFireType]}" />
                 </StackPanel>
-                <StackPanel  Grid.Column="1">
-                    <TextBox x:Name="TerAttack" Text="{Binding SelectedUnit.TerAttack}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
-                    <ComboBox x:Name="TerProjectile" IsEditable="True" ItemsSource="{Binding ProjectileEntries}" Height="25" SelectedItem="{Binding SelectedUnit.TerProjectile}"></ComboBox>
-                    <TextBox x:Name="TerAmmunition" Text="{Binding SelectedUnit.TerAmmunition}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
-                    <ComboBox x:Name="TerTechType" ItemsSource="{Binding TechTypes}" Height="25" SelectedItem="{Binding SelectedUnit.TerTechType}"></ComboBox>
-                    <ComboBox x:Name="TerSoundType" ItemsSource="{Binding SoundTypes}" Height="25" SelectedItem="{Binding SelectedUnit.TerSoundType}"></ComboBox>
-                    <TextBox x:Name="TerFireType" Text="{Binding SelectedUnit.TerFireType}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
+                <StackPanel Grid.Column="1">
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.TerAttack}"
+                        x:Name="TerAttack" />
+                    <ComboBox
+                        Height="25"
+                        IsEditable="True"
+                        ItemsSource="{Binding ProjectileEntries}"
+                        SelectedItem="{Binding SelectedUnit.TerProjectile}"
+                        x:Name="TerProjectile" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.TerAmmunition}"
+                        x:Name="TerAmmunition" />
+                    <ComboBox
+                        Height="25"
+                        ItemsSource="{Binding TechTypes}"
+                        SelectedItem="{Binding SelectedUnit.TerTechType}"
+                        x:Name="TerTechType" />
+                    <ComboBox
+                        Height="25"
+                        ItemsSource="{Binding SoundTypes}"
+                        SelectedItem="{Binding SelectedUnit.TerSoundType}"
+                        x:Name="TerSoundType" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.TerFireType}"
+                        x:Name="TerFireType" />
                 </StackPanel>
-                <StackPanel  Grid.Column="2">
-                    <TextBlock Text="{Binding UnitUiText[TerCharge] }" Height="25" />
-                    <TextBlock Text="{Binding UnitUiText[TerRange] }" Height="25" />
-                    <TextBlock Text="{Binding UnitUiText[TerWeaponType] }" Height="25" />
-                    <TextBlock Text="{Binding UnitUiText[TerDamageType] }" Height="25" />
-                    <TextBlock Text="{Binding UnitUiText[TerAttDelay] }" Height="25" />
-                    <TextBlock Text="{Binding UnitUiText[TerSkelFactor] }" Height="25" />
+                <StackPanel Grid.Column="2">
+                    <TextBlock Height="25" Text="{Binding UnitUiText[TerCharge]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[TerRange]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[TerWeaponType]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[TerDamageType]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[TerAttDelay]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[TerSkelFactor]}" />
                 </StackPanel>
-                <StackPanel  Grid.Column="3">
-                    <TextBox x:Name="TerCharge" Text="{Binding SelectedUnit.TerCharge}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
-                    <TextBox x:Name="TerRange" Text="{Binding SelectedUnit.TerRange}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
-                    <ComboBox x:Name="TerWeaponType" ItemsSource="{Binding WeaponTypes}" Height="25" SelectedItem="{Binding SelectedUnit.TerWeaponType}"></ComboBox>
-                    <ComboBox x:Name="TerDamageType" ItemsSource="{Binding DamageTypes}" Height="25" SelectedItem="{Binding SelectedUnit.TerDamageType}"></ComboBox>
-                    <TextBox x:Name="TerAttDelay" Text="{Binding SelectedUnit.TerAttDelay}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
-                    <TextBox x:Name="TerSkelFactor" Text="{Binding SelectedUnit.TerSkelFactor}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
+                <StackPanel Grid.Column="3">
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.TerCharge}"
+                        x:Name="TerCharge" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.TerRange}"
+                        x:Name="TerRange" />
+                    <ComboBox
+                        Height="25"
+                        ItemsSource="{Binding WeaponTypes}"
+                        SelectedItem="{Binding SelectedUnit.TerWeaponType}"
+                        x:Name="TerWeaponType" />
+                    <ComboBox
+                        Height="25"
+                        ItemsSource="{Binding DamageTypes}"
+                        SelectedItem="{Binding SelectedUnit.TerDamageType}"
+                        x:Name="TerDamageType" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.TerAttDelay}"
+                        x:Name="TerAttDelay" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.TerSkelFactor}"
+                        x:Name="TerSkelFactor" />
                 </StackPanel>
                 <sdl:MultiSelectComboBox
-                    x:Name="TerAttr"
+                    Grid.Column="0"
                     Grid.ColumnSpan="4"
                     Height="25"
                     ItemsSource="{Binding AttackAttr}"
+                    SelectedItems="{Binding SelectedUnit.TerAttr}"
                     SelectionMode="Multiple"
                     VerticalAlignment="Bottom"
-                    SelectedItems="{Binding SelectedUnit.TerAttr}">
-                </sdl:MultiSelectComboBox>
+                    x:Name="TerAttr" />
             </Grid>
 
 
-            <Grid ColumnSpan="1" Row="1" Margin="5">
+            <Grid
+                Grid.Column="0"
+                Margin="5"
+                Row="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="25*"></ColumnDefinition>
-                    <ColumnDefinition Width="25*"></ColumnDefinition>
-                    <ColumnDefinition Width="25*"></ColumnDefinition>
-                    <ColumnDefinition Width="25*"></ColumnDefinition>
+                    <ColumnDefinition Width="25*" />
+                    <ColumnDefinition Width="25*" />
+                    <ColumnDefinition Width="25*" />
+                    <ColumnDefinition Width="25*" />
                 </Grid.ColumnDefinitions>
-                <Border BorderThickness="1" BorderBrush="Black" Grid.ColumnSpan="4" Margin="-5"></Border>
-                <StackPanel  Grid.Column="0">
-                    <TextBlock Text="{Binding UnitUiText[PriAttack] }" Height="25" />
+                <Border
+                    BorderBrush="Black"
+                    BorderThickness="1"
+                    Grid.ColumnSpan="4"
+                    Margin="-5" />
+                <StackPanel Grid.Column="0">
+                    <TextBlock Height="25" Text="{Binding UnitUiText[PriAttack]}" />
                     <TextBlock Height="25">
                         <Hyperlink Click="ProjectileGoto_OnClick">
                             Pri Projectile
                             <Hyperlink.Style>
-                                <Style TargetType="Hyperlink"
-                                       BasedOn="{StaticResource {x:Type Hyperlink}}">
-                                    <Setter Property="Foreground" Value="#000"/>
+                                <Style BasedOn="{StaticResource {x:Type Hyperlink}}" TargetType="Hyperlink">
+                                    <Setter Property="Foreground" Value="#000" />
                                 </Style>
                             </Hyperlink.Style>
                         </Hyperlink>
                     </TextBlock>
-                    <TextBlock Text="{Binding UnitUiText[PriAmmunition] }" Height="25" />
-                    <TextBlock Text="{Binding UnitUiText[PriTechType] }" Height="25" />
-                    <TextBlock Text="{Binding UnitUiText[PriSoundType] }" Height="25" />
-                    <TextBlock Text="{Binding UnitUiText[PriFireType] }" Height="25" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[PriAmmunition]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[PriTechType]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[PriSoundType]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[PriFireType]}" />
                 </StackPanel>
-                <StackPanel  Grid.Column="1">
-                    <TextBox   x:Name="PriAttack" Text="{Binding SelectedUnit.PriAttack}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
-                    <ComboBox x:Name="PriProjectile" IsEditable="True" ItemsSource="{Binding ProjectileEntries}" Height="25" SelectedItem="{Binding SelectedUnit.PriProjectile}"></ComboBox>
-                    <TextBox   x:Name="PriAmmunition" Text="{Binding SelectedUnit.PriAmmunition}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
-                    <ComboBox   x:Name="PriTechType" ItemsSource="{Binding TechTypes}" Height="25" SelectedItem="{Binding SelectedUnit.PriTechType}"></ComboBox>
-                    <ComboBox  x:Name="PriSoundType" ItemsSource="{Binding SoundTypes}" Height="25" SelectedItem="{Binding SelectedUnit.PriSoundType}"></ComboBox>
-                    <TextBox   x:Name="PriFireType" Text="{Binding SelectedUnit.PriFireType}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
+                <StackPanel Grid.Column="1">
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.PriAttack}"
+                        x:Name="PriAttack" />
+                    <ComboBox
+                        Height="25"
+                        IsEditable="True"
+                        ItemsSource="{Binding ProjectileEntries}"
+                        SelectedItem="{Binding SelectedUnit.PriProjectile}"
+                        x:Name="PriProjectile" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.PriAmmunition}"
+                        x:Name="PriAmmunition" />
+                    <ComboBox
+                        Height="25"
+                        ItemsSource="{Binding TechTypes}"
+                        SelectedItem="{Binding SelectedUnit.PriTechType}"
+                        x:Name="PriTechType" />
+                    <ComboBox
+                        Height="25"
+                        ItemsSource="{Binding SoundTypes}"
+                        SelectedItem="{Binding SelectedUnit.PriSoundType}"
+                        x:Name="PriSoundType" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.PriFireType}"
+                        x:Name="PriFireType" />
                 </StackPanel>
-                <StackPanel  Grid.Column="2">
-                    <TextBlock Text="{Binding UnitUiText[PriCharge] }" Height="25" />
-                    <TextBlock Text="{Binding UnitUiText[PriRange] }" Height="25" />
-                    <TextBlock Text="{Binding UnitUiText[PriWeaponType] }" Height="25" />
-                    <TextBlock Text="{Binding UnitUiText[PriDamageType] }" Height="25" />
-                    <TextBlock Text="{Binding UnitUiText[PriAttDelay] }" Height="25" />
-                    <TextBlock Text="{Binding UnitUiText[PriSkelFactor] }" Height="25" />
+                <StackPanel Grid.Column="2">
+                    <TextBlock Height="25" Text="{Binding UnitUiText[PriCharge]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[PriRange]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[PriWeaponType]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[PriDamageType]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[PriAttDelay]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[PriSkelFactor]}" />
                 </StackPanel>
-                <StackPanel  Grid.Column="3">
-                    <TextBox x:Name="PriCharge" Text="{Binding SelectedUnit.PriCharge}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
-                    <TextBox x:Name="PriRange" Text="{Binding SelectedUnit.PriRange}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
-                    <ComboBox x:Name="PriWeaponType" ItemsSource="{Binding WeaponTypes}" Height="25" SelectedItem="{Binding SelectedUnit.PriWeaponType}"></ComboBox>
-                    <ComboBox x:Name="PriDamageType" ItemsSource="{Binding DamageTypes}" Height="25" SelectedItem="{Binding SelectedUnit.PriDamageType}"></ComboBox>
-                    <TextBox x:Name="PriAttDelay" Text="{Binding SelectedUnit.PriAttDelay}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
-                    <TextBox x:Name="PriSkelFactor" Text="{Binding SelectedUnit.PriSkelFactor}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
+                <StackPanel Grid.Column="3">
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.PriCharge}"
+                        x:Name="PriCharge" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.PriRange}"
+                        x:Name="PriRange" />
+                    <ComboBox
+                        Height="25"
+                        ItemsSource="{Binding WeaponTypes}"
+                        SelectedItem="{Binding SelectedUnit.PriWeaponType}"
+                        x:Name="PriWeaponType" />
+                    <ComboBox
+                        Height="25"
+                        ItemsSource="{Binding DamageTypes}"
+                        SelectedItem="{Binding SelectedUnit.PriDamageType}"
+                        x:Name="PriDamageType" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.PriAttDelay}"
+                        x:Name="PriAttDelay" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.PriSkelFactor}"
+                        x:Name="PriSkelFactor" />
                 </StackPanel>
                 <sdl:MultiSelectComboBox
-                    x:Name="PriAttr"
+                    Grid.Column="0"
                     Grid.ColumnSpan="4"
                     Height="25"
                     ItemsSource="{Binding AttackAttr}"
+                    SelectedItems="{Binding SelectedUnit.PriAttr}"
                     SelectionMode="Multiple"
                     VerticalAlignment="Bottom"
-                    SelectedItems="{Binding SelectedUnit.PriAttr}">
-                </sdl:MultiSelectComboBox>
+                    x:Name="PriAttr" />
             </Grid>
 
-            <Grid Row="2">
+            <Grid Grid.Column="0" Row="2">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="25*"></ColumnDefinition>
-                    <ColumnDefinition Width="75*"></ColumnDefinition>
+                    <ColumnDefinition Width="25*" />
+                    <ColumnDefinition Width="75*" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Grid.ColumnSpan="2">
-                    <TextBlock x:Name="Soldiera" Height="25">
-                        <TextBlock.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem x:Name="SoldierGoto" Header="Go to entry" Click="SoldierGoto_OnClick"/>
-                            </ContextMenu>
-                        </TextBlock.ContextMenu>
+                    <TextBlock Height="25" x:Name="Soldiera">
                         <Hyperlink Click="SoldierGotoHyper_OnClick">
                             Soldier
                             <Hyperlink.Style>
-                                <Style TargetType="Hyperlink"
-                                       BasedOn="{StaticResource {x:Type Hyperlink}}">
-                                    <Setter Property="Foreground" Value="#000"/>
+                                <Style BasedOn="{StaticResource {x:Type Hyperlink}}" TargetType="Hyperlink">
+                                    <Setter Property="Foreground" Value="#000" />
                                 </Style>
                             </Hyperlink.Style>
                         </Hyperlink>
                     </TextBlock>
-                    <TextBlock x:Name="Officer1a" Height="25">
-                        <TextBlock.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem  Header="Go to entry" Click="SoldierGoto_OnClick"/>
-                            </ContextMenu>
-                        </TextBlock.ContextMenu>
+                    <TextBlock Height="25" x:Name="Officer1A">
                         <Hyperlink Click="SoldierGotoHyper_OnClick">
                             Officer
                             <Hyperlink.Style>
-                                <Style TargetType="Hyperlink"
-                                       BasedOn="{StaticResource {x:Type Hyperlink}}">
-                                    <Setter Property="Foreground" Value="#000"/>
+                                <Style BasedOn="{StaticResource {x:Type Hyperlink}}" TargetType="Hyperlink">
+                                    <Setter Property="Foreground" Value="#000" />
                                 </Style>
                             </Hyperlink.Style>
                         </Hyperlink>
                     </TextBlock>
-                    <TextBlock x:Name="Officer2a" Height="25">
-                        <TextBlock.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem  Header="Go to entry" Click="SoldierGoto_OnClick"/>
-                            </ContextMenu>
-                        </TextBlock.ContextMenu>
+                    <TextBlock Height="25" x:Name="Officer2A">
                         <Hyperlink Click="SoldierGotoHyper_OnClick">
                             Officer
                             <Hyperlink.Style>
-                                <Style TargetType="Hyperlink"
-                                       BasedOn="{StaticResource {x:Type Hyperlink}}">
-                                    <Setter Property="Foreground" Value="#000"/>
+                                <Style BasedOn="{StaticResource {x:Type Hyperlink}}" TargetType="Hyperlink">
+                                    <Setter Property="Foreground" Value="#000" />
                                 </Style>
                             </Hyperlink.Style>
                         </Hyperlink>
                     </TextBlock>
-                    <TextBlock x:Name="Officer3a" Height="25">
-                        <TextBlock.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem  Header="Go to entry" Click="SoldierGoto_OnClick"/>
-                            </ContextMenu>
-                        </TextBlock.ContextMenu>
+                    <TextBlock Height="25" x:Name="Officer3A">
                         <Hyperlink Click="SoldierGotoHyper_OnClick">
                             Officer
                             <Hyperlink.Style>
-                                <Style TargetType="Hyperlink"
-                                       BasedOn="{StaticResource {x:Type Hyperlink}}">
-                                    <Setter Property="Foreground" Value="#000"/>
+                                <Style BasedOn="{StaticResource {x:Type Hyperlink}}" TargetType="Hyperlink">
+                                    <Setter Property="Foreground" Value="#000" />
                                 </Style>
                             </Hyperlink.Style>
                         </Hyperlink>
                     </TextBlock>
-                    <Grid Grid.ColumnSpan="2">
+                    <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="25*" MaxWidth="135"></ColumnDefinition>
-                            <ColumnDefinition Width="25*"></ColumnDefinition>
-                            <ColumnDefinition Width="15*" MaxWidth="50"></ColumnDefinition>
-                            <ColumnDefinition Width="25*" MaxWidth="60"></ColumnDefinition>
+                            <ColumnDefinition MaxWidth="135" Width="25*" />
+                            <ColumnDefinition Width="25*" />
+                            <ColumnDefinition MaxWidth="50" Width="15*" />
+                            <ColumnDefinition MaxWidth="60" Width="25*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="25*"></RowDefinition>
-                            <RowDefinition Height="25*"></RowDefinition>
-                            <RowDefinition Height="25*"></RowDefinition>
-                            <RowDefinition Height="25*"></RowDefinition>
+                            <RowDefinition Height="25*" />
+                            <RowDefinition Height="25*" />
+                            <RowDefinition Height="25*" />
+                            <RowDefinition Height="25*" />
                         </Grid.RowDefinitions>
-                        <TextBlock x:Name="ArmourModelBasea" Height="25" Grid.Row="0">
-                            <TextBlock.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Header="Go to entry" Click="SoldierGoto_OnClick"/>
-                                </ContextMenu>
-                            </TextBlock.ContextMenu>
+                        <TextBlock
+                            Grid.Row="0"
+                            Height="25"
+                            x:Name="ArmourModelBaseA">
                             <Hyperlink Click="SoldierGotoHyper_OnClick">
                                 Base Model
                                 <Hyperlink.Style>
-                                    <Style TargetType="Hyperlink"
-                                           BasedOn="{StaticResource {x:Type Hyperlink}}">
-                                        <Setter Property="Foreground" Value="#000"/>
+                                    <Style BasedOn="{StaticResource {x:Type Hyperlink}}" TargetType="Hyperlink">
+                                        <Setter Property="Foreground" Value="#000" />
                                     </Style>
                                 </Hyperlink.Style>
                             </Hyperlink>
                         </TextBlock>
-                        <ComboBox x:Name="ArmourModelBase" IsEditable="True" ItemsSource="{Binding ModelEntries}" Height="25" SelectedItem="{Binding SelectedUnit.ArmourModelBase}" Grid.Row="0"  Grid.Column="1"></ComboBox>
-                        <TextBlock Text="Levels" Height="25" Margin="5,0,0,0"  Grid.Row="0"  Grid.Column="2"/>
-                        <TextBox x:Name="ArmourlvlBase"  Margin="5,0,0,0" Width="50" Text="{Binding SelectedUnit.ArmourlvlBase}" Height="25" HorizontalAlignment="Stretch"  Grid.Row="0"  Grid.Column="3" TextChanged="Field_OnTextChanged"/>
+                        <ComboBox
+                            Grid.Column="1"
+                            Grid.Row="0"
+                            Height="25"
+                            IsEditable="True"
+                            ItemsSource="{Binding ModelEntries}"
+                            SelectedItem="{Binding SelectedUnit.ArmourModelBase}"
+                            x:Name="ArmourModelBase" />
+                        <TextBlock
+                            Grid.Column="2"
+                            Grid.Row="0"
+                            Height="25"
+                            Margin="5,0,0,0"
+                            Text="Levels" />
+                        <TextBox
+                            Grid.Column="3"
+                            Grid.Row="0"
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Margin="5,0,0,0"
+                            Text="{Binding SelectedUnit.ArmourlvlBase}"
+                            Width="50"
+                            x:Name="ArmourlvlBase" />
 
-                        <TextBlock x:Name="ArmourModelOnea" Height="25" Grid.Row="1">
-                            <TextBlock.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Header="Go to entry" Click="SoldierGoto_OnClick"/>
-                                </ContextMenu>
-                            </TextBlock.ContextMenu>
+                        <TextBlock
+                            Grid.Column="0"
+                            Grid.Row="1"
+                            Height="25"
+                            x:Name="ArmourModelOneA">
                             <Hyperlink Click="SoldierGotoHyper_OnClick">
                                 Upgrade Model 1
                                 <Hyperlink.Style>
-                                    <Style TargetType="Hyperlink"
-                                           BasedOn="{StaticResource {x:Type Hyperlink}}">
-                                        <Setter Property="Foreground" Value="#000"/>
+                                    <Style BasedOn="{StaticResource {x:Type Hyperlink}}" TargetType="Hyperlink">
+                                        <Setter Property="Foreground" Value="#000" />
                                     </Style>
                                 </Hyperlink.Style>
                             </Hyperlink>
                         </TextBlock>
-                        <ComboBox x:Name="ArmourModelOne" IsEditable="True" ItemsSource="{Binding ModelEntries}" Height="25" SelectedItem="{Binding SelectedUnit.ArmourModelOne}" Grid.Row="1"  Grid.Column="1"></ComboBox>
-                        <TextBlock Text="Levels" Height="25" Margin="5,0,0,0"  Grid.Row="1"  Grid.Column="2"/>
-                        <TextBox x:Name="ArmourlvlOne"  Margin="5,0,0,0" Width="50" Text="{Binding SelectedUnit.ArmourlvlOne}" Height="25" HorizontalAlignment="Stretch"  Grid.Row="1"  Grid.Column="3" TextChanged="Field_OnTextChanged"/>
+                        <ComboBox
+                            Grid.Column="1"
+                            Grid.Row="1"
+                            Height="25"
+                            IsEditable="True"
+                            ItemsSource="{Binding ModelEntries}"
+                            SelectedItem="{Binding SelectedUnit.ArmourModelOne}"
+                            x:Name="ArmourModelOne" />
+                        <TextBlock
+                            Grid.Column="2"
+                            Grid.Row="1"
+                            Height="25"
+                            Margin="5,0,0,0"
+                            Text="Levels" />
+                        <TextBox
+                            Grid.Column="3"
+                            Grid.Row="1"
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Margin="5,0,0,0"
+                            Text="{Binding SelectedUnit.ArmourlvlOne}"
+                            Width="50"
+                            x:Name="ArmourlvlOne" />
 
-                        <TextBlock x:Name="ArmourModelTwoa" Height="25" Grid.Row="2">
-                            <TextBlock.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Header="Go to entry" Click="SoldierGoto_OnClick"/>
-                                </ContextMenu>
-                            </TextBlock.ContextMenu>
+                        <TextBlock
+                            Grid.Column="0"
+                            Grid.Row="2"
+                            Height="25"
+                            x:Name="ArmourModelTwoA">
                             <Hyperlink Click="SoldierGotoHyper_OnClick">
                                 Upgrade Model 2
                                 <Hyperlink.Style>
-                                    <Style TargetType="Hyperlink"
-                                           BasedOn="{StaticResource {x:Type Hyperlink}}">
-                                        <Setter Property="Foreground" Value="#000"/>
+                                    <Style BasedOn="{StaticResource {x:Type Hyperlink}}" TargetType="Hyperlink">
+                                        <Setter Property="Foreground" Value="#000" />
                                     </Style>
                                 </Hyperlink.Style>
                             </Hyperlink>
                         </TextBlock>
-                        <ComboBox x:Name="ArmourModelTwo" IsEditable="True" ItemsSource="{Binding ModelEntries}" Height="25" SelectedItem="{Binding SelectedUnit.ArmourModelTwo}" Grid.Row="2"  Grid.Column="1"></ComboBox>
-                        <TextBlock Text="Levels" Height="25" Margin="5,0,0,0"  Grid.Row="2"  Grid.Column="2"/>
-                        <TextBox x:Name="ArmourlvlTwo"  Margin="5,0,0,0" Width="50" Text="{Binding SelectedUnit.ArmourlvlTwo}" Height="25" HorizontalAlignment="Stretch"  Grid.Row="2"  Grid.Column="3" TextChanged="Field_OnTextChanged"/>
+                        <ComboBox
+                            Grid.Column="1"
+                            Grid.Row="2"
+                            Height="25"
+                            IsEditable="True"
+                            ItemsSource="{Binding ModelEntries}"
+                            SelectedItem="{Binding SelectedUnit.ArmourModelTwo}"
+                            x:Name="ArmourModelTwo" />
+                        <TextBlock
+                            Grid.Column="2"
+                            Grid.Row="2"
+                            Height="25"
+                            Margin="5,0,0,0"
+                            Text="Levels" />
+                        <TextBox
+                            Grid.Column="3"
+                            Grid.Row="2"
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Margin="5,0,0,0"
+                            Text="{Binding SelectedUnit.ArmourlvlTwo}"
+                            Width="50"
+                            x:Name="ArmourlvlTwo" />
 
-                        <TextBlock x:Name="ArmourModelThreea" Height="25" Grid.Row="3">
-                            <TextBlock.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Header="Go to entry" Click="SoldierGoto_OnClick"/>
-                                </ContextMenu>
-                            </TextBlock.ContextMenu>
+                        <TextBlock
+                            Grid.Column="0"
+                            Grid.Row="3"
+                            Height="25"
+                            x:Name="ArmourModelThreeA">
                             <Hyperlink Click="SoldierGotoHyper_OnClick">
                                 Upgrade Model 3
                                 <Hyperlink.Style>
-                                    <Style TargetType="Hyperlink"
-                                           BasedOn="{StaticResource {x:Type Hyperlink}}">
-                                        <Setter Property="Foreground" Value="#000"/>
+                                    <Style BasedOn="{StaticResource {x:Type Hyperlink}}" TargetType="Hyperlink">
+                                        <Setter Property="Foreground" Value="#000" />
                                     </Style>
                                 </Hyperlink.Style>
                             </Hyperlink>
                         </TextBlock>
-                        <ComboBox x:Name="ArmourModelThree" IsEditable="True" ItemsSource="{Binding ModelEntries}" Height="25" SelectedItem="{Binding SelectedUnit.ArmourModelThree}" Grid.Row="3"  Grid.Column="1"></ComboBox>
-                        <TextBlock Text="Levels" Height="25" Margin="5,0,0,0"  Grid.Row="3"  Grid.Column="2"/>
-                        <TextBox x:Name="ArmourlvlThree"  Margin="5,0,0,0" Width="50" Text="{Binding SelectedUnit.ArmourlvlThree}" Height="25" HorizontalAlignment="Stretch"  Grid.Row="3"  Grid.Column="3" TextChanged="Field_OnTextChanged"/>
+                        <ComboBox
+                            Grid.Column="1"
+                            Grid.Row="3"
+                            Height="25"
+                            IsEditable="True"
+                            ItemsSource="{Binding ModelEntries}"
+                            SelectedItem="{Binding SelectedUnit.ArmourModelThree}"
+                            x:Name="ArmourModelThree" />
+                        <TextBlock
+                            Grid.Column="2"
+                            Grid.Row="3"
+                            Height="25"
+                            Margin="5,0,0,0"
+                            Text="Levels" />
+                        <TextBox
+                            Grid.Column="3"
+                            Grid.Row="3"
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Margin="5,0,0,0"
+                            Text="{Binding SelectedUnit.ArmourlvlThree}"
+                            Width="50"
+                            x:Name="ArmourlvlThree" />
                     </Grid>
-                    <TextBlock Text="{Binding UnitUiText[Ownership] }" Height="50"/>
-                    <TextBlock Text="{Binding UnitUiText[EraZero] }" Height="25"/>
-                    <TextBlock Text="{Binding UnitUiText[EraOne] }" Height="25"/>
-                    <TextBlock Text="{Binding UnitUiText[EraTwo] }" Height="25"/>
+                    <TextBlock Height="50" Text="{Binding UnitUiText[Ownership]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[EraZero]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[EraOne]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[EraTwo]}" />
                 </StackPanel>
                 <StackPanel Grid.Column="1">
-                    <ComboBox x:Name="Soldier" IsEditable="True" ItemsSource="{Binding ModelEntries}" Height="25" SelectedItem="{Binding SelectedUnit.Soldier}"  HorizontalAlignment="Stretch"></ComboBox>
-                    <ComboBox x:Name="Officer1" IsEditable="True" ItemsSource="{Binding ModelEntries}" Height="25" SelectedItem="{Binding SelectedUnit.Officer1}"  HorizontalAlignment="Stretch"></ComboBox>
-                    <ComboBox x:Name="Officer2" IsEditable="True" ItemsSource="{Binding ModelEntries}" Height="25" SelectedItem="{Binding SelectedUnit.Officer2}"  HorizontalAlignment="Stretch"></ComboBox>
-                    <ComboBox x:Name="Officer3" IsEditable="True" ItemsSource="{Binding ModelEntries}" Height="25" SelectedItem="{Binding SelectedUnit.Officer3}"  HorizontalAlignment="Stretch"></ComboBox>
+                    <ComboBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        IsEditable="True"
+                        ItemsSource="{Binding ModelEntries}"
+                        SelectedItem="{Binding SelectedUnit.Soldier}"
+                        x:Name="Soldier" />
+                    <ComboBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        IsEditable="True"
+                        ItemsSource="{Binding ModelEntries}"
+                        SelectedItem="{Binding SelectedUnit.Officer1}"
+                        x:Name="Officer1" />
+                    <ComboBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        IsEditable="True"
+                        ItemsSource="{Binding ModelEntries}"
+                        SelectedItem="{Binding SelectedUnit.Officer2}"
+                        x:Name="Officer2" />
+                    <ComboBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        IsEditable="True"
+                        ItemsSource="{Binding ModelEntries}"
+                        SelectedItem="{Binding SelectedUnit.Officer3}"
+                        x:Name="Officer3" />
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="" Height="25"/>
+                        <TextBlock Height="25" Text="" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="" Height="25"/>
+                        <TextBlock Height="25" Text="" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="" Height="25"/>
+                        <TextBlock Height="25" Text="" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="" Height="25"/>
+                        <TextBlock Height="25" Text="" />
                     </StackPanel>
                     <sdl:MultiSelectComboBox
-                        x:Name="Ownership"
-                        Grid.ColumnSpan="4"
                         Height="50"
+                        ItemsSource="{Binding Factions}"
+                        SelectedItems="{Binding SelectedUnit.Ownership}"
                         SelectedItemsChanged="Ownership_OnSelectedItemsChanged"
-                        ItemsSource="{Binding Factions}"
                         SelectionMode="Multiple"
                         VerticalAlignment="Bottom"
-                        SelectedItems="{Binding SelectedUnit.Ownership}">
-                    </sdl:MultiSelectComboBox>
+                        x:Name="Ownership" />
                     <sdl:MultiSelectComboBox
-                        x:Name="EraZero"
-                        Grid.ColumnSpan="4"
                         Height="25"
+                        ItemsSource="{Binding Factions}"
+                        SelectedItems="{Binding SelectedUnit.EraZero}"
                         SelectedItemsChanged="EraZero_OnSelectedItemsChanged"
-                        ItemsSource="{Binding Factions}"
                         SelectionMode="Multiple"
                         VerticalAlignment="Bottom"
-                        SelectedItems="{Binding SelectedUnit.EraZero}">
-                    </sdl:MultiSelectComboBox>
+                        x:Name="EraZero" />
                     <sdl:MultiSelectComboBox
-                        x:Name="EraOne"
-                        Grid.ColumnSpan="4"
                         Height="25"
+                        ItemsSource="{Binding Factions}"
+                        SelectedItems="{Binding SelectedUnit.EraOne}"
                         SelectedItemsChanged="EraOne_OnSelectedItemsChanged"
-                        ItemsSource="{Binding Factions}"
                         SelectionMode="Multiple"
                         VerticalAlignment="Bottom"
-                        SelectedItems="{Binding SelectedUnit.EraOne}">
-                    </sdl:MultiSelectComboBox>
+                        x:Name="EraOne" />
                     <sdl:MultiSelectComboBox
-                        x:Name="EraTwo"
                         Height="25"
-                        SelectedItemsChanged="EraTwo_OnSelectedItemsChanged"
                         ItemsSource="{Binding Factions}"
+                        SelectedItems="{Binding SelectedUnit.EraTwo}"
+                        SelectedItemsChanged="EraTwo_OnSelectedItemsChanged"
                         SelectionMode="Multiple"
                         VerticalAlignment="Bottom"
-                        SelectedItems="{Binding SelectedUnit.EraTwo}">
-                    </sdl:MultiSelectComboBox>
+                        x:Name="EraTwo" />
                 </StackPanel>
             </Grid>
-            <StackPanel Grid.Row="2" Grid.Column="1">
+            <StackPanel Grid.Column="1" Grid.Row="2">
                 <StackPanel Orientation="Horizontal">
                     <sdl:MultiSelectComboBox
-                        x:Name="Attributes"
-                        Width="450"
                         Height="75"
                         ItemsSource="{Binding AttributeTypes}"
+                        SelectedItems="{Binding SelectedUnit.Attributes}"
                         SelectionMode="Multiple"
                         VerticalAlignment="Bottom"
-                        SelectedItems="{Binding SelectedUnit.Attributes}">
-                    </sdl:MultiSelectComboBox>
-                    <Button x:Name="Btn" Content="Add Attribute"  Height="25" Width="80" Click="btn_Click"/>
-                    <Popup x:Name="Popup"  PlacementTarget="{Binding ElementName=Btn}" Placement="Bottom"  Width="200" Height="100" Margin="0,20,0,0">
-                        <Border BorderBrush="Black" BorderThickness="2" Background="#ededec">
+                        Width="450"
+                        x:Name="Attributes" />
+                    <Button
+                        Click="btn_Click"
+                        Content="Add Attribute"
+                        Height="25"
+                        Width="80"
+                        x:Name="Btn" />
+                    <Popup
+                        Height="100"
+                        Margin="0,20,0,0"
+                        Placement="Bottom"
+                        PlacementTarget="{Binding ElementName=Btn}"
+                        Width="200"
+                        x:Name="Popup">
+                        <Border
+                            Background="#ededec"
+                            BorderBrush="Black"
+                            BorderThickness="2">
                             <StackPanel VerticalAlignment="Center">
-                                <TextBox x:Name="TxtBox" VerticalAlignment="Center" Margin="15,0,15,0"/>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <Button Margin="5,15,5,0" x:Name="AcceptAttr" Content="Save"  Height="25" Width="40" Click="acceptAttr_Click"/>
-                                    <Button Margin="5,15,5,0" x:Name="CancelAttr" Content="Cancel"  Height="25" Width="40" Click="CancelAttr_Click"/>
+                                <TextBox
+                                    Margin="15,0,15,0"
+                                    VerticalAlignment="Center"
+                                    x:Name="TxtBox" />
+                                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                    <Button
+                                        Click="acceptAttr_Click"
+                                        Content="Save"
+                                        Height="25"
+                                        Margin="5,15,5,0"
+                                        Width="40"
+                                        x:Name="AcceptAttr" />
+                                    <Button
+                                        Click="CancelAttr_Click"
+                                        Content="Cancel"
+                                        Height="25"
+                                        Margin="5,15,5,0"
+                                        Width="40"
+                                        x:Name="CancelAttr" />
                                 </StackPanel>
                             </StackPanel>
                         </Border>
                     </Popup>
                 </StackPanel>
-                <Grid Row="2" Column="1">
+                <Grid Column="1" Row="2">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="25*"></ColumnDefinition>
-                        <ColumnDefinition Width="75*"></ColumnDefinition>
+                        <ColumnDefinition Width="25*" />
+                        <ColumnDefinition Width="75*" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="{Binding UnitUiText[MountEffect] }" Height="25" Grid.Column="0"/>
-                    <TextBox x:Name="MountEffect" Text="{Binding MountEffectString}" Height="25" HorizontalAlignment="Stretch" Grid.Column="1"/>
+                    <TextBlock
+                        Grid.Column="0"
+                        Height="25"
+                        Text="{Binding UnitUiText[MountEffect]}" />
+                    <TextBox
+                        Grid.Column="1"
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding MountEffectString}"
+                        x:Name="MountEffect" />
                 </Grid>
-                <Grid Row="2" Column="1">
+                <Grid Column="1" Row="2">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="25*"></ColumnDefinition>
-                        <ColumnDefinition Width="25*"></ColumnDefinition>
-                        <ColumnDefinition Width="25*"></ColumnDefinition>
-                        <ColumnDefinition Width="25*"></ColumnDefinition>
+                        <ColumnDefinition Width="25*" />
+                        <ColumnDefinition Width="25*" />
+                        <ColumnDefinition Width="25*" />
+                        <ColumnDefinition Width="25*" />
                     </Grid.ColumnDefinitions>
-                    <StackPanel  Grid.Column="0">
-                        <TextBlock Text="{Binding UnitUiText[PriArmour] }" Height="25" />
-                        <TextBlock Text="{Binding UnitUiText[PriDefense] }" Height="25" />
-                        <TextBlock Text="{Binding UnitUiText[PriDefSound] }" Height="25" />
-                        <TextBlock Text="{Binding UnitUiText[PriShield] }" Height="25" />
-                        <TextBlock Text="{Binding UnitUiText[Discipline] }" Height="25" />
-                        <TextBlock Text="{Binding UnitUiText[LockMorale] }" Height="25" />
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Height="25" Text="{Binding UnitUiText[PriArmour]}" />
+                        <TextBlock Height="25" Text="{Binding UnitUiText[PriDefense]}" />
+                        <TextBlock Height="25" Text="{Binding UnitUiText[PriDefSound]}" />
+                        <TextBlock Height="25" Text="{Binding UnitUiText[PriShield]}" />
+                        <TextBlock Height="25" Text="{Binding UnitUiText[Discipline]}" />
+                        <TextBlock Height="25" Text="{Binding UnitUiText[LockMorale]}" />
                     </StackPanel>
-                    <StackPanel  Grid.Column="1">
-                        <TextBox x:Name="PriArmour" Text="{Binding SelectedUnit.PriArmour}" Height="25" HorizontalAlignment="Stretch"/>
-                        <TextBox x:Name="PriDefense" Text="{Binding SelectedUnit.PriDefense}" Height="25" HorizontalAlignment="Stretch"/>
-                        <ComboBox x:Name="PriDefSound" ItemsSource="{Binding SoundTypesDef}" Height="25" SelectedItem="{Binding SelectedUnit.PriDefSound}"></ComboBox>
-                        <TextBox x:Name="PriShield" Text="{Binding SelectedUnit.PriShield}" Height="25" HorizontalAlignment="Stretch"/>
-                        <ComboBox x:Name="Discipline" ItemsSource="{Binding DisciplineTypes}" Height="25" SelectedItem="{Binding SelectedUnit.Discipline}"></ComboBox>
-                        <CheckBox Name="LockMorale" IsChecked="{Binding SelectedUnit.LockMorale}"></CheckBox>
+                    <StackPanel Grid.Column="1">
+                        <TextBox
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding SelectedUnit.PriArmour}"
+                            x:Name="PriArmour" />
+                        <TextBox
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding SelectedUnit.PriDefense}"
+                            x:Name="PriDefense" />
+                        <ComboBox
+                            Height="25"
+                            ItemsSource="{Binding SoundTypesDef}"
+                            SelectedItem="{Binding SelectedUnit.PriDefSound}"
+                            x:Name="PriDefSound" />
+                        <TextBox
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding SelectedUnit.PriShield}"
+                            x:Name="PriShield" />
+                        <ComboBox
+                            Height="25"
+                            ItemsSource="{Binding DisciplineTypes}"
+                            SelectedItem="{Binding SelectedUnit.Discipline}"
+                            x:Name="Discipline" />
+                        <ui:ToggleSwitch IsChecked="{Binding SelectedUnit.LockMorale}" Name="LockMorale" />
                     </StackPanel>
-                    <StackPanel  Grid.Column="2">
-                        <TextBlock Text="{Binding UnitUiText[SecArmour] }" Height="25" />
-                        <TextBlock Text="{Binding UnitUiText[SecDefense] }" Height="25" />
-                        <TextBlock Text="{Binding UnitUiText[SecDefSound] }" Height="25" />
-                        <TextBlock Text="{Binding UnitUiText[Morale] }" Height="25" />
-                        <TextBlock Text="{Binding UnitUiText[Training] }" Height="25" />
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Height="25" Text="{Binding UnitUiText[SecArmour]}" />
+                        <TextBlock Height="25" Text="{Binding UnitUiText[SecDefense]}" />
+                        <TextBlock Height="25" Text="{Binding UnitUiText[SecDefSound]}" />
+                        <TextBlock Height="25" Text="{Binding UnitUiText[Morale]}" />
+                        <TextBlock Height="25" Text="{Binding UnitUiText[Training]}" />
                     </StackPanel>
-                    <StackPanel  Grid.Column="3">
-                        <TextBox x:Name="SecArmour" Text="{Binding SelectedUnit.SecArmour}" Height="25" HorizontalAlignment="Stretch"/>
-                        <TextBox x:Name="SecDefense" Text="{Binding SelectedUnit.SecDefense}" Height="25" HorizontalAlignment="Stretch"/>
-                        <ComboBox x:Name="SecDefSound" ItemsSource="{Binding SoundTypesDef}" Height="25"
-                                  SelectedItem="{Binding SelectedUnit.SecDefSound}">
-                        </ComboBox>
-                        <TextBox x:Name="Morale" Text="{Binding SelectedUnit.Morale}" Height="25" HorizontalAlignment="Stretch"/>
-                        <ComboBox x:Name="Training" ItemsSource="{Binding TrainedTypes}" Height="25" SelectedItem="{Binding SelectedUnit.Training}"></ComboBox>
+                    <StackPanel Grid.Column="3">
+                        <TextBox
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding SelectedUnit.SecArmour}"
+                            x:Name="SecArmour" />
+                        <TextBox
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding SelectedUnit.SecDefense}"
+                            x:Name="SecDefense" />
+                        <ComboBox
+                            Height="25"
+                            ItemsSource="{Binding SoundTypesDef}"
+                            SelectedItem="{Binding SelectedUnit.SecDefSound}"
+                            x:Name="SecDefSound" />
+                        <TextBox
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Text="{Binding SelectedUnit.Morale}"
+                            x:Name="Morale" />
+                        <ComboBox
+                            Height="25"
+                            ItemsSource="{Binding TrainedTypes}"
+                            SelectedItem="{Binding SelectedUnit.Training}"
+                            x:Name="Training" />
                     </StackPanel>
                 </Grid>
 
             </StackPanel>
 
-            <Grid Grid.Column="1">
+            <Grid Grid.Column="1" Grid.Row="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="45*"></RowDefinition>
-                    <RowDefinition Height="10*"></RowDefinition>
-                    <RowDefinition Height="45*"></RowDefinition>
+                    <RowDefinition Height="45*" />
+                    <RowDefinition Height="10*" />
+                    <RowDefinition Height="45*" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="25*"></ColumnDefinition>
-                    <ColumnDefinition Width="25*"></ColumnDefinition>
-                    <ColumnDefinition Width="25*"></ColumnDefinition>
-                    <ColumnDefinition Width="25*"></ColumnDefinition>
+                    <ColumnDefinition Width="25*" />
+                    <ColumnDefinition Width="25*" />
+                    <ColumnDefinition Width="25*" />
+                    <ColumnDefinition Width="25*" />
                 </Grid.ColumnDefinitions>
-                <Image Source="{Binding UnitInfoImage}" VerticalAlignment="Stretch" Grid.ColumnSpan="4" MaxHeight="300" ></Image>
-                <TextBox x:Name="DescrShort" Text="{Binding SelectedUnit.DescrShort}" Grid.ColumnSpan="4" Height="50" VerticalAlignment="Top" HorizontalAlignment="Stretch" Grid.Row="1" TextWrapping="Wrap"/>
-                <StackPanel  Grid.Column="0" Grid.Row="2"  VerticalAlignment="Top">
-                    <TextBlock Text="{Binding UnitUiText[InfoDict] }" Height="25"/>
-                    <TextBlock Text="{Binding UnitUiText[SpacingWidth] }" Height="25"/>
-                    <TextBlock Text="{Binding UnitUiText[SpacingWidthLoose] }" Height="25"/>
-                    <TextBlock Text="{Binding UnitUiText[SpacingRanks] }" Height="25"/>
-                    <TextBlock Text="{Binding UnitUiText[FormationStyle] }" Height="25"/>
+                <Image
+                    Grid.ColumnSpan="4"
+                    MaxHeight="300"
+                    Source="{Binding UnitInfoImage}"
+                    VerticalAlignment="Stretch" />
+                <TextBox
+                    Grid.Column="0"
+                    Grid.ColumnSpan="4"
+                    Grid.Row="1"
+                    Height="50"
+                    HorizontalAlignment="Stretch"
+                    Text="{Binding SelectedUnit.DescrShort}"
+                    TextWrapping="Wrap"
+                    VerticalAlignment="Top"
+                    x:Name="DescrShort" />
+                <StackPanel
+                    Grid.Column="0"
+                    Grid.Row="2"
+                    VerticalAlignment="Top">
+                    <TextBlock Height="25" Text="{Binding UnitUiText[InfoDict]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[SpacingWidth]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[SpacingWidthLoose]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[SpacingRanks]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[FormationStyle]}" />
                 </StackPanel>
-                <StackPanel  Grid.Column="1" Grid.Row="2" VerticalAlignment="Top">
-                    <TextBox x:Name="InfoDict" Text="{Binding SelectedUnit.InfoDict}" Height="25" HorizontalAlignment="Stretch"/>
-                    <TextBox x:Name="SpacingWidth" Text="{Binding SelectedUnit.SpacingWidth}" Height="25" HorizontalAlignment="Stretch"/>
-                    <TextBox x:Name="SpacingWidthLoose" Text="{Binding SelectedUnit.SpacingWidthLoose}" Height="25" HorizontalAlignment="Stretch"/>
-                    <TextBox x:Name="SpacingRanks" Text="{Binding SelectedUnit.SpacingRanks}" Height="25"
-                             HorizontalAlignment="Stretch" />
-                    <ComboBox x:Name="FormationStyle" SelectionChanged="Special_formation_OnSelectionChanged" ItemsSource="{Binding FormationStylesX}" Height="25" SelectedItem="{Binding SelectedUnit.FormationStyle}"></ComboBox>
+                <StackPanel
+                    Grid.Column="1"
+                    Grid.Row="2"
+                    VerticalAlignment="Top">
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.InfoDict}"
+                        x:Name="InfoDict" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.SpacingWidth}"
+                        x:Name="SpacingWidth" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.SpacingWidthLoose}"
+                        x:Name="SpacingWidthLoose" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.SpacingRanks}"
+                        x:Name="SpacingRanks" />
+                    <ComboBox
+                        Height="25"
+                        ItemsSource="{Binding FormationStylesX}"
+                        SelectedItem="{Binding SelectedUnit.FormationStyle}"
+                        SelectionChanged="Special_formation_OnSelectionChanged"
+                        x:Name="FormationStyle" />
                 </StackPanel>
-                <StackPanel  Grid.Column="2" Grid.Row="2" VerticalAlignment="Top">
-                    <TextBlock Text="{Binding UnitUiText[CardDict] }" Height="25"/>
-                    <TextBlock Text="{Binding UnitUiText[SpacingDepth] }" Height="25"/>
-                    <TextBlock Text="{Binding UnitUiText[SpacingDepthLoose] }" Height="25"/>
-                    <TextBlock Text="{Binding UnitUiText[SpecialFormation] }" Height="25"/>
+                <StackPanel
+                    Grid.Column="2"
+                    Grid.Row="2"
+                    VerticalAlignment="Top">
+                    <TextBlock Height="25" Text="{Binding UnitUiText[CardDict]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[SpacingDepth]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[SpacingDepthLoose]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[SpecialFormation]}" />
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding UnitUiText[StatFood] }" Height="25"/>
-                        <TextBox x:Name="StatFood" Text="{Binding SelectedUnit.StatFood}" Margin="10,0,0,0" Width="50"
-                                 Height="25" HorizontalAlignment="Stretch" />
+                        <TextBlock Height="25" Text="{Binding UnitUiText[StatFood]}" />
+                        <TextBox
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Margin="10,0,0,0"
+                            Text="{Binding SelectedUnit.StatFood}"
+                            Width="50"
+                            x:Name="StatFood" />
                     </StackPanel>
                 </StackPanel>
-                <StackPanel  Grid.Column="3" Grid.Row="2" VerticalAlignment="Top">
-                    <TextBox x:Name="CardDict" Text="{Binding SelectedUnit.CardDict}" Height="25"
-                             HorizontalAlignment="Stretch" />
-                    <TextBox x:Name="SpacingDepth" Text="{Binding SelectedUnit.SpacingDepth}" Height="25" HorizontalAlignment="Stretch"/>
-                    <TextBox x:Name="SpacingDepthLoose" Text="{Binding SelectedUnit.SpacingDepthLoose}" Height="25" HorizontalAlignment="Stretch"/>
-                    <ComboBox x:Name="SpecialFormation" SelectionChanged="Special_formation_OnSelectionChanged" ItemsSource="{Binding SpecialFormationStylesX}" Height="25" SelectedItem="{Binding SelectedUnit.SpecialFormation}"></ComboBox>
+                <StackPanel
+                    Grid.Column="3"
+                    Grid.Row="2"
+                    VerticalAlignment="Top">
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.CardDict}"
+                        x:Name="CardDict" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.SpacingDepth}"
+                        x:Name="SpacingDepth" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.SpacingDepthLoose}"
+                        x:Name="SpacingDepthLoose" />
+                    <ComboBox
+                        Height="25"
+                        ItemsSource="{Binding SpecialFormationStylesX}"
+                        SelectedItem="{Binding SelectedUnit.SpecialFormation}"
+                        SelectionChanged="Special_formation_OnSelectionChanged"
+                        x:Name="SpecialFormation" />
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding UnitUiText[StatFoodSec] }" Height="25"/>
-                        <TextBox x:Name="StatFoodSec" Text="{Binding SelectedUnit.StatFoodSec}" Margin="10,0,0,0" Width="50" Height="25" HorizontalAlignment="Stretch"/>
+                        <TextBlock Height="25" Text="{Binding UnitUiText[StatFoodSec]}" />
+                        <TextBox
+                            Height="25"
+                            HorizontalAlignment="Stretch"
+                            Margin="10,0,0,0"
+                            Text="{Binding SelectedUnit.StatFoodSec}"
+                            Width="50"
+                            x:Name="StatFoodSec" />
                     </StackPanel>
                 </StackPanel>
             </Grid>
 
-
-
-
-            <Grid ColumnSpan="1" Row="2" Margin="0" Column="2">
+            <Grid
+                Column="2"
+                Margin="0"
+                Row="2">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="25*"></ColumnDefinition>
-                    <ColumnDefinition Width="25*"></ColumnDefinition>
-                    <ColumnDefinition Width="25*"></ColumnDefinition>
-                    <ColumnDefinition Width="25*"></ColumnDefinition>
+                    <ColumnDefinition Width="25*" />
+                    <ColumnDefinition Width="25*" />
+                    <ColumnDefinition Width="25*" />
+                    <ColumnDefinition Width="25*" />
                 </Grid.ColumnDefinitions>
-                <StackPanel  Grid.Column="0">
-                    <TextBlock Text="{Binding UnitUiText[StatScrub] }" Height="25"/>
-                    <TextBlock Text="{Binding UnitUiText[StatSnow] }" Height="25"/>
-                    <TextBlock Text="{Binding UnitUiText[StatHeat] }" Height="25"/>
-                    <TextBlock Text="{Binding UnitUiText[RecruitTime] }" Height="25"/>
-                    <TextBlock Text="{Binding UnitUiText[Upkeep] }" Height="25"/>
-                    <TextBlock Text="{Binding UnitUiText[WpnCost] }" Height="25"/>
-                    <TextBlock Text="{Binding UnitUiText[CustomLimit] }" Height="25"/>
-                    <TextBlock Text="{Binding UnitUiText[RecruitPriorityOffset] }" Height="25"/>
-                    <TextBlock Text="{Binding UnitUiText[ValuePerCost] }" Height="25"/>
-                    <TextBlock Text="{Binding UnitUiText[ValuePerUpkeep] }" Height="25"/>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Height="25" Text="{Binding UnitUiText[StatScrub]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[StatSnow]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[StatHeat]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[RecruitTime]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[Upkeep]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[WpnCost]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[CustomLimit]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[RecruitPriorityOffset]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[ValuePerCost]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[ValuePerUpkeep]}" />
                 </StackPanel>
-                <StackPanel  Grid.Column="1">
-                    <TextBox x:Name="StatScrub" Text="{Binding SelectedUnit.StatScrub}" Height="25" HorizontalAlignment="Stretch"/>
-                    <TextBox x:Name="StatSnow" Text="{Binding SelectedUnit.StatSnow}" Height="25" HorizontalAlignment="Stretch"/>
-                    <TextBox x:Name="StatHeat" Text="{Binding SelectedUnit.StatHeat}" Height="25"
-                             HorizontalAlignment="Stretch" />
-                    <TextBox x:Name="RecruitTime" Text="{Binding SelectedUnit.RecruitTime}" Height="25" HorizontalAlignment="Stretch"/>
-                    <TextBox x:Name="Upkeep" Text="{Binding SelectedUnit.Upkeep}" Height="25" HorizontalAlignment="Stretch"/>
-                    <TextBox x:Name="WpnCost" Text="{Binding SelectedUnit.WpnCost}" Height="25" HorizontalAlignment="Stretch"/>
-                    <TextBox x:Name="CustomLimit" Text="{Binding SelectedUnit.CustomLimit}" Height="25" HorizontalAlignment="Stretch"/>
-                    <TextBox x:Name="RecruitPriorityOffset" Text="{Binding SelectedUnit.RecruitPriorityOffset}" Height="25" HorizontalAlignment="Stretch"/>
-                    <TextBlock x:Name="UnitValuePerCost" Text="{Binding SelectedUnit.ValuePerCost}" Height="25" HorizontalAlignment="Stretch"/>
-                    <TextBlock x:Name="UnitValuePerUpkeep" Text="{Binding SelectedUnit.ValuePerUpkeep}" Height="25" HorizontalAlignment="Stretch"/>
+                <StackPanel Grid.Column="1">
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.StatScrub}"
+                        x:Name="StatScrub" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.StatSnow}"
+                        x:Name="StatSnow" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.StatHeat}"
+                        x:Name="StatHeat" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.RecruitTime}"
+                        x:Name="RecruitTime" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.Upkeep}"
+                        x:Name="Upkeep" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.WpnCost}"
+                        x:Name="WpnCost" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.CustomLimit}"
+                        x:Name="CustomLimit" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.RecruitPriorityOffset}"
+                        x:Name="RecruitPriorityOffset" />
+                    <TextBlock
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.ValuePerCost}"
+                        x:Name="UnitValuePerCost" />
+                    <TextBlock
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.ValuePerUpkeep}"
+                        x:Name="UnitValuePerUpkeep" />
                 </StackPanel>
-                <StackPanel  Grid.Column="2">
-                    <TextBlock Text="{Binding UnitUiText[StatForest] }" Height="25" />
-                    <TextBlock Text="{Binding UnitUiText[StatSand] }" Height="25" />
-                    <TextBlock Text="{Binding UnitUiText[CustomCost] }" Height="25" />
-                    <TextBlock Text="{Binding UnitUiText[RecruitCost] }" Height="25" />
-                    <TextBlock Text="{Binding UnitUiText[CrusadeUpkeep] }" Height="25" />
-                    <TextBlock Text="{Binding UnitUiText[ArmourCost] }" Height="25" />
-                    <TextBlock Text="{Binding UnitUiText[CustomIncrease] }" Height="25" />
+                <StackPanel Grid.Column="2">
+                    <TextBlock Height="25" Text="{Binding UnitUiText[StatForest]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[StatSand]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[CustomCost]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[RecruitCost]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[CrusadeUpkeep]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[ArmourCost]}" />
+                    <TextBlock Height="25" Text="{Binding UnitUiText[CustomIncrease]}" />
                 </StackPanel>
-                <StackPanel  Grid.Column="3">
-                    <TextBox x:Name="StatForest" Text="{Binding SelectedUnit.StatForest}" Height="25" HorizontalAlignment="Stretch"/>
-                    <TextBox x:Name="StatSand" Text="{Binding SelectedUnit.StatSand}" Height="25" HorizontalAlignment="Stretch"/>
-                    <TextBox x:Name="CustomCost" Text="{Binding SelectedUnit.CustomCost}" Height="25" HorizontalAlignment="Stretch"/>
-                    <TextBox x:Name="RecruitCost" Text="{Binding SelectedUnit.RecruitCost}" Height="25" HorizontalAlignment="Stretch"/>
-                    <TextBox x:Name="CrusadeUpkeep" Text="{Binding SelectedUnit.CrusadeUpkeep}" Height="25" HorizontalAlignment="Stretch"/>
-                    <TextBox x:Name="ArmourCost" Text="{Binding SelectedUnit.ArmourCost}" Height="25" HorizontalAlignment="Stretch"/>
-                    <TextBox x:Name="CustomIncrease" Text="{Binding SelectedUnit.CustomIncrease}" Height="25" HorizontalAlignment="Stretch"/>
+                <StackPanel Grid.Column="3">
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.StatForest}"
+                        x:Name="StatForest" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.StatSand}"
+                        x:Name="StatSand" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.CustomCost}"
+                        x:Name="CustomCost" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.RecruitCost}"
+                        x:Name="RecruitCost" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.CrusadeUpkeep}"
+                        x:Name="CrusadeUpkeep" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.ArmourCost}"
+                        x:Name="ArmourCost" />
+                    <TextBox
+                        Height="25"
+                        HorizontalAlignment="Stretch"
+                        Text="{Binding SelectedUnit.CustomIncrease}"
+                        x:Name="CustomIncrease" />
                 </StackPanel>
             </Grid>
 
 
-            <Grid Grid.Column="2">
+            <Grid Grid.Column="2" Grid.Row="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="48*"></RowDefinition>
-                    <RowDefinition Height="64*"></RowDefinition>
+                    <RowDefinition Height="48*" />
+                    <RowDefinition Height="64*" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="48*"></ColumnDefinition>
-                    <ColumnDefinition Width="64*"></ColumnDefinition>
+                    <ColumnDefinition Width="48*" />
+                    <ColumnDefinition Width="64*" />
                 </Grid.ColumnDefinitions>
-                <Image Source="{Binding UnitImage}" VerticalAlignment="Center" HorizontalAlignment="Center" Width="125" Grid.Column="0"></Image>
-                <Image Source="{Binding FactionSymbolImage}" VerticalAlignment="Center" HorizontalAlignment="Center" Width="125" Grid.Column="1"></Image>
-                <TextBox x:Name="Descr" Text="{Binding SelectedUnit.Descr}" Grid.ColumnSpan="2" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Left" TextWrapping="Wrap"/>
+                <Image
+                    Grid.Column="0"
+                    HorizontalAlignment="Center"
+                    Source="{Binding UnitImage}"
+                    VerticalAlignment="Center"
+                    Width="125" />
+                <Image
+                    Grid.Column="1"
+                    Grid.Row="0"
+                    HorizontalAlignment="Center"
+                    Source="{Binding FactionSymbolImage}"
+                    VerticalAlignment="Center"
+                    Width="125" />
+                <TextBox
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Grid.Row="1"
+                    HorizontalAlignment="Left"
+                    Text="{Binding SelectedUnit.Descr}"
+                    TextWrapping="Wrap"
+                    VerticalAlignment="Stretch"
+                    x:Name="Descr" />
             </Grid>
         </Grid>
     </ScrollViewer>

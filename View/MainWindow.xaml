@@ -1,86 +1,132 @@
-﻿<Window x:Class="ModdingTool.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:usercontrols="clr-namespace:ModdingTool.View.UserControls"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ModdingTool"
-        mc:Ignorable="d"
-        Background="#ededec"
-        Title="Medieval II Total War Modding Tool" Height="1080" Width="1920" WindowState="Maximized">
+﻿<Window
+    Background="#ededec"
+    Height="1080"
+    Title="Medieval II Total War Modding Tool"
+    Width="1920"
+    WindowState="Maximized"
+    mc:Ignorable="d"
+    x:Class="ModdingTool.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:ModdingTool"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:usercontrols="clr-namespace:ModdingTool.View.UserControls"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Window.InputBindings>
-        <KeyBinding Key="Z" Modifiers="Control"
-                    Command="Undo"
-                    />
+        <KeyBinding
+            Command="Undo"
+            Key="Z"
+            Modifiers="Control" />
     </Window.InputBindings>
 
-    <Grid>
+    <Grid Background="Black">
         <Grid.RowDefinitions>
-            <RowDefinition Height="23"/>
-            <RowDefinition Height="31"/>
-            <RowDefinition Height="34*"></RowDefinition>
-            <RowDefinition Height="461*"></RowDefinition>
-            <RowDefinition Height="20"></RowDefinition>
+            <RowDefinition
+                Height="25*"
+                MaxHeight="60"
+                MinHeight="50" />
+            <RowDefinition
+                Height="25*"
+                MaxHeight="60"
+                MinHeight="35" />
+            <RowDefinition Height="34*" />
+            <RowDefinition Height="461*" />
+            <RowDefinition Height="20" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="69*"></ColumnDefinition>
-            <ColumnDefinition Width="171*"></ColumnDefinition>
-            <ColumnDefinition Width="46*"></ColumnDefinition>
-            <ColumnDefinition Width="74*"/>
-            <ColumnDefinition Width="120*"></ColumnDefinition>
+            <ColumnDefinition Width="69*" />
+            <ColumnDefinition Width="171*" />
+            <ColumnDefinition Width="46*" />
+            <ColumnDefinition Width="74*" />
+            <ColumnDefinition Width="120*" />
         </Grid.ColumnDefinitions>
 
-        <!-- Menu -->
-        <usercontrols:Menubar  x:Name="MenuBarCustom"  Grid.ColumnSpan="5" Grid.Row="0" FontFamily="Verdana" Loaded="MenuBarCustom_Loaded" Grid.RowSpan="1" FontWeight="Bold" FontSize="16">
-            <usercontrols:Menubar.Background>
-                <ImageBrush  ImageSource="pack://application:,,,/Images/blank_parchment.jpg"
-                AlignmentY="Top" AlignmentX="Center" Stretch="UniformToFill" />
-            </usercontrols:Menubar.Background>
-        </usercontrols:Menubar>
+        <!--  Menu  -->
+        <usercontrols:Menubar
+            FontFamily="Nirmala UI"
+            Foreground="Azure"
+            Grid.ColumnSpan="5"
+            Grid.Row="0"
+            Loaded="MenuBarCustom_Loaded"
+            x:Name="MenuBarCustom" />
 
-        <usercontrols:ToolBoxCustom  x:Name="ToolBox"  Grid.ColumnSpan="5" Grid.Row="1" FontFamily="Verdana" FontSize="14">
-        </usercontrols:ToolBoxCustom>
+        <usercontrols:ToolBoxCustom
+            FontFamily="Nirmala UI"
+            FontSize="14"
+            Foreground="Azure"
+            Grid.Column="1"
+            Grid.ColumnSpan="4"
+            Grid.Row="1"
+            Margin="0,0,0,0"
+            x:Name="ToolBox" />
 
-        <!-- Data Pick List -->
-        <usercontrols:DataList x:Name="DataListLive" Grid.Row="2" Grid.RowSpan="2" FontFamily="Verdana" FontSize="14" >
+        <!--  Data Pick List  -->
+        <usercontrols:DataList
+            Background="{StaticResource BackgroundBrush}"
+            FontFamily="Nirmala UI"
+            FontSize="16"
+            FontWeight="Regular"
+            Foreground="Azure"
+            Grid.Column="0"
+            Grid.Row="1"
+            Grid.RowSpan="3"
+            Margin="0,0,0,0"
+            x:Name="DataListLive">
             <usercontrols:DataList.Effect>
-                <DropShadowEffect/>
+                <DropShadowEffect />
             </usercontrols:DataList.Effect>
         </usercontrols:DataList>
 
-        <!-- Main Data Tabs -->
-        <usercontrols:DataTab x:Name="DataTabLive" Grid.Row="2" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="4" >
+        <!--  Main Data Tabs  -->
+        <usercontrols:DataTab
+            FontFamily="Nirmala UI"
+            Grid.Column="1"
+            Grid.ColumnSpan="4"
+            Grid.Row="2"
+            Grid.RowSpan="2"
+            Margin="0,0,0,0"
+            x:Name="DataTabLive">
             <usercontrols:DataTab.Effect>
-                <DropShadowEffect/>
+                <DropShadowEffect />
             </usercontrols:DataTab.Effect>
             <usercontrols:DataTab.Background>
-                <ImageBrush  ImageSource="pack://application:,,,/Images/Untitled.jpg"
-                AlignmentY="Top" AlignmentX="Center" Stretch="UniformToFill" />
+                <ImageBrush
+                    AlignmentX="Center"
+                    AlignmentY="Top"
+                    ImageSource="pack://application:,,,/Images/Untitled.jpg"
+                    Stretch="UniformToFill" />
             </usercontrols:DataTab.Background>
         </usercontrols:DataTab>
 
-        <!-- Status Bar -->
-        <usercontrols:StatusBarCustom x:Name="StatusBarLive" Grid.Row="4" Grid.ColumnSpan="5" Margin="0,15,0,0"/>
+        <!--  Status Bar  -->
+        <usercontrols:StatusBarCustom
+            Background="{StaticResource BackgroundBrush}"
+            FontFamily="Nirmala UI"
+            Foreground="Azure"
+            Grid.ColumnSpan="5"
+            Grid.Row="4"
+            Margin="0,0,0,0"
+            x:Name="StatusBarLive" />
     </Grid>
 
-    <Window.Resources>
-           <!-- One style for each *type* of control on the window -->
-        <Style TargetType="TextBox">
-            <Setter Property="Margin" Value="2,1,1,1"/>
-            <Setter Property="Background" Value="#ededec"/>
+    <!--<Window.Resources>-->
+    <!--  One style for each *type* of control on the window  -->
+    <!--<Style TargetType="TextBox">
+            <Setter Property="Margin" Value="2,1,1,1" />
+            <Setter Property="Background" Value="#ededec" />
         </Style>
         <Style TargetType="ComboBox">
-            <Setter Property="Margin" Value="2,1,1,1"/>
-            <Setter Property="Background" Value="#ededec"/>
+            <Setter Property="Margin" Value="2,1,1,1" />
+            <Setter Property="Background" Value="#ededec" />
         </Style>
         <Style TargetType="ListBox">
-            <Setter Property="Margin" Value="2,1,1,1"/>
-            <Setter Property="Background" Value="#ededec"/>
+            <Setter Property="Margin" Value="2,1,1,1" />
+            <Setter Property="Background" Value="#ededec" />
         </Style>
         <Style TargetType="TextBlock">
-            <Setter Property="Margin" Value="2,1,1,1"/>
-            <Setter Property="FontFamily" Value="Verdana"/>
-            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="2,1,1,1" />
+            <Setter Property="FontFamily" Value="Verdana" />
+            <Setter Property="FontWeight" Value="Bold" />
         </Style>
-    </Window.Resources>
+    </Window.Resources>-->
 </Window>

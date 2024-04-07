@@ -77,6 +77,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="WPF-UI">
+      <HintPath>Resources\Wpf.Ui.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="View\UserControls\ProjectileTabView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

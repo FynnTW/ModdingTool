@@ -46,7 +46,7 @@ public partial class BattleModelDb
     }
     
     public void ExportJson() =>
-        File.WriteAllText(@"bmdb.json", JsonConvert.SerializeObject(BattleModels));
+        File.WriteAllText(@"bmdb.json", JsonConvert.SerializeObject(BattleModels, Formatting.Indented));
     
     public List<string> GetNames() => new(BattleModels.Keys);
     public void Remove(string name) => BattleModels.Remove(name);
@@ -112,7 +112,7 @@ public partial class BattleModelDb
                 FirstEntryPad(ref fileStream);
             entry.LodTable = new List<Lod>();
             for (var i = 0; i < entry.LodCount; i++)
-                entry.AddLod(fileStream.GetString(), fileStream.GetInt(), i);
+                entry.AddLod(fileStream.GetString(), fileStream.GetInt(), i, entry.Name);
             if (firstEntry)
                 FirstEntryPad(ref fileStream);
             entry.MainTexturesCount = fileStream.GetInt();
@@ -127,7 +127,7 @@ public partial class BattleModelDb
                         facName, 
                         fileStream.GetString(), 
                         fileStream.GetString(),
-                        fileStream.GetString());
+                        fileStream.GetString(), entry.Name);
                 }
                 else
                 {
@@ -147,7 +147,7 @@ public partial class BattleModelDb
                         facName, 
                         fileStream.GetString(), 
                         fileStream.GetString(),
-                        fileStream.GetString());
+                        fileStream.GetString(), entry.Name);
                 }
                 else
                 {
