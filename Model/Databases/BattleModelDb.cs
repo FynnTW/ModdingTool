@@ -70,7 +70,7 @@ public partial class BattleModelDb
             return;
         fileStream.LogStart();
 
-        //First entry in vanilla has extra ints
+        //First entry in vanilla has extra integers
         var firstEntry = false;
 
         ////////Parse bmdb////////
@@ -79,10 +79,7 @@ public partial class BattleModelDb
         fileStream.SetStringPos(35);
 
         var numberOfEntries = fileStream.GetInt();
-        // ReSharper disable once NotAccessedVariable
-        var pad = fileStream.GetInt();
-        // ReSharper disable once RedundantAssignment
-        pad = fileStream.GetInt();
+        FirstEntryPad(ref fileStream);
 
         //Loop through all entries
         for (var n = 0; n < numberOfEntries; n++)
@@ -92,16 +89,13 @@ public partial class BattleModelDb
             {
                 Name = fileStream.GetString().ToLower()
             };
-            //check if there is a blank entry or default vanilla with extra ints
+            //check if there is a blank entry or default vanilla with extra integers
             switch (n)
             {
                 case 0 when entry.Name.Equals("blank"):
                 {
                     for (var i = 0; i < 39; i++)
-                    {
-                        // ReSharper disable once RedundantAssignment
-                        pad = fileStream.GetInt();
-                    }
+                       fileStream.GetInt();
                     continue;
                 }
                 case 0 when !entry.Name.Equals("blank"):
@@ -111,71 +105,63 @@ public partial class BattleModelDb
 
             //Get rest of entry
             entry.Scale = fileStream.GetFloat();
-            if (firstEntry) { pad = fileStream.GetInt(); pad = fileStream.GetInt(); }
+            if (firstEntry)
+                FirstEntryPad(ref fileStream);
             entry.LodCount = fileStream.GetInt();
-            if (firstEntry) { pad = fileStream.GetInt(); pad = fileStream.GetInt(); }
+            if (firstEntry)
+                FirstEntryPad(ref fileStream);
             entry.LodTable = new List<Lod>();
             for (var i = 0; i < entry.LodCount; i++)
-            {
-                entry.LodTable.Add(new Lod
-                {
-                    Mesh = fileStream.GetString(),
-                    Distance = fileStream.GetInt(),
-                    Name = entry.Name
-                });
-            }
-            if (firstEntry) { pad = fileStream.GetInt(); pad = fileStream.GetInt(); }
+                entry.AddLod(fileStream.GetString(), fileStream.GetInt(), i);
+            if (firstEntry)
+                FirstEntryPad(ref fileStream);
             entry.MainTexturesCount = fileStream.GetInt();
-            if (firstEntry) { pad = fileStream.GetInt(); pad = fileStream.GetInt(); }
+            if (firstEntry)
+                FirstEntryPad(ref fileStream);
             for (var i = 0; i < entry.MainTexturesCount; i++)
             {
-                var facname = fileStream.GetString().ToLower();
-                if (FactionDataBase.ContainsKey(facname) || facname == "merc")
+                var facName = fileStream.GetString().ToLower();
+                if (FactionDataBase.ContainsKey(facName) || facName == "merc")
                 {
-                    entry.MainTextures.Add(new Texture
-                    {
-                        Name = entry.Name,
-                        Faction = facname,
-                        TexturePath = fileStream.GetString(),
-                        Normal = fileStream.GetString(),
-                        Sprite = fileStream.GetString()
-                    });
+                    entry.AddMainTexture(
+                        facName, 
+                        fileStream.GetString(), 
+                        fileStream.GetString(),
+                        fileStream.GetString());
                 }
                 else
                 {
-                    var texpad = fileStream.GetString();
-                    texpad = fileStream.GetString();
-                    texpad = fileStream.GetString();
+                    fileStream.GetString();
+                    fileStream.GetString();
+                    fileStream.GetString();
                 }
             }
             entry.MainTexturesCount = entry.MainTextures.Count;
             entry.AttachTexturesCount = fileStream.GetInt();
             for (var i = 0; i < entry.AttachTexturesCount; i++)
             {
-                var facname = fileStream.GetString().ToLower();
-                if (FactionDataBase.ContainsKey(facname) || facname == "merc")
+                var facName = fileStream.GetString().ToLower();
+                if (FactionDataBase.ContainsKey(facName) || facName == "merc")
                 {
-                    entry.AttachTextures.Add(new Texture
-                    {
-                        Name = entry.Name,
-                        Faction = facname,
-                        TexturePath = fileStream.GetString(),
-                        Normal = fileStream.GetString(),
-                        Sprite = fileStream.GetString()
-                    });
+                    entry.AddAttachTexture(
+                        facName, 
+                        fileStream.GetString(), 
+                        fileStream.GetString(),
+                        fileStream.GetString());
                 }
                 else
                 {
-                    // ReSharper disable once NotAccessedVariable
-                    var texpad = fileStream.GetString();
-                    texpad = fileStream.GetString();
-                    texpad = fileStream.GetString();
+                    fileStream.GetString();
+                    fileStream.GetString();
+                    fileStream.GetString();
                 }
             }
             entry.AttachTexturesCount = entry.AttachTextures.Count;
-            if (firstEntry) { pad = fileStream.GetInt(); pad = fileStream.GetInt(); }
+            if (firstEntry)
+                FirstEntryPad(ref fileStream);
             entry.MountTypeCount = fileStream.GetInt();
-            if (firstEntry) { pad = fileStream.GetInt(); pad = fileStream.GetInt(); }
+            if (firstEntry)
+                FirstEntryPad(ref fileStream);
             entry.Animations = new List<Animation>();
             for (var i = 0; i < entry.MountTypeCount; i++)
             {
@@ -214,7 +200,8 @@ public partial class BattleModelDb
                     entry.Animations[i].SecWeaponTwo = entry.Animations[i].SecWeapons[1];
                 }
             }
-            if (firstEntry) { pad = fileStream.GetInt(); pad = fileStream.GetInt(); }
+            if (firstEntry)
+                FirstEntryPad(ref fileStream);
             entry.TorchIndex = fileStream.GetInt();
             entry.TorchBoneX = fileStream.GetFloat();
             entry.TorchBoneY = fileStream.GetFloat();
@@ -222,7 +209,8 @@ public partial class BattleModelDb
             entry.TorchSpriteX = fileStream.GetFloat();
             entry.TorchSpriteY = fileStream.GetFloat();
             entry.TorchSpriteZ = fileStream.GetFloat();
-            if (firstEntry) { pad = fileStream.GetInt(); pad = fileStream.GetInt(); }
+            if (firstEntry)
+                FirstEntryPad(ref fileStream);
             firstEntry = false;
             if (BattleModels.ContainsKey(entry.Name))
             {
@@ -234,7 +222,13 @@ public partial class BattleModelDb
         }
         fileStream.LogEnd();
     }
-    
+
+    private static void FirstEntryPad(ref FileStream stream)
+    {
+        stream.GetInt();
+        stream.GetInt();
+    }
+
     public void CheckModelUsage()
     {
         CheckUseInFile("\\data\\world\\maps\\campaign\\imperial_campaign\\", "campaign_script.txt");

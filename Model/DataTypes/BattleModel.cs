@@ -42,6 +42,7 @@ public class BattleModel : GameType
                 AddChange(nameof(Name), old, value);
                 ModData.BattleModelDb.Remove(old);
                 ModData.BattleModelDb.Add(this);
+                NotifyPropertyChanged();
             }
         } 
     }
@@ -62,17 +63,35 @@ public class BattleModel : GameType
             {
                 AddChange(nameof(Scale), _scale, value);
                 _scale = value;
+                NotifyPropertyChanged();
             }
         }
     }
-    
+
+    /// <summary>
+    /// Gets or sets the number of LODs in the battle model.
+    /// </summary>
+    /// <remarks>
+    /// The LOD count determines the number of levels of detail (LODs) that the battle model has.
+    /// An LOD is a version of the model that is less complex and detailed, used for performance optimization at different distances from the camera.
+    /// </remarks>
     public int LodCount
     {
         get => !IsParsing ? LodTable.Count : _lodCount;
         set => _lodCount = value;
     }
+
+    /// <summary>
+    /// List of meshes and distances for each level of detail (LOD) in the battle model.
+    /// </summary>
     public List<Lod> LodTable { get; set; } = new();
-    
+
+    /// <summary>
+    /// Adds a new level of detail (LOD) to the BattleModel. If the LOD already exists, updates the mesh and distance.
+    /// </summary>
+    /// <param name="mesh">The mesh associated with the LOD.</param>
+    /// <param name="distance">The distance at which the LOD should be displayed.</param>
+    /// <param name="index">The index of the LOD in the LOD table. For example 0 would change the lod0 etc</param>
     public void AddLod(string mesh, int distance, int index)
     {
         if (LodTable.Count > index)
@@ -88,12 +107,29 @@ public class BattleModel : GameType
             Name = Name
         });
     }
+
+    /// <summary>
+    /// Gets or sets the count of main textures in the battle model.
+    /// </summary>
     public int MainTexturesCount
     {
         get => !IsParsing ? MainTextures.Count : _mainTexturesCount;
         set => _mainTexturesCount = value;
     }
+
+    /// <summary>
+    /// Represents the main textures of a BattleModel.
+    /// </summary>
     public List<Texture> MainTextures { get; private init; } = new();
+
+    /// <summary>
+    /// Adds a main texture to the BattleModel. If the texture already exists, updates the texture path, normal map, and sprite.
+    /// </summary>
+    /// <param name="faction">The faction associated with the texture.</param>
+    /// <param name="texturePath">The path of the texture.</param>
+    /// <param name="normal">The normal map of the texture.</param>
+    /// <param name="sprite">The sprite associated with the texture.</param>
+    /// <returns>The added or updated Texture object.</returns>
     public Texture AddMainTexture(string faction, string texturePath, string normal, string sprite)
     {
         var texture = MainTextures.Find(fac => fac.Faction == faction);
@@ -110,16 +146,34 @@ public class BattleModel : GameType
             TexturePath = texturePath,
             Normal = normal,
             Sprite = sprite,
-            Name = Name
+            Name = Name,
+            IsAttach = false
         });
         return MainTextures.Last();
     }
+    
+    /// <summary>
+    /// Gets or sets the count of attached textures in the battle model.
+    /// </summary>
     public int AttachTexturesCount
     {
         get => !IsParsing ? AttachTextures.Count : _attachTexturesCount;
         set => _attachTexturesCount = value;
     }
+    
+    /// <summary>
+    /// Represents the attached textures of a BattleModel.
+    /// </summary>
     public List<Texture> AttachTextures { get; private init; } = new ();
+
+    /// <summary>
+    /// Adds an attached texture to the BattleModel. If the texture already exists, updates the texture path, normal map, and sprite.
+    /// </summary>
+    /// <param name="faction">The faction associated with the texture.</param>
+    /// <param name="texturePath">The path of the texture.</param>
+    /// <param name="normal">The normal map of the texture.</param>
+    /// <param name="sprite">The sprite associated with the texture.</param>
+    /// <returns>The added or updated Texture object.</returns>
     public Texture AddAttachTexture(string faction, string texturePath, string normal, string sprite)
     {
         var texture = AttachTextures.Find(fac => fac.Faction == faction);
@@ -136,17 +190,33 @@ public class BattleModel : GameType
             TexturePath = texturePath,
             Normal = normal,
             Sprite = sprite,
-            Name = Name
+            Name = Name,
+            IsAttach = true
         });
         return AttachTextures.Last();
     }
+    
+    /// <summary>
+    /// Gets or sets the count of mount types in the battle model.
+    /// </summary>
     public int MountTypeCount
     {
         get => !IsParsing ? Animations.Count : _mountTypeCount;
         set => _mountTypeCount = value;
     }
+
+    /// <summary>
+    /// Represents the animations of a BattleModel.
+    /// </summary>
     public List<Animation> Animations { get; set; } = new ();
 
+    /// <summary>
+    /// Adds an animation to the BattleModel. If the entry for the provided mount type already exists, updates the primary and secondary skeleton.
+    /// </summary>
+    /// <param name="mountType">The mount type associated with the animation.</param>
+    /// <param name="primarySkeleton">The primary skeleton of the animation.</param>
+    /// <param name="secondarySkeleton">The secondary skeleton of the animation.</param>
+    /// <returns>The added or updated Animation object.</returns>
     public Animation AddAnimation(string mountType, string primarySkeleton, string secondarySkeleton)
     {
         var anim = Animations.Find(mount => mount.MountType == mountType);
@@ -182,9 +252,16 @@ public class BattleModel : GameType
         {
             AddChange(nameof(TorchIndex), _torchIndex, value);
             _torchIndex = value;
+            NotifyPropertyChanged();
         }
     }
 
+    /// <summary>
+    /// Gets or sets the X coordinate of the torch bone in the BattleModel.
+    /// </summary>
+    /// <remarks>
+    /// When setting this property, it logs the change using the AddChange method.
+    /// </remarks>
     public float TorchBoneX
     {
         get => _torchBoneX;
@@ -192,9 +269,16 @@ public class BattleModel : GameType
         {
             AddChange(nameof(TorchBoneX), _torchBoneX, value);
             _torchBoneX = value;
+            NotifyPropertyChanged();
         }
     }
 
+    /// <summary>
+    /// Gets or sets the Y coordinate of the torch bone in the BattleModel.
+    /// </summary>
+    /// <remarks>
+    /// When setting this property, it logs the change using the AddChange method.
+    /// </remarks>
     public float TorchBoneY
     {
         get => _torchBoneY;
@@ -202,9 +286,16 @@ public class BattleModel : GameType
         {
             AddChange(nameof(TorchBoneY), _torchBoneY, value);
             _torchBoneY = value;
+            NotifyPropertyChanged();
         }
     }
 
+    /// <summary>
+    /// Gets or sets the Z coordinate of the torch bone in the BattleModel.
+    /// </summary>
+    /// <remarks>
+    /// When setting this property, it logs the change using the AddChange method.
+    /// </remarks>
     public float TorchBoneZ
     {
         get => _torchBoneZ;
@@ -212,9 +303,16 @@ public class BattleModel : GameType
         {
             AddChange(nameof(TorchBoneZ), _torchBoneZ, value);
             _torchBoneZ = value;
+            NotifyPropertyChanged();
         }
     }
 
+    /// <summary>
+    /// Gets or sets the X coordinate of the torch sprite in the BattleModel.
+    /// </summary>
+    /// <remarks>
+    /// When setting this property, it logs the change using the AddChange method.
+    /// </remarks>
     public float TorchSpriteX
     {
         get => _torchSpriteX;
@@ -222,9 +320,16 @@ public class BattleModel : GameType
         {
             AddChange(nameof(TorchSpriteX), _torchSpriteX, value);
             _torchSpriteX = value;
+            NotifyPropertyChanged();
         }
     }
 
+    /// <summary>
+    /// Gets or sets the Y coordinate of the torch sprite in the BattleModel.
+    /// </summary>
+    /// <remarks>
+    /// When setting this property, it logs the change using the AddChange method.
+    /// </remarks>
     public float TorchSpriteY
     {
         get => _torchSpriteY;
@@ -232,9 +337,16 @@ public class BattleModel : GameType
         {
             AddChange(nameof(TorchSpriteY), _torchSpriteY, value);
             _torchSpriteY = value;
+            NotifyPropertyChanged();
         }
     }
 
+    /// <summary>
+    /// Gets or sets the Z coordinate of the torch sprite in the BattleModel.
+    /// </summary>
+    /// <remarks>
+    /// When setting this property, it logs the change using the AddChange method.
+    /// </remarks>
     public float TorchSpriteZ
     { 
         get => _torchSpriteZ;
@@ -242,6 +354,7 @@ public class BattleModel : GameType
         {
             AddChange(nameof(TorchSpriteZ), _torchSpriteZ, value);
             _torchSpriteZ = value;
+            NotifyPropertyChanged();
         }
     }
     #endregion Properties
@@ -461,11 +574,18 @@ public class BattleModel : GameType
     #endregion
 }
 
+/// <summary>
+/// Represents a Level of Detail (LOD) in a BattleModel.
+/// LODs are used to optimize rendering by displaying less complex versions of the model at greater distances.
+/// </summary>
 public class Lod : GameType
 {
     private string _mesh = "";
     private int _distance = 6400;
-        
+
+    /// <summary>
+    /// Gets or sets the of the battle model that uses this LOD.
+    /// </summary>
     public string Name { init => _name = value; }
 
     public string Mesh
@@ -474,8 +594,9 @@ public class Lod : GameType
         set
         {
             FileExistsData(value, _name);
-            AddChange(nameof(Mesh), _mesh, value);
+            AddChangeList(nameof(Mesh), _mesh, value, Index.ToString(), "Lod");
             _mesh = value;
+            NotifyPropertyChanged();
         }
     }
 
@@ -484,10 +605,13 @@ public class Lod : GameType
         get => _distance;
         set
         {
-            AddChange(nameof(Distance), _distance, value);
+            AddChangeList(nameof(Distance), _distance, value, Index.ToString(), "Lod");
             _distance = value;
+            NotifyPropertyChanged();
         }
     }
+    
+    public int Index { get; set; }
 }
 
 public class Texture : GameType
@@ -497,6 +621,7 @@ public class Texture : GameType
     private string _texturePath = string.Empty;
     private string _normal = string.Empty;
     private string _sprite = string.Empty;
+    public bool IsAttach { get; init; } = false;
     public string Name { init => _name = value; }
 
     public string TexturePath
@@ -513,6 +638,7 @@ public class Texture : GameType
             FileExistsData(value, _name);
             AddChange(nameof(TexturePath), _texturePath, value);
             _texturePath = value;
+            NotifyPropertyChanged();
         }
     }
 
@@ -529,6 +655,7 @@ public class Texture : GameType
             FileExistsData(value, _name);
             AddChange(nameof(Normal), _normal, value);
             _normal = value;
+            NotifyPropertyChanged();
         }
     }
 
@@ -545,6 +672,7 @@ public class Texture : GameType
             FileExistsData(value, _name);
             AddChange(nameof(Sprite), _sprite, value);
             _sprite = value;
+            NotifyPropertyChanged();
         }
     }
     public string Faction
@@ -556,6 +684,7 @@ public class Texture : GameType
                 ErrorDb.AddError("Faction " + value + " does not exist.");
             AddChange(nameof(Faction), _faction, value);
             _faction = value;
+            NotifyPropertyChanged();
         }
     }
 }
@@ -580,6 +709,7 @@ public class Animation : GameType
                 ErrorDb.AddError("Mount type " + value + " does not exist.");
             AddChange(nameof(MountType), _mountType, value);
             _mountType = value;
+            NotifyPropertyChanged();
         }
     }
 
@@ -590,6 +720,7 @@ public class Animation : GameType
         {
             AddChange(nameof(PrimarySkeleton), _primarySkeleton, value);
             _primarySkeleton = value;
+            NotifyPropertyChanged();
         }
     }
 
@@ -600,6 +731,7 @@ public class Animation : GameType
         {
             AddChange(nameof(SecondarySkeleton), _secondarySkeleton, value);
             _secondarySkeleton = value;
+            NotifyPropertyChanged();
         }
     }
 
@@ -622,6 +754,7 @@ public class Animation : GameType
         { 
             AddChange(nameof(PriWeaponOne), _priWeapons[0], value);
             _priWeapons[0] = value;
+            NotifyPropertyChanged();
         } 
     }
 
@@ -632,6 +765,7 @@ public class Animation : GameType
         {
             AddChange(nameof(PriWeaponTwo), _priWeapons[1], value);
             _priWeapons[1] = value;
+            NotifyPropertyChanged();
         }
     }
 
@@ -642,6 +776,7 @@ public class Animation : GameType
         {
             AddChange(nameof(SecWeaponOne), _secWeapons[0], value);
             _secWeapons[0] = value;
+            NotifyPropertyChanged();
         }
     }
 
@@ -652,6 +787,7 @@ public class Animation : GameType
         {
             AddChange(nameof(SecWeaponTwo), _secWeapons[1], value);
             _secWeapons[1] = value;
+            NotifyPropertyChanged();
         }
     }
         

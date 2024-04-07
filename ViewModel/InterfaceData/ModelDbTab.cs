@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Controls;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Microsoft.Win32;
+using Python.Runtime;
 using static ModdingTool.Globals;
 
 namespace ModdingTool.View.InterfaceData;
 
-public class ModelDbTab : ITab.Tab
+public partial class ModelDbTab : Tab
 {
     public static Dictionary<string, string> BmdbUiText { get; set; } = new Dictionary<string, string>()
     {
@@ -35,9 +40,33 @@ public class ModelDbTab : ITab.Tab
         {"TorchspriteY", "Torch Sprite Y"},
         {"TorchspriteZ", "Torch Sprite Z"},
     };
-    public BattleModel SelectedModel { get; set; }
-    public static List<string> Factions { get; set; }
-    public static string[] MountTypes { get; set; } = new string[] { "horse", "none", "elephant", "camel" };
+
+    [ObservableProperty] 
+    private BattleModel _selectedModel = new();
+
+    [ObservableProperty] 
+    private List<string> _factions;
+
+    [ObservableProperty] 
+    private float _scale;
+    public static IEnumerable<string> MountTypes { get; set; } = BattleModel.MountTypes;
+    
+    [RelayCommand]
+    private void BrowseMesh(Lod lod)
+    {
+        var dialog = new OpenFileDialog
+        {
+            Filter = "Mesh files (*.mesh)|*.mesh",
+            Title = "Please select a mesh file"
+        };
+        dialog.ShowDialog();
+        var filename = dialog.FileName;
+        if (filename == "") return;
+        var removeString = ModPath + "\\data\\";
+        filename = filename.Replace(removeString, "");
+        filename = filename.Replace("\\", "/");
+        lod.Mesh = filename;
+    }
 
     public ModelDbTab(string name)
     {
@@ -45,5 +74,6 @@ public class ModelDbTab : ITab.Tab
         Factions.Add("merc");
         Title = name;
         SelectedModel = ModData.BattleModelDb.Get(Title)!;
+        Scale = SelectedModel.Scale;
     }
 }

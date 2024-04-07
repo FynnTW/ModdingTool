@@ -3,66 +3,50 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using ModdingTool.View.InterfaceData;
 using static ModdingTool.Globals;
 
 namespace ModdingTool.View.UserControls
 {
+    
+    
     /// <summary>
     /// Interaction logic for ModelDbTabView.xaml
     /// </summary>
     public partial class ModelDbTabView : UserControl
     {
+    
+        public ModelDbTab ViewModel { get; set; }
+        
         public ModelDbTabView()
         {
             InitializeComponent();
+            ViewModel = (ModelDbTab)DataContext;
         }
 
         private void BrowseMesh_OnClick(object sender, RoutedEventArgs e)
         {
             // Cast the sender as a Button
-            Button button = sender as Button;
-            if (button != null)
-            {
-                DataGridRow row = FindVisualParent<DataGridRow>(button);
-                if (row != null)
-                {
-                    if (row.Item is not Lod dataItem)
-                    {
-                        dataItem = new Lod();
-                    };
-                    var dialog = new OpenFileDialog();
-                    dialog.Filter = "Mesh files (*.mesh)|*.mesh";
-                    dialog.Title = "Please select a mesh file";
-                    dialog.ShowDialog();
-                    var filename = dialog.FileName;
-                    if (filename == "") return;
-                    string removeString = ModPath + "\\data\\";
-                    filename = filename.Replace(removeString, "");
-                    filename = filename.Replace("\\", "/");
-                    dataItem.Mesh = filename;
-                    row.Item = dataItem;
-                    var lods = LodGrid.ItemsSource as List<Lod>;
-                    lods?.Add(dataItem);
-                    LodGrid.ItemsSource = lods;
-                    //LodGrid.Items.Refresh();
-                }
-            }
+            if (sender is not Button button) return;
+            var row = FindVisualParent<DataGridRow>(button);
+            if (row.Item is not Lod dataItem)
+                return;
+            ViewModel = (ModelDbTab)DataContext;
+            ViewModel.BrowseMeshCommand.Execute(dataItem);
+            var parent = row.Parent as DataGrid;
+            parent?.Items.Refresh();
         }
 
-        public static T FindVisualParent<T>(UIElement element) where T : UIElement
+        private static T FindVisualParent<T>(UIElement element) where T : UIElement
         {
-            UIElement parent = element;
+            var parent = element;
             while (parent != null)
             {
-                T correctlyTyped = parent as T;
-                if (correctlyTyped != null)
-                {
+                if (parent is T correctlyTyped)
                     return correctlyTyped;
-                }
 
                 parent = VisualTreeHelper.GetParent(parent) as UIElement;
             }
-
             return null;
         }
 

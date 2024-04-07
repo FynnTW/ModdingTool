@@ -3,7 +3,7 @@ using static ModdingTool.Globals;
 
 namespace ModdingTool.View.InterfaceData
 {
-    public class ProjectileTab : ITab.Tab
+    public partial class ProjectileTab : Tab
     {
         public Projectile selectedProjectile { get; set; }
 

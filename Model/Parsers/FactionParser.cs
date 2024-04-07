@@ -282,28 +282,28 @@ namespace ModdingTool
                             switch (id)
                             {
                                 case "spawned_on_event":
-                                    faction.Spawned_on_event = true;
-                                    faction.Spawn_modifier = id;
+                                    faction.SpawnedOnEvent = true;
+                                    faction.SpawnModifier = id;
                                     break;
 
                                 case "shadowed_by":
-                                    faction.Spawn_faction = parts[3];
-                                    faction.Spawn_modifier = id;
+                                    faction.SpawnFaction = parts[3];
+                                    faction.SpawnModifier = id;
                                     break;
 
                                 case "shadowing":
-                                    faction.Spawn_faction = parts[3];
-                                    faction.Spawn_modifier = id;
+                                    faction.SpawnFaction = parts[3];
+                                    faction.SpawnModifier = id;
                                     break;
 
                                 case "spawns_on_revolt":
-                                    faction.Spawn_faction = parts[3];
-                                    faction.Spawn_modifier = id;
+                                    faction.SpawnFaction = parts[3];
+                                    faction.SpawnModifier = id;
                                     break;
 
                                 case "spawned_by":
-                                    faction.Spawn_faction = parts[3];
-                                    faction.Spawn_modifier = id;
+                                    faction.SpawnFaction = parts[3];
+                                    faction.SpawnModifier = id;
                                     break;
                             }
                         }
@@ -317,12 +317,12 @@ namespace ModdingTool
                     case "special_faction_type":
                         if (value.Equals("slave_faction"))
                         {
-                            faction.Slave_faction = true;
+                            faction.SlaveFaction = true;
                             break;
                         }
                         if (value.Equals("papal_faction"))
                         {
-                            faction.Papal_faction = true;
+                            faction.PapalFaction = true;
                         }
                         break;
 
@@ -335,107 +335,107 @@ namespace ModdingTool
                         break;
 
                     case "rebel_symbol":
-                        faction.Rebel_symbol = value;
+                        faction.RebelSymbol = value;
                         break;
 
                     case "primary_colour":
-                        faction.Primary_colourR = int.Parse(value.Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[1]);
-                        faction.Primary_colourG = int.Parse(parts[2].Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[1]);
-                        faction.Primary_colourB = int.Parse(parts[3].Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[1]);
+                        faction.PrimaryColourR = int.Parse(value.Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[1]);
+                        faction.PrimaryColourG = int.Parse(parts[2].Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[1]);
+                        faction.PrimaryColourB = int.Parse(parts[3].Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[1]);
                         break;
 
                     case "secondary_colour":
-                        faction.Secondary_colourR = int.Parse(value.Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[1]);
-                        faction.Secondary_colourG = int.Parse(parts[2].Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[1]);
-                        faction.Secondary_colourB = int.Parse(parts[3].Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[1]);
+                        faction.SecondaryColourR = int.Parse(value.Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[1]);
+                        faction.SecondaryColourG = int.Parse(parts[2].Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[1]);
+                        faction.SecondaryColourB = int.Parse(parts[3].Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)[1]);
                         break;
 
                     case "loading_logo":
-                        faction.Loading_logo = value;
+                        faction.LoadingLogo = value;
                         break;
 
                     case "standard_index":
-                        faction.Standard_index = value;
+                        faction.StandardIndex = value;
                         break;
 
                     case "logo_index":
-                        faction.Logo_index = value;
+                        faction.LogoIndex = value;
                         break;
 
                     case "small_logo_index":
-                        faction.Small_logo_index = value;
+                        faction.SmallLogoIndex = value;
                         break;
 
                     case "triumph_value":
-                        faction.Triumph_value = int.Parse(value);
+                        faction.TriumphValue = int.Parse(value);
                         break;
 
                     case "custom_battle_availability":
-                        faction.Custom_battle_availability = ToBool(value);
+                        faction.CustomBattleAvailability = ToBool(value);
                         break;
 
                     case "periods_unavailable_in_custom_battle":
-                        faction.Periods_unavailable_in_custom_battle = parts[1..];
+                        faction.PeriodsUnavailableInCustomBattle = parts[1..].ToList();
                         break;
 
                     case "can_sap":
-                        faction.Can_sap = ToBool(value);
+                        faction.CanSap = ToBool(value);
                         break;
 
                     case "prefers_naval_invasions":
-                        faction.Prefers_naval_invasions = ToBool(value);
+                        faction.PrefersNavalInvasions = ToBool(value);
                         break;
 
                     case "can_have_princess":
-                        faction.Can_have_princess = ToBool(value);
+                        faction.CanHavePrincess = ToBool(value);
                         break;
 
                     case "disband_to_pools":
-                        faction.Disband_to_pools = ToBool(value);
+                        faction.DisbandToPools = ToBool(value);
                         break;
 
                     case "can_build_siege_towers":
-                        faction.Can_build_siege_towers = ToBool(value);
+                        faction.CanBuildSiegeTowers = ToBool(value);
                         break;
 
                     case "can_transmit_plague":
-                        faction.Can_transmit_plague = ToBool(value);
+                        faction.CanTransmitPlague = ToBool(value);
                         break;
 
                     case "has_family_tree":
-                        faction.Has_family_tree = value;
+                        faction.HasFamilyTree = value;
                         break;
 
                     case "horde_min_units":
-                        faction.Horde_min_units = int.Parse(value);
+                        faction.HordeMinUnits = int.Parse(value);
                         break;
 
                     case "horde_max_units":
-                        faction.Horde_max_units = int.Parse(value);
+                        faction.HordeMaxUnits = int.Parse(value);
                         break;
 
                     case "horde_max_units_reduction_every_horde":
-                        faction.Horde_max_units_reduction_every_horde = int.Parse(value);
+                        faction.HordeMaxUnitsReductionEveryHorde = int.Parse(value);
                         break;
 
                     case "horde_unit_per_settlement_population":
-                        faction.Horde_unit_per_settlement_population = int.Parse(value);
+                        faction.HordeUnitPerSettlementPopulation = int.Parse(value);
                         break;
 
                     case "horde_min_named_characters":
-                        faction.Horde_min_named_characters = int.Parse(value);
+                        faction.HordeMinNamedCharacters = int.Parse(value);
                         break;
 
                     case "horde_max_percent_army_stack":
-                        faction.Horde_max_percent_army_stack = int.Parse(value);
+                        faction.HordeMaxPercentArmyStack = int.Parse(value);
                         break;
 
                     case "horde_disband_percent_on_settlement_capture":
-                        faction.Horde_disband_percent_on_settlement_capture = int.Parse(value);
+                        faction.HordeDisbandPercentOnSettlementCapture = int.Parse(value);
                         break;
 
                     case "horde_unit":
-                        faction.Horde_units.Add(value);
+                        faction.HordeUnits.Add(value);
                         break;
                 }
             }

@@ -3,10 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:ModdingTool.View.UserControls"
              xmlns:mvvm="clr-namespace:ModdingTool.View.InterfaceData"
-             xmlns:mt="clr-namespace:ModdingTool"
-             xmlns:sdl="http://schemas.sdl.com/xaml"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance mvvm:ModelDbTab}">
@@ -41,7 +38,7 @@
 
             <StackPanel Grid.Row="1">
                 <TextBlock Text="Meshes" Height="25"/>
-                <DataGrid x:Name="LodGrid" ItemsSource="{Binding SelectedModel.LodTable}"  AutoGenerateColumns="False" RowHeight="25" CanUserResizeRows="False" ColumnHeaderHeight="25" >
+                <DataGrid x:Name="LodGrid" CanUserAddRows="False" ItemsSource="{Binding SelectedModel.LodTable}"  AutoGenerateColumns="False" RowHeight="25" CanUserResizeRows="False" ColumnHeaderHeight="25" >
                     <DataGrid.Columns>
                         <DataGridTextColumn x:Name="MeshPath" Header="Mesh Path" Binding="{Binding Mesh}"/>
                         <DataGridTextColumn Header="LOD Distance" Binding="{Binding Distance}"/>
@@ -59,7 +56,7 @@
                     </DataGrid.Columns>
                 </DataGrid>
                 <TextBlock Text="Main Textures" Height="25"/>
-                <DataGrid x:Name="MainTextureGrid" ItemsSource="{Binding SelectedModel.MainTextures}"   AutoGenerateColumns="False" RowHeight="25" CanUserResizeRows="False" ColumnHeaderHeight="25" >
+                <DataGrid x:Name="MainTextureGrid" CanUserAddRows="False" ItemsSource="{Binding SelectedModel.MainTextures}"   AutoGenerateColumns="False" RowHeight="25" CanUserResizeRows="False" ColumnHeaderHeight="25" >
                     <DataGrid.Columns>
                         <DataGridTemplateColumn Header="Faction" >
                             <DataGridTemplateColumn.CellTemplate>
@@ -85,7 +82,7 @@
                     </DataGrid.Columns>
                 </DataGrid>
                 <TextBlock Text="Attachment Textures" Height="25"/>
-                <DataGrid x:Name="AttachTextureGrid" ItemsSource="{Binding SelectedModel.AttachTextures}"  AutoGenerateColumns="False" RowHeight="25" CanUserResizeRows="False" ColumnHeaderHeight="25" >
+                <DataGrid x:Name="AttachTextureGrid" CanUserAddRows="False" ItemsSource="{Binding SelectedModel.AttachTextures}"  AutoGenerateColumns="False" RowHeight="25" CanUserResizeRows="False" ColumnHeaderHeight="25" >
                     <DataGrid.Columns>
                         <DataGridTemplateColumn Header="Faction" >
                             <DataGridTemplateColumn.CellTemplate>
@@ -111,7 +108,7 @@
                     </DataGrid.Columns>
                 </DataGrid>
                 <TextBlock Text="Animations" Height="25"/>
-                <DataGrid x:Name="AnimationGrid" ItemsSource="{Binding SelectedModel.Animations}"  AutoGenerateColumns="False" RowHeight="25" CanUserResizeRows="False" ColumnHeaderHeight="25" SizeChanged="AnimationGrid_OnSizeChanged">
+                <DataGrid x:Name="AnimationGrid"  CanUserAddRows="False" ItemsSource="{Binding SelectedModel.Animations}"  AutoGenerateColumns="False" RowHeight="25" CanUserResizeRows="False" ColumnHeaderHeight="25" SizeChanged="AnimationGrid_OnSizeChanged">
                     <DataGrid.Columns>
                         <DataGridTemplateColumn Header="Mount Type" >
                             <DataGridTemplateColumn.CellTemplate>

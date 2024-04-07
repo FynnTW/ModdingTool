@@ -174,20 +174,20 @@ namespace ModdingTool
                     case "faction":
                         active_faction = value;
                         stratmodel_id = 0;
-                        FactionDataBase[active_faction].FactionCharacterTypes.Add(chartype.type, new FactionCharacter { name = chartype.type });
+                        FactionDataBase[active_faction].FactionCharacterTypes.Add(chartype.type, new FactionCharacter { Name = chartype.type });
                         break;
                     case "dictionary":
-                        FactionDataBase[active_faction].FactionCharacterTypes[chartype.type].dictionary = int.Parse(value);
+                        FactionDataBase[active_faction].FactionCharacterTypes[chartype.type].Dictionary = int.Parse(value);
                         break;
                     case "battle_model":
-                        FactionDataBase[active_faction].FactionCharacterTypes[chartype.type].battle_model = value.Trim().ToLower();
+                        FactionDataBase[active_faction].FactionCharacterTypes[chartype.type].BattleModel = value.Trim().ToLower();
                         ModData.BattleModelDb.UsedModels.Add(value.Trim().ToLower());
                         break;
                     case "battle_equip":
-                        FactionDataBase[active_faction].FactionCharacterTypes[chartype.type].battle_equip = parts[1..].ToString();
+                        FactionDataBase[active_faction].FactionCharacterTypes[chartype.type].BattleEquip = parts[1..].ToString();
                         break;
                     case "strat_model":
-                        FactionDataBase[active_faction].FactionCharacterTypes[chartype.type].models[stratmodel_id] = value;
+                        FactionDataBase[active_faction].FactionCharacterTypes[chartype.type].Models[stratmodel_id] = value;
                         stratmodel_id++;
                         break;
                 }

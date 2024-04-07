@@ -641,7 +641,6 @@ public class UnitDb
                                         unit.MercenaryUnit = true;
                                         continue;
                                     case "general_unit":
-                                        unit.GeneralUnit = true;
                                         continue;
                                 }
                             }
@@ -656,7 +655,6 @@ public class UnitDb
                                 unit.MercenaryUnit = true;
                                 continue;
                             case "general_unit":
-                                unit.GeneralUnit = true;
                                 continue;
                         }
                     }
@@ -931,7 +929,7 @@ public class UnitDb
                             if (unit.ArmourModelThree != null) ModData.BattleModelDb.UsedModels.Add(unit.ArmourModelThree);
                         }
                     }
-                    unit.ArmourUgModels = parts[1..];
+
                     break;
 
                 case "ownership":

@@ -9,30 +9,30 @@ namespace ModdingTool.ViewModel
     public partial class DataTabViewModel : ObservableObject
     {
         [ObservableProperty]
-        private ICollection<ITab> _tabs;
+        private ICollection<Tab> _tabs;
         [ObservableProperty]
-        private ITab _selectedTab = null;
+        private Tab _selectedTab = null;
 
         public DataTabViewModel() =>
-            Tabs = new ObservableCollection<ITab>();
+            Tabs = new ObservableCollection<Tab>();
         public DataTabViewModel(DataList dataList)
         {
             if (dataList.DataContext is DataListViewModel dataListViewmodel)
                 dataListViewmodel.SelectionChanged += OnTabPicked;
-            Tabs = new ObservableCollection<ITab>();
+            Tabs = new ObservableCollection<Tab>();
         }
 
         private void OnTabPicked(object? sender, TabPickedEventArgs e) =>
             AddTab(e.SelectedTab);
 
 
-        public void AddTab(ITab tab)
+        public void AddTab(Tab tab)
         {
             Tabs.Add(tab);
             SelectedTab = tab;
         }
 
-        public void RemoveTab(ITab tab)
+        public void RemoveTab(Tab tab)
         {
             Tabs.Remove(tab);
         }

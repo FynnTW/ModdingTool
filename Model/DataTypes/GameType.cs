@@ -1,18 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace ModdingTool;
 
-public abstract class GameType
+public abstract class GameType : INotifyPropertyChanged 
 {
+
+    public event PropertyChangedEventHandler? PropertyChanged;  
+
+    // This method is called by the Set accessor of each property.  
+    // The CallerMemberName attribute that is applied to the optional propertyName  
+    // parameter causes the property name of the caller to be substituted as an argument.  
+    protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "")  
+    {  
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }  
+    
     private string DataType => GetType().Name;
 
     protected string _name = "";
-    
-    public static bool FileExistsData(string path, string name)
+
+    protected static bool FileExistsData(string path, string name)
     {
         if (string.IsNullOrWhiteSpace(path)) return false;
         if (File.Exists(Globals.ModPath + "/data/" + path) ||
@@ -27,6 +40,12 @@ public abstract class GameType
         if (oldValue == newValue) return;
         Changes.AddChange(attribute, DataType, _name, oldValue, newValue);
     }
+    protected void AddChangeList(string attribute, string oldValue, string newValue, string listIndex, string listType)
+    {
+        if (Globals.IsParsing) return;
+        if (oldValue == newValue) return;
+        Changes.AddChange(attribute, DataType, _name, oldValue, newValue, listIndex, listType);
+    }
         
     protected void AddChange(string attribute, bool oldValue, bool newValue)
     {
@@ -34,12 +53,24 @@ public abstract class GameType
         if (oldValue == newValue) return;
         Changes.AddChange(attribute, DataType, _name, oldValue.ToString(), newValue.ToString());
     }
+    protected void AddChangeList(string attribute, bool oldValue, bool newValue, string listIndex, string listType)
+    {
+        if (Globals.IsParsing) return;
+        if (oldValue == newValue) return;
+        Changes.AddChange(attribute, DataType, _name, oldValue.ToString(), newValue.ToString(), listIndex, listType);
+    }
     
     protected void AddChange(string attribute, int oldValue, int newValue)
     {
         if (Globals.IsParsing) return;
         if (oldValue == newValue) return;
         Changes.AddChange(attribute, DataType, _name, oldValue.ToString(), newValue.ToString());
+    }
+    protected void AddChangeList(string attribute, int oldValue, int newValue, string listIndex, string listType)
+    {
+        if (Globals.IsParsing) return;
+        if (oldValue == newValue) return;
+        Changes.AddChange(attribute, DataType, _name, oldValue.ToString(), newValue.ToString(), listIndex, listType);
     }
     protected static string FormatFloat(float input)
     {
@@ -67,6 +98,14 @@ public abstract class GameType
         if (oldV == newV) return;
         Changes.AddChange(attribute, DataType, _name, oldV, newV);
     }
+    protected void AddChangeList(string attribute, float oldValue, float newValue, string listIndex, string listType)
+    {
+        if (Globals.IsParsing) return;
+        var oldV = FormatFloat(oldValue);
+        var newV = FormatFloat(newValue);
+        if (oldV == newV) return;
+        Changes.AddChange(attribute, DataType, _name, oldV, newV, listIndex, listType);
+    }
     protected void AddChange(string attribute, double oldValue, double newValue)
     {
         if (Globals.IsParsing) return;
@@ -75,16 +114,24 @@ public abstract class GameType
         if (oldV == newV) return;
         Changes.AddChange(attribute, DataType, _name, oldV, newV);
     }
+    protected void AddChangeList(string attribute, double oldValue, double newValue, string listIndex, string listType)
+    {
+        if (Globals.IsParsing) return;
+        var oldV = FormatFloat(oldValue);
+        var newV = FormatFloat(newValue);
+        if (oldV == newV) return;
+        Changes.AddChange(attribute, DataType, _name, oldV, newV, listIndex, listType);
+    }
     
     public static bool FloatNotEqual(float a, float b) => Math.Abs(a - b) > 0.001;
-    public static bool FloatNotEqual(double a, double b) => Math.Abs(a - b) > 0.001;
-    
-    public Dictionary<string, List<string>> Comments { get; set; } = new();
-    
-    public string ConditionalString(string? text, string returnText = "") => 
+    protected static bool FloatNotEqual(double a, double b) => Math.Abs(a - b) > 0.001;
+
+    protected Dictionary<string, List<string>> Comments { get; set; } = new();
+
+    protected static string ConditionalString(string? text, string returnText = "") => 
         string.IsNullOrWhiteSpace(text) ? "" : string.IsNullOrWhiteSpace(returnText) ? text : returnText;
 
-    public virtual string GetTypeTextField(string identifier) => "";
+    protected virtual string GetTypeTextField(string identifier) => "";
 
 
     public void AssignComments(string identifier, ref List<string> commentCache, ref string commentCacheInLine)
@@ -96,8 +143,8 @@ public abstract class GameType
         CommentsInLine[identifier] = commentCacheInLine;
         commentCacheInLine = "";
     }
-    
-    public string GetTextField(string identifier)
+
+    protected string GetTextField(string identifier)
     {
         var text = "";
         text += AddComment(identifier);
@@ -115,8 +162,8 @@ public abstract class GameType
         }
         return input == 0 ? "0" : input.ToString("0.0", CultureInfo.InvariantCulture);
     }
-    
-    public static string MakeCommaString(List<string> list)
+
+    protected static string MakeCommaString(List<string> list)
     {
         var commaString = "";
         if (list.Count == 0) return commaString;
@@ -130,8 +177,8 @@ public abstract class GameType
         }
         return commaString;
     }
-    
-    public string GetTabLength(string text) 
+
+    protected static string GetTabLength(string text) 
         => text.Length switch
             {
                 0 => "",
@@ -142,12 +189,11 @@ public abstract class GameType
                 < 20 => "\t\t",
                 _ => "\t",
             };
-    
-    
 
-    public Dictionary<string, string> CommentsInLine { get; set; } = new();
-    
-    public string AddComment(string identifier)
+
+    protected Dictionary<string, string> CommentsInLine { get; set; } = new();
+
+    private string AddComment(string identifier)
     {
         if (!Comments.TryGetValue(identifier, out var value)) return "";
         if (value.Count == 0) return "";

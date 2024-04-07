@@ -24,7 +24,7 @@ public static class Changes
         return new List<string>(ChangeList.ConvertAll(x => x.ToString()));
     }
     
-    public static void AddChange(string attribute, string dataType, string dataId, string oldValue, string newValue)
+    public static void AddChange(string attribute, string dataType, string dataId, string oldValue, string newValue, string listIndex = "", string listType = "")
     {
         ChangeList.Add(new Change()
         {
@@ -33,6 +33,9 @@ public static class Changes
             DataId = dataId,
             OldValue = oldValue,
             NewValue = newValue,
+            ListIndex = listIndex,
+            ListType = listType,
+            IsList = !string.IsNullOrWhiteSpace(listIndex),
             Time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
         });
     }
@@ -45,10 +48,15 @@ public static class Changes
         public string OldValue { get; set; } = string.Empty;
         public string NewValue { get; set; } = string.Empty;
         public string Time { get; set; } = string.Empty;
+        public string ListIndex { get; set; } = string.Empty;
+        public string ListType { get; set; } = string.Empty;
+        public bool IsList { get; set; } = false;
         
         public override string ToString()
         {
-            return $@"{Time} - Changed [{DataType} - {DataId}]: [{Attribute}] from {OldValue} to {NewValue}";
+            return IsList ? 
+                $@"{Time} - Changed [{DataType} - {DataId}]: [{Attribute}] from {OldValue} to {NewValue} at index {ListIndex} in list {ListType}" : 
+                $@"{Time} - Changed [{DataType} - {DataId}]: [{Attribute}] from {OldValue} to {NewValue}";
         }
 
         public void Undo()
@@ -67,12 +75,31 @@ public static class Changes
                 _ => null
             };
             if (dataBase == null) return;
+            if (string.IsNullOrWhiteSpace(DataId))
+            {
+                Debug.WriteLine("DataId is null or empty");
+                return;
+            }
             dynamic? data = dataBase[DataId];
             if (data == null) return;
             try
             {
-                if (DataId is "Lod" or "Texture" or "Animation")
-                    return;
+                if (DataType is "Lod" or "Texture" or "Animation")
+                {
+                    switch (DataType)
+                    {
+                        case "Lod":
+                            if (Globals.ModData.BattleModelDb.Get(DataId) == null) return;
+                            data = Globals.ModData.BattleModelDb.Get(DataId)!.LodTable[int.Parse(ListIndex)];
+                            break;
+                        case "Texture":
+                            return;
+                            break;
+                        case "Animation":
+                            return;
+                            break;
+                    }
+                }
                 Type type = data.GetType();
                 if (type == null) return;
                 var property = type.GetProperty(Attribute);

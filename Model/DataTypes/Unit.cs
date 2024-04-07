@@ -185,50 +185,47 @@ namespace ModdingTool
         private string? _priTechType = "melee_blade";
         private string? _priDamageType = "blunt";
         private string? _priSoundType = "none";
-        private int _priAttDelay = 0;
+        private int _priAttDelay;
         private double _priSkelFactor = 1.0;
-        private int _secCharge = 0;
+        private int _secCharge;
         private string? _secProjectile = "";
-        private int _secRange = 0;
-        private int _secAmmunition = 0;
+        private int _secRange;
+        private int _secAmmunition;
         private string? _secWeaponType = "no";
         private string? _secTechType = "melee_simple";
         private string? _secDamageType = "blunt";
         private string? _secSoundType = "none";
-        private int _secAttDelay = 0;
+        private int _secAttDelay;
         private double _secSkelFactor = 1;
-        private int _terAttack = 0;
-        private int _terCharge = 0;
+        private int _terAttack;
+        private int _terCharge;
         private string? _terProjectile = "";
-        private int _terRange = 0;
-        private int _terAmmunition = 0;
+        private int _terRange;
+        private int _terAmmunition;
         private string? _terWeaponType = "no";
         private string? _terTechType = "melee_simple";
-        private List<string>? _priAttr = new List<string>();
-        private List<string>? _secAttr = new List<string>();
         private string? _terDamageType = "blunt";
         private string? _terSoundType = "none";
-        private int _terAttDelay = 0;
-        private double _terSkelFactor = 0;
-        private List<string>? _terAttr = new List<string>();
-        private int _priArmour = 0;
+        private int _terAttDelay;
+        private double _terSkelFactor;
+        private int _priArmour;
         private string? _formationStyle = "square";
-        private int _priDefense = 0;
-        private int _priShield = 0;
+        private int _priDefense;
+        private int _priShield;
         private string? _priDefSound = "flesh";
-        private int _secArmour = 0;
-        private int _secDefense = 0;
+        private int _secArmour;
+        private int _secDefense;
         private string? _secDefSound = "flesh";
-        private int _statHeat = 0;
-        private int _statScrub = 0;
-        private int _statForest = 0;
-        private int _statSnow = 0;
-        private int _statSand = 0;
+        private int _statHeat;
+        private int _statScrub;
+        private int _statForest;
+        private int _statSnow;
+        private int _statSand;
         private int _morale = 1;
         private string? _discipline = "normal";
         private string? _training = "untrained";
         private int _statChargeDist = 10;
-        private int _statFireDelay = 0;
+        private int _statFireDelay;
         private int _statFood = 60;
         private int _statFoodSec = 300;
         private int _recruitTime = 1;
@@ -240,39 +237,26 @@ namespace ModdingTool
         private int _customLimit = 3;
         private int _customIncrease = 50;
         private double _moveSpeed = 1.0;
-        private int _statStl = 0;
-        private int[]? _armourUgLevels;
+        private int _statStl;
         private string? _armourlvlBase;
         private string? _armourlvlOne;
         private string? _armourlvlTwo;
         private string? _armourlvlThree;
-        private string?[]? _armourUgModels;
         private string? _armourModelBase;
         private string? _armourModelOne;
         private string? _armourModelTwo;
         private string? _armourModelThree;
-        private List<string> _ownership = new List<string>();
-        private List<string> _eraZero = new List<string>();
-        private List<string> _eraOne = new List<string>();
-        private List<string> _eraTwo = new List<string>();
-        private double _recruitPriorityOffset = 0;
+        private double _recruitPriorityOffset;
         private string? _infoDict;
         private string? _cardDict;
         private double _crusadeUpkeep = 1.0;
         private int _spacingRanks;
-        private bool _lockMorale = false;
+        private bool _lockMorale;
         private string? _priFireType = "";
         private string? _secFireType = "";
         private string? _terFireType = "";
         private string? _descr = "";
         private string? _descrShort = "";
-        private string _card = "";
-        private bool _mercenaryUnit = false;
-        private bool _generalUnit = false;
-        private bool _isEopUnit = false;
-        private string _filePath = "";
-        private int _eduIndex;
-        private double _aiUnitValue;
 
         #endregion fields
 
@@ -287,6 +271,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(LocalizedName), _localizedName, value);
                 _localizedName = value;
+                NotifyPropertyChanged();
             }
         }
         
@@ -310,6 +295,7 @@ namespace ModdingTool
                     ModData.Units.Remove(old);
                     ModData.Units.Add(this);
                     EduIndex = index;
+                    NotifyPropertyChanged();
                 }
             }
         }
@@ -325,6 +311,7 @@ namespace ModdingTool
                 if (value == null) return;
                 AddChange(nameof(Dictionary), _dictionary, value);
                 _dictionary = value;
+                NotifyPropertyChanged();
             }
         }
         
@@ -345,6 +332,7 @@ namespace ModdingTool
                 }
                 AddChange(nameof(Category), _category, value);
                 _category = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -365,6 +353,7 @@ namespace ModdingTool
                 }
                 AddChange(nameof(ClassType), _class, value);
                 _class = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -385,6 +374,7 @@ namespace ModdingTool
                 }
                 AddChange(nameof(ClassType), _voiceType, value);
                 _voiceType = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -400,6 +390,7 @@ namespace ModdingTool
                 if (value == null) return;
                 AddChange(nameof(Accent), _accent ?? "", value);
                 _accent = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -415,6 +406,7 @@ namespace ModdingTool
                 if (value == null) return;
                 AddChange(nameof(BannerFaction), _bannerFaction ?? "", value);
                 _bannerFaction = value;
+                NotifyPropertyChanged();
             }
         } 
 
@@ -430,6 +422,7 @@ namespace ModdingTool
                 if (value == null) return;
                 AddChange(nameof(BannerUnit), _bannerUnit ?? "", value);
                 _bannerUnit = value;
+                NotifyPropertyChanged();
             }
         } 
 
@@ -445,6 +438,7 @@ namespace ModdingTool
                 if (value == null) return;
                 AddChange(nameof(BannerMain), _bannerMain ?? "", value);
                 _bannerMain = value;
+                NotifyPropertyChanged();
             }
         } 
 
@@ -460,6 +454,7 @@ namespace ModdingTool
                 if (value == null) return;
                 AddChange(nameof(BannerSecondary), _bannerSecondary ?? "", value);
                 _bannerSecondary = value;
+                NotifyPropertyChanged();
             }
         } 
 
@@ -475,6 +470,7 @@ namespace ModdingTool
                 if (value == null) return;
                 AddChange(nameof(BannerHoly), _bannerHoly ?? "", value);
                 _bannerHoly = value;
+                NotifyPropertyChanged();
             }
         }
         
@@ -493,6 +489,7 @@ namespace ModdingTool
                     ErrorDb.AddError($"Soldier {value} does not exist in battle models database.");
                 AddChange(nameof(Soldier), _soldier, value);
                 _soldier = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -517,6 +514,7 @@ namespace ModdingTool
                 }
                 AddChange(nameof(SoldierCount), _soldierCount, value);
                 _soldierCount = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -535,6 +533,7 @@ namespace ModdingTool
                     ErrorDb.AddError($"Invalid number of animals {value} for handler unit {Type}.");
                 AddChange(nameof(ExtrasCount), _extrasCount, value);
                 _extrasCount = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -548,6 +547,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(Mass), _mass, value);
                 _mass = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -561,6 +561,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(Radius), _radius, value);
                 _radius = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -574,6 +575,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(Height), _height, value);
                 _height = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -591,6 +593,7 @@ namespace ModdingTool
                     ErrorDb.AddError($"Officer {value} does not exist in battle models database.");
                 AddChange(nameof(Officer1), _officer1, value);
                 _officer1 = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -608,6 +611,7 @@ namespace ModdingTool
                     ErrorDb.AddError($"Officer {value} does not exist in battle models database.");
                 AddChange(nameof(Officer2), _officer2, value);
                 _officer2 = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -625,6 +629,7 @@ namespace ModdingTool
                     ErrorDb.AddError($"Officer {value} does not exist in battle models database.");
                 AddChange(nameof(Officer3), _officer3, value);
                 _officer3 = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -639,6 +644,7 @@ namespace ModdingTool
                 if (value == null) return;
                 AddChange(nameof(MountedEngine), _mountedEngine, value);
                 _mountedEngine = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -656,6 +662,7 @@ namespace ModdingTool
                     ErrorDb.AddError($"Mount {value} does not exist in mounts database.");
                 AddChange(nameof(Mount), _mount, value);
                 _mount = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -670,6 +677,7 @@ namespace ModdingTool
                 if (value == null) return;
                 AddChange(nameof(Ship), _ship, value);
                 _ship = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -684,6 +692,7 @@ namespace ModdingTool
                 if (value == null) return;
                 AddChange(nameof(Engine), _engine, value);
                 _engine = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -698,13 +707,14 @@ namespace ModdingTool
                 if (value == null) return;
                 AddChange(nameof(Animal), _animal, value);
                 _animal = value;
+                NotifyPropertyChanged();
             }
         }
 
         /// <summary>
         /// Gets or sets the mount effect for the unit. This is a list of strings representing the mount effects a unit has.
         /// </summary>
-        public List<string> MountEffect { get; set; } = new();
+        public List<string> MountEffect { get; private set; } = new();
 
         /// <summary>
         /// Adds a new mount effect to the unit. If the effect already exists, it will not be added.
@@ -747,6 +757,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(SpacingWidth), _spacingWidth, value);
                 _spacingWidth = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -761,6 +772,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(SpacingDepth), _spacingDepth, value);
                 _spacingDepth = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -775,6 +787,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(SpacingWidthLoose), _spacingWidthLoose, value);
                 _spacingWidthLoose = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -789,6 +802,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(SpacingDepthLoose), _spacingDepthLoose, value);
                 _spacingDepthLoose = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -809,6 +823,7 @@ namespace ModdingTool
                 }
                 AddChange(nameof(SpecialFormation), _specialFormation ?? "", value);
                 _specialFormation = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -824,6 +839,7 @@ namespace ModdingTool
                 value = ClampUnitStat(value);
                 AddChange(nameof(HitPoints), _hitPoints, value);
                 _hitPoints = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -839,6 +855,7 @@ namespace ModdingTool
                 value = ClampUnitStat(value);
                 AddChange(nameof(MountHitPoints), _mountHitPoints, value);
                 _mountHitPoints = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -854,6 +871,7 @@ namespace ModdingTool
                 value = ClampUnitStat(value);
                 AddChange(nameof(PriAttack), _priAttack, value);
                 _priAttack = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -869,6 +887,7 @@ namespace ModdingTool
                 value = ClampUnitStat(value);
                 AddChange(nameof(PriCharge), _priCharge, value);
                 _priCharge = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -884,6 +903,7 @@ namespace ModdingTool
                 value ??= "no";
                 AddChange(nameof(PriProjectile), _priProjectile ?? "", value);
                 _priProjectile = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -898,6 +918,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(PriRange), _priRange, value);
                 _priRange = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -912,6 +933,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(PriAmmunition), _priAmmunition, value);
                 _priAmmunition = value;
+                NotifyPropertyChanged();
             }
         }
         
@@ -932,6 +954,7 @@ namespace ModdingTool
                 }
                 AddChange(nameof(PriWeaponType), _priWeaponType ?? "", value);
                 _priWeaponType = value;
+                NotifyPropertyChanged();
             }
         }
         
@@ -952,6 +975,7 @@ namespace ModdingTool
                 }
                 AddChange(nameof(PriTechType), _priTechType ?? "", value);
                 _priTechType = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -972,6 +996,7 @@ namespace ModdingTool
                 }
                 AddChange(nameof(PriDamageType), _priDamageType ?? "", value);
                 _priDamageType = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -992,6 +1017,7 @@ namespace ModdingTool
                 }
                 AddChange(nameof(PriSoundType), _priSoundType ?? "", value);
                 _priSoundType = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1006,6 +1032,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(PriAttDelay), _priAttDelay, value);
                 _priAttDelay = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1020,17 +1047,14 @@ namespace ModdingTool
             {
                 AddChange(nameof(PriSkelFactor), _priSkelFactor, value);
                 _priSkelFactor = value;
+                NotifyPropertyChanged();
             }
         }
 
         /// <summary>
         /// Gets or sets the primary attributes of the unit. This is a list of strings representing the attributes of a unit's primary attack.
         /// </summary>
-        public List<string>? PriAttr
-        {
-            get => _priAttr;
-            set => _priAttr = value;
-        }
+        public List<string>? PriAttr { get; set; } = new ();
 
         /// <summary>
         /// Adds a new primary attribute to the unit. If the attribute already exists, it will not be added.
@@ -1062,6 +1086,7 @@ namespace ModdingTool
                 value = ClampUnitStat(value);
                 AddChange(nameof(SecAttack), _secAttack, value);
                 _secAttack = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1077,6 +1102,7 @@ namespace ModdingTool
                 value = ClampUnitStat(value);
                 AddChange(nameof(SecCharge), _secCharge, value);
                 _secCharge = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1092,6 +1118,7 @@ namespace ModdingTool
                 value ??= "no";
                 AddChange(nameof(SecProjectile), _secProjectile ?? "", value);
                 _secProjectile = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1106,6 +1133,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(SecRange), _secRange, value);
                 _secRange = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1120,6 +1148,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(SecAmmunition), _secAmmunition, value);
                 _secAmmunition = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1140,6 +1169,7 @@ namespace ModdingTool
                 }
                 AddChange(nameof(SecWeaponType), _secWeaponType ?? "", value);
                 _secWeaponType = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1160,6 +1190,7 @@ namespace ModdingTool
                 }
                 AddChange(nameof(SecTechType), _secTechType ?? "", value);
                 _secTechType = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1180,6 +1211,7 @@ namespace ModdingTool
                 }
                 AddChange(nameof(SecDamageType), _secDamageType ?? "", value);
                 _secDamageType = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1200,6 +1232,7 @@ namespace ModdingTool
                 }
                 AddChange(nameof(SecSoundType), _secSoundType ?? "", value);
                 _secSoundType = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1214,6 +1247,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(SecAttDelay), _secAttDelay, value);
                 _secAttDelay = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1228,17 +1262,14 @@ namespace ModdingTool
             {
                 AddChange(nameof(SecSkelFactor), _secSkelFactor, value);
                 _secSkelFactor = value;
+                NotifyPropertyChanged();
             }
         }
 
         /// <summary>
         /// Gets or sets the secondary attributes of the unit. This is a list of strings representing the attributes of a unit's secondary attack.
         /// </summary>
-        public List<string>? SecAttr
-        {
-            get => _secAttr;
-            set => _secAttr = value;
-        }
+        public List<string>? SecAttr { get; set; } = new();
 
         /// <summary>
         /// Adds a new secondary attribute to the unit. If the attribute already exists, it will not be added.
@@ -1270,6 +1301,7 @@ namespace ModdingTool
                 value = ClampUnitStat(value);
                 AddChange(nameof(TerAttack), _terAttack, value);
                 _terAttack = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1285,6 +1317,7 @@ namespace ModdingTool
                 value = ClampUnitStat(value);
                 AddChange(nameof(TerCharge), _terCharge, value);
                 _terCharge = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1300,6 +1333,7 @@ namespace ModdingTool
                 value ??= "no";
                 AddChange(nameof(TerProjectile), _terProjectile ?? "", value);
                 _terProjectile = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1314,6 +1348,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(TerRange), _terRange, value);
                 _terRange = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1328,6 +1363,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(TerAmmunition), _terAmmunition, value);
                 _terAmmunition = value;
+                NotifyPropertyChanged();
             }
         }
         
@@ -1348,6 +1384,7 @@ namespace ModdingTool
                 }
                 AddChange(nameof(TerWeaponType), _terWeaponType ?? "", value);
                 _terWeaponType = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1368,6 +1405,7 @@ namespace ModdingTool
                 }
                 AddChange(nameof(TerTechType), _terTechType ?? "", value);
                 _terTechType = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1388,6 +1426,7 @@ namespace ModdingTool
                 }
                 AddChange(nameof(TerDamageType), _terDamageType ?? "", value);
                 _terDamageType = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1408,6 +1447,7 @@ namespace ModdingTool
                 }
                 AddChange(nameof(TerSoundType), _terSoundType ?? "", value);
                 _terSoundType = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1422,6 +1462,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(TerAttDelay), _terAttDelay, value);
                 _terAttDelay = value;
+                NotifyPropertyChanged();
             }
         }
         
@@ -1436,18 +1477,15 @@ namespace ModdingTool
             {
                 AddChange(nameof(TerSkelFactor), _terSkelFactor, value);
                 _terSkelFactor = value;
+                NotifyPropertyChanged();
             }
         }
 
         /// <summary>
         /// Gets or sets the tertiary attributes of the unit. This is a list of strings representing the attributes of a unit's tertiary attack.
         /// </summary>
-        public List<string>? TerAttr
-        {
-            get => _terAttr;
-            set => _terAttr = value;
-        }
-        
+        public List<string>? TerAttr { get; set; } = new();
+
         /// <summary>
         /// Adds a new tertiary attribute to the unit. If the attribute already exists, it will not be added.
         /// If the attribute does not exist in the global attribute types, an error is logged.
@@ -1486,6 +1524,7 @@ namespace ModdingTool
                 value = ClampUnitStat(value, 0);
                 AddChange(nameof(PriArmour), _priArmour, value);
                 _priArmour = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1506,6 +1545,7 @@ namespace ModdingTool
                 }
                 AddChange(nameof(FormationStyle), _formationStyle ?? "", value);
                 _formationStyle = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1521,6 +1561,7 @@ namespace ModdingTool
                 value = ClampUnitStat(value, 0);
                 AddChange(nameof(PriDefense), _priDefense, value);
                 _priDefense = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1536,6 +1577,7 @@ namespace ModdingTool
                 value = ClampUnitStat(value, 0);
                 AddChange(nameof(PriShield), _priShield, value);
                 _priShield = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1556,6 +1598,7 @@ namespace ModdingTool
                 }
                 AddChange(nameof(PriDefSound), _priDefSound ?? "", value);
                 _priDefSound = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1571,6 +1614,7 @@ namespace ModdingTool
                 value = ClampUnitStat(value, 0);
                 AddChange(nameof(SecArmour), _secArmour, value);
                 _secArmour = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1586,6 +1630,7 @@ namespace ModdingTool
                 value = ClampUnitStat(value, 0);
                 AddChange(nameof(SecDefense), _secDefense, value);
                 _secDefense = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1606,6 +1651,7 @@ namespace ModdingTool
                 }
                 AddChange(nameof(SecDefSound), _secDefSound ?? "", value);
                 _secDefSound = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1621,6 +1667,7 @@ namespace ModdingTool
                 value = ClampUnitStat(value, 0);
                 AddChange(nameof(StatHeat), _statHeat, value);
                 _statHeat = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1636,6 +1683,7 @@ namespace ModdingTool
                 value = ClampUnitStat(value, 0);
                 AddChange(nameof(StatScrub), _statScrub, value);
                 _statScrub = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1651,6 +1699,7 @@ namespace ModdingTool
                 value = ClampUnitStat(value, 0);
                 AddChange(nameof(StatForest), _statForest, value);
                 _statForest = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1666,6 +1715,7 @@ namespace ModdingTool
                 value = ClampUnitStat(value, 0);
                 AddChange(nameof(StatSnow), _statSnow, value);
                 _statSnow = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1681,6 +1731,7 @@ namespace ModdingTool
                 value = ClampUnitStat(value, 0);
                 AddChange(nameof(StatSand), _statSand, value);
                 _statSand = value;
+                NotifyPropertyChanged();
             }
         }
         
@@ -1696,6 +1747,7 @@ namespace ModdingTool
                 value = ClampUnitStat(value, 0);
                 AddChange(nameof(Morale), _morale, value);
                 _morale = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1716,6 +1768,7 @@ namespace ModdingTool
                 }
                 AddChange(nameof(Discipline), _discipline ?? "", value);
                 _discipline = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1736,6 +1789,7 @@ namespace ModdingTool
                 }
                 AddChange(nameof(Training), _training ?? "", value);
                 _training = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1750,6 +1804,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(StatChargeDist), _statChargeDist, value);
                 _statChargeDist = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1764,6 +1819,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(StatFireDelay), _statFireDelay, value);
                 _statFireDelay = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1778,6 +1834,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(StatFood), _statFood, value);
                 _statFood = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1792,6 +1849,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(StatFoodSec), _statFoodSec, value);
                 _statFoodSec = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1806,6 +1864,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(RecruitTime), _recruitTime, value);
                 _recruitTime = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1820,6 +1879,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(RecruitCost), _recruitCost, value);
                 _recruitCost = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1834,6 +1894,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(Upkeep), _upkeep, value);
                 _upkeep = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1848,6 +1909,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(WpnCost), _wpnCost, value);
                 _wpnCost = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1862,6 +1924,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(ArmourCost), _armourCost, value);
                 _armourCost = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1876,6 +1939,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(CustomCost), _customCost, value);
                 _customCost = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1890,6 +1954,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(CustomLimit), _customLimit, value);
                 _customLimit = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1904,6 +1969,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(CustomIncrease), _customIncrease, value);
                 _customIncrease = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1918,6 +1984,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(MoveSpeed), _moveSpeed, value);
                 _moveSpeed = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1932,16 +1999,8 @@ namespace ModdingTool
             {
                 AddChange(nameof(StatStl), _statStl, value);
                 _statStl = value;
+                NotifyPropertyChanged();
             }
-        }
-        
-        /// <summary>
-        /// Gets or sets the Armour Upgrade Levels of the unit. This is an array of integers representing the different levels of armour upgrades a unit can have.
-        /// </summary>
-        public int[]? ArmourUgLevels
-        {
-            get => _armourUgLevels;
-            set => _armourUgLevels = value;
         }
 
         /// <summary>
@@ -1956,6 +2015,7 @@ namespace ModdingTool
                 if (value == null) return;
                 AddChange(nameof(ArmourlvlBase), _armourlvlBase ?? "", value);
                 _armourlvlBase = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1971,6 +2031,7 @@ namespace ModdingTool
                 if (value == null) return;
                 AddChange(nameof(ArmourlvlOne), _armourlvlOne ?? "", value);
                 _armourlvlOne = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -1986,6 +2047,7 @@ namespace ModdingTool
                 if (value == null) return;
                 AddChange(nameof(ArmourlvlTwo), _armourlvlTwo ?? "", value);
                 _armourlvlTwo = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -2001,16 +2063,8 @@ namespace ModdingTool
                 if (value == null) return;
                 AddChange(nameof(ArmourlvlThree), _armourlvlThree ?? "", value);
                 _armourlvlThree = value;
+                NotifyPropertyChanged();
             }
-        }
-
-        /// <summary>
-        /// Gets or sets the Armour Upgrade Models of the unit. This is an array of strings representing the different models of armour upgrades a unit can have.
-        /// </summary>
-        public string?[]? ArmourUgModels
-        {
-            get => _armourUgModels;
-            set => _armourUgModels = value;
         }
 
         /// <summary>
@@ -2027,6 +2081,7 @@ namespace ModdingTool
                     ErrorDb.AddError($"Armour model {value} does not exist.");
                 AddChange(nameof(ArmourModelBase), _armourModelBase ?? "", value);
                 _armourModelBase = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -2044,6 +2099,7 @@ namespace ModdingTool
                     ErrorDb.AddError($"Armour model {value} does not exist.");
                 AddChange(nameof(ArmourModelOne), _armourModelOne ?? "", value);
                 _armourModelOne = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -2061,6 +2117,7 @@ namespace ModdingTool
                     ErrorDb.AddError($"Armour model {value} does not exist.");
                 AddChange(nameof(ArmourModelTwo), _armourModelTwo ?? "", value);
                 _armourModelTwo = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -2078,17 +2135,14 @@ namespace ModdingTool
                     ErrorDb.AddError($"Armour model {value} does not exist.");
                 AddChange(nameof(ArmourModelThree), _armourModelThree ?? "", value);
                 _armourModelThree = value;
+                NotifyPropertyChanged();
             }
         }
 
         /// <summary>
         /// Gets or sets the Ownership of the unit. This is a list of strings representing the factions that own the unit.
         /// </summary>
-        public List<string> Ownership
-        {
-            get => _ownership;
-            set => _ownership = value;
-        }
+        public List<string> Ownership { get; set; } = new();
 
         /// <summary>
         /// Adds a new faction to the Ownership of the unit. If the faction already exists in the Ownership, it will not be added.
@@ -2104,11 +2158,7 @@ namespace ModdingTool
         /// <summary>
         /// Gets or sets the EraZero of the unit. This is a list of strings representing the factions that own the unit in EraZero.
         /// </summary>
-        public List<string> EraZero
-        {
-            get => _eraZero;
-            set => _eraZero = value;
-        }
+        public List<string> EraZero { get; set; } = new List<string>();
 
         /// <summary>
         /// Adds a new faction to the EraZero of the unit. If the faction already exists in the EraZero, it will not be added.
@@ -2124,11 +2174,7 @@ namespace ModdingTool
         /// <summary>
         /// Gets or sets the EraOne of the unit. This is a list of strings representing the factions that own the unit in EraOne.
         /// </summary>
-        public List<string> EraOne
-        {
-            get => _eraOne;
-            set => _eraOne = value;
-        }
+        public List<string> EraOne { get; set; } = new List<string>();
 
         /// <summary>
         /// Adds a new faction to the EraOne of the unit. If the faction already exists in the EraOne, it will not be added.
@@ -2144,11 +2190,7 @@ namespace ModdingTool
         /// <summary>
         /// Gets or sets the EraTwo of the unit. This is a list of strings representing the factions that own the unit in EraTwo.
         /// </summary>
-        public List<string> EraTwo
-        {
-            get => _eraTwo;
-            set => _eraTwo = value;
-        }
+        public List<string> EraTwo { get; set; } = new List<string>();
 
         /// <summary>
         /// Adds a new faction to the EraTwo of the unit. If the faction already exists in the EraTwo, it will not be added.
@@ -2172,6 +2214,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(RecruitPriorityOffset),_recruitPriorityOffset, value);
                 _recruitPriorityOffset = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -2187,6 +2230,7 @@ namespace ModdingTool
                 if (value == null) return;
                 AddChange(nameof(InfoDict),_infoDict ?? "", value);
                 _infoDict = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -2202,6 +2246,7 @@ namespace ModdingTool
                 if (value == null) return;
                 AddChange(nameof(CardDict),_cardDict ?? "", value);
                 _cardDict = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -2219,6 +2264,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(CrusadeUpkeep),_crusadeUpkeep, value);
                 _crusadeUpkeep = value;
+                NotifyPropertyChanged();
             }
         }
             
@@ -2233,6 +2279,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(SpacingRanks),_spacingRanks, value);
                 _spacingRanks = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -2247,6 +2294,7 @@ namespace ModdingTool
             {
                 AddChange(nameof(LockMorale),_lockMorale, value);
                 _lockMorale = value;
+                NotifyPropertyChanged();
             }
         }
         
@@ -2259,8 +2307,10 @@ namespace ModdingTool
             get => _priFireType;
             set
             {
-                AddChange(nameof(PriFireType),_priFireType, value);
+                if (value == null) return;
+                AddChange(nameof(PriFireType),_priFireType ?? "", value);
                 _priFireType = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -2273,8 +2323,10 @@ namespace ModdingTool
             get => _secFireType;
             set
             {
-                AddChange(nameof(SecFireType),_secFireType, value);
+                if (value == null) return;
+                AddChange(nameof(SecFireType),_secFireType ?? "", value);
                 _secFireType = value;
+                NotifyPropertyChanged();
             }
         }
         
@@ -2287,8 +2339,10 @@ namespace ModdingTool
             get => _terFireType;
             set
             {
-                AddChange(nameof(TerFireType),_terFireType, value);
+                if (value == null) return;
+                AddChange(nameof(TerFireType),_terFireType ?? "", value);
                 _terFireType = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -2304,6 +2358,7 @@ namespace ModdingTool
                 if (value == null) return;
                 AddChange(nameof(Descr),_descr ?? "", value);
                 _descr = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -2318,71 +2373,39 @@ namespace ModdingTool
                 if (value == null) return;
                 AddChange(nameof(DescrShort),_descrShort ?? "", value);
                 _descrShort = value;
+                NotifyPropertyChanged();
             }
         }
 
         /// <summary>
         /// Represents a card for a unit in a game.
         /// </summary>
-        public string Card
-        {
-            get => _card;
-            set => _card = value;
-        }
+        public string Card { get; set; } = "";
 
         /// <summary>
         /// Gets or sets the MercenaryUnit property of the unit. This is a boolean indicating whether the unit is a mercenary.
         /// </summary>
-        public bool MercenaryUnit
-        {
-            get => _mercenaryUnit;
-            set => _mercenaryUnit = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the GeneralUnit property of the unit. This is a boolean indicating whether the unit is a general.
-        /// </summary>
-        public bool GeneralUnit
-        {
-            get => _generalUnit;
-            set => _generalUnit = value;
-        }
+        public bool MercenaryUnit { get; set; }
 
         /// <summary>
         /// Gets or sets the IsEopUnit property of the unit. This is a boolean indicating whether the unit is an EopUnit.
         /// </summary>
-        public bool IsEopUnit
-        {
-            get => _isEopUnit;
-            set => _isEopUnit = value;
-        }
+        public bool IsEopUnit { get; init; }
 
         /// <summary>
         /// Gets or sets the FilePath of the unit. This is a string representing the file path of the unit.
         /// </summary>
-        public string FilePath
-        {
-            get => _filePath;
-            set => _filePath = value;
-        }
+        public string FilePath { get; set; } = "";
 
         /// <summary>
         /// Gets or sets the EduIndex of the unit. This is an integer representing the education index of the unit.
         /// </summary>
-        public int EduIndex
-        {
-            get => _eduIndex;
-            set => _eduIndex = value;
-        }
+        public int EduIndex { get; set; }
 
         /// <summary>
         /// Gets or sets the AiUnitValue of the unit. This is a double representing the AI unit value of the unit.
         /// </summary>
-        public double AiUnitValue
-        {
-            get => _aiUnitValue;
-            set => _aiUnitValue = value;
-        }
+        public double AiUnitValue { get; set; }
 
         /// <summary>
         /// Gets the value per cost ratio of the unit.
@@ -2410,7 +2433,7 @@ namespace ModdingTool
 
         /// <summary>
         /// Gets or sets the symbol representing the faction.
-        /// </summary
+        /// </summary>
         public string FactionSymbol { get; set; } = "";
 
         #endregion
@@ -2432,7 +2455,7 @@ namespace ModdingTool
         /// <param name="name">The name of the new Unit object.</param>
         /// <param name="localizedName">The localized name of the new Unit object.</param>
         /// <param name="unit">The Unit object to clone.</param>
-        /// <returns>A cloned Unit object with the specified name and localized name.</returns
+        /// <returns>A cloned Unit object with the specified name and localized name.</returns>
         public static Unit? CloneUnit(string name, string localizedName, Unit unit)
         {
             if (ModData.Units.Contains(name))
@@ -2479,7 +2502,7 @@ namespace ModdingTool
         /// This method uses a switch statement to determine which attribute to return based on the provided identifier.
         /// It handles every edu field.
         /// </remarks>
-        public override string GetTypeTextField(string identifier)
+        protected override string GetTypeTextField(string identifier)
         {
             return identifier switch
             {
@@ -2678,7 +2701,7 @@ namespace ModdingTool
                 }
                 else
                 {
-                    double rangeModifier = PriRange <= 200 ? PriRange * 0.02 : 4.0;
+                    var rangeModifier = PriRange <= 200 ? PriRange * 0.02 : 4.0;
                     attackValue = PriAttack * 0.5 * rangeModifier + PriAttack * 0.5;
                     if (PriAttr != null && PriAttr.Contains("ap"))
                     {
@@ -2689,19 +2712,19 @@ namespace ModdingTool
                     hasMissileModifier = 0.8;
                 }
             }
-            double statsTotal = attackValue + (4 * PriArmour) + (2 * PriDefense) + (2 * PriShield);
+            var statsTotal = attackValue + (4 * PriArmour) + (2 * PriDefense) + (2 * PriShield);
 
-            const double MAX_MORALE = 12.0;
-            const double ADJUSTMENT_SCALE = 0.55;
-            const double BASE_OFFSET = 0.25;
+            const double maxMorale = 12.0;
+            const double adjustmentScale = 0.55;
+            const double baseOffset = 0.25;
 
-            double moraleValue = Math.Clamp(Morale, 0.0, MAX_MORALE);
-            double normalizedMorale = moraleValue / MAX_MORALE;
-            double adjustedMorale = normalizedMorale * ADJUSTMENT_SCALE + BASE_OFFSET;
-            double moraleEffect = 1.0 - adjustedMorale;
+            var moraleValue = Math.Clamp(Morale, 0.0, maxMorale);
+            var normalizedMorale = moraleValue / maxMorale;
+            var adjustedMorale = normalizedMorale * adjustmentScale + baseOffset;
+            var moraleEffect = 1.0 - adjustedMorale;
 
-            double moraleModifier = 1.0 - (moraleEffect * hasMissileModifier);
-            double extrasStats = 0.0;
+            var moraleModifier = 1.0 - (moraleEffect * hasMissileModifier);
+            var extrasStats = 0.0;
             if (Category != null)
             {
                 switch (Category)

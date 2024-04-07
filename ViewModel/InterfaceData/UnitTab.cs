@@ -13,7 +13,7 @@ using ImageFormat = Pfim.ImageFormat;
 
 namespace ModdingTool.View.InterfaceData;
 
-public class UnitTab : ITab.Tab
+public partial class UnitTab : Tab
 {
     public static Dictionary<string, string> UnitUiText { get; set; } = new Dictionary<string, string>()
         {

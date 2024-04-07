@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Toolkit.Uwp.Notifications;
 
 namespace ModdingTool;
 
@@ -14,6 +15,8 @@ public class Errors
 
     public void AddError(string error)
     {
+        if (!Globals.IsParsing)
+            new ToastContentBuilder().AddText("Error").AddText(error).Show();
         ErrorList.Add(error);
         Console.WriteLine(error);
         Console.WriteLine(@"====================================================================================");

@@ -4,7 +4,7 @@ using static ModdingTool.Globals;
 
 namespace ModdingTool.View.InterfaceData
 {
-    public class MountTab : ITab.Tab
+    public partial class MountTab : Tab
     {
         public Mount SelectedMount { get; set; }
         public static string[] ModelEntries { get; set; }

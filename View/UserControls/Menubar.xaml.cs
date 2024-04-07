@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Forms;
+using Microsoft.Toolkit.Uwp.Notifications;
 using ModToolLib;
 using ModdingTool.API;
 using static ModdingTool.Globals;
@@ -104,8 +105,6 @@ namespace ModdingTool.View.UserControls
             var logWindow = new ErrorLog();
             logWindow.Show();
             logWindow.WriteErrors();
-            var classs = new Class1();
-            Print(classs.Add(1, 1).ToString());
         }
 
         private void ChangeLog_Click(object sender, RoutedEventArgs e)

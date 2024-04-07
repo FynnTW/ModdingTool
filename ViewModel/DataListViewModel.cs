@@ -60,7 +60,7 @@ namespace ModdingTool.ViewModel
             if (Selected == "")
                 return;
             OpenTabType = SelectedType;
-            ITab? addedTab = SelectedType switch
+            Tab? addedTab = SelectedType switch
             {
                 "Units" => new UnitTab(Selected),
                 "Model Entries" => new ModelDbTab(Selected),
@@ -78,7 +78,7 @@ namespace ModdingTool.ViewModel
         {
             if (type == "")
                 return;
-            ITab? addedTab = type switch
+            Tab? addedTab = type switch
             {
                 "Units" => new UnitTab(name),
                 "Model Entries" => new ModelDbTab(name),
@@ -128,9 +128,9 @@ namespace ModdingTool.ViewModel
 
     public class TabPickedEventArgs
     {
-        public ITab SelectedTab { get; }
+        public Tab SelectedTab { get; }
 
-        public TabPickedEventArgs(ITab selectedTab)
+        public TabPickedEventArgs(Tab selectedTab)
         {
             SelectedTab = selectedTab;
         }
