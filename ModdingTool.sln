@@ -5,8 +5,6 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModdingTool", "ModdingTool.csproj", "{11CA8524-4557-4E75-BCFE-5076F7020A28}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ModToolLib", "ModToolLib\ModToolLib.vcxproj", "{35A43005-409D-4592-8ED7-79C8636EC18F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
