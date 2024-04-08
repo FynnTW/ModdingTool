@@ -5,7 +5,7 @@ using System;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace ModdingTool.View.InterfaceData;
+namespace ModdingTool.ViewModel.InterfaceData;
 
  public abstract class Tab : ObservableObject
  {

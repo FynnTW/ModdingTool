@@ -78,62 +78,62 @@ namespace ModdingTool
         /// <summary>
         /// An array of strings representing the different categories a unit can belong to.
         /// </summary>
-        private static readonly string[] Categories = { "infantry", "cavalry", "siege", "handler", "ship", "non_combatant" };
+        public static readonly string[] Categories = { "infantry", "cavalry", "siege", "handler", "ship", "non_combatant" };
 
         /// <summary>
         /// An array of strings representing the different classes a unit can belong to.
         /// </summary>
-        private static readonly string[] Classes = { "light", "heavy", "missile", "spearmen", "skirmish" };
+        public static readonly string[] Classes = { "light", "heavy", "missile", "spearmen", "skirmish" };
 
         /// <summary>
         /// An array of strings representing the different types of damage a unit can inflict.
         /// </summary>
-        private static readonly string[] DamageTypes = { "piercing", "slashing", "blunt", "fire" };
+        public static readonly string[] DamageTypes = { "piercing", "slashing", "blunt", "fire" };
 
         /// <summary>
         /// An array of strings representing the different types of weapons a unit can use.
         /// </summary>
-        private static readonly string[] WeaponTypes = { "melee", "thrown", "missile", "siege_missile", "no" };
+        public static readonly string[] WeaponTypes = { "melee", "thrown", "missile", "siege_missile", "no" };
 
         /// <summary>
         /// An array of strings representing the different types of sounds a unit can make.
         /// </summary>
-        private static readonly string[] SoundTypes = { "none", "knife", "mace", "axe", "sword", "spear" };
+        public static readonly string[] SoundTypes = { "none", "knife", "mace", "axe", "sword", "spear" };
 
         /// <summary>
         /// An array of strings representing the different types of voices a unit can have.
         /// </summary>
-        private static readonly string[] VoiceTypes = { "general", "heavy", "medium", "light", "female", "general_1", "heavy_1", "medium_1", "light_1", "female_1" };
+        public static readonly string[] VoiceTypes = { "general", "heavy", "medium", "light", "female", "general_1", "heavy_1", "medium_1", "light_1", "female_1" };
 
         /// <summary>
         /// An array of strings representing the different types of sound effects a unit can make.
         /// </summary>
-        private static readonly string[] SoundTypesDef = { "flesh", "leather", "ground", "building", "metal" };
+        public static readonly string[] SoundTypesDef = { "flesh", "leather", "ground", "building", "metal" };
         
         /// <summary>
         /// An array of strings representing the different technology types a unit can have.
         /// </summary>
-        private static readonly string[] TechTypes = { "melee_simple", "missile_mechanical", "melee_blade", "missile_gunpowder", "artillery_mechanical", "artillery_gunpowder" };
+        public static readonly string[] TechTypes = { "melee_simple", "missile_mechanical", "melee_blade", "missile_gunpowder", "artillery_mechanical", "artillery_gunpowder" };
 
         /// <summary>
         /// A list of strings representing the different formation styles a unit can adopt.
         /// </summary>
-        private static readonly List<string> FormationStyles = new (){ "square", "horde", "phalanx" };
+        public static readonly List<string> FormationStyles = new (){ "square", "horde", "phalanx" };
 
         /// <summary>
         /// A list of strings representing the different special formation styles a unit can adopt.
         /// </summary>
-        private static readonly List<string> SpecialFormationStyles = new (){ "wedge", "phalanx", "schiltrom", "shield_wall" };
+        public static readonly List<string> SpecialFormationStyles = new (){ "wedge", "phalanx", "schiltrom", "shield_wall" };
 
         /// <summary>
         /// A list of strings representing the different attack attributes a unit can have.
         /// </summary>
-        private static readonly List<string> AttackAttr = new (){ "spear", "light_spear", "prec", "ap", "bp", "area", "fire", "launching", "thrown", "short_pike", "long_pike", "spear_bonus_12", "spear_bonus_10", "spear_bonus_8", "spear_bonus_6", "spear_bonus_4" };
+        public static readonly List<string> AttackAttr = new (){ "spear", "light_spear", "prec", "ap", "bp", "area", "fire", "launching", "thrown", "short_pike", "long_pike", "spear_bonus_12", "spear_bonus_10", "spear_bonus_8", "spear_bonus_6", "spear_bonus_4" };
 
         /// <summary>
         /// An array of strings representing the different discipline types a unit can have.
         /// </summary>
-        private static readonly string[] DisciplineTypes = { "impetuous", "normal", "disciplined", "berserker","low" };
+        public static readonly string[] DisciplineTypes = { "impetuous", "normal", "disciplined", "berserker","low" };
 
         /// <summary>
         /// An array of strings representing the different training levels a unit can have.
@@ -589,7 +589,7 @@ namespace ModdingTool
             set
             {
                 if (value == null) return;
-                if (!ModData.BattleModelDb.Contains(value))
+                if (!string.IsNullOrWhiteSpace(value) && !ModData.BattleModelDb.Contains(value))
                     ErrorDb.AddError($"Officer {value} does not exist in battle models database.");
                 AddChange(nameof(Officer1), _officer1, value);
                 _officer1 = value;
@@ -607,7 +607,7 @@ namespace ModdingTool
             set
             {
                 if (value == null) return;
-                if (!ModData.BattleModelDb.Contains(value))
+                if (!string.IsNullOrWhiteSpace(value) && !ModData.BattleModelDb.Contains(value))
                     ErrorDb.AddError($"Officer {value} does not exist in battle models database.");
                 AddChange(nameof(Officer2), _officer2, value);
                 _officer2 = value;
@@ -625,7 +625,7 @@ namespace ModdingTool
             set
             {
                 if (value == null) return;
-                if (!ModData.BattleModelDb.Contains(value))
+                if (!string.IsNullOrWhiteSpace(value) && !ModData.BattleModelDb.Contains(value))
                     ErrorDb.AddError($"Officer {value} does not exist in battle models database.");
                 AddChange(nameof(Officer3), _officer3, value);
                 _officer3 = value;
@@ -658,7 +658,7 @@ namespace ModdingTool
             set
             {
                 if (value == null) return;
-                if (!MountDataBase.ContainsKey(value))
+                if (!string.IsNullOrWhiteSpace(value) && !MountDataBase.ContainsKey(value))
                     ErrorDb.AddError($"Mount {value} does not exist in mounts database.");
                 AddChange(nameof(Mount), _mount, value);
                 _mount = value;
@@ -816,7 +816,7 @@ namespace ModdingTool
             set
             {
                 if (value == null) return;
-                if (!SpecialFormationStyles.Contains(value.ToLower()))
+                if (!string.IsNullOrWhiteSpace(value) && !SpecialFormationStyles.Contains(value.ToLower()))
                 {
                     ErrorDb.AddError($"Special formation {value} does not exist.");
                     return;
@@ -2095,7 +2095,7 @@ namespace ModdingTool
             set
             {
                 if (value == null) return;
-                if (!ModData.BattleModelDb.Contains(value.ToLower()))
+                if (!string.IsNullOrWhiteSpace(value) && !ModData.BattleModelDb.Contains(value.ToLower()))
                     ErrorDb.AddError($"Armour model {value} does not exist.");
                 AddChange(nameof(ArmourModelOne), _armourModelOne ?? "", value);
                 _armourModelOne = value;
@@ -2113,7 +2113,7 @@ namespace ModdingTool
             set
             {
                 if (value == null) return;
-                if (!ModData.BattleModelDb.Contains(value.ToLower()))
+                if (!string.IsNullOrWhiteSpace(value) && !ModData.BattleModelDb.Contains(value.ToLower()))
                     ErrorDb.AddError($"Armour model {value} does not exist.");
                 AddChange(nameof(ArmourModelTwo), _armourModelTwo ?? "", value);
                 _armourModelTwo = value;
@@ -2131,7 +2131,7 @@ namespace ModdingTool
             set
             {
                 if (value == null) return;
-                if (!ModData.BattleModelDb.Contains(value.ToLower()))
+                if (!string.IsNullOrWhiteSpace(value) && !ModData.BattleModelDb.Contains(value.ToLower()))
                     ErrorDb.AddError($"Armour model {value} does not exist.");
                 AddChange(nameof(ArmourModelThree), _armourModelThree ?? "", value);
                 _armourModelThree = value;

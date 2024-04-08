@@ -1,0 +1,277 @@
+﻿<UserControl
+    d:DataContext="{d:DesignInstance mvvm:UnitTab}"
+    d:DesignHeight="1080"
+    d:DesignWidth="1920"
+    mc:Ignorable="d"
+    x:Class="ModdingTool.View.UserControls.NewUnitView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:ModdingTool.View.UserControls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mvvm="clr-namespace:ModdingTool.ViewModel.InterfaceData"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources />
+    <Grid>
+        <Grid.Background>
+            <ImageBrush
+                AlignmentX="Center"
+                AlignmentY="Top"
+                ImageSource="pack://application:,,,/Images/blank_parchment.jpg" />
+        </Grid.Background>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="33*" />
+            <ColumnDefinition Width="33*" />
+            <ColumnDefinition Width="33*" />
+        </Grid.ColumnDefinitions>
+        <!--  First Column  -->
+        <StackPanel Grid.Column="0">
+            <Expander
+                FontFamily="Nirmala UI"
+                Foreground="Azure"
+                Header="Core details"
+                HorizontalAlignment="Stretch"
+                IsExpanded="True"
+                VerticalAlignment="Top">
+                <!--  Core details  -->
+                <StackPanel Orientation="Vertical">
+                    <!--  Edu Type  -->
+                    <local:LabelledFormTextInput
+                        InputText="{Binding SelectedUnit.Type}"
+                        LabelText="{Binding UnitUiText[Type]}"
+                        ToolTip="The unique identifier for this unit. Non unique values are not allowed and will not be accepted."
+                        VerticalAlignment="Center"
+                        x:Name="Type" />
+                    <!--  Dictionary  -->
+                    <local:LabelledFormTextInput
+                        InputText="{Binding SelectedUnit.Dictionary}"
+                        LabelText="{Binding UnitUiText[Dictionary]}"
+                        ToolTip="The name used to look up the localization strings and the unit cards for this unit."
+                        VerticalAlignment="Center"
+                        x:Name="Dictionary" />
+                    <!--  Class  -->
+                    <local:LabelledFormComboInput
+                        ItemsSource="{Binding Classes}"
+                        LabelText="{Binding UnitUiText[ClassType]}"
+                        SelectedItem="{Binding SelectedUnit.ClassType}"
+                        ToolTip="The class this unit belongs to."
+                        VerticalAlignment="Center"
+                        x:Name="ClassType" />
+                    <!--  Category  -->
+                    <local:LabelledFormComboInput
+                        ItemsSource="{Binding Categories}"
+                        LabelText="{Binding UnitUiText[Category]}"
+                        SelectedItem="{Binding SelectedUnit.Category}"
+                        ToolTip="The category this unit belongs to."
+                        VerticalAlignment="Center"
+                        x:Name="Category" />
+                </StackPanel>
+            </Expander>
+            <Expander
+                Foreground="Azure"
+                Header="Voice Options"
+                HorizontalAlignment="Stretch"
+                IsExpanded="True"
+                VerticalAlignment="Top">
+                <!--  Voice Options  -->
+                <StackPanel Orientation="Vertical">
+                    <!--  Voice Type  -->
+                    <local:LabelledFormComboInput
+                        ItemsSource="{Binding VoiceTypes}"
+                        LabelText="{Binding UnitUiText[VoiceType]}"
+                        SelectedItem="{Binding SelectedUnit.VoiceType}"
+                        ToolTip="The voice type this unit uses. Note that units that are captains or generals will always use the general voice type."
+                        VerticalAlignment="Center"
+                        x:Name="VoiceType" />
+                    <!--  Accent  -->
+                    <local:LabelledFormTextInput
+                        InputText="{Binding SelectedUnit.Accent}"
+                        LabelText="{Binding UnitUiText[Accent]}"
+                        ToolTip="The accent this unit uses."
+                        VerticalAlignment="Center"
+                        x:Name="Accent" />
+                </StackPanel>
+            </Expander>
+            <Expander
+                Foreground="Azure"
+                Header="Models"
+                HorizontalAlignment="Stretch"
+                IsExpanded="True"
+                VerticalAlignment="Top">
+                <!--  Models  -->
+                <StackPanel Orientation="Vertical">
+                    <!--  Soldier  -->
+                    <local:LabelledFormComboInput
+                        IsEditable="True"
+                        ItemsSource="{Binding ModelEntries}"
+                        LabelText="{Binding UnitUiText[Soldier]}"
+                        SelectedItem="{Binding SelectedUnit.Soldier}"
+                        ToolTip="The BMDB entry the unit will use for it's animations."
+                        VerticalAlignment="Center"
+                        x:Name="Soldier" />
+                    <!--  Base Model  -->
+                    <local:LabelledFormComboInput
+                        IsEditable="True"
+                        ItemsSource="{Binding ModelEntries}"
+                        LabelText="{Binding UnitUiText[ArmourModelBase]}"
+                        SelectedItem="{Binding SelectedUnit.ArmourModelBase}"
+                        ToolTip="The BMDB entry the unit will use as it's base model."
+                        VerticalAlignment="Center"
+                        x:Name="ArmourModelBase" />
+                    <Expander
+                        Foreground="Azure"
+                        Header="Upgrade Models"
+                        HorizontalAlignment="Stretch"
+                        IsExpanded="False"
+                        VerticalAlignment="Top">
+                        <!--  Upgrade Models  -->
+                        <StackPanel Orientation="Vertical">
+                            <!--  ArmourModelOne  -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="50*" />
+                                    <ColumnDefinition Width="15*" />
+                                    <ColumnDefinition Width="25*" />
+                                </Grid.ColumnDefinitions>
+                                <local:LabelledFormComboInput
+                                    IsEditable="True"
+                                    ItemsSource="{Binding ModelEntries}"
+                                    LabelText="{Binding UnitUiText[ArmourModelOne]}"
+                                    SelectedItem="{Binding SelectedUnit.ArmourModelOne}"
+                                    ToolTip="The first upgrade model this unit uses."
+                                    VerticalAlignment="Center"
+                                    x:Name="ArmourModelOne" />
+                                <ui:TextBlock Grid.Column="1" Text="Levels" />
+                                <ui:TextBox
+                                    Grid.Column="2"
+                                    HorizontalAlignment="Stretch"
+                                    Text="{Binding SelectedUnit.ArmourlvlOne}"
+                                    x:Name="ArmourlvlOne" />
+                            </Grid>
+                            <!--  ArmourModelTwo  -->
+                            <local:LabelledFormComboInput
+                                IsEditable="True"
+                                ItemsSource="{Binding ModelEntries}"
+                                LabelText="{Binding UnitUiText[ArmourModelTwo]}"
+                                SelectedItem="{Binding SelectedUnit.ArmourModelTwo}"
+                                ToolTip="The second upgrade model this unit uses."
+                                VerticalAlignment="Center"
+                                x:Name="ArmourModelTwo" />
+                            <!--  ArmourModelThree  -->
+                            <local:LabelledFormComboInput
+                                IsEditable="True"
+                                ItemsSource="{Binding ModelEntries}"
+                                LabelText="{Binding UnitUiText[ArmourModelThree]}"
+                                SelectedItem="{Binding SelectedUnit.ArmourModelThree}"
+                                ToolTip="The third upgrade model this unit uses."
+                                VerticalAlignment="Center"
+                                x:Name="ArmourModelThree" />
+                        </StackPanel>
+                    </Expander>
+                    <Expander
+                        Foreground="Azure"
+                        Header="Officers"
+                        HorizontalAlignment="Stretch"
+                        IsExpanded="False"
+                        VerticalAlignment="Top">
+                        <!--  Officers  -->
+                        <StackPanel Orientation="Vertical">
+                            <!--  Officer1  -->
+                            <local:LabelledFormComboInput
+                                IsEditable="True"
+                                ItemsSource="{Binding ModelEntries}"
+                                LabelText="{Binding UnitUiText[Officer1]}"
+                                SelectedItem="{Binding SelectedUnit.Officer1}"
+                                ToolTip="The first officer this unit uses."
+                                VerticalAlignment="Center"
+                                x:Name="Officer1" />
+                            <!--  Officer2  -->
+                            <local:LabelledFormComboInput
+                                IsEditable="True"
+                                ItemsSource="{Binding ModelEntries}"
+                                LabelText="{Binding UnitUiText[Officer2]}"
+                                SelectedItem="{Binding SelectedUnit.Officer2}"
+                                ToolTip="The second officer this unit uses."
+                                VerticalAlignment="Center"
+                                x:Name="Officer2" />
+                            <!--  Officer3  -->
+                            <local:LabelledFormComboInput
+                                IsEditable="True"
+                                ItemsSource="{Binding ModelEntries}"
+                                LabelText="{Binding UnitUiText[Officer3]}"
+                                SelectedItem="{Binding SelectedUnit.Officer3}"
+                                ToolTip="The third officer this unit uses."
+                                VerticalAlignment="Center"
+                                x:Name="Officer3" />
+                        </StackPanel>
+                    </Expander>
+                </StackPanel>
+            </Expander>
+        </StackPanel>
+        <!--  Second Column  -->
+        <StackPanel Grid.Column="1" Orientation="Vertical">
+            <!--  Name  -->
+            <ui:TextBox
+                Background="Transparent"
+                BorderBrush="Transparent"
+                BorderThickness="0"
+                FontFamily="Nirmala UI"
+                FontSize="28"
+                Grid.Column="1"
+                HorizontalAlignment="Stretch"
+                Text="{Binding SelectedUnit.LocalizedName}"
+                TextAlignment="Center"
+                VerticalAlignment="Top" />
+            <!--  Info Card  -->
+            <Image
+                HorizontalAlignment="Center"
+                Source="{Binding UnitInfoImage}"
+                Stretch="None"
+                VerticalAlignment="Top" />
+        </StackPanel>
+        <StackPanel Grid.Column="2">
+            <Grid HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="92" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <!--  Unit Card  -->
+                <Border BorderBrush="Black" BorderThickness="2">
+                    <Image
+                        Height="128"
+                        HorizontalAlignment="Center"
+                        Source="{Binding UnitImage}"
+                        VerticalAlignment="Top" />
+                </Border>
+                <!--  Short Description  -->
+                <ui:TextBox
+                    Background="{StaticResource BackgroundBrush3}"
+                    FontFamily="Nirmala UI"
+                    FontSize="14"
+                    Grid.Column="1"
+                    HorizontalAlignment="Stretch"
+                    MaxHeight="128"
+                    MinHeight="128"
+                    Text="{Binding SelectedUnit.DescrShort}"
+                    TextAlignment="Left"
+                    TextWrapping="Wrap"
+                    VerticalAlignment="Top" />
+            </Grid>
+            <!--  Description  -->
+            <ui:TextBox
+                Background="{StaticResource BackgroundBrush3}"
+                FontFamily="Nirmala UI"
+                FontSize="14"
+                HorizontalAlignment="Stretch"
+                HorizontalScrollBarVisibility="Auto"
+                MaxHeight="300"
+                MinHeight="300"
+                Text="{Binding SelectedUnit.Descr}"
+                TextAlignment="Left"
+                TextWrapping="Wrap"
+                VerticalAlignment="Top"
+                VerticalScrollBarVisibility="Auto" />
+        </StackPanel>
+        <!--  Third Column  -->
+    </Grid>
+</UserControl>

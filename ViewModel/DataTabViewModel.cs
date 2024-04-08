@@ -1,5 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using ModdingTool.View.InterfaceData;
+using ModdingTool.ViewModel.InterfaceData;
 using ModdingTool.View.UserControls;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

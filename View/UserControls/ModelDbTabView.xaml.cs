@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using ModdingTool.View.InterfaceData;
+using ModdingTool.ViewModel.InterfaceData;
 using static ModdingTool.Globals;
 
 namespace ModdingTool.View.UserControls

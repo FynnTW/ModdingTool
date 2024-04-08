@@ -1,4 +1,4 @@
-﻿using ModdingTool.View.InterfaceData;
+﻿using ModdingTool.ViewModel.InterfaceData;
 using ModdingTool.ViewModel;
 using Sdl.MultiSelectComboBox.EventArgs;
 using Sdl.MultiSelectComboBox.Themes.Generic;

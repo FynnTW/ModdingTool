@@ -8,7 +8,7 @@ using Microsoft.Win32;
 using Python.Runtime;
 using static ModdingTool.Globals;
 
-namespace ModdingTool.View.InterfaceData;
+namespace ModdingTool.ViewModel.InterfaceData;
 
 public partial class ModelDbTab : Tab
 {

@@ -8,10 +8,11 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using ModdingTool.Databases;
 using static ModdingTool.Globals;
 using ImageFormat = Pfim.ImageFormat;
 
-namespace ModdingTool.View.InterfaceData;
+namespace ModdingTool.ViewModel.InterfaceData;
 
 public partial class UnitTab : Tab
 {
@@ -153,80 +154,36 @@ public partial class UnitTab : Tab
             { "ValuePerCost", "Value Per Cost"},
         };
     public Unit SelectedUnit { get; set; }
-    public static string[] Categories { get; set; } = new string[] { "infantry", "cavalry", "siege", "handler", "ship", "non_combatant" };
-    public static string[] Classes { get; set; } = new string[] { "light", "heavy", "missile", "spearmen", "skirmish" };
-    public static string[] DamageTypes { get; set; } = new string[] { "piercing", "slashing", "blunt", "fire" };
-    public static string[] WeaponTypes { get; set; } = new string[] { "melee", "thrown", "missile", "siege_missile", "no" };
-    public static string[] SoundTypes { get; set; } = new string[] { "none", "knife", "mace", "axe", "sword", "spear" };
-    public static string[] VoiceTypes { get; set; } = new string[] { "General", "Heavy", "Light", "Female", "Medium" };
-    public static List<string> Factions { get; set; }
-    public static string[] ModelEntries { get; set; }
-    public static string[] MountEntries { get; set; }
-    public static string[] ProjectileEntries { get; set; }
+    public static string[] Categories => Unit.Categories;
+    public static string[] Classes => Unit.Classes;
+    public static string[] DamageTypes => Unit.DamageTypes;
+    public static string[] WeaponTypes => Unit.WeaponTypes;
+    public static string[] SoundTypes => Unit.SoundTypes;
+    public static string[] VoiceTypes => Unit.VoiceTypes;
+    public static List<string> Factions => new List<string> { "all", string.Empty }
+        .Concat(FactionDataBase.Keys)
+        .Concat(CultureDataBase.Keys)
+        .ToList();
+    public static List<string> ModelEntries => new(ModData.BattleModelDb.GetNames()) { string.Empty };
+    public static List<string> MountEntries => new(MountDataBase.Keys.ToList()) { string.Empty };
+    public static List<string> ProjectileEntries => new(ProjectileDataBase.Keys.ToList()) { "no", string.Empty };
+    
     public static string PriAnimation { get; set; }
     public static string SecAnimation { get; set; }
 
-    public static string[] SoundTypesDef { get; set; } = new string[]
-    {
-        "flesh", "leather", "ground", "building", "metal"
-    };
-    public static List<string> AttributeTypes { get; set; } = new List<string>
-    {
-        "can_withdraw",
-        "can_sap",
-        "hide_long_grass",
-        "hide_anywhere",
-        "sea_faring",
-        "gunpowder_unit",
-        "screeching_women",
-        "druid",
-        "cantabrian_circle",
-        "is_peasant",
-        "no_custom",
-        "start_not_skirmishing",
-        "fire_by_rank",
-        "gunpowder_artillery_unit",
-        "command",
-        "free_upkeep_unit",
-        "heavy",
-        "hardy",
-        "mercenary_unit",
-        "frighten_foot",
-        "frighten_mounted",
-        "very_hardy",
-        "slave",
-        "power_charge",
-        "hide_forest",
-        "can_horde",
-        "can_swim",
-        "can_formed_charge",
-        "can_feign_rout",
-        "can_run_amok",
-        "warcry",
-        "stakes",
-        "general_unit",
-        "general_unit_upgrade",
-        "legionary_name",
-        "wagon_fort",
-        "cannot_skirmish",
-        "hide_improved_forest"
-    };
-    public static string[] DisciplineTypes { get; set; } = new string[]
-    {
-        "impetuous", "normal", "disciplined", "berserker","low"
-    };
-    public static string[] TrainedTypes { get; set; } = new string[]
-    {
-        "trained", "highly_trained", "untrained"
-    };
-    public static string[] TechTypes { get; set; } = new string[] { "melee_simple", "missile_mechanical", "melee_blade", "missile_gunpowder", "artillery_mechanical", "artillery_gunpowder" };
-    public static List<string> FormationStyles { get; set; } = new List<string> { "square", "horde", "phalanx" };
-    public static List<string> SpecialFormationStyles { get; set; } = new List<string> { "wedge", "phalanx", "schiltrom", "shield_wall" };
-    public static List<string> AttackAttr { get; set; } = new List<string> { "spear", "light_spear", "prec", "ap", "bp", "area", "fire", "launching", "thrown", "short_pike", "long_pike", "spear_bonus_12", "spear_bonus_10", "spear_bonus_8", "spear_bonus_6", "spear_bonus_4" };
-    public BitmapImage UnitImage { get; set; }
-    public BitmapImage UnitInfoImage { get; set; }
-    public BitmapImage FactionSymbolImage { get; set; }
-    public string MountEffectString { get; set; } = "";
+    public static string[] SoundTypesDef => Unit.SoundTypesDef;
+    public static List<string> AttributeTypes => ModData.Units.AttributeTypes;
+    
+    public static string[] DisciplineTypes => Unit.DisciplineTypes;
+    public static string[] TrainedTypes => Unit.DisciplineTypes;
+    public static string[] TechTypes  => Unit.TechTypes;
+    public static List<string> FormationStyles => Unit.FormationStyles;
+    public static List<string> SpecialFormationStyles => Unit.SpecialFormationStyles;
+    public static List<string> AttackAttr => Unit.AttackAttr;
+    public BitmapImage UnitImage { get; set; } = new();
+    public BitmapImage UnitInfoImage { get; set; } = new();
+    public BitmapImage FactionSymbolImage { get; set; } = new();
+    public string MountEffectString => string.Join(", ", SelectedUnit.MountEffect);
     public List<string> FormationStylesX { get; set; } = new List<string> { "square", "horde", "phalanx" };
     public List<string> SpecialFormationStylesX { get; set; } = new List<string> { "wedge", "phalanx", "schiltrom", "shield_wall" };
 
@@ -239,54 +196,34 @@ public partial class UnitTab : Tab
     {
         Title = name;
         SelectedUnit = ModData.Units.Get(Title)!;
-        Factions = FactionDataBase.Keys.ToList();
-        Factions.Add("all");
-        Factions.AddRange(CultureDataBase.Keys.ToList());
-        ModelEntries = ModData.BattleModelDb.GetNames().ToArray();
-        MountEntries = MountDataBase.Keys.ToArray();
-        var projectilesList = ProjectileDataBase.Keys.ToList();
-        projectilesList.Add("no");
-        ProjectileEntries = projectilesList.ToArray();
 
-        if (!ModOptionsInstance.DisableCardImages)
+        if (ModOptionsInstance.DisableCardImages) return;
+        try
         {
-            try
-            {
-                UnitInfoImage = TgaToImageSource(SelectedUnit.CardInfo);
-            }
-            catch (Exception e)
-            {
-                ErrorDb.AddError("Error reading " + SelectedUnit.CardInfo);
-                ErrorDb.AddError(e.Message);
-            }
-            try
-            {
-                UnitImage = TgaToImageSource(SelectedUnit.Card);
-            }
-            catch (Exception e)
-            {
-                ErrorDb.AddError("Error reading " + SelectedUnit.Card);
-                ErrorDb.AddError(e.Message);
-            }
-            try
-            {
-                FactionSymbolImage = TgaToImageSource(SelectedUnit.FactionSymbol);
-            }
-            catch (Exception e)
-            {
-                ErrorDb.AddError("Error reading " + SelectedUnit.FactionSymbol);
-                ErrorDb.AddError(e.Message);
-            }
+            UnitInfoImage = TgaToImageSource(SelectedUnit.CardInfo);
         }
-
-
-        foreach (var effect in SelectedUnit.MountEffect)
+        catch (Exception e)
         {
-            MountEffectString += effect;
-            if (effect != SelectedUnit.MountEffect.Last())
-            {
-                MountEffectString += ", ";
-            }
+            ErrorDb.AddError("Error reading " + SelectedUnit.CardInfo);
+            ErrorDb.AddError(e.Message);
+        }
+        try
+        {
+            UnitImage = TgaToImageSource(SelectedUnit.Card);
+        }
+        catch (Exception e)
+        {
+            ErrorDb.AddError("Error reading " + SelectedUnit.Card);
+            ErrorDb.AddError(e.Message);
+        }
+        try
+        {
+            FactionSymbolImage = TgaToImageSource(SelectedUnit.FactionSymbol);
+        }
+        catch (Exception e)
+        {
+            ErrorDb.AddError("Error reading " + SelectedUnit.FactionSymbol);
+            ErrorDb.AddError(e.Message);
         }
     }
 
@@ -295,9 +232,7 @@ public partial class UnitTab : Tab
     private static BitmapImage TgaToImageSource(string source)
     {
         if (string.IsNullOrWhiteSpace(source))
-        {
             return null!;
-        }
         Bitmap bitmap;
         var image = Pfimage.FromFile(source, new PfimConfig(bufferSize: 65536));
 

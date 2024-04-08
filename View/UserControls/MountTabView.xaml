@@ -1,82 +1,187 @@
-﻿<UserControl x:Class="ModdingTool.View.UserControls.MountTabView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:ModdingTool.View.UserControls"
-             xmlns:mvvm="clr-namespace:ModdingTool.View.InterfaceData"
-             xmlns:mt="clr-namespace:ModdingTool"
-             xmlns:sdl="http://schemas.sdl.com/xaml"
-             mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800"
-             d:DataContext="{d:DesignInstance mvvm:MountTab}">
-    <ScrollViewer Grid.ColumnSpan="5" Grid.RowSpan="2" >
+﻿<UserControl
+    d:DataContext="{d:DesignInstance mvvm:MountTab}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="ModdingTool.View.UserControls.MountTabView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:ModdingTool.View.UserControls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mt="clr-namespace:ModdingTool"
+    xmlns:mvvm="clr-namespace:ModdingTool.ViewModel.InterfaceData"
+    xmlns:sdl="http://schemas.sdl.com/xaml"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer Grid.ColumnSpan="5" Grid.RowSpan="2">
         <Grid ColumnSpan="1" Row="0">
             <Grid.Background>
-                <ImageBrush  ImageSource="pack://application:,,,/Images/blank_parchment.jpg"
-                             AlignmentY="Top" AlignmentX="Center" />
+                <ImageBrush
+                    AlignmentX="Center"
+                    AlignmentY="Top"
+                    ImageSource="pack://application:,,,/Images/blank_parchment.jpg" />
             </Grid.Background>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="150"></ColumnDefinition>
-                <ColumnDefinition Width="250"></ColumnDefinition>
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="250" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="75*"></RowDefinition>
-                <RowDefinition Height="5*"></RowDefinition>
-                <RowDefinition Height="20*"></RowDefinition>
+                <RowDefinition Height="75*" />
+                <RowDefinition Height="5*" />
+                <RowDefinition Height="20*" />
             </Grid.RowDefinitions>
-            <StackPanel  Grid.Column="0">
-                <TextBlock Text="{Binding MountUiText[type] }" Height="25"/>
-                <TextBlock Text="{Binding MountUiText[mount_class] }" Height="25"/>
-                <TextBlock Text="{Binding MountUiText[model] }" Height="25">
+            <StackPanel Grid.Column="0">
+                <TextBlock Height="25" Text="{Binding MountUiText[type]}" />
+                <TextBlock Height="25" Text="{Binding MountUiText[mount_class]}" />
+                <TextBlock Height="25" Text="{Binding MountUiText[model]}">
                     <TextBlock.ContextMenu>
                         <ContextMenu>
-                            <MenuItem x:Name="ModelGoto" Header="Go to entry" Click="ModelGoto_OnClick"/>
+                            <MenuItem
+                                Click="ModelGoto_OnClick"
+                                Header="Go to entry"
+                                x:Name="ModelGoto" />
                         </ContextMenu>
                     </TextBlock.ContextMenu>
                 </TextBlock>
-                <TextBlock Text="{Binding MountUiText[radius] }" Height="25"/>
-                <TextBlock Text="{Binding MountUiText[x_radius] }" Height="25"/>
-                <TextBlock Text="{Binding MountUiText[y_offset] }" Height="25"/>
-                <TextBlock Text="{Binding MountUiText[height] }" Height="25"/>
-                <TextBlock Text="{Binding MountUiText[mass] }" Height="25"/>
-                <TextBlock Text="{Binding MountUiText[banner_height] }" Height="25"/>
-                <TextBlock Text="{Binding MountUiText[bouyancy_offset] }" Height="25"/>
-                <TextBlock Text="{Binding MountUiText[water_trail_effect] }" Height="25"/>
-                <TextBlock Text="{Binding MountUiText[root_node_height] }" Height="25"/>
-                <TextBlock Text="{Binding MountUiText[attack_delay] }" Height="25"/>
-                <TextBlock Text="{Binding MountUiText[dead_radius] }" Height="25"/>
-                <TextBlock Text="{Binding MountUiText[tusk_z] }" Height="25"/>
-                <TextBlock Text="{Binding MountUiText[tusk_radius] }" Height="25"/>
-                <TextBlock Text="{Binding MountUiText[riders] }" Height="25"/>
-                <TextBlock Text="Rider Offsets" Height="25"/>
-                <DataGrid  x:Name="RiderOffsetGrid" ItemsSource="{Binding SelectedMount.rider_offsets}"  AutoGenerateColumns="False" RowHeight="25" CanUserResizeRows="False" ColumnHeaderHeight="25" SizeChanged="RiderOffsetGrid_OnSizeChanged">
+                <TextBlock Height="25" Text="{Binding MountUiText[radius]}" />
+                <TextBlock Height="25" Text="{Binding MountUiText[x_radius]}" />
+                <TextBlock Height="25" Text="{Binding MountUiText[y_offset]}" />
+                <TextBlock Height="25" Text="{Binding MountUiText[height]}" />
+                <TextBlock Height="25" Text="{Binding MountUiText[mass]}" />
+                <TextBlock Height="25" Text="{Binding MountUiText[banner_height]}" />
+                <TextBlock Height="25" Text="{Binding MountUiText[bouyancy_offset]}" />
+                <TextBlock Height="25" Text="{Binding MountUiText[water_trail_effect]}" />
+                <TextBlock Height="25" Text="{Binding MountUiText[root_node_height]}" />
+                <TextBlock Height="25" Text="{Binding MountUiText[attack_delay]}" />
+                <TextBlock Height="25" Text="{Binding MountUiText[dead_radius]}" />
+                <TextBlock Height="25" Text="{Binding MountUiText[tusk_z]}" />
+                <TextBlock Height="25" Text="{Binding MountUiText[tusk_radius]}" />
+                <TextBlock Height="25" Text="{Binding MountUiText[riders]}" />
+                <TextBlock Height="25" Text="Rider Offsets" />
+                <DataGrid
+                    AutoGenerateColumns="False"
+                    CanUserResizeRows="False"
+                    ColumnHeaderHeight="25"
+                    ItemsSource="{Binding SelectedMount.rider_offsets}"
+                    RowHeight="25"
+                    SizeChanged="RiderOffsetGrid_OnSizeChanged"
+                    x:Name="RiderOffsetGrid">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="id" Binding="{Binding id}" IsReadOnly="False"/>
-                        <DataGridTextColumn Header="x" Binding="{Binding x}" IsReadOnly="False"/>
-                        <DataGridTextColumn Header="y" Binding="{Binding y}" IsReadOnly="False" />
-                        <DataGridTextColumn Header="z" Binding="{Binding z}" IsReadOnly="False"/>
+                        <DataGridTextColumn
+                            Binding="{Binding id}"
+                            Header="id"
+                            IsReadOnly="False" />
+                        <DataGridTextColumn
+                            Binding="{Binding x}"
+                            Header="x"
+                            IsReadOnly="False" />
+                        <DataGridTextColumn
+                            Binding="{Binding y}"
+                            Header="y"
+                            IsReadOnly="False" />
+                        <DataGridTextColumn
+                            Binding="{Binding z}"
+                            Header="z"
+                            IsReadOnly="False" />
                     </DataGrid.Columns>
                 </DataGrid>
             </StackPanel>
-            <StackPanel  Grid.Column="1">
-                <TextBox x:Name="type" Text="{Binding SelectedMount.type}" Height="25" HorizontalAlignment="Stretch" TextChanged="Field_OnTextChanged"/>
-                <ComboBox x:Name="mount_class" ItemsSource="{Binding MountTypes}" Height="25" HorizontalAlignment="Stretch" SelectedItem="{Binding SelectedMount.mount_class}"/>
-                <ComboBox x:Name="model" IsEditable="True" ItemsSource="{Binding ModelEntries}" Height="25" SelectedItem="{Binding SelectedMount.model}"/>
-                <TextBox x:Name="radius" Text="{Binding SelectedMount.radius}" Height="25" ></TextBox>
-                <TextBox x:Name="x_radius" Text="{Binding SelectedMount.x_radius}" Height="25"></TextBox>
-                <TextBox x:Name="y_offset" Text="{Binding SelectedMount.y_offset}" Height="25"></TextBox>
-                <TextBox x:Name="height" Text="{Binding SelectedMount.height}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
-                <TextBox x:Name="mass" Text="{Binding SelectedMount.mass}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
-                <TextBox x:Name="banner_height" Text="{Binding SelectedMount.banner_height}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
-                <TextBox x:Name="bouyancy_offset" Text="{Binding SelectedMount.bouyancy_offset}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
-                <TextBox x:Name="water_trail_effect" Text="{Binding SelectedMount.water_trail_effect}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
-                <TextBox x:Name="root_node_height" Text="{Binding SelectedMount.root_node_height}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
-                <TextBox x:Name="attack_delay" Text="{Binding SelectedMount.attack_delay}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
-                <TextBox x:Name="dead_radius" Text="{Binding SelectedMount.dead_radius}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
-                <TextBox x:Name="tusk_z" Text="{Binding SelectedMount.tusk_z}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
-                <TextBox x:Name="tusk_radius" Text="{Binding SelectedMount.tusk_radius}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
-                <TextBox x:Name="riders" Text="{Binding SelectedMount.riders}" Height="25" HorizontalAlignment="Stretch"  TextChanged="Field_OnTextChanged"/>
+            <StackPanel Grid.Column="1">
+                <TextBox
+                    Height="25"
+                    HorizontalAlignment="Stretch"
+                    Text="{Binding SelectedMount.type}"
+                    TextChanged="Field_OnTextChanged"
+                    x:Name="type" />
+                <ComboBox
+                    Height="25"
+                    HorizontalAlignment="Stretch"
+                    ItemsSource="{Binding MountTypes}"
+                    SelectedItem="{Binding SelectedMount.mount_class}"
+                    x:Name="mount_class" />
+                <ComboBox
+                    Height="25"
+                    IsEditable="True"
+                    ItemsSource="{Binding ModelEntries}"
+                    SelectedItem="{Binding SelectedMount.model}"
+                    x:Name="model" />
+                <TextBox
+                    Height="25"
+                    Text="{Binding SelectedMount.radius}"
+                    x:Name="radius" />
+                <TextBox
+                    Height="25"
+                    Text="{Binding SelectedMount.x_radius}"
+                    x:Name="x_radius" />
+                <TextBox
+                    Height="25"
+                    Text="{Binding SelectedMount.y_offset}"
+                    x:Name="y_offset" />
+                <TextBox
+                    Height="25"
+                    HorizontalAlignment="Stretch"
+                    Text="{Binding SelectedMount.height}"
+                    TextChanged="Field_OnTextChanged"
+                    x:Name="height" />
+                <TextBox
+                    Height="25"
+                    HorizontalAlignment="Stretch"
+                    Text="{Binding SelectedMount.mass}"
+                    TextChanged="Field_OnTextChanged"
+                    x:Name="mass" />
+                <TextBox
+                    Height="25"
+                    HorizontalAlignment="Stretch"
+                    Text="{Binding SelectedMount.banner_height}"
+                    TextChanged="Field_OnTextChanged"
+                    x:Name="banner_height" />
+                <TextBox
+                    Height="25"
+                    HorizontalAlignment="Stretch"
+                    Text="{Binding SelectedMount.bouyancy_offset}"
+                    TextChanged="Field_OnTextChanged"
+                    x:Name="bouyancy_offset" />
+                <TextBox
+                    Height="25"
+                    HorizontalAlignment="Stretch"
+                    Text="{Binding SelectedMount.water_trail_effect}"
+                    TextChanged="Field_OnTextChanged"
+                    x:Name="water_trail_effect" />
+                <TextBox
+                    Height="25"
+                    HorizontalAlignment="Stretch"
+                    Text="{Binding SelectedMount.root_node_height}"
+                    TextChanged="Field_OnTextChanged"
+                    x:Name="root_node_height" />
+                <TextBox
+                    Height="25"
+                    HorizontalAlignment="Stretch"
+                    Text="{Binding SelectedMount.attack_delay}"
+                    TextChanged="Field_OnTextChanged"
+                    x:Name="attack_delay" />
+                <TextBox
+                    Height="25"
+                    HorizontalAlignment="Stretch"
+                    Text="{Binding SelectedMount.dead_radius}"
+                    TextChanged="Field_OnTextChanged"
+                    x:Name="dead_radius" />
+                <TextBox
+                    Height="25"
+                    HorizontalAlignment="Stretch"
+                    Text="{Binding SelectedMount.tusk_z}"
+                    TextChanged="Field_OnTextChanged"
+                    x:Name="tusk_z" />
+                <TextBox
+                    Height="25"
+                    HorizontalAlignment="Stretch"
+                    Text="{Binding SelectedMount.tusk_radius}"
+                    TextChanged="Field_OnTextChanged"
+                    x:Name="tusk_radius" />
+                <TextBox
+                    Height="25"
+                    HorizontalAlignment="Stretch"
+                    Text="{Binding SelectedMount.riders}"
+                    TextChanged="Field_OnTextChanged"
+                    x:Name="riders" />
             </StackPanel>
         </Grid>
     </ScrollViewer>

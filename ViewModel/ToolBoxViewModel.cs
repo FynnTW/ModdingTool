@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using ModdingTool.View.InterfaceData;
+using ModdingTool.ViewModel.InterfaceData;
 using ModdingTool.View.UserControls;
 using System;
 using System.Collections.Generic;

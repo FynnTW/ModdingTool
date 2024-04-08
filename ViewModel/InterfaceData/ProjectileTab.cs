@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using static ModdingTool.Globals;
 
-namespace ModdingTool.View.InterfaceData
+namespace ModdingTool.ViewModel.InterfaceData
 {
     public partial class ProjectileTab : Tab
     {

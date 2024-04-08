@@ -2,7 +2,7 @@
 using System.Linq;
 using static ModdingTool.Globals;
 
-namespace ModdingTool.View.InterfaceData
+namespace ModdingTool.ViewModel.InterfaceData
 {
     public partial class MountTab : Tab
     {

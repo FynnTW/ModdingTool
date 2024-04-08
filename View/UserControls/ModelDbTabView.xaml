@@ -7,7 +7,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:mvvm="clr-namespace:ModdingTool.View.InterfaceData"
+    xmlns:mvvm="clr-namespace:ModdingTool.ViewModel.InterfaceData"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ScrollViewer
         FontFamily="Nirmala UI"
@@ -240,162 +240,160 @@
                             IsReadOnly="False" />
                     </DataGrid.Columns>
                 </DataGrid>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="200*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock
-                            Height="35"
-                            HorizontalAlignment="Center"
-                            Text="{Binding BmdbUiText[TorchIndex]}"
-                            TextAlignment="Center"
-                            VerticalAlignment="Center" />
-                        <TextBox
-                            Height="35"
-                            HorizontalAlignment="Center"
-                            HorizontalContentAlignment="Center"
-                            Margin="3"
-                            MinWidth="50"
-                            Text="{Binding SelectedModel.TorchIndex}"
-                            VerticalAlignment="Center"
-                            VerticalContentAlignment="Center"
-                            x:Name="TorchIndex" />
-                    </StackPanel>
+                <Expander Header="Torch details" IsExpanded="True">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Expander Header="Torch Bone" IsExpanded="True">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock
+                                    Height="35"
+                                    HorizontalAlignment="Center"
+                                    Text="{Binding BmdbUiText[TorchIndex]}"
+                                    TextAlignment="Center"
+                                    VerticalAlignment="Center" />
+                                <TextBox
+                                    Height="35"
+                                    HorizontalAlignment="Center"
+                                    HorizontalContentAlignment="Center"
+                                    Margin="3"
+                                    MinWidth="50"
+                                    Text="{Binding SelectedModel.TorchIndex}"
+                                    VerticalAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    x:Name="TorchIndex" />
+                            </StackPanel>
+                        </Expander>
 
-                    <TextBlock
-                        Grid.Column="0"
-                        Grid.Row="1"
-                        Height="35"
-                        Text="Torch Offsets" />
-                    <StackPanel
-                        Grid.Column="0"
-                        Grid.Row="2"
-                        Orientation="Horizontal">
-                        <TextBlock
-                            Height="35"
-                            HorizontalAlignment="Center"
-                            MinWidth="20"
-                            Text="X"
-                            TextAlignment="Center"
-                            VerticalAlignment="Center" />
-                        <TextBox
-                            Height="35"
-                            HorizontalAlignment="Center"
-                            HorizontalContentAlignment="Center"
-                            Margin="3"
-                            MinWidth="50"
-                            Text="{Binding SelectedModel.TorchBoneY}"
-                            VerticalAlignment="Center"
-                            VerticalContentAlignment="Center"
-                            x:Name="TorchBoneX" />
-                        <TextBlock
-                            Height="35"
-                            HorizontalAlignment="Center"
-                            MinWidth="20"
-                            Text="Y"
-                            TextAlignment="Center"
-                            VerticalAlignment="Center" />
-                        <TextBox
-                            Height="35"
-                            HorizontalAlignment="Center"
-                            HorizontalContentAlignment="Center"
-                            Margin="3"
-                            MinWidth="50"
-                            Text="{Binding SelectedModel.TorchBoneY}"
-                            VerticalAlignment="Center"
-                            VerticalContentAlignment="Center"
-                            x:Name="TorchBoneY" />
-                        <TextBlock
-                            Height="35"
-                            HorizontalAlignment="Center"
-                            MinWidth="20"
-                            Text="Z"
-                            TextAlignment="Center"
-                            VerticalAlignment="Center" />
-                        <TextBox
-                            Height="35"
-                            HorizontalAlignment="Center"
-                            HorizontalContentAlignment="Center"
-                            Margin="3"
-                            MinWidth="50"
-                            Text="{Binding SelectedModel.TorchBoneZ}"
-                            VerticalAlignment="Center"
-                            VerticalContentAlignment="Center"
-                            x:Name="TorchBoneZ" />
-                    </StackPanel>
+                        <Expander
+                            Grid.Column="0"
+                            Grid.Row="1"
+                            Header="Torch Offsets"
+                            IsExpanded="True">
 
-                    <TextBlock
-                        Grid.Column="0"
-                        Grid.Row="3"
-                        Height="35"
-                        HorizontalAlignment="Stretch"
-                        Text="Torch Sprite Offsets"
-                        VerticalAlignment="Center" />
-                    <StackPanel
-                        Grid.Column="0"
-                        Grid.Row="4"
-                        Orientation="Horizontal">
-                        <TextBlock
-                            Height="35"
-                            HorizontalAlignment="Center"
-                            MinWidth="20"
-                            Text="X"
-                            TextAlignment="Center"
-                            VerticalAlignment="Center" />
-                        <TextBox
-                            Height="35"
-                            HorizontalAlignment="Center"
-                            HorizontalContentAlignment="Center"
-                            Margin="3"
-                            MinWidth="50"
-                            Text="{Binding SelectedModel.TorchSpriteX}"
-                            VerticalAlignment="Center"
-                            VerticalContentAlignment="Center"
-                            x:Name="TorchspriteX" />
-                        <TextBlock
-                            Height="35"
-                            HorizontalAlignment="Center"
-                            MinWidth="20"
-                            Text="Y"
-                            TextAlignment="Center"
-                            VerticalAlignment="Center" />
-                        <TextBox
-                            Height="35"
-                            HorizontalAlignment="Center"
-                            HorizontalContentAlignment="Center"
-                            Margin="3"
-                            MinWidth="50"
-                            Text="{Binding SelectedModel.TorchSpriteY}"
-                            VerticalAlignment="Center"
-                            VerticalContentAlignment="Center"
-                            x:Name="TorchspriteY" />
-                        <TextBlock
-                            Height="35"
-                            HorizontalAlignment="Center"
-                            MinWidth="20"
-                            Text="Z"
-                            TextAlignment="Center"
-                            VerticalAlignment="Center" />
-                        <TextBox
-                            Height="35"
-                            HorizontalAlignment="Center"
-                            HorizontalContentAlignment="Center"
-                            Margin="3"
-                            MinWidth="50"
-                            Text="{Binding SelectedModel.TorchSpriteZ}"
-                            VerticalAlignment="Center"
-                            VerticalContentAlignment="Center"
-                            x:Name="TorchspriteZ" />
-                    </StackPanel>
-                </Grid>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock
+                                    Height="35"
+                                    HorizontalAlignment="Center"
+                                    MinWidth="20"
+                                    Text="X"
+                                    TextAlignment="Center"
+                                    VerticalAlignment="Center" />
+                                <TextBox
+                                    Height="35"
+                                    HorizontalAlignment="Center"
+                                    HorizontalContentAlignment="Center"
+                                    Margin="3"
+                                    MinWidth="50"
+                                    Text="{Binding SelectedModel.TorchBoneY}"
+                                    VerticalAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    x:Name="TorchBoneX" />
+                                <TextBlock
+                                    Height="35"
+                                    HorizontalAlignment="Center"
+                                    MinWidth="20"
+                                    Text="Y"
+                                    TextAlignment="Center"
+                                    VerticalAlignment="Center" />
+                                <TextBox
+                                    Height="35"
+                                    HorizontalAlignment="Center"
+                                    HorizontalContentAlignment="Center"
+                                    Margin="3"
+                                    MinWidth="50"
+                                    Text="{Binding SelectedModel.TorchBoneY}"
+                                    VerticalAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    x:Name="TorchBoneY" />
+                                <TextBlock
+                                    Height="35"
+                                    HorizontalAlignment="Center"
+                                    MinWidth="20"
+                                    Text="Z"
+                                    TextAlignment="Center"
+                                    VerticalAlignment="Center" />
+                                <TextBox
+                                    Height="35"
+                                    HorizontalAlignment="Center"
+                                    HorizontalContentAlignment="Center"
+                                    Margin="3"
+                                    MinWidth="50"
+                                    Text="{Binding SelectedModel.TorchBoneZ}"
+                                    VerticalAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    x:Name="TorchBoneZ" />
+                            </StackPanel>
+                        </Expander>
+
+                        <Expander
+                            Grid.Column="0"
+                            Grid.Row="2"
+                            Header="Torch Sprite Offsets">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock
+                                    Height="35"
+                                    HorizontalAlignment="Center"
+                                    MinWidth="20"
+                                    Text="X"
+                                    TextAlignment="Center"
+                                    VerticalAlignment="Center" />
+                                <TextBox
+                                    Height="35"
+                                    HorizontalAlignment="Center"
+                                    HorizontalContentAlignment="Center"
+                                    Margin="3"
+                                    MinWidth="50"
+                                    Text="{Binding SelectedModel.TorchSpriteX}"
+                                    VerticalAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    x:Name="TorchspriteX" />
+                                <TextBlock
+                                    Height="35"
+                                    HorizontalAlignment="Center"
+                                    MinWidth="20"
+                                    Text="Y"
+                                    TextAlignment="Center"
+                                    VerticalAlignment="Center" />
+                                <TextBox
+                                    Height="35"
+                                    HorizontalAlignment="Center"
+                                    HorizontalContentAlignment="Center"
+                                    Margin="3"
+                                    MinWidth="50"
+                                    Text="{Binding SelectedModel.TorchSpriteY}"
+                                    VerticalAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    x:Name="TorchspriteY" />
+                                <TextBlock
+                                    Height="35"
+                                    HorizontalAlignment="Center"
+                                    MinWidth="20"
+                                    Text="Z"
+                                    TextAlignment="Center"
+                                    VerticalAlignment="Center" />
+                                <TextBox
+                                    Height="35"
+                                    HorizontalAlignment="Center"
+                                    HorizontalContentAlignment="Center"
+                                    Margin="3"
+                                    MinWidth="50"
+                                    Text="{Binding SelectedModel.TorchSpriteZ}"
+                                    VerticalAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    x:Name="TorchspriteZ" />
+                            </StackPanel>
+                        </Expander>
+                    </Grid>
+                </Expander>
             </StackPanel>
         </Grid>
     </ScrollViewer>

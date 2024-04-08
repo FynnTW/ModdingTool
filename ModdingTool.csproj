@@ -48,6 +48,11 @@
     <None Remove="View\NewFolder\**" />
     <Page Remove="Styles\**" />
     <Page Remove="View\NewFolder\**" />
+    <Page Update="View\UserControls\LabelledFormComboInput.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

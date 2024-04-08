@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
-using ModdingTool.View.InterfaceData;
+using ModdingTool.ViewModel.InterfaceData;
 using ModdingTool.View.UserControls;
 using Newtonsoft.Json;
 using static ModdingTool.Globals;
@@ -534,7 +534,7 @@ public class UnitDb
                     break;
 
                 case "voice_type":
-                    unit.VoiceType = parts?[1]?.Trim();
+                    unit.VoiceType = parts?[1]?.Trim().ToLower();
                     break;
 
                 case "accent":
