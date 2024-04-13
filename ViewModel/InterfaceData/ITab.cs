@@ -2,6 +2,7 @@
 using ModdingTool.View.UserControls;
 using ModdingTool.ViewModel;
 using System;
+using System.Windows;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -30,8 +31,15 @@ namespace ModdingTool.ViewModel.InterfaceData;
      }
     
      public string TabType { get; set; } = "";
+     
+     private string _title;
 
-     public string Title { get; set; }
+     public string Title
+     {
+         get { return _title; }
+         set { SetProperty(ref _title, value); }
+     }
+     
      public ICommand CloseCommand { get; private set; }
      public event EventHandler CloseRequested;
 

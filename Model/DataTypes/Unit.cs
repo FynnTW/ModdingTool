@@ -149,6 +149,7 @@ namespace ModdingTool
         private string _class = "light";
         private string _voiceType = "Light";
         private string _soldier = "";
+        private BattleModel? _soldierEntry = null;
         private string? _accent;
         private string? _bannerFaction = "main_infantry";
         private string? _bannerUnit;
@@ -161,8 +162,11 @@ namespace ModdingTool
         private double _radius = 0.40;
         private double _height = 1.70;
         private string _officer1 = "";
+        private BattleModel? _officer1Entry = null;
         private string _officer2 = "";
+        private BattleModel? _officer2Entry = null;
         private string _officer3 = "";
+        private BattleModel? _officer3Entry = null;
         private string _mountedEngine = "";
         private string _mount = "";
         private string _ship = "";
@@ -242,10 +246,14 @@ namespace ModdingTool
         private string? _armourlvlOne;
         private string? _armourlvlTwo;
         private string? _armourlvlThree;
-        private string? _armourModelBase;
-        private string? _armourModelOne;
-        private string? _armourModelTwo;
-        private string? _armourModelThree;
+        private string _armourModelBase = "";
+        private BattleModel? _armourModelBaseEntry = null;
+        private string _armourModelOne = "";
+        private BattleModel? _armourModelOneEntry = null;
+        private string _armourModelTwo = "";
+        private BattleModel? _armourModelTwoEntry = null;
+        private string _armourModelThree = "";
+        private BattleModel? _armourModelThreeEntry = null;
         private double _recruitPriorityOffset;
         private string? _infoDict;
         private string? _cardDict;
@@ -479,17 +487,22 @@ namespace ModdingTool
         /// Gets or sets the soldier model for the unit. This is a string representing the soldier model a unit uses.
         /// The setter validates the input against the battle models database. If the model does not exist, an error is logged.
         /// </summary>
-        public string? Soldier
+        public string Soldier
         {
-            get => _soldier;
+            get => _soldierEntry != null ? _soldierEntry.Name : _soldier;
             set
             {
-                if (value == null) return;
-                if (!ModData.BattleModelDb.Contains(value))
-                    ErrorDb.AddError($"Soldier {value} does not exist in battle models database.");
-                AddChange(nameof(Soldier), _soldier, value);
+                if (string.IsNullOrWhiteSpace(value))
+                    return;
+                var old = _soldierEntry != null ? _soldierEntry.Name : _soldier;
+                if (old == value)
+                    return;
+                AddChange(nameof(Soldier), old, value);
+                _soldierEntry = ModData.BattleModelDb.Get(value.ToLower());
                 _soldier = value;
                 NotifyPropertyChanged();
+                if (old != value)
+                    UpdateModelUsage(old, value);
             }
         }
 
@@ -545,6 +558,8 @@ namespace ModdingTool
             get => _mass;
             set
             {
+                if (value < 0)
+                    value = 1.0;
                 AddChange(nameof(Mass), _mass, value);
                 _mass = value;
                 NotifyPropertyChanged();
@@ -559,6 +574,8 @@ namespace ModdingTool
             get => _radius;
             set
             {
+                if (value < 0)
+                    value = 0.4;
                 AddChange(nameof(Radius), _radius, value);
                 _radius = value;
                 NotifyPropertyChanged();
@@ -573,6 +590,8 @@ namespace ModdingTool
             get => _height;
             set
             {
+                if (value < 0)
+                    value = 1.7;
                 AddChange(nameof(Height), _height, value);
                 _height = value;
                 NotifyPropertyChanged();
@@ -583,17 +602,21 @@ namespace ModdingTool
         /// Gets or sets the first officer model for the unit. This is a string representing the first officer model a unit uses.
         /// The setter validates the input against the battle models database. If the model does not exist, an error is logged.
         /// </summary>
-        public string? Officer1
+        public string Officer1
         {
-            get => _officer1;
+            get => _officer1Entry != null ? _officer1Entry.Name : _officer1;
             set
             {
-                if (value == null) return;
-                if (!string.IsNullOrWhiteSpace(value) && !ModData.BattleModelDb.Contains(value))
-                    ErrorDb.AddError($"Officer {value} does not exist in battle models database.");
-                AddChange(nameof(Officer1), _officer1, value);
+                if (string.IsNullOrWhiteSpace(value))
+                    value = string.Empty;
+                var old = Officer1;
+                if (old == value)
+                    return;
+                AddChange(nameof(Officer1), old, value);
+                _officer1Entry = value != string.Empty ? ModData.BattleModelDb.Get(value.ToLower()) : null;
                 _officer1 = value;
                 NotifyPropertyChanged();
+                UpdateModelUsage(old, value);
             }
         }
 
@@ -601,17 +624,21 @@ namespace ModdingTool
         /// Gets or sets the second officer model for the unit. This is a string representing the second officer model a unit uses.
         /// The setter validates the input against the battle models database. If the model does not exist, an error is logged.
         /// </summary>
-        public string? Officer2
+        public string Officer2
         {
-            get => _officer2;
+            get => _officer2Entry != null ? _officer2Entry.Name : _officer2;
             set
             {
-                if (value == null) return;
-                if (!string.IsNullOrWhiteSpace(value) && !ModData.BattleModelDb.Contains(value))
-                    ErrorDb.AddError($"Officer {value} does not exist in battle models database.");
-                AddChange(nameof(Officer2), _officer2, value);
+                if (string.IsNullOrWhiteSpace(value))
+                    value = string.Empty;
+                var old = Officer2;
+                if (old == value)
+                    return;
+                AddChange(nameof(Officer2), old, value);
+                _officer2Entry = value != string.Empty ? ModData.BattleModelDb.Get(value.ToLower()) : null;
                 _officer2 = value;
                 NotifyPropertyChanged();
+                UpdateModelUsage(old, value);
             }
         }
 
@@ -619,17 +646,21 @@ namespace ModdingTool
         /// Gets or sets the third officer model for the unit. This is a string representing the third officer model a unit uses.
         /// The setter validates the input against the battle models database. If the model does not exist, an error is logged.
         /// </summary>
-        public string? Officer3
+        public string Officer3
         {
-            get => _officer3;
+            get => _officer3Entry != null ? _officer3Entry.Name : _officer3;
             set
             {
-                if (value == null) return;
-                if (!string.IsNullOrWhiteSpace(value) && !ModData.BattleModelDb.Contains(value))
-                    ErrorDb.AddError($"Officer {value} does not exist in battle models database.");
-                AddChange(nameof(Officer3), _officer3, value);
+                if (string.IsNullOrWhiteSpace(value))
+                    value = string.Empty;
+                var old = Officer3;
+                if (old == value)
+                    return;
+                AddChange(nameof(Officer3), old, value);
+                _officer3Entry = value != string.Empty ? ModData.BattleModelDb.Get(value.ToLower()) : null;
                 _officer3 = value;
                 NotifyPropertyChanged();
+                UpdateModelUsage(old, value);
             }
         }
 
@@ -970,7 +1001,7 @@ namespace ModdingTool
                 if (value == null) return;
                 if (!TechTypes.Contains(value.ToLower()))
                 {
-                    ErrorDb.AddError($"Weapon type {value} does not exist.");
+                    ErrorDb.AddError($"Tech type {value} does not exist.");
                     return;
                 }
                 AddChange(nameof(PriTechType), _priTechType ?? "", value);
@@ -2071,17 +2102,26 @@ namespace ModdingTool
         /// Gets or sets the base armour model of the unit. This is a string representing the base armour model a unit has.
         /// The setter validates the input against the battle models database. If the model does not exist, an error is logged.
         /// </summary>
-        public string? ArmourModelBase
+        public string ArmourModelBase
         {
-            get => _armourModelBase;
+            get
+            {
+                if (_armourModelBaseEntry != null)
+                    _armourModelBase = _armourModelBaseEntry.Name;
+                return _armourModelBase;
+            }
             set
             {
-                if (value == null) return;
-                if (!ModData.BattleModelDb.Contains(value.ToLower()))
-                    ErrorDb.AddError($"Armour model {value} does not exist.");
-                AddChange(nameof(ArmourModelBase), _armourModelBase ?? "", value);
+                if (string.IsNullOrWhiteSpace(value))
+                    return;
+                var old = _armourModelBase;
+                if (old == value)
+                    return;
+                AddChange(nameof(ArmourModelBase), old, value);
+                _armourModelBaseEntry = value != string.Empty ? ModData.BattleModelDb.Get(value.ToLower()) : null;
                 _armourModelBase = value;
                 NotifyPropertyChanged();
+                UpdateModelUsage(old, value);
             }
         }
 
@@ -2089,17 +2129,21 @@ namespace ModdingTool
         /// Gets or sets the first armour model of the unit. This is a string representing the first armour model a unit has.
         /// The setter validates the input against the battle models database. If the model does not exist, an error is logged.
         /// </summary>
-        public string? ArmourModelOne
+        public string ArmourModelOne
         {
-            get => _armourModelOne;
+            get => _armourModelOneEntry != null ? _armourModelOneEntry.Name : _armourModelOne;
             set
             {
-                if (value == null) return;
-                if (!string.IsNullOrWhiteSpace(value) && !ModData.BattleModelDb.Contains(value.ToLower()))
-                    ErrorDb.AddError($"Armour model {value} does not exist.");
-                AddChange(nameof(ArmourModelOne), _armourModelOne ?? "", value);
+                if (string.IsNullOrWhiteSpace(value))
+                    return;
+                var old = ArmourModelOne;
+                if (old == value)
+                    return;
+                AddChange(nameof(ArmourModelOne), old, value);
+                _armourModelOneEntry = value != string.Empty ? ModData.BattleModelDb.Get(value.ToLower()) : null;
                 _armourModelOne = value;
                 NotifyPropertyChanged();
+                UpdateModelUsage(old, value);
             }
         }
 
@@ -2107,17 +2151,21 @@ namespace ModdingTool
         /// Gets or sets the second armour model of the unit. This is a string representing the second armour model a unit has.
         /// The setter validates the input against the battle models database. If the model does not exist, an error is logged.
         /// </summary>
-        public string? ArmourModelTwo
+        public string ArmourModelTwo
         {
-            get => _armourModelTwo;
+            get => _armourModelTwoEntry != null ? _armourModelTwoEntry.Name : _armourModelTwo;
             set
             {
-                if (value == null) return;
-                if (!string.IsNullOrWhiteSpace(value) && !ModData.BattleModelDb.Contains(value.ToLower()))
-                    ErrorDb.AddError($"Armour model {value} does not exist.");
-                AddChange(nameof(ArmourModelTwo), _armourModelTwo ?? "", value);
+                if (string.IsNullOrWhiteSpace(value))
+                    return;
+                var old = ArmourModelTwo;
+                if (old == value)
+                    return;
+                AddChange(nameof(ArmourModelTwo), old, value);
+                _armourModelTwoEntry = value != string.Empty ? ModData.BattleModelDb.Get(value.ToLower()) : null;
                 _armourModelTwo = value;
                 NotifyPropertyChanged();
+                UpdateModelUsage(old, value);
             }
         }
 
@@ -2125,17 +2173,21 @@ namespace ModdingTool
         /// Gets or sets the third armour model of the unit. This is a string representing the third armour model a unit has.
         /// The setter validates the input against the battle models database. If the model does not exist, an error is logged.
         /// </summary>
-        public string? ArmourModelThree
+        public string ArmourModelThree
         {
-            get => _armourModelThree;
+            get => _armourModelThreeEntry != null ? _armourModelThreeEntry.Name : _armourModelThree;
             set
             {
-                if (value == null) return;
-                if (!string.IsNullOrWhiteSpace(value) && !ModData.BattleModelDb.Contains(value.ToLower()))
-                    ErrorDb.AddError($"Armour model {value} does not exist.");
-                AddChange(nameof(ArmourModelThree), _armourModelThree ?? "", value);
+                if (string.IsNullOrWhiteSpace(value))
+                    return;
+                var old = ArmourModelThree;
+                if (old == value)
+                    return;
+                AddChange(nameof(ArmourModelThree), old, value);
+                _armourModelThreeEntry = value != string.Empty ? ModData.BattleModelDb.Get(value.ToLower()) : null;
                 _armourModelThree = value;
                 NotifyPropertyChanged();
+                UpdateModelUsage(old, value);
             }
         }
 
@@ -2450,6 +2502,46 @@ namespace ModdingTool
         private static int ClampUnitStat(int value, int min = 1, int max = 63) => Math.Clamp(value, min, max);
 
         /// <summary>
+        /// Checks if the given model name matches any of the unit's model properties.
+        /// </summary>
+        /// <param name="model">The name of the model to check.</param>
+        /// <returns>True if the model name matches any of the unit's model properties, false otherwise.</returns>
+        public bool ContainsModel(string model)
+        {
+            return ArmourModelBase == model 
+                   || ArmourModelOne == model 
+                   || ArmourModelTwo == model 
+                   || ArmourModelThree == model
+                   || Soldier == model
+                   || Officer1 == model
+                   || Officer2 == model
+                   || Officer3 == model;
+        }
+
+        /// <summary>
+        /// Updates the usage of a model in the unit.
+        /// </summary>
+        /// <param name="oldModelName">The name of the model to be replaced.</param>
+        /// <param name="newModelName">The name of the model to replace with.</param>
+        /// <remarks>
+        /// If the new model exists, it is added to the unit's model usage.
+        /// If the old model is not used by the unit anymore, it is removed from the unit's model usage.
+        /// </remarks>
+        public void UpdateModelUsage(string oldModelName, string newModelName)
+        {
+            var newModel = ModData.BattleModelDb.Get(newModelName.ToLower());
+            if (!string.IsNullOrWhiteSpace(newModelName) && newModel == null)
+                ErrorDb.AddError($"Model entry {newModelName} does not exist.");
+            else if (newModel != null && !newModel.ModelUsage.Units.Contains(this))
+                newModel.ModelUsage.Units.Add(this);
+            if (string.IsNullOrWhiteSpace(oldModelName) ||
+                !ModData.BattleModelDb.Contains(oldModelName.ToLower())) return;
+            if (ContainsModel(oldModelName)) return;
+            var oldModel = ModData.BattleModelDb.Get(oldModelName.ToLower());
+            oldModel?.ModelUsage.Units.Remove(this);
+        }
+
+        /// <summary>
         /// Clones a Unit object with the specified name and localized name.
         /// </summary>
         /// <param name="name">The name of the new Unit object.</param>
@@ -2459,12 +2551,15 @@ namespace ModdingTool
         public static Unit? CloneUnit(string name, string localizedName, Unit unit)
         {
             if (ModData.Units.Contains(name))
+            {
+                ErrorDb.AddError($"Unit {name} already exists.");
                 return null;
+            }
             var newUnit = (Unit)unit.MemberwiseClone();
             newUnit.MountEffect = new List<string>(unit.MountEffect);
             newUnit.Attributes = new List<string>(unit.Attributes);
-            newUnit.Comments = new Dictionary<string, List<string>>(unit.Comments);
-            newUnit.CommentsInLine = new Dictionary<string, string>(unit.CommentsInLine);
+            newUnit.Comments = new Dictionary<string, List<string>>();
+            newUnit.CommentsInLine = new Dictionary<string, string>();
             newUnit.Ownership = new List<string>(unit.Ownership);
             newUnit.EraZero = new List<string>(unit.EraZero);
             newUnit.EraOne = new List<string>(unit.EraOne);
@@ -2475,8 +2570,7 @@ namespace ModdingTool
             newUnit.LocalizedName = localizedName;
             newUnit.Type = name;
             newUnit.Dictionary = name.Replace(" ", "_").ToLower();
-            newUnit.Card = name.Replace(" ", "_").ToLower();
-            newUnit.CardInfo = name.Replace(" ", "_").ToLower();
+            newUnit.GetCards();
             return newUnit;
         }
 

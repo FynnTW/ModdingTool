@@ -60,4 +60,8 @@ public partial class LabelledFormComboInput : UserControl
         get => (string) GetValue(LabelTextProperty);
         set => SetValue(LabelTextProperty, value);
     }
+
+    private void SoldierGotoHyper_OnClick(object sender, RoutedEventArgs e)
+    {
+    }
 }

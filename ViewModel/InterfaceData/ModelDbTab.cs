@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -72,8 +73,16 @@ public partial class ModelDbTab : Tab
     {
         Factions = FactionDataBase.Keys.ToList();
         Factions.Add("merc");
+        SelectedModel = ModData.BattleModelDb.Get(name)!;
         Title = name;
-        SelectedModel = ModData.BattleModelDb.Get(Title)!;
-        Scale = SelectedModel.Scale;
+        SelectedModel.PropertyChanged += SelectedModel_PropertyChanged;
+    }
+
+    private void SelectedModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == "Name")
+        {
+            Title = SelectedModel.Name;
+        }
     }
 }

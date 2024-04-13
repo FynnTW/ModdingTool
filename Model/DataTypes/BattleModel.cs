@@ -23,6 +23,8 @@ public class BattleModel : GameType
     #endregion
     
     #region Properties
+    
+    public ModelUsage ModelUsage { get => _modelUsage; set => _modelUsage = value; }
     /**
      * <summary>
      * Name of the entry.
@@ -40,8 +42,15 @@ public class BattleModel : GameType
                 _name = value;
                 if (string.IsNullOrWhiteSpace(old) || !ModData.BattleModelDb.Contains(old)) return;
                 AddChange(nameof(Name), old, value);
-                ModData.BattleModelDb.Remove(old);
                 ModData.BattleModelDb.Add(this);
+                var oldModel = ModData.BattleModelDb.Get(old);
+                if (oldModel != null)
+                {
+                    oldModel.ModelUsage.Units.Clear();
+                    oldModel.ModelUsage.Mounts.Clear();
+                    oldModel.ModelUsage.CharacterEntries.Clear();
+                }
+                ModData.BattleModelDb.Remove(old);
                 NotifyPropertyChanged();
             }
         } 
@@ -364,6 +373,7 @@ public class BattleModel : GameType
     #endregion Properties
 
     #region Fields
+    private ModelUsage _modelUsage = new();
     private float _scale = 1;
     private int _torchIndex = -1;
     private float _torchBoneX= 0;
@@ -581,6 +591,7 @@ public class BattleModel : GameType
 /// <summary>
 /// Represents a Level of Detail (LOD) in a BattleModel.
 /// LODs are used to optimize rendering by displaying less complex versions of the model at greater distances.
+/// Every level has a mesh ending with "lod" + index and a distance at which it should be displayed.
 /// </summary>
 public class Lod : GameType
 {
@@ -592,6 +603,16 @@ public class Lod : GameType
     /// </summary>
     public string Name { init => _name = value; }
 
+    /// <summary>
+    /// Gets or sets the mesh associated with the Level of Detail (LOD).
+    /// </summary>
+    /// <remarks>
+    /// When setting this property, it checks if the file exists, logs the change using the AddChangeList method,
+    /// updates the value of the mesh, and notifies any property change listeners.
+    /// </remarks>
+    /// <value>
+    /// The mesh associated with the LOD.
+    /// </value>
     public string Mesh
     {
         get => _mesh;
@@ -604,6 +625,16 @@ public class Lod : GameType
         }
     }
 
+    /// <summary>
+    /// Gets or sets the distance associated with the Level of Detail (LOD).
+    /// </summary>
+    /// <remarks>
+    /// When setting this property, it logs the change using the AddChangeList method,
+    /// updates the value of the distance, and notifies any property change listeners.
+    /// </remarks>
+    /// <value>
+    /// The distance associated with the LOD.
+    /// </value>
     public int Distance
     {
         get => _distance;
@@ -615,9 +646,18 @@ public class Lod : GameType
         }
     }
     
+    /// <summary>
+    /// Gets or sets the index of the Level of Detail (LOD). Mesh names need to end with "lod" + index.
+    /// </summary>
+    /// <value>
+    /// The index of the LOD.
+    /// </value>
     public int Index { get; set; }
 }
 
+/// <summary>
+/// Represents a texture entry in a BattleModel.
+/// </summary>
 public class Texture : GameType
 {
 
@@ -625,65 +665,99 @@ public class Texture : GameType
     private string _texturePath = string.Empty;
     private string _normal = string.Empty;
     private string _sprite = string.Empty;
+    
+    /// <summary>
+    /// Gets or sets a value indicating whether the texture is an attachment texture or main texture.
+    /// </summary>
     public bool IsAttach { get; init; } = false;
+    
+    /// <summary>
+    /// Sets the name of the model entry this texture is attached to.
+    /// </summary>
     public string Name { init => _name = value; }
 
+    
+    /// <summary>
+    /// Gets or sets the path of the texture.
+    /// </summary>
+    /// <remarks>
+    /// When setting this property, it checks if the value is null or whitespace. If it is, it returns without making any changes.
+    /// Otherwise, it calls the FileExistsData method with the value and the current texture path, logs the change using the AddChange method,
+    /// updates the value of the texture path, and notifies any property change listeners.
+    /// </remarks>
     public string TexturePath
     {
         get => _texturePath;
         set
         {
             if (string.IsNullOrWhiteSpace(value))
-            {
-                _texturePath = value;
-                return;
-            }
-
-            FileExistsData(value, _name);
+               return;
+            FileExistsData(value, _texturePath);
             AddChange(nameof(TexturePath), _texturePath, value);
             _texturePath = value;
             NotifyPropertyChanged();
         }
     }
 
+    /// <summary>
+    /// Gets or sets the normal map of the texture.
+    /// </summary>
+    /// <remarks>
+    /// When setting this property, it checks if the value is null or whitespace. If it is, it returns without making any changes.
+    /// Otherwise, it calls the FileExistsData method with the value and the current normal map, logs the change using the AddChange method,
+    /// updates the value of the normal map, and notifies any property change listeners.
+    /// </remarks>
     public string Normal
     {
         get => _normal;
         set
         {
             if (string.IsNullOrWhiteSpace(value))
-            {
-                _normal = value;
                 return;
-            }
-            FileExistsData(value, _name);
+            FileExistsData(value, _normal);
             AddChange(nameof(Normal), _normal, value);
             _normal = value;
             NotifyPropertyChanged();
         }
     }
 
+    /// <summary>
+    /// Gets or sets the sprite associated with the texture.
+    /// </summary>
+    /// <remarks>
+    /// When setting this property, it checks if the value is null or whitespace. If it is, it returns without making any changes.
+    /// Otherwise, it calls the FileExistsData method with the value and the current sprite, logs the change using the AddChange method,
+    /// updates the value of the sprite, and notifies any property change listeners.
+    /// </remarks>
     public string Sprite
     {
         get => _sprite;
         set
         {
             if (string.IsNullOrWhiteSpace(value))
-            {
-                _sprite = value;
-                return;
-            }
-            FileExistsData(value, _name);
+                return; 
+            FileExistsData(value, _sprite);
             AddChange(nameof(Sprite), _sprite, value);
             _sprite = value;
             NotifyPropertyChanged();
         }
     }
+
+    /// <summary>
+    /// Gets or sets the faction associated with the texture.
+    /// </summary>
+    /// <remarks>
+    /// When setting this property, it checks if the value is null or whitespace. If it is, it returns without making any changes.
+    /// It also checks if the faction exists in the FactionDataBase and is not "merc". If it doesn't exist, it adds an error to the ErrorDb.
+    /// It then logs the change using the AddChange method, updates the value of the faction, and notifies any property change listeners.
+    /// </remarks>
     public string Faction
     {
         get => _faction;
         set
         {
+            if (string.IsNullOrWhiteSpace(value))
+                return; 
             if (!FactionDataBase.ContainsKey(value) && value != "merc")
                 ErrorDb.AddError("Faction " + value + " does not exist.");
             AddChange(nameof(Faction), _faction, value);
@@ -702,15 +776,29 @@ public class Animation : GameType
     private List<string> _priWeapons = new();
     private int _secWeaponCount;
     private List<string> _secWeapons = new();
+    
+    /// <summary>
+    /// Gets or sets the name of the model entry this animation is attached to.
+    /// </summary>
     public string Name  { init => _name = value; }
 
+    /// <summary>
+    /// Gets or sets the mount type associated with the animation.
+    /// </summary>
+    /// <remarks>
+    /// When setting this property, it checks if the value exists in the BattleModel's MountTypes. If it doesn't exist, it adds an error to the ErrorDb and returns without making any changes.
+    /// Otherwise, it logs the change using the AddChange method, updates the value of the mount type, and notifies any property change listeners.
+    /// </remarks>
     public string MountType
     {
         get => _mountType;
         set
         {
             if (!BattleModel.MountTypes.Contains(value))
+            {
                 ErrorDb.AddError("Mount type " + value + " does not exist.");
+                return;
+            }
             AddChange(nameof(MountType), _mountType, value);
             _mountType = value;
             NotifyPropertyChanged();
@@ -804,5 +892,75 @@ public class Animation : GameType
     {
         get => _secWeapons; 
         set => _secWeapons = value;
+    }
+}
+
+
+/// <summary>
+/// Represents the usage of a model in various contexts within the game.
+/// </summary>
+public class ModelUsage
+{
+    /// <summary>
+    /// List of unit names that use the model.
+    /// </summary>
+    public List<Unit> Units = new();
+
+    /// <summary>
+    /// List of mount names that use the model.
+    /// </summary>
+    public List<Mount> Mounts = new();
+
+    /// <summary>
+    /// List of lines in the descr_strat.txt file where the model is used.
+    /// </summary>
+    public List<string> DescrStratLines = new();
+
+    /// <summary>
+    /// List of lines in the campaign_script.txt file where the model is used.
+    /// </summary>
+    public List<string> CampaignScriptLines = new();
+
+    /// <summary>
+    /// List of character entries that use the model.
+    /// </summary>
+    public List<string> CharacterEntries = new();
+    
+    /// <summary>
+    /// Checks if the model is used in any context.
+    /// </summary>
+    /// <returns>
+    /// True if the model is used in any context (Units, Mounts, DescrStratLines, CampaignScriptLines, CharacterEntries), otherwise false.
+    /// </returns>
+    public bool IsUsed()
+    {
+        return Units.Count > 0 
+               || Mounts.Count > 0 
+               || DescrStratLines.Count > 0 
+               || CampaignScriptLines.Count > 0
+               || CharacterEntries.Count > 0;
+    }
+
+    /// <summary>
+    /// Generates a string that represents the usage of the model.
+    /// </summary>
+    /// <returns>
+    /// A string that contains all the contexts where the model is used. If the model is not used in any context, it returns "No usages found.".
+    /// </returns>
+    public string GetUsageString()
+    {
+        if (!IsUsed())
+            return "No usages found.";
+        return "" + 
+               ( Units.Count > 0  ? 
+                   Units.Aggregate("Units: ", (current, unit) => current + unit.Type + ", ") : "") +
+               ( Mounts.Count > 0  ? 
+                   Mounts.Aggregate("\nMounts: ", (current, mount) => current + mount.type + ", ") : "") +
+               ( DescrStratLines.Count > 0  ? 
+                   DescrStratLines.Aggregate("\nDescrStratLines: ", (current, line) => current + line + "\n") : "") +
+               ( CampaignScriptLines.Count > 0  ? 
+                   CampaignScriptLines.Aggregate("\nCampaignScriptLines", (current, line) => current + line + "\n") : "") +
+               ( CharacterEntries.Count > 0  ? 
+                   CharacterEntries.Aggregate("\nCharacterEntries", (current, entry) => current + entry + ", ") : "");
     }
 }

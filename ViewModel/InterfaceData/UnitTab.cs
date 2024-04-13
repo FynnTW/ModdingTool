@@ -1,16 +1,21 @@
 ﻿using Pfim;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Media.Imaging;
 using ModdingTool.Databases;
+using ModdingTool.View.UserControls;
+using Wpf.Ui.Controls;
 using static ModdingTool.Globals;
 using ImageFormat = Pfim.ImageFormat;
+using MessageBox = System.Windows.MessageBox;
 
 namespace ModdingTool.ViewModel.InterfaceData;
 
@@ -194,8 +199,9 @@ public partial class UnitTab : Tab
 
     public UnitTab(string name)
     {
-        Title = name;
-        SelectedUnit = ModData.Units.Get(Title)!;
+        SelectedUnit = ModData.Units.Get(name)!;
+        Title = SelectedUnit.Type;
+        SelectedUnit.PropertyChanged += SelectedUnit_PropertyChanged;
 
         if (ModOptionsInstance.DisableCardImages) return;
         try
@@ -224,6 +230,16 @@ public partial class UnitTab : Tab
         {
             ErrorDb.AddError("Error reading " + SelectedUnit.FactionSymbol);
             ErrorDb.AddError(e.Message);
+        }
+    }
+    
+    
+    private void SelectedUnit_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        // If the Type property of SelectedUnit has changed, update Title
+        if (e.PropertyName == "Type")
+        {
+            Title = SelectedUnit.Type;
         }
     }
 

@@ -10,20 +10,63 @@ namespace ModdingTool.Databases;
 
 public partial class BattleModelDb
 {
+    /// <summary>
+    /// Gets or sets the dictionary of BattleModels, where the key is the name of the BattleModel and the value is the BattleModel itself.
+    /// </summary>
     private Dictionary<string, BattleModel> BattleModels { get; set; } = new();
+
+    /// <summary>
+    /// A list of names of the BattleModels that are used in the game files.
+    /// </summary>
     public List<string> UsedModels = new();
     
+    /// <summary>
+    /// Adds a new BattleModel to the BattleModels dictionary.
+    /// </summary>
+    /// <param name="battleModel">The BattleModel to be added.</param>
+    /// <remarks>
+    /// If a BattleModel with the same name already exists in the dictionary, an error is logged and the new BattleModel is not added.
+    /// </remarks>
     public void Add(BattleModel battleModel)
     {
-        BattleModels.Add(battleModel.Name, battleModel);
+        if (BattleModels.TryAdd(battleModel.Name, battleModel)) return;
+        ErrorDb.AddError("Duplicate entry " + battleModel.Name);
+        BattleModels[battleModel.Name] = battleModel;
     }
     
+    /// <summary>
+    /// Retrieves the BattleModels dictionary.
+    /// </summary>
+    /// <returns>
+    /// The BattleModels dictionary.
+    /// </returns>
     public Dictionary<string, BattleModel> GetBattleModels() => BattleModels;
     
+    /// <summary>
+    /// Checks if the BattleModels dictionary contains a specific key.
+    /// </summary>
+    /// <param name="name">The key to locate in the BattleModels dictionary.</param>
+    /// <returns>
+    /// true if the BattleModels dictionary contains an element with the specified key; otherwise, false.
+    /// </returns>
     public bool Contains(string name) => BattleModels.ContainsKey(name);
     
+    /// <summary>
+    /// Gets the value associated with the specified key or the default value for the type of the value parameter.
+    /// </summary>
+    /// <param name="key">The key of the value to get.</param>
+    /// <returns>
+    /// The value associated with the specified key, if the key is found; otherwise, the default value for the type of the value parameter.
+    /// </returns>
     public BattleModel? Get(string key) => BattleModels.GetValueOrDefault(key);
     
+    /// <summary>
+    /// Retrieves the BattleModel at the specified index in the BattleModels dictionary.
+    /// </summary>
+    /// <param name="index">The zero-based index of the BattleModel to get.</param>
+    /// <returns>
+    /// The BattleModel at the specified index in the BattleModels dictionary, if the index is valid; otherwise, null.
+    /// </returns>
     public BattleModel? GetByIndex(int index)
     {
         if (index < 0 || index >= BattleModels.Count)
@@ -31,6 +74,14 @@ public partial class BattleModelDb
         return BattleModels.ElementAt(index).Value;
     }
     
+    /// <summary>
+    /// Imports a JSON file and deserializes it into the BattleModels dictionary.
+    /// </summary>
+    /// <param name="fileName">The name of the JSON file to import.</param>
+    /// <remarks>
+    /// If the imported JSON is null, an error is logged and the method returns.
+    /// Otherwise, the BattleModels dictionary is cleared and populated with the imported data.
+    /// </remarks>
     public void ImportJson(string fileName)
     {
         var jsonString = File.ReadAllText(fileName);
@@ -45,12 +96,50 @@ public partial class BattleModelDb
             Add(entry.Value);
     }
     
+    /// <summary>
+    /// Exports the BattleModels dictionary to a JSON file.
+    /// </summary>
+    /// <remarks>
+    /// The BattleModels dictionary is serialized into a JSON string and written to a file named "bmdb.json".
+    /// The JSON is formatted with indented formatting for readability.
+    /// </remarks>
     public void ExportJson() =>
         File.WriteAllText(@"bmdb.json", JsonConvert.SerializeObject(BattleModels, Formatting.Indented));
     
+    /// <summary>
+    /// Retrieves a list of the names of all BattleModels in the BattleModels dictionary.
+    /// </summary>
+    /// <returns>
+    /// A new list containing the names of all BattleModels in the BattleModels dictionary.
+    /// </returns>
     public List<string> GetNames() => new(BattleModels.Keys);
-    public void Remove(string name) => BattleModels.Remove(name);
 
+    /// <summary>
+    /// Removes a BattleModel from the BattleModels dictionary.
+    /// </summary>
+    /// <param name="name">The name of the BattleModel to remove.</param>
+    /// <remarks>
+    /// If the BattleModels dictionary does not contain a BattleModel with the specified name, the method returns.
+    /// If the BattleModel to be removed is still in use, an error is logged.
+    /// </remarks>
+    public void Remove(string name)
+    {
+        if (!BattleModels.ContainsKey(name)) return;
+        var model = Get(name);
+        if (model == null) return;
+        if (model.ModelUsage.IsUsed())
+            ErrorDb.AddError($@"Model entry {model.Name} was removed but still used in: {model.ModelUsage.GetUsageString()}");
+        BattleModels.Remove(name);
+    }
+
+    /// <summary>.n
+    /// Writes the BattleModels dictionary to the battlemodels.modeldb file in the mod folder.
+    /// </summary>
+    /// <remarks>
+    /// This method first backs up the existing file, then constructs a new string representation of the BattleModels dictionary.
+    /// The new string is written to the file "battle_models.modeldb" in the "data/unit_models" directory.
+    /// The string is formatted with newline characters replaced by the appropriate line ending for the current platform.
+    /// </remarks>
     public void WriteFile()
     {
         BackupFile("\\data\\unit_models\\", "battle_models.modeldb");
@@ -62,6 +151,14 @@ public partial class BattleModelDb
         File.WriteAllText(ModPath + @"/data/unit_models/battle_models.modeldb", newBmdb.Replace("\n", "\r\n").Replace("\r\r\n", "\r\n"));
     }
     
+    /// <summary>
+    /// Parses the battle_models.modeldb file and populates the BattleModels dictionary.
+    /// </summary>
+    /// <remarks>
+    /// This method reads the battle_models.modeldb file and creates a new BattleModel for each entry in the file.
+    /// Each BattleModel is populated with data from the file and added to the BattleModels dictionary.
+    /// If the file cannot be read, the method returns.
+    /// </remarks>
     public void ParseFile()
     {
         var fileStream = new FileStream("\\data\\unit_models\\", "battle_models.modeldb");
@@ -212,23 +309,33 @@ public partial class BattleModelDb
             if (firstEntry)
                 FirstEntryPad(ref fileStream);
             firstEntry = false;
-            if (BattleModels.ContainsKey(entry.Name))
-            {
-                ErrorDb.AddError($"Duplicate entry {entry.Name}");
-                Console.WriteLine(@"====================================================================================");
-            }
             Add(entry);
             Console.WriteLine(entry.Name);
         }
         fileStream.LogEnd();
     }
 
+    /// <summary>
+    /// Skips two integers in the FileStream.
+    /// </summary>
+    /// <param name="stream">The FileStream to read from.</param>
+    /// <remarks>
+    /// This method is used to skip over two integers in the FileStream during the parsing of the first entry in the battle_models.modeldb file.
+    /// </remarks>
     private static void FirstEntryPad(ref FileStream stream)
     {
         stream.GetInt();
         stream.GetInt();
     }
 
+    /// <summary>
+    /// Checks the usage of models and mounts in the game files.
+    /// </summary>
+    /// <remarks>
+    /// This method checks the usage of models and mounts in the campaign_script.txt and descr_strat.txt files.
+    /// It then removes duplicates from the list of used models and mounts.
+    /// For each model and mount in the BattleModels and MountDataBase dictionaries that is not used, an error is logged.
+    /// </remarks>
     public void CheckModelUsage()
     {
         CheckUseInFile("\\data\\world\\maps\\campaign\\imperial_campaign\\", "campaign_script.txt");
@@ -249,6 +356,16 @@ public partial class BattleModelDb
         }
     }
     
+    /// <summary>
+    /// Checks the usage of models in a specified file.
+    /// </summary>
+    /// <param name="path">The path of the file to check.</param>
+    /// <param name="filename">The name of the file to check.</param>
+    /// <remarks>
+    /// This method reads the specified file line by line and checks each line for the presence of a model name.
+    /// If a model name is found, it is added to the list of used models and its usage is logged.
+    /// If a model name is not found in the BattleModels dictionary, an error is logged.
+    /// </remarks>
     private void CheckUseInFile(string path, string filename)
     {
         var fileStream = new FileStream(path, filename);
@@ -270,7 +387,20 @@ public partial class BattleModelDb
             {
                 matchString = matchString.Split(',')[0];
             }
-            UsedModels.Add(matchString.ToLower().Trim());
+            var key = matchString.ToLower().Trim();
+            if (BattleModels.ContainsKey(key))
+            {
+                var isCampaignScript = filename.Contains("campaign_script");
+                if (isCampaignScript)
+                    BattleModels[key].ModelUsage.CampaignScriptLines.Add(line);
+                else
+                    BattleModels[key].ModelUsage.DescrStratLines.Add(line);
+                UsedModels.Add(matchString.ToLower().Trim());
+            }
+            else
+            {
+                ErrorDb.AddError("Model " + matchString + " not found");
+            }
         }
 
         fileStream.LogEnd();

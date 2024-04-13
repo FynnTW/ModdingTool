@@ -69,6 +69,7 @@
             </Expander>
             <Expander
                 Foreground="Azure"
+                FontFamily="Nirmala UI"
                 Header="Voice Options"
                 HorizontalAlignment="Stretch"
                 IsExpanded="True"
@@ -95,13 +96,14 @@
             <Expander
                 Foreground="Azure"
                 Header="Models"
+                FontFamily="Nirmala UI"
                 HorizontalAlignment="Stretch"
                 IsExpanded="True"
                 VerticalAlignment="Top">
                 <!--  Models  -->
                 <StackPanel Orientation="Vertical">
                     <!--  Soldier  -->
-                    <local:LabelledFormComboInput
+                    <local:HyperLinkCombo
                         IsEditable="True"
                         ItemsSource="{Binding ModelEntries}"
                         LabelText="{Binding UnitUiText[Soldier]}"
@@ -110,7 +112,7 @@
                         VerticalAlignment="Center"
                         x:Name="Soldier" />
                     <!--  Base Model  -->
-                    <local:LabelledFormComboInput
+                    <local:HyperLinkCombo
                         IsEditable="True"
                         ItemsSource="{Binding ModelEntries}"
                         LabelText="{Binding UnitUiText[ArmourModelBase]}"
@@ -121,6 +123,7 @@
                     <Expander
                         Foreground="Azure"
                         Header="Upgrade Models"
+                        FontFamily="Nirmala UI"
                         HorizontalAlignment="Stretch"
                         IsExpanded="False"
                         VerticalAlignment="Top">
@@ -131,9 +134,9 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="50*" />
                                     <ColumnDefinition Width="15*" />
-                                    <ColumnDefinition Width="25*" />
+                                    <ColumnDefinition Width="15*" />
                                 </Grid.ColumnDefinitions>
-                                <local:LabelledFormComboInput
+                                <local:HyperLinkCombo
                                     IsEditable="True"
                                     ItemsSource="{Binding ModelEntries}"
                                     LabelText="{Binding UnitUiText[ArmourModelOne]}"
@@ -141,43 +144,85 @@
                                     ToolTip="The first upgrade model this unit uses."
                                     VerticalAlignment="Center"
                                     x:Name="ArmourModelOne" />
-                                <ui:TextBlock Grid.Column="1" Text="Levels" />
+                                <ui:TextBlock 
+                                    VerticalAlignment="Center" 
+                                    HorizontalAlignment="Center"
+                                    Grid.Column="1" 
+                                    Text="Levels" />
                                 <ui:TextBox
                                     Grid.Column="2"
                                     HorizontalAlignment="Stretch"
+                                    ToolTip="The armour level this model entry gets applied to, can be multiple repetitions of the same number to increase the amount of armour applied."
                                     Text="{Binding SelectedUnit.ArmourlvlOne}"
                                     x:Name="ArmourlvlOne" />
                             </Grid>
                             <!--  ArmourModelTwo  -->
-                            <local:LabelledFormComboInput
-                                IsEditable="True"
-                                ItemsSource="{Binding ModelEntries}"
-                                LabelText="{Binding UnitUiText[ArmourModelTwo]}"
-                                SelectedItem="{Binding SelectedUnit.ArmourModelTwo}"
-                                ToolTip="The second upgrade model this unit uses."
-                                VerticalAlignment="Center"
-                                x:Name="ArmourModelTwo" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="50*" />
+                                    <ColumnDefinition Width="15*" />
+                                    <ColumnDefinition Width="15*" />
+                                </Grid.ColumnDefinitions>
+                                <local:HyperLinkCombo
+                                    IsEditable="True"
+                                    ItemsSource="{Binding ModelEntries}"
+                                    LabelText="{Binding UnitUiText[ArmourModelTwo]}"
+                                    SelectedItem="{Binding SelectedUnit.ArmourModelTwo}"
+                                    ToolTip="The second upgrade model this unit uses."
+                                    VerticalAlignment="Center"
+                                    x:Name="ArmourModelTwo" />
+                                <ui:TextBlock 
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center" 
+                                    Grid.Column="1" 
+                                    Text="Levels" />
+                                <ui:TextBox
+                                    Grid.Column="2"
+                                    HorizontalAlignment="Stretch"
+                                    ToolTip="The armour level this model entry gets applied to, can be multiple repetitions of the same number to increase the amount of armour applied."
+                                    Text="{Binding SelectedUnit.ArmourlvlTwo}"
+                                    x:Name="ArmourlvlTwo" />
+                            </Grid>
                             <!--  ArmourModelThree  -->
-                            <local:LabelledFormComboInput
-                                IsEditable="True"
-                                ItemsSource="{Binding ModelEntries}"
-                                LabelText="{Binding UnitUiText[ArmourModelThree]}"
-                                SelectedItem="{Binding SelectedUnit.ArmourModelThree}"
-                                ToolTip="The third upgrade model this unit uses."
-                                VerticalAlignment="Center"
-                                x:Name="ArmourModelThree" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="50*" />
+                                    <ColumnDefinition Width="15*" />
+                                    <ColumnDefinition Width="15*" />
+                                </Grid.ColumnDefinitions>
+                                <local:HyperLinkCombo
+                                    IsEditable="True"
+                                    ItemsSource="{Binding ModelEntries}"
+                                    LabelText="{Binding UnitUiText[ArmourModelThree]}"
+                                    SelectedItem="{Binding SelectedUnit.ArmourModelThree}"
+                                    ToolTip="The second upgrade model this unit uses."
+                                    VerticalAlignment="Center"
+                                    x:Name="ArmourModelThree" />
+                                <ui:TextBlock 
+                                    VerticalAlignment="Center" 
+                                    HorizontalAlignment="Center"
+                                    Grid.Column="1" 
+                                    Text="Levels" />
+                                <ui:TextBox
+                                    Grid.Column="2"
+                                    HorizontalAlignment="Stretch"
+                                    ToolTip="The armour level this model entry gets applied to, can be multiple repetitions of the same number to increase the amount of armour applied."
+                                    Text="{Binding SelectedUnit.ArmourlvlThree}"
+                                    x:Name="ArmourlvlThree" />
+                            </Grid>
                         </StackPanel>
                     </Expander>
                     <Expander
                         Foreground="Azure"
                         Header="Officers"
+                        FontFamily="Nirmala UI"
                         HorizontalAlignment="Stretch"
                         IsExpanded="False"
                         VerticalAlignment="Top">
                         <!--  Officers  -->
                         <StackPanel Orientation="Vertical">
                             <!--  Officer1  -->
-                            <local:LabelledFormComboInput
+                            <local:HyperLinkCombo
                                 IsEditable="True"
                                 ItemsSource="{Binding ModelEntries}"
                                 LabelText="{Binding UnitUiText[Officer1]}"
@@ -186,7 +231,7 @@
                                 VerticalAlignment="Center"
                                 x:Name="Officer1" />
                             <!--  Officer2  -->
-                            <local:LabelledFormComboInput
+                            <local:HyperLinkCombo
                                 IsEditable="True"
                                 ItemsSource="{Binding ModelEntries}"
                                 LabelText="{Binding UnitUiText[Officer2]}"
@@ -195,7 +240,7 @@
                                 VerticalAlignment="Center"
                                 x:Name="Officer2" />
                             <!--  Officer3  -->
-                            <local:LabelledFormComboInput
+                            <local:HyperLinkCombo
                                 IsEditable="True"
                                 ItemsSource="{Binding ModelEntries}"
                                 LabelText="{Binding UnitUiText[Officer3]}"

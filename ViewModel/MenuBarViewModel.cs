@@ -9,6 +9,7 @@ using ModdingTool.API;
 using ModdingTool.View;
 using ModdingTool.View.UserControls;
 using static ModdingTool.Globals;
+using Application = System.Windows.Application;
 
 namespace ModdingTool.ViewModel;
 
@@ -177,6 +178,10 @@ public partial class MenuBarViewModel : ObservableObject
         if (result != CommonFileDialogResult.Ok) return;
         if (dialog.FileName != null) 
             SetModPath(dialog.FileName);
+        var window = (MainWindow)Application.Current.MainWindow!;
+        var dataTab = window?.DataTabLive;
+        var dataContextTabs = dataTab?.DataContext as DataTabViewModel;
+        dataContextTabs?.ClearTabs();
         Globals.LoadMod();
         ModLoaded = true;
     }

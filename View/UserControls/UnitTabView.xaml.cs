@@ -109,6 +109,7 @@ namespace ModdingTool.View.UserControls
             var dataViewModel = datatab?.DataContext as DataTabViewModel;
             dataViewModel?.AddTab(newTab);
         }
+        
 
         private void Ownership_OnSelectedItemsChanged(object? sender, SelectedItemsChangedEventArgs e)
         {
