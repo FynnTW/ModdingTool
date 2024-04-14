@@ -8,14 +8,16 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media.Imaging;
+using CommunityToolkit.Mvvm.Input;
 using ModdingTool.Databases;
 using ModdingTool.View.UserControls;
-using Wpf.Ui.Controls;
 using static ModdingTool.Globals;
 using ImageFormat = Pfim.ImageFormat;
 using MessageBox = System.Windows.MessageBox;
+using TextBlock = Wpf.Ui.Controls.TextBlock;
 
 namespace ModdingTool.ViewModel.InterfaceData;
 
@@ -59,11 +61,11 @@ public partial class UnitTab : Tab
             { "SpecialFormation", "Special_formation" },
             { "HitPoints", "Hit points" },
             { "MountHitPoints", "Mount hit points" },
-            { "PriAttack", "Pri Attack" },
-            { "PriCharge", "Pri Charge" },
-            { "PriProjectile", "Pri Projectile" },
-            { "PriRange", "Pri Range" },
-            { "PriAmmunition", "Pri Ammunition" },
+            { "PriAttack", "Attack" },
+            { "PriCharge", "Charge" },
+            { "PriProjectile", "Projectile" },
+            { "PriRange", "Range" },
+            { "PriAmmunition", "Ammunition" },
             { "PriWeaponType", "Pri Weapon Type" },
             { "PriTechType", "Pri Tech Type" },
             { "PriDamageType", "Pri Damage Type" },
@@ -95,13 +97,13 @@ public partial class UnitTab : Tab
             { "TerAttDelay", "Ter Attack Delay" },
             { "TerSkelFactor", "Ter Skeleton Factor" },
             { "TerAttr", "Tertiary Attack Attributes" },
-            { "PriArmour", "Primary Armour" },
-            { "PriDefense", "Primary Defense Skill" },
-            { "PriShield", "Primary Shield" },
-            { "PriDefSound", "Primary Armour Sound" },
-            { "SecArmour", "Secondary Armour" },
-            { "SecDefense", "Secondary Defense Skill" },
-            { "SecDefSound", "Secondary Armour Sound" },
+            { "PriArmour", "Armour" },
+            { "PriDefense", "Defense Skill" },
+            { "PriShield", "Shield" },
+            { "PriDefSound", "Armour Sound" },
+            { "SecArmour", "Sec Armour" },
+            { "SecDefense", "Sec Defense Skill" },
+            { "SecDefSound", "Sec Armour Sound" },
             { "FormationStyle", "Formation Style" },
             { "StatHeat", "Heat Penalty" },
             { "StatScrub", "Scrubs Modifier" },
@@ -184,7 +186,7 @@ public partial class UnitTab : Tab
     public static string[] TechTypes  => Unit.TechTypes;
     public static List<string> FormationStyles => Unit.FormationStyles;
     public static List<string> SpecialFormationStyles => Unit.SpecialFormationStyles;
-    public static List<string> AttackAttr => Unit.AttackAttr;
+    public static List<string> AttackAttr { get; set; }  = new (Unit.AttackAttr){"no"};
     public BitmapImage UnitImage { get; set; } = new();
     public BitmapImage UnitInfoImage { get; set; } = new();
     public BitmapImage FactionSymbolImage { get; set; } = new();
@@ -231,6 +233,41 @@ public partial class UnitTab : Tab
             ErrorDb.AddError("Error reading " + SelectedUnit.FactionSymbol);
             ErrorDb.AddError(e.Message);
         }
+    }
+
+
+    [RelayCommand]
+    private void ExecHyperLinkSoldier(object sender)
+    {
+        var textBlock = (sender as Hyperlink)?.Parent as TextBlock;
+        var grid = textBlock?.Parent as Grid;
+        if (grid?.Parent is not HyperLinkCombo hyperLinkCombo) return;
+        var attribute = hyperLinkCombo.Name;
+        if (string.IsNullOrWhiteSpace(attribute)) return;
+        var model = (string) SelectedUnit.GetType().GetProperty(attribute)?.GetValue(SelectedUnit, null)!;
+        if (string.IsNullOrWhiteSpace(model)) return;
+        var newTab = new ModelDbTab(model);
+        var window = (MainWindow)Application.Current.MainWindow;
+        var dataTab = window?.FindName("DataTabLive") as DataTab;
+        var dataViewModel = dataTab?.DataContext as DataTabViewModel;
+        dataViewModel?.AddTab(newTab);
+    }
+
+    [RelayCommand]
+    private void ExecHyperLinkProjectile(object sender)
+    {
+        var textBlock = (sender as Hyperlink)?.Parent as TextBlock;
+        var grid = textBlock?.Parent as Grid;
+        if (grid?.Parent is not HyperLinkCombo hyperLinkCombo) return;
+        var attribute = hyperLinkCombo.Name;
+        if (string.IsNullOrWhiteSpace(attribute)) return;
+        var projectile = (string) SelectedUnit.GetType().GetProperty(attribute)?.GetValue(SelectedUnit, null)!;
+        if (string.IsNullOrWhiteSpace(projectile)) return;
+        var newTab = new ProjectileTab(projectile);
+        var window = (MainWindow)Application.Current.MainWindow;
+        var dataTab = window?.FindName("DataTabLive") as DataTab;
+        var dataViewModel = dataTab?.DataContext as DataTabViewModel;
+        dataViewModel?.AddTab(newTab);
     }
     
     

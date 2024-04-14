@@ -14,10 +14,10 @@
             <ColumnDefinition Width="40*" />
             <ColumnDefinition Width="60*" />
         </Grid.ColumnDefinitions>
-        <ui:TextBlock Text="{Binding LabelText, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" VerticalAlignment="Center" />
+        <ui:TextBlock  FontSize="16" Text="{Binding LabelText, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" VerticalAlignment="Center" />
         <ComboBox
             Background="{StaticResource BackgroundBrush3}"
-            Grid.Column="1"
+            Grid.Column="1" FontSize="16"
             IsEditable="{Binding IsEditable, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
             ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
             LostFocus="ComboBox_LostFocus"

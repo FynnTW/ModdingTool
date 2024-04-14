@@ -2,6 +2,7 @@ using System.Collections;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using CommunityToolkit.Mvvm.Input;
 using ModdingTool.ViewModel;
 using ModdingTool.ViewModel.InterfaceData;
 
@@ -28,6 +29,20 @@ public partial class HyperLinkCombo : UserControl
     {
         get => (IEnumerable) GetValue(ItemsSourceProperty);
         set => SetValue(ItemsSourceProperty, value);
+    }
+
+    public static readonly DependencyProperty CommandProperty = DependencyProperty.Register(
+        nameof(ClickCommand), typeof(IRelayCommand<object>), typeof(HyperLinkCombo), new PropertyMetadata(null));
+
+    public IRelayCommand<object> ClickCommand
+    {
+        get => (IRelayCommand<object>)GetValue(CommandProperty);
+        set => SetValue(CommandProperty, value);
+    }
+
+    private void Hyperlink_Click(object sender, RoutedEventArgs e)
+    {
+        ClickCommand?.Execute(sender);
     }
 
     public object SelectedItem

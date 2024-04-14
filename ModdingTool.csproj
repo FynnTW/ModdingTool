@@ -56,6 +56,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BlackPearl.Controls.Library" Version="2.0.4" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="Dirkster.AvalonDock" Version="4.72.0" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.0" />

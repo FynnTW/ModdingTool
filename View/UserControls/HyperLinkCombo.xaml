@@ -13,7 +13,7 @@
             <ColumnDefinition Width="60*" />
         </Grid.ColumnDefinitions>
         <ui:TextBlock  VerticalAlignment="Center">
-            <Hyperlink Click="SoldierGotoHyper_OnClick">
+            <Hyperlink Click="Hyperlink_Click"  FontSize="16">
                 <Hyperlink.Style>
                     <Style BasedOn="{StaticResource {x:Type Hyperlink}}" TargetType="Hyperlink">
                         <Setter Property="Foreground" Value="Aquamarine" />
@@ -24,7 +24,7 @@
         </ui:TextBlock>
         <ComboBox
             Background="{StaticResource BackgroundBrush3}"
-            Grid.Column="1"
+            Grid.Column="1"  FontSize="16"
             IsEditable="{Binding IsEditable, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
             ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
             LostFocus="ComboBox_LostFocus"

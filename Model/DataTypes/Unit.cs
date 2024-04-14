@@ -128,7 +128,7 @@ namespace ModdingTool
         /// <summary>
         /// A list of strings representing the different attack attributes a unit can have.
         /// </summary>
-        public static readonly List<string> AttackAttr = new (){ "spear", "light_spear", "prec", "ap", "bp", "area", "fire", "launching", "thrown", "short_pike", "long_pike", "spear_bonus_12", "spear_bonus_10", "spear_bonus_8", "spear_bonus_6", "spear_bonus_4" };
+        public static  List<string> AttackAttr = new (){ "spear", "light_spear", "prec", "ap", "bp", "area", "fire", "launching", "thrown", "short_pike", "long_pike", "spear_bonus_12", "spear_bonus_10", "spear_bonus_8", "spear_bonus_6", "spear_bonus_4" };
 
         /// <summary>
         /// An array of strings representing the different discipline types a unit can have.
@@ -608,7 +608,7 @@ namespace ModdingTool
             set
             {
                 if (string.IsNullOrWhiteSpace(value))
-                    value = string.Empty;
+                    return;
                 var old = Officer1;
                 if (old == value)
                     return;
@@ -630,7 +630,7 @@ namespace ModdingTool
             set
             {
                 if (string.IsNullOrWhiteSpace(value))
-                    value = string.Empty;
+                    return;
                 var old = Officer2;
                 if (old == value)
                     return;
@@ -652,7 +652,7 @@ namespace ModdingTool
             set
             {
                 if (string.IsNullOrWhiteSpace(value))
-                    value = string.Empty;
+                    return;
                 var old = Officer3;
                 if (old == value)
                     return;
@@ -931,7 +931,8 @@ namespace ModdingTool
             get => _priProjectile;
             set
             {
-                value ??= "no";
+                if (string.IsNullOrWhiteSpace(value))
+                    return;
                 AddChange(nameof(PriProjectile), _priProjectile ?? "", value);
                 _priProjectile = value;
                 NotifyPropertyChanged();
@@ -1146,7 +1147,8 @@ namespace ModdingTool
             get => _secProjectile;
             set
             {
-                value ??= "no";
+                if (string.IsNullOrWhiteSpace(value))
+                    return;
                 AddChange(nameof(SecProjectile), _secProjectile ?? "", value);
                 _secProjectile = value;
                 NotifyPropertyChanged();
@@ -1361,7 +1363,8 @@ namespace ModdingTool
             get => _terProjectile;
             set
             {
-                value ??= "no";
+                if (string.IsNullOrWhiteSpace(value))
+                    return;
                 AddChange(nameof(TerProjectile), _terProjectile ?? "", value);
                 _terProjectile = value;
                 NotifyPropertyChanged();
@@ -2929,8 +2932,10 @@ namespace ModdingTool
             foreach (var faction in cardSearchFactions)
             {
                 var cardPath = ModPath + UnitCardPath + "\\";
+                var cardPathGame = GamePath + UnitCardPath + "\\";
                 cardPath += faction;
-                if (!(Directory.Exists(cardPath)))
+                cardPathGame += faction;
+                if (!(Directory.Exists(cardPath)) && !(Directory.Exists(cardPathGame)))
                 {
                     ErrorDb.AddError($@"Card path not found {cardPath}");
                     continue;
@@ -2939,6 +2944,10 @@ namespace ModdingTool
                 if (File.Exists(cardPath + "\\#" + Dictionary + ".tga"))
                 {
                     unitCard = cardPath + "\\#" + Dictionary + ".tga";
+                }
+                else if (File.Exists(cardPathGame + "\\#" + Dictionary + ".tga"))
+                {
+                    unitCard = cardPathGame + "\\#" + Dictionary.ToLower() + ".tga";
                 }
                 else
                 {
@@ -2950,8 +2959,10 @@ namespace ModdingTool
             foreach (var faction in infoCardSearchFactions)
             {
                 var cardInfoPath = ModPath + UnitInfoCardPath + "\\";
+                var cardInfoPathGame = GamePath + UnitInfoCardPath + "\\";
                 cardInfoPath += faction;
-                if (!(Directory.Exists(cardInfoPath)))
+                cardInfoPathGame += faction;
+                if (!(Directory.Exists(cardInfoPath)) && !(Directory.Exists(cardInfoPathGame)))
                 {
                     ErrorDb.AddError($@"Info Card path not found {cardInfoPath}");
                     continue;
@@ -2960,6 +2971,10 @@ namespace ModdingTool
                 if (File.Exists(cardInfoPath + "\\" + Dictionary + "_info.tga"))
                 {
                     unitInfoCard = cardInfoPath + "\\" + Dictionary + "_info.tga";
+                }
+                else if(File.Exists(cardInfoPathGame + "\\" + Dictionary + "_info.tga"))
+                {
+                    unitInfoCard = cardInfoPathGame + "\\" + Dictionary.ToLower() + "_info.tga";
                 }
                 else
                 {

@@ -9,9 +9,35 @@
     xmlns:local="clr-namespace:ModdingTool.View.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mvvm="clr-namespace:ModdingTool.ViewModel.InterfaceData"
+    xmlns:controls="clr-namespace:BlackPearl.Controls.CoreLibrary;assembly=BlackPearl.Controls.CoreLibrary"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:sdl="http://schemas.sdl.com/xaml"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <UserControl.Resources />
+
+    <UserControl.Resources>
+            <Style x:Key="CustomMultiSelectComboBoxGridStyle" TargetType="Grid">
+                <Setter Property="Height" Value="Auto"/>
+                <Setter Property="Width" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type sdl:MultiSelectComboBox}}, Path=ActualWidth}"/>
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
+                <Setter Property="Margin" Value="0"/>
+                <Setter Property="OverridesDefaultStyle" Value="True"/>
+                <Setter Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="True"/>
+                <Setter Property="VirtualizingPanel.IsContainerVirtualizable" Value="True"/>
+            </Style>
+
+            <Style TargetType="{x:Type sdl:MultiSelectComboBox}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type sdl:MultiSelectComboBox}">
+                                <Grid Style="{StaticResource CustomMultiSelectComboBoxGridStyle}">
+                                    <!-- Other template contents -->
+                                </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+        </UserControl.Resources>
     <Grid>
         <Grid.Background>
             <ImageBrush
@@ -105,6 +131,7 @@
                     <!--  Soldier  -->
                     <local:HyperLinkCombo
                         IsEditable="True"
+                        ClickCommand="{Binding ExecHyperLinkSoldierCommand}"
                         ItemsSource="{Binding ModelEntries}"
                         LabelText="{Binding UnitUiText[Soldier]}"
                         SelectedItem="{Binding SelectedUnit.Soldier}"
@@ -114,6 +141,7 @@
                     <!--  Base Model  -->
                     <local:HyperLinkCombo
                         IsEditable="True"
+                        ClickCommand="{Binding DataContext.ExecHyperLinkSoldierCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                         ItemsSource="{Binding ModelEntries}"
                         LabelText="{Binding UnitUiText[ArmourModelBase]}"
                         SelectedItem="{Binding SelectedUnit.ArmourModelBase}"
@@ -133,11 +161,12 @@
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="50*" />
-                                    <ColumnDefinition Width="15*" />
-                                    <ColumnDefinition Width="15*" />
+                                    <ColumnDefinition Width="10*" />
+                                    <ColumnDefinition Width="10*" />
                                 </Grid.ColumnDefinitions>
                                 <local:HyperLinkCombo
                                     IsEditable="True"
+                                    ClickCommand="{Binding DataContext.ExecHyperLinkSoldierCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                     ItemsSource="{Binding ModelEntries}"
                                     LabelText="{Binding UnitUiText[ArmourModelOne]}"
                                     SelectedItem="{Binding SelectedUnit.ArmourModelOne}"
@@ -160,11 +189,12 @@
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="50*" />
-                                    <ColumnDefinition Width="15*" />
-                                    <ColumnDefinition Width="15*" />
+                                    <ColumnDefinition Width="10*" />
+                                    <ColumnDefinition Width="10*" />
                                 </Grid.ColumnDefinitions>
                                 <local:HyperLinkCombo
                                     IsEditable="True"
+                                    ClickCommand="{Binding DataContext.ExecHyperLinkSoldierCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                     ItemsSource="{Binding ModelEntries}"
                                     LabelText="{Binding UnitUiText[ArmourModelTwo]}"
                                     SelectedItem="{Binding SelectedUnit.ArmourModelTwo}"
@@ -187,12 +217,13 @@
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="50*" />
-                                    <ColumnDefinition Width="15*" />
-                                    <ColumnDefinition Width="15*" />
+                                    <ColumnDefinition Width="10*" />
+                                    <ColumnDefinition Width="10*" />
                                 </Grid.ColumnDefinitions>
                                 <local:HyperLinkCombo
                                     IsEditable="True"
                                     ItemsSource="{Binding ModelEntries}"
+                                    ClickCommand="{Binding DataContext.ExecHyperLinkSoldierCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                     LabelText="{Binding UnitUiText[ArmourModelThree]}"
                                     SelectedItem="{Binding SelectedUnit.ArmourModelThree}"
                                     ToolTip="The second upgrade model this unit uses."
@@ -224,6 +255,7 @@
                             <!--  Officer1  -->
                             <local:HyperLinkCombo
                                 IsEditable="True"
+                                ClickCommand="{Binding DataContext.ExecHyperLinkSoldierCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                 ItemsSource="{Binding ModelEntries}"
                                 LabelText="{Binding UnitUiText[Officer1]}"
                                 SelectedItem="{Binding SelectedUnit.Officer1}"
@@ -233,6 +265,7 @@
                             <!--  Officer2  -->
                             <local:HyperLinkCombo
                                 IsEditable="True"
+                                ClickCommand="{Binding DataContext.ExecHyperLinkSoldierCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                 ItemsSource="{Binding ModelEntries}"
                                 LabelText="{Binding UnitUiText[Officer2]}"
                                 SelectedItem="{Binding SelectedUnit.Officer2}"
@@ -242,6 +275,7 @@
                             <!--  Officer3  -->
                             <local:HyperLinkCombo
                                 IsEditable="True"
+                                ClickCommand="{Binding DataContext.ExecHyperLinkSoldierCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                 ItemsSource="{Binding ModelEntries}"
                                 LabelText="{Binding UnitUiText[Officer3]}"
                                 SelectedItem="{Binding SelectedUnit.Officer3}"
@@ -262,7 +296,6 @@
                 BorderThickness="0"
                 FontFamily="Nirmala UI"
                 FontSize="28"
-                Grid.Column="1"
                 HorizontalAlignment="Stretch"
                 Text="{Binding SelectedUnit.LocalizedName}"
                 TextAlignment="Center"
@@ -273,7 +306,121 @@
                 Source="{Binding UnitInfoImage}"
                 Stretch="None"
                 VerticalAlignment="Top" />
+            <!--Stats-->
+            <Expander
+                Foreground="Azure"
+                Header="Stats"
+                FontFamily="Nirmala UI"
+                HorizontalAlignment="Stretch"
+                IsExpanded="True"
+                VerticalAlignment="Top"
+                >
+                <StackPanel>
+                    <!--Primary-->
+                    <Expander
+                        Foreground="Azure"
+                        Header="Primary"
+                        FontFamily="Nirmala UI"
+                        HorizontalAlignment="Stretch"
+                        IsExpanded="True"
+                        VerticalAlignment="Top">
+                        <StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="33*"></ColumnDefinition>
+                                    <ColumnDefinition Width="33*"></ColumnDefinition>
+                                    <ColumnDefinition Width="33*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="25*"></RowDefinition>
+                                    <RowDefinition Height="25*"></RowDefinition>
+                                    <RowDefinition Height="25*"></RowDefinition>
+                                    <RowDefinition Height="25*"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <!--  Stats Left Side  -->
+                                    <!--Attack-->
+                                    <local:LabelNumberInput
+                                        InputText="{Binding SelectedUnit.PriAttack}"
+                                        LabelText="{Binding UnitUiText[PriAttack]}">
+                                    </local:LabelNumberInput>
+                                    <!--Range-->
+                                    <local:LabelNumberInput
+                                        Grid.Column="0"
+                                        Grid.Row="1"
+                                        InputText="{Binding SelectedUnit.PriRange}"
+                                        LabelText="{Binding UnitUiText[PriRange]}">
+                                    </local:LabelNumberInput>
+                                <!--Projecile-->
+                                <local:HyperLinkCombo
+                                    Grid.Column="0"
+                                    Grid.Row="2"
+                                    Grid.ColumnSpan="2"
+                                    IsEditable="True"
+                                    VerticalAlignment="Center"
+                                    ClickCommand="{Binding ExecHyperLinkProjectileCommand}"
+                                    x:Name="PriProjectile"
+                                    ItemsSource="{Binding ProjectileEntries}"
+                                    SelectedItem="{Binding SelectedUnit.PriProjectile}"
+                                    LabelText="{Binding UnitUiText[PriProjectile]}">
+                                </local:HyperLinkCombo>
+                                <!--  Stats  Center  -->
+                                    <!--Charge-->
+                                    <local:LabelNumberInput
+                                        Grid.Column="1"
+                                        Grid.Row="0"
+                                        InputText="{Binding SelectedUnit.PriCharge}"
+                                        LabelText="{Binding UnitUiText[PriCharge]}">
+                                    </local:LabelNumberInput>
+                                    <!--Ammunition-->
+                                    <local:LabelNumberInput
+                                        Grid.Column="1"
+                                        Grid.Row="1"
+                                        InputText="{Binding SelectedUnit.PriAmmunition}"
+                                        LabelText="{Binding UnitUiText[PriAmmunition]}">
+                                    </local:LabelNumberInput>
+                                <!--  Stats  Right Side  -->
+                                    <!--Armour-->
+                                    <local:LabelNumberInput
+                                        Grid.Column="2"
+                                        Grid.Row="0"
+                                        InputText="{Binding SelectedUnit.PriArmour}"
+                                        LabelText="{Binding UnitUiText[PriArmour]}">
+                                    </local:LabelNumberInput>
+                                    <!--Defense-->
+                                    <local:LabelNumberInput
+                                        Grid.Column="2"
+                                        Grid.Row="1"
+                                        InputText="{Binding SelectedUnit.PriDefense}"
+                                        LabelText="{Binding UnitUiText[PriDefense]}">
+                                    </local:LabelNumberInput>
+                                    <!--Shield-->
+                                    <local:LabelNumberInput
+                                        Grid.Column="2"
+                                        Grid.Row="2"
+                                        InputText="{Binding SelectedUnit.PriShield}"
+                                        LabelText="{Binding UnitUiText[PriShield]}">
+                                    </local:LabelNumberInput>
+                            </Grid>
+                            <!--Attributes  -->
+                            <controls:MultiSelectCombobox
+                                Foreground="Azure"
+                                FontSize="16"
+                                ItemSeparator="  "
+                                FontFamily="Nirmala UI"
+                                ItemSource="{Binding AttackAttr}"
+                                SelectedItems="{Binding SelectedUnit.PriAttr}"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Stretch"
+                                Background="{StaticResource BackgroundBrush}"
+                                x:Name="PriAttr"
+                                VerticalAlignment="Center">
+                            </controls:MultiSelectCombobox>
+                        </StackPanel>
+                    </Expander>
+                </StackPanel>
+            </Expander>
         </StackPanel>
+        <!--  Third Column  -->
         <StackPanel Grid.Column="2">
             <Grid HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
@@ -317,6 +464,5 @@
                 VerticalAlignment="Top"
                 VerticalScrollBarVisibility="Auto" />
         </StackPanel>
-        <!--  Third Column  -->
     </Grid>
 </UserControl>
