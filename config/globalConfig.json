@@ -1,0 +1,7 @@
+{
+  "UseEop": false,
+  "StartMod": "",
+  "AddUnitValuePerUpkeep": true,
+  "AddUnitValuePerCost": true,
+  "AddUnitValue": true
+}
