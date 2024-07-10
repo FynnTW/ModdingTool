@@ -35,6 +35,14 @@ public partial class BattleModelDb
     }
     
     /// <summary>
+    /// Retrieves the count of BattleModels in the BattleModels dictionary.
+    /// </summary>
+    /// <returns>
+    /// The count of BattleModels in the BattleModels dictionary.
+    /// </returns>
+    public int GetCount() => BattleModels.Count;
+    
+    /// <summary>
     /// Retrieves the BattleModels dictionary.
     /// </summary>
     /// <returns>

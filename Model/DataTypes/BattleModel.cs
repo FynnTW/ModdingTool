@@ -24,7 +24,8 @@ public class BattleModel : GameType
     
     #region Properties
     
-    public ModelUsage ModelUsage { get => _modelUsage; set => _modelUsage = value; }
+    public ModelUsage ModelUsage { get; set; } = new();
+
     /**
      * <summary>
      * Name of the entry.
@@ -373,7 +374,7 @@ public class BattleModel : GameType
     #endregion Properties
 
     #region Fields
-    private ModelUsage _modelUsage = new();
+
     private float _scale = 1;
     private int _torchIndex = -1;
     private float _torchBoneX= 0;
