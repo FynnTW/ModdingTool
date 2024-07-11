@@ -423,34 +423,34 @@ public class BattleModel : GameType
                 entry += " ";
             entry += NumString(texture.Sprite) + "\n";
         }
-        entry += Animations.Count + "\n";
+        entry += Animations.Count;
         foreach (var animation in Animations)
         {
-            animation.PriWeapons = new List<string>();
+            var priWeapons= new List<string>();
             if (!string.IsNullOrWhiteSpace(animation.PriWeaponOne))
             {
-                animation.PriWeapons.Add(animation.PriWeaponOne);
+                priWeapons.Add(animation.PriWeaponOne);
             }
 
             if (!string.IsNullOrWhiteSpace(animation.PriWeaponTwo))
             {
-                animation.PriWeapons.Add(animation.PriWeaponTwo);
+                priWeapons.Add(animation.PriWeaponTwo);
             }
-            animation.SecWeapons = new List<string>();
+            var secWeapons = new List<string>();
             if (!string.IsNullOrWhiteSpace(animation.SecWeaponOne))
             {
-                animation.SecWeapons.Add(animation.SecWeaponOne);
+                secWeapons.Add(animation.SecWeaponOne);
             }
 
             if (!string.IsNullOrWhiteSpace(animation.SecWeaponTwo))
             {
-                animation.SecWeapons.Add(animation.SecWeaponTwo);
+                secWeapons.Add(animation.SecWeaponTwo);
             }
-            entry += NumString(animation.MountType) + "\n";
+            entry += "\n" + NumString(animation.MountType) + "\n";
             entry += NumString(animation.PrimarySkeleton) + " ";
             entry += NumString(animation.SecondarySkeleton) + "\n";
-            entry += animation.PriWeapons.Count;
-            if (animation.PriWeapons.Count > 0)
+            entry += priWeapons.Count;
+            if (priWeapons.Count > 0)
             {
                 entry += "\n";
             }
@@ -458,18 +458,18 @@ public class BattleModel : GameType
             {
                 entry += " ";
             }
-            for (var i = 0; i < animation.PriWeapons.Count; i++)
+            for (var i = 0; i < priWeapons.Count; i++)
             {
                 entry += i switch
                 {
                     0 => NumString(animation.PriWeaponOne) + "\n",
                     1 => NumString(animation.PriWeaponTwo) + "\n",
-                    _ => NumString(animation.PriWeapons[i]) + "\n"
+                    _ => NumString(priWeapons[i]) + "\n"
                 };
             }
 
-            entry += animation.SecWeapons.Count;
-            if (animation.SecWeapons.Count > 0)
+            entry += secWeapons.Count;
+            if (secWeapons.Count > 0)
             {
                 entry += "\n";
             }
@@ -477,7 +477,7 @@ public class BattleModel : GameType
             {
                 entry += " ";
             }
-            for (var i = 0; i < animation.SecWeapons.Count; i++)
+            for (var i = 0; i < secWeapons.Count; i++)
             {
                 entry += i switch
                 {
