@@ -17,6 +17,10 @@ The following is a modding tool for the game Medieval II: Total War.
 - Detailed error log for common mistakes in multiple files
 - Import/Export BMDB as JSON
 
+## Download
+
+* [Nightly Build](https://nightly.link/FynnTW/ModdingTool/workflows/build-modding-tool/master/M2TW-Modding-Tool.zip)
+
 ## Build
 
 #### [Install .NET 7.0 and verify installation](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
