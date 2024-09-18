@@ -145,7 +145,7 @@
                         <DataGridTemplateColumn Header="Delete">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Click="DeleteTextureAttach_OnClick" Name="DeleteTexture">
+                                    <Button Click="DeleteTexture_OnClick" Name="DeleteTexture">
                                         <Button.Background>
                                             <ImageBrush ImageSource="pack://application:,,,/Images/bin.png" />
                                         </Button.Background>
@@ -203,7 +203,7 @@
                         <DataGridTemplateColumn Header="Delete">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Click="BrowseTextureAttach_OnClick" Name="DeleteTexture">
+                                    <Button Click="DeleteTextureAttach_OnClick" Name="DeleteTexture">
                                         <Button.Background>
                                             <ImageBrush ImageSource="pack://application:,,,/Images/bin.png" />
                                         </Button.Background>
