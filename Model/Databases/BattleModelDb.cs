@@ -416,4 +416,6 @@ public partial class BattleModelDb
     
     [GeneratedRegex("(?:\\s+|,)battle_model\\s+(\\S*)\\s")]
     private static partial Regex BattleModelRegex1();
+    
+    
 }

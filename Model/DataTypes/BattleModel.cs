@@ -503,6 +503,11 @@ public class BattleModel : GameType
      */
     private static string NumString(string input) 
         => string.IsNullOrWhiteSpace(input) || input.Length < 1 ? "0" : input.Length + " " + input;
+
+    public BattleModel? CloneEntry(string newName)
+    {
+        return BattleModel.CloneModel(newName, this);
+    }
     
     /**
      * <summary>
@@ -579,8 +584,12 @@ public class BattleModel : GameType
                 SecondarySkeleton = animation.SecondarySkeleton,
                 PriWeaponCount = animation.PriWeaponCount,
                 PriWeapons = new List<string>(),
-                SecWeaponCount = animation.SecWeaponCount,
                 SecWeapons = new List<string>(),
+                PriWeaponOne = animation.PriWeaponOne,
+                SecWeaponOne = animation.SecWeaponOne,
+                PriWeaponTwo = animation.PriWeaponTwo,
+                SecWeaponTwo = animation.SecWeaponTwo,
+                SecWeaponCount = animation.SecWeaponCount,
                 Name = name
             });
         }
@@ -845,7 +854,14 @@ public class Animation : GameType
         get => _priWeapons.Count > 0 ? _priWeapons[0] : "";
         set
         { 
-            AddChange(nameof(PriWeaponOne), _priWeapons[0], value);
+            if (_priWeapons.Count > 0)
+                AddChange(nameof(PriWeaponOne), _priWeapons[0], value);
+            else
+            {
+                _priWeapons.Add(value);
+                NotifyPropertyChanged();
+                return;
+            }
             _priWeapons[0] = value;
             NotifyPropertyChanged();
         } 
@@ -856,7 +872,14 @@ public class Animation : GameType
         get => _priWeapons.Count > 1 ? _priWeapons[1] : "";
         set
         {
-            AddChange(nameof(PriWeaponTwo), _priWeapons[1], value);
+            if (_priWeapons.Count > 1)
+                AddChange(nameof(PriWeaponTwo), _priWeapons[1], value);  
+            else
+            {
+                _priWeapons.Add(value);
+                NotifyPropertyChanged();
+                return;
+            }
             _priWeapons[1] = value;
             NotifyPropertyChanged();
         }
@@ -867,7 +890,14 @@ public class Animation : GameType
         get => _secWeapons.Count > 0 ? _secWeapons[0] : "";
         set
         {
-            AddChange(nameof(SecWeaponOne), _secWeapons[0], value);
+            if (_secWeapons.Count > 0)
+                AddChange(nameof(SecWeaponOne), _secWeapons[0], value);
+            else
+            {
+                _secWeapons.Add(value);
+                NotifyPropertyChanged();
+                return;
+            }
             _secWeapons[0] = value;
             NotifyPropertyChanged();
         }
@@ -878,7 +908,14 @@ public class Animation : GameType
         get => _secWeapons.Count > 1 ? _secWeapons[1] : "";
         set
         {
-            AddChange(nameof(SecWeaponTwo), _secWeapons[1], value);
+            if (_secWeapons.Count > 1)
+                AddChange(nameof(SecWeaponTwo), _secWeapons[1], value);
+            else
+            {
+                _secWeapons.Add(value);
+                NotifyPropertyChanged();
+                return;
+            }
             _secWeapons[1] = value;
             NotifyPropertyChanged();
         }
