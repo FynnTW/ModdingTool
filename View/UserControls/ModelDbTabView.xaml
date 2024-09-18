@@ -142,6 +142,17 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Delete">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Click="DeleteTextureAttach_OnClick" Name="DeleteTexture">
+                                        <Button.Background>
+                                            <ImageBrush ImageSource="pack://application:,,,/Images/bin.png" />
+                                        </Button.Background>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
                 <TextBlock Height="35" Text="Attachment Textures" />
@@ -184,6 +195,17 @@
                                     <Button Click="BrowseTexture_OnClick" Name="BrowseTexture">
                                         <Button.Background>
                                             <ImageBrush ImageSource="pack://application:,,,/Images/folder.jpg" />
+                                        </Button.Background>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Delete">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Click="BrowseTextureAttach_OnClick" Name="DeleteTexture">
+                                        <Button.Background>
+                                            <ImageBrush ImageSource="pack://application:,,,/Images/bin.png" />
                                         </Button.Background>
                                     </Button>
                                 </DataTemplate>

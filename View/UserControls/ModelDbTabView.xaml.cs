@@ -132,6 +132,54 @@ namespace ModdingTool.View.UserControls
             openBrowseTextureDialog(sender, false);
         }
 
+        private void DeleteTextureItem(object sender, bool main)
+        {
+            if (sender is not Button button) return;
+
+            var row = FindVisualParent<DataGridRow>(button);
+            var parent = row.Parent as DataGrid;
+
+            // Ensure the row's item is of type Texture
+            if (row.Item is not Texture dataItem)
+            {
+                return; // If it's not a Texture, return early.
+            }
+
+            // Determine if we are working with the main texture grid or the attachment texture grid
+            if (main)
+            {
+                var mainTextures = MainTextureGrid.ItemsSource as List<Texture>;
+                if (mainTextures != null && mainTextures.Contains(dataItem))
+                {
+                    mainTextures.Remove(dataItem); // Remove the item from the main texture list
+                    MainTextureGrid.ItemsSource = mainTextures; // Update the grid's item source
+                }
+            }
+            else
+            {
+                var attachTextures = AttachTextureGrid.ItemsSource as List<Texture>;
+                if (attachTextures != null && attachTextures.Contains(dataItem))
+                {
+                    attachTextures.Remove(dataItem); // Remove the item from the attachment texture list
+                    AttachTextureGrid.ItemsSource = attachTextures; // Update the grid's item source
+                }
+            }
+
+            // Refresh the data grids to reflect the removal
+            MainTextureGrid.Items.Refresh();
+            AttachTextureGrid.Items.Refresh();
+        }
+
+        private void DeleteTexture_OnClick(object sender, RoutedEventArgs e)
+        {
+            DeleteTextureItem(sender, true);
+        }
+
+        private void DeleteTextureAttach_OnClick(object sender, RoutedEventArgs e)
+        {
+            DeleteTextureItem(sender, true);
+        }
+
         private void AnimationGrid_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             var dataGrid = sender as DataGrid;
