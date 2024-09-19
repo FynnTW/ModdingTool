@@ -148,8 +148,7 @@ namespace ModdingTool.View.UserControls
             // Determine if we are working with the main texture grid or the attachment texture grid
             if (main)
             {
-                var mainTextures = MainTextureGrid.ItemsSource as List<Texture>;
-                if (mainTextures != null && mainTextures.Contains(dataItem))
+                if (MainTextureGrid.ItemsSource is List<Texture> mainTextures && mainTextures.Contains(dataItem))
                 {
                     mainTextures.Remove(dataItem); // Remove the item from the main texture list
                     MainTextureGrid.ItemsSource = mainTextures; // Update the grid's item source
@@ -157,8 +156,7 @@ namespace ModdingTool.View.UserControls
             }
             else
             {
-                var attachTextures = AttachTextureGrid.ItemsSource as List<Texture>;
-                if (attachTextures != null && attachTextures.Contains(dataItem))
+                if (AttachTextureGrid.ItemsSource is List<Texture> attachTextures && attachTextures.Contains(dataItem))
                 {
                     attachTextures.Remove(dataItem); // Remove the item from the attachment texture list
                     AttachTextureGrid.ItemsSource = attachTextures; // Update the grid's item source
@@ -190,6 +188,20 @@ namespace ModdingTool.View.UserControls
                 animation.PriWeapons ??= new List<string>();
                 animation.SecWeapons ??= new List<string>();
             }
+        }
+
+        private void AddMesh_OnClick(object sender, RoutedEventArgs e)
+        {
+            ViewModel = (ModelDbTab)DataContext;
+            ViewModel.AddMeshCommand.Execute(null);
+        }
+
+        private void AddMeshAccept_OnClick(object sender, RoutedEventArgs e)
+        {
+            ViewModel = (ModelDbTab)DataContext;
+            ViewModel.AddMeshCommand.Execute(null);
+            LodGrid.ItemsSource = ViewModel.SelectedModel.LodTable;
+            LodGrid.Items.Refresh();
         }
     }
 }
