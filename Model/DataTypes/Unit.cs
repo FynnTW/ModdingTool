@@ -981,7 +981,7 @@ namespace ModdingTool
                 if (value == null) return;
                 if (!WeaponTypes.Contains(value.ToLower()))
                 {
-                    ErrorDb.AddError($"Weapon type {value} does not exist.");
+                    ErrorDb.AddError($"{Type}: Weapon type {value} does not exist.");
                     return;
                 }
                 AddChange(nameof(PriWeaponType), _priWeaponType ?? "", value);
@@ -1002,7 +1002,7 @@ namespace ModdingTool
                 if (value == null) return;
                 if (!TechTypes.Contains(value.ToLower()))
                 {
-                    ErrorDb.AddError($"Tech type {value} does not exist.");
+                    ErrorDb.AddError($"{Type}: Tech type {value} does not exist.");
                     return;
                 }
                 AddChange(nameof(PriTechType), _priTechType ?? "", value);
@@ -1023,7 +1023,7 @@ namespace ModdingTool
                 if (value == null) return;
                 if (!DamageTypes.Contains(value.ToLower()))
                 {
-                    ErrorDb.AddError($"Damage type {value} does not exist.");
+                    ErrorDb.AddError($"{Type}: Damage type {value} does not exist.");
                     return;
                 }
                 AddChange(nameof(PriDamageType), _priDamageType ?? "", value);
@@ -1044,7 +1044,7 @@ namespace ModdingTool
                 if (value == null) return;
                 if (!SoundTypes.Contains(value.ToLower()))
                 {
-                    ErrorDb.AddError($"Sound type {value} does not exist.");
+                    ErrorDb.AddError($"{Type}: Sound type {value} does not exist.");
                     return;
                 }
                 AddChange(nameof(PriSoundType), _priSoundType ?? "", value);
@@ -1714,7 +1714,7 @@ namespace ModdingTool
             get => _statScrub;
             set
             {
-                value = ClampUnitStat(value, 0);
+                value = ClampUnitStat(value, -6, 6);
                 AddChange(nameof(StatScrub), _statScrub, value);
                 _statScrub = value;
                 NotifyPropertyChanged();
@@ -1730,7 +1730,7 @@ namespace ModdingTool
             get => _statForest;
             set
             {
-                value = ClampUnitStat(value, 0);
+                value = ClampUnitStat(value, -6, 6);
                 AddChange(nameof(StatForest), _statForest, value);
                 _statForest = value;
                 NotifyPropertyChanged();
@@ -1746,7 +1746,7 @@ namespace ModdingTool
             get => _statSnow;
             set
             {
-                value = ClampUnitStat(value, 0);
+                value = ClampUnitStat(value,  -6, 6);
                 AddChange(nameof(StatSnow), _statSnow, value);
                 _statSnow = value;
                 NotifyPropertyChanged();
@@ -1762,7 +1762,7 @@ namespace ModdingTool
             get => _statSand;
             set
             {
-                value = ClampUnitStat(value, 0);
+                value = ClampUnitStat(value,  -6, 6);
                 AddChange(nameof(StatSand), _statSand, value);
                 _statSand = value;
                 NotifyPropertyChanged();
@@ -2786,105 +2786,114 @@ namespace ModdingTool
         /// <returns>The calculated unit value.</returns>
         public double CalculateUnitValue()
         {
-            double attackValue = 0;
-            var hasMissileModifier = 1.0;
-            if (Category != null)
+            double aiUnitValue = 0;
+            double extraValue = 0;
+            double moraleMod = 1.0;
+            if (PriAttr != null && PriAttr.Contains("prec"))
             {
-                if ((PriAttr != null && PriAttr.Contains("prec")) || string.IsNullOrWhiteSpace(PriProjectile))
-                {
-                    var attackStat = string.IsNullOrWhiteSpace(PriProjectile) ? PriAttack : SecAttack + 2.0;
-                    var chargeStat = string.IsNullOrWhiteSpace(PriProjectile) ? PriCharge / 2.0 : SecCharge / 2.0;
-                    attackValue = attackStat + chargeStat;
-                }
-                else
-                {
-                    var rangeModifier = PriRange <= 200 ? PriRange * 0.02 : 4.0;
-                    attackValue = PriAttack * 0.5 * rangeModifier + PriAttack * 0.5;
-                    if (PriAttr != null && PriAttr.Contains("ap"))
-                    {
-                        attackValue += 5.0;
-                        if (PriTechType is "missile_gunpowder")
-                            attackValue += 5.0;
-                    }
-                    hasMissileModifier = 0.8;
-                }
+                aiUnitValue = (SecAttack + 2) + (SecCharge * 0.5);
             }
-            var statsTotal = attackValue + (4 * PriArmour) + (2 * PriDefense) + (2 * PriShield);
+            else if (PriProjectile != null)
+            {
+                var rangeModifier = PriRange <= 200 ? PriRange * 0.02 : 4.0;
+                var attack = PriAttack * 0.5;
+                aiUnitValue = attack + (attack * rangeModifier);
+                if (PriAttr != null && PriAttr.Contains("ap"))
+                {
+                    aiUnitValue += 5.0;
+                    if (PriTechType is "missile_gunpowder")
+                        aiUnitValue += 5.0;
+                }
 
+                if (PriArmour < 4)
+                    aiUnitValue += 2;
+                moraleMod = 0.8;
+            }
+            else
+            {
+                aiUnitValue = PriAttack + (PriCharge * 0.5);
+            }
+            aiUnitValue += (4 * PriArmour) + (2 * PriDefense) + (2 * PriShield);
+            
             const double maxMorale = 12.0;
             const double adjustmentScale = 0.55;
             const double baseOffset = 0.25;
-
             var moraleValue = Math.Clamp(Morale, 0.0, maxMorale);
-            var normalizedMorale = moraleValue / maxMorale;
-            var adjustedMorale = normalizedMorale * adjustmentScale + baseOffset;
-            var moraleEffect = 1.0 - adjustedMorale;
-
-            var moraleModifier = 1.0 - (moraleEffect * hasMissileModifier);
-            var extrasStats = 0.0;
-            if (Category != null)
+            var moraleModifier = baseOffset + (adjustmentScale * (moraleValue * 0.0833));
+            moraleModifier = 1.0 - ((1.0 - moraleModifier) * moraleMod);
+            switch (Category)
             {
-                switch (Category)
+                case "cavalry":
                 {
-                    case "siege":
+                    if (Mount != null && MountDataBase.TryGetValue(Mount, out var mount))
+                    {
+                        if (mount.mount_class == "elephant")
                         {
-                            var rangeModifier = SecRange <= 210 ? SecRange * 0.01429 : 3.0;
-                            attackValue = SecAttack * 1.5 * rangeModifier + SecAttack * 1.5;
-                            if (SecAttr != null)
+                            extraValue += SecAttack + (SecCharge / 2.0);
+                            if (SecAttr != null && SecAttr.Contains("ap"))
                             {
-                                if (SecAttr.Contains("ap"))
-                                    attackValue += 3.0;
-                                if (SecAttr.Contains("launching"))
-                                    attackValue += 3.0;
-                                if (!SecAttr.Contains("area"))
-                                {
-                                    if (SecAttr.Contains("bp"))
-                                        attackValue *= 1.4;
-                                }
-                                else
-                                    attackValue *= 2.5;
+                                extraValue += 5.0;
                             }
-                            extrasStats = ExtrasCount * attackValue * moraleModifier;
-                            //if (Pri_armour < 8)
-                            //   statsTotal += 3.0;
-                            break;
-                        }
-                    case "handler":
-                        break;
-                    case "cavalry":
-                        {
-                            if (Mount != null)
+                            if (SecAttr != null && SecAttr.Contains("launching"))
                             {
-                                var mountType = MountDataBase[Mount].mount_class;
-                                switch (mountType)
-                                {
-                                    case "horse":
-                                    case "camel":
-                                        statsTotal += 4.0;
-                                        break;
-                                    case "elephant":
-                                        {
-                                            extrasStats = SecAttack + (SecCharge / 2.0);
-                                            if (SecAttr != null)
-                                            {
-                                                if (SecAttr.Contains("ap"))
-                                                    extrasStats += 5.0;
-                                                if (SecAttr.Contains("launching"))
-                                                    extrasStats += 1.0;
-                                                if (SecAttr.Contains("launching"))
-                                                    extrasStats += 2.0;
-                                            }
+                                extraValue += 1.0;
+                            }
+                            if (SecAttr != null && SecAttr.Contains("area"))
+                            {
+                                extraValue += 2.0;
+                            }
 
-                                            extrasStats = extrasStats * (ExtrasCount * MountHitPoints) * moraleModifier;
-                                            break;
-                                        }
-                                }
-                            }
-                            break;
+                            extraValue += SecArmour;
+                            extraValue *= MountHitPoints * ExtrasCount;
+                            extraValue *= moraleModifier;
                         }
+                        else
+                        {
+                            aiUnitValue += 4.0;
+                        }
+                    }
+                    break;
                 }
+                case "siege":
+                {
+                    var rangeModifier = SecRange > 210 ? 3.0 : SecRange * 0.01429;
+                    var attack = SecAttack * 1.5f;
+                    extraValue += attack + (attack * rangeModifier);
+                    if (SecAttr != null && SecAttr.Contains("ap"))
+                    {
+                        extraValue += 3.0;
+                    }
+                    if (SecAttr != null && SecAttr.Contains("launching"))
+                    {
+                        extraValue += 3.0;
+                    }
+                    if (SecAttr != null && SecAttr.Contains("area"))
+                    {
+                        extraValue *= 2.5f;
+                    }
+                    if (SecAttr != null && SecAttr.Contains("bp"))
+                    {
+                        extraValue *= 1.4f;
+                    }
+                    extraValue *= ExtrasCount;
+                    extraValue *= moraleModifier;
+                    if (PriArmour < 4)
+                        aiUnitValue += 3;
+                    break;
+                }
+                case "handler":
+                {
+                    extraValue += SecAttack + SecArmour;
+                    extraValue *= MountHitPoints * ExtrasCount;
+                    break;
+                }
+                default:
+                    break;
             }
 
+            aiUnitValue *= moraleModifier;
+            
+            
             var officerCount = 0;
             if (!string.IsNullOrWhiteSpace(Officer1))
                 officerCount++;
@@ -2892,10 +2901,8 @@ namespace ModdingTool
                 officerCount++;
             if (!string.IsNullOrWhiteSpace(Officer3))
                 officerCount++;
-            if (Attributes.Contains("general_unit"))
-                officerCount++;
-            var aiUnitValue = ((SoldierCount * HitPoints + officerCount * (HitPoints + 1)) * (moraleModifier * statsTotal) + extrasStats) * 0.45;
-            return aiUnitValue;
+            aiUnitValue *= (SoldierCount * HitPoints) + (officerCount * (HitPoints + 1));
+            return double.Round((aiUnitValue + extraValue) * 0.45);
         }
 
         /// <summary>

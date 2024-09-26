@@ -35,7 +35,7 @@ The following is a modding tool for the game Medieval II: Total War.
 `dotnet publish -c Release --no-restore`
 
 #### Run the executable
-`bin\Release\net7.0-windows\win-x86\publish\ModdingTool.exe`
+`.\bin\Release\net7.0-windows10.0.17763.0\win-x64\publish\ModdingTool.exe`
 
 ## Screenshots
 ![](https://i.imgur.com/dneVvyt.png)

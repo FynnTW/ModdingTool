@@ -50,8 +50,17 @@ public partial class ModelDbTab : Tab
 
     [ObservableProperty] 
     private float _scale;
+
+    [ObservableProperty] 
+    private bool _isMeshPopupOpen;
+
+    [ObservableProperty] 
+    private string _inputMeshPath;
+
+    [ObservableProperty] 
+    private string _inputMeshRange;
     public static IEnumerable<string> MountTypes { get; set; } = BattleModel.MountTypes;
-    
+
     [RelayCommand]
     private void BrowseMesh(Lod lod)
     {
@@ -69,6 +78,42 @@ public partial class ModelDbTab : Tab
         lod.Mesh = filename;
     }
 
+    [RelayCommand]
+    private void AddMesh()
+    {
+        if (string.IsNullOrWhiteSpace(InputMeshPath)) return;
+        if (string.IsNullOrWhiteSpace(InputMeshRange)) return;
+        int range;
+        try
+        {
+            range = int.Parse(InputMeshRange);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            range = 6400;
+        }
+        SelectedModel.AddLod(InputMeshPath, range, SelectedModel.LodCount, SelectedModel.Name);
+        IsMeshPopupOpen = false;
+    }
+
+    [RelayCommand]
+    private void CancelAddMesh()
+    {
+        IsMeshPopupOpen = false;
+    }
+
+    [RelayCommand]
+    private void OpenMeshPopup()
+    {
+        IsMeshPopupOpen = true;
+        if (SelectedModel.LodCount <= 0) return;
+        InputMeshRange = (SelectedModel.LodTable[SelectedModel.LodCount - 1].Distance * 2).ToString();
+        var oldLodString = "lod" + (SelectedModel.LodCount - 1);
+        var newLodString = "lod" + SelectedModel.LodCount;
+        InputMeshPath = SelectedModel.LodTable[SelectedModel.LodCount - 1].Mesh.Replace(oldLodString, newLodString);
+    }
+
     public ModelDbTab(string name)
     {
         Factions = FactionDataBase.Keys.ToList();
@@ -76,6 +121,9 @@ public partial class ModelDbTab : Tab
         SelectedModel = ModData.BattleModelDb.Get(name)!;
         Title = name;
         SelectedModel.PropertyChanged += SelectedModel_PropertyChanged;
+        IsMeshPopupOpen = false;
+        InputMeshRange = "6400";
+        InputMeshPath = "";
     }
 
     private void SelectedModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)

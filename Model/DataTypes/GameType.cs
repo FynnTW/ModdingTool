@@ -25,7 +25,8 @@ public abstract class GameType : INotifyPropertyChanged
 
     protected string _name = "";
 
-    protected static bool FileExistsData(string path, string name)
+    protected static bool 
+        FileExistsData(string path, string name)
     {
         if (string.IsNullOrWhiteSpace(path)) return false;
         if (File.Exists(Globals.ModPath + "/data/" + path) ||
@@ -197,7 +198,6 @@ public abstract class GameType : INotifyPropertyChanged
     {
         if (!Comments.TryGetValue(identifier, out var value)) return "";
         if (value.Count == 0) return "";
-        var comment = value.Aggregate("", (current, c) => current + (c + "\n"));
-        return comment;
+        return value.Aggregate("", (current, t) => current + (t + "\n"));
     }
 }

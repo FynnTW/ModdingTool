@@ -6,6 +6,7 @@
     x:Class="ModdingTool.View.UserControls.ModelDbTabView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:ModdingTool.View.UserControls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mvvm="clr-namespace:ModdingTool.ViewModel.InterfaceData"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
@@ -63,7 +64,62 @@
             </Grid>
 
             <StackPanel Grid.Row="1">
-                <TextBlock Height="35" Text="Meshes" />
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Height="35" Text="Meshes" />
+                    <Popup
+                        Height="200"
+                        IsOpen="{Binding IsMeshPopupOpen}"
+                        Margin="0,20,0,0"
+                        Placement="Bottom"
+                        PlacementTarget="{Binding ElementName=AddMeshButton}"
+                        Width="1000"
+                        x:Name="AddMeshPopup">
+                        <Border
+                            Background="{StaticResource BackgroundBrush2}"
+                            BorderBrush="Black"
+                            BorderThickness="2">
+                            <StackPanel VerticalAlignment="Center">
+                                <local:LabelledFormTextInput
+                                    InputText="{Binding InputMeshPath}"
+                                    LabelText="Path"
+                                    VerticalAlignment="Center"
+                                    x:Name="InputMesh" />
+                                <local:LabelledFormTextInput
+                                    InputText="{Binding InputMeshRange}"
+                                    LabelText="Range"
+                                    VerticalAlignment="Center"
+                                    x:Name="InputRange" />
+                                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                    <Button
+                                        Click="AddMeshAccept_OnClick"
+                                        Content="Add"
+                                        FontFamily="Nirmala UI"
+                                        Height="35"
+                                        Margin="5,15,5,0"
+                                        Width="50"
+                                        x:Name="AddMeshAccept" />
+                                    <Button
+                                        Command="{Binding CancelAddMeshCommand}"
+                                        Content="Cancel"
+                                        FontFamily="Nirmala UI"
+                                        Height="35"
+                                        Margin="5,15,5,0"
+                                        Width="50"
+                                        x:Name="AddMeshCancel" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </Popup>
+                    <Button
+                        Command="{Binding OpenMeshPopupCommand}"
+                        FontSize="16"
+                        HorizontalContentAlignment="Center"
+                        Margin="5"
+                        Name="AddMeshButton"
+                        VerticalContentAlignment="Center">
+                        Add
+                    </Button>
+                </StackPanel>
                 <DataGrid
                     AutoGenerateColumns="False"
                     Background="{StaticResource BackgroundBrush2}"
@@ -142,6 +198,17 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Delete">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Click="DeleteTexture_OnClick" Name="DeleteTexture">
+                                        <Button.Background>
+                                            <ImageBrush ImageSource="pack://application:,,,/Images/bin.png" />
+                                        </Button.Background>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
                 <TextBlock Height="35" Text="Attachment Textures" />
@@ -184,6 +251,17 @@
                                     <Button Click="BrowseTexture_OnClick" Name="BrowseTexture">
                                         <Button.Background>
                                             <ImageBrush ImageSource="pack://application:,,,/Images/folder.jpg" />
+                                        </Button.Background>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Delete">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Click="DeleteTextureAttach_OnClick" Name="DeleteTexture">
+                                        <Button.Background>
+                                            <ImageBrush ImageSource="pack://application:,,,/Images/bin.png" />
                                         </Button.Background>
                                     </Button>
                                 </DataTemplate>

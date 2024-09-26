@@ -414,6 +414,8 @@ public partial class BattleModelDb
         fileStream.LogEnd();
     }
     
-    [GeneratedRegex("battle_model\\s+(\\S*)\\s")]
+    [GeneratedRegex("(?:\\s+|,)battle_model\\s+(\\S*)\\s")]
     private static partial Regex BattleModelRegex1();
+    
+    
 }
