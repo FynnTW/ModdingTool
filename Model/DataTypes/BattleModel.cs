@@ -164,6 +164,11 @@ public class BattleModel : GameType
         return MainTextures.Last();
     }
     
+    public void RemoveMainTexture(Texture texture)
+    {
+        MainTextures.Remove(texture);
+    }
+    
     /// <summary>
     /// Gets or sets the count of attached textures in the battle model.
     /// </summary>
