@@ -214,6 +214,11 @@ public class BattleModel : GameType
         return AttachTextures.Last();
     }
     
+    public void RemoveAttachTexture(Texture texture)
+    {
+        AttachTextures.Remove(texture);
+    }
+    
     /// <summary>
     /// Gets or sets the count of mount types in the battle model.
     /// </summary>
