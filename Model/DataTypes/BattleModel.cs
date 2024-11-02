@@ -208,7 +208,7 @@ public class BattleModel : GameType
             TexturePath = texturePath,
             Normal = normal,
             Sprite = sprite,
-            Name = Name,
+            Name = name,
             IsAttach = true
         });
         return AttachTextures.Last();
@@ -255,9 +255,14 @@ public class BattleModel : GameType
             MountType = mountType,
             PrimarySkeleton = primarySkeleton,
             SecondarySkeleton = secondarySkeleton,
-            Name = Name
+            Name = name
         });
         return Animations.Last();
+    }
+    
+    public void RemoveAnimation(Animation anim)
+    {
+        Animations.Remove(anim);
     }
     
     /// <summary>
