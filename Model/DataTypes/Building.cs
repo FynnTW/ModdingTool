@@ -10,6 +10,7 @@ namespace ModdingTool
         public string convert_to { get; set; } = "";
         private string _religion = "";
         public List<string> factions { get; set; } = new();
+        public List<string> LevelNames { get; set; } = new();
         private string _classification { get; set; } = "";
         public List<BuildingLevel> Levels { get; set; } = new();
         public List<Plugin> Plugins { get; set; } = new();

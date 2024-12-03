@@ -97,6 +97,15 @@ public partial class BuildingDb
                 {
                         //Console.WriteLine(line);
                         var parts = line.Split(delimitersWhite);
+                        if (currentBracket == BracketType.Levels)
+                        {
+                                if (building.LevelNames.Contains(parts[0]))
+                                {
+                                        building.AddBuildingLevel(new BuildingLevel());
+                                        nextBracket = BracketType.Level;
+                                        building.Levels[^1].name = parts[0];
+                                }
+                        }
                         switch (parts[0])
                         {
                                 case "{":
@@ -138,6 +147,7 @@ public partial class BuildingDb
                                         break;
                                 case "levels":
                                         nextBracket = BracketType.Levels;
+                                        building.LevelNames = parts[1..].ToList();
                                         break;
                                 case "upgrades":
                                         nextBracket = BracketType.Upgrades;
