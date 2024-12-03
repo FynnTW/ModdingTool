@@ -2,20 +2,59 @@
 
 namespace ModdingTool
 {
-    public class Building
+    public class Building : GameType
     {
-        public string name { get; set; } = "";
-        public bool isTemple { get; set; } = false;
-        public bool isHinterland { get; set; } = false;
-        public bool isHinterlandFarms { get; set; } = false;
+        private bool _isHinterlandFarms = false;
         public bool isGuild { get; set; } = false;
         public bool isConvert { get; set; } = false;
         public string convert_to { get; set; } = "";
-        public string religion { get; set; } = "";
+        private string _religion = "";
         public List<string> factions { get; set; } = new();
-        public string classification { get; set; } = "";
-        public List<BuildingLevel> levels { get; set; } = new();
-        public List<Plugin> plugins { get; set; } = new();
+        private string _classification { get; set; } = "";
+        public List<BuildingLevel> Levels { get; set; } = new();
+        public List<Plugin> Plugins { get; set; } = new();
+        public string Name { 
+            get => _name;
+            set
+            {
+                AddChange("Name", _name, value);
+                _name = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public string Religion { 
+            get => _religion;
+            set
+            {
+                AddChange("Religion", _religion, value);
+                _name = value;
+                NotifyPropertyChanged();
+            }
+        }
+        
+        public string Classification { 
+            get => _classification;
+            set
+            {
+                AddChange("Classification", _classification, value);
+                _classification = value;
+                NotifyPropertyChanged();
+            }
+        }
+        
+        public void AddBuildingLevel(BuildingLevel level) => Levels.Add(level);
+        public void AddPlugin(Plugin plugin) => Plugins.Add(plugin);
+        
+        public void RemoveBuildingLevel(BuildingLevel level) => Levels.Remove(level);
+        
+        public void RemovePlugin(Plugin plugin) => Plugins.Remove(plugin);
+        
+        public BuildingLevel GetBuildingLevel(int index) => Levels[index];
+        
+        public Plugin GetPlugin(int index) => Plugins[index];
+        
+        public bool IsHinterland => Name.StartsWith(("hinterland_"));
+        public bool IsTemple => Name.StartsWith(("temple_"));
 
     }
 

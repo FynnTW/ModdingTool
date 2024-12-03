@@ -33,6 +33,16 @@ public partial class FileStream
         FileName = fileName;
     }
     
+    public string? GetNextCleanLine()
+    {
+        var line = GetCleanLine();
+        while(line == null && Line < Lines.Length)
+            line = GetCleanLine();
+        return line;
+    }
+    
+    
+    
     public string? GetCleanLine()
     {
         var line = GetLine();

@@ -44,6 +44,7 @@ namespace ModdingTool
         {
             public BattleModelDb BattleModelDb { get; } = new();
             public UnitDb Units { get; } = new();
+            public BuildingDb Buildings { get; } = new();
         }
 
         public static ModOptions ModOptionsInstance = new();
@@ -167,6 +168,7 @@ namespace ModdingTool
             ModData.BattleModelDb.ParseFile();
             MountParser.Parse();
             ModData.Units.ParseFile();
+            ModData.Buildings.ParseFiles();
             CharacterTypesParser.parseCharacterTypes();
             ModData.BattleModelDb.CheckModelUsage();
             ProjectileParser.ParseProjectiles();
