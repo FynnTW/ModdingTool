@@ -34,6 +34,9 @@ public static class LuaAPI
         
         _luaState.DoString(@"import ('ModdingTool', 'ModdingTool.Databases.UnitDb')");
         _luaState.DoString(@"import ('ModdingTool', 'ModdingTool.Unit')");
+        
+        _luaState.DoString(@"import ('ModdingTool', 'ModdingTool.Databases.BuildingDb')");
+        _luaState.DoString(@"import ('ModdingTool', 'ModdingTool.Building')");
     }
     
     public static Globals.Data GetModData()
