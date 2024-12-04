@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -242,9 +243,9 @@ public partial class BuildingDb
                                                                 var recSplit = line.Split('"');
                                                                 cap.Unit = recSplit[1];
                                                                 var newParts = recSplit[2].Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries);
-                                                                cap.InitialPool = double.Parse(newParts[0]);
-                                                                cap.ReplenishmentRate = double.Parse(newParts[1]);
-                                                                cap.MaximumPool = double.Parse(newParts[2]);
+                                                                cap.InitialPool = double.Parse(newParts[0], CultureInfo.InvariantCulture.NumberFormat);
+                                                                cap.ReplenishmentRate = double.Parse(newParts[1], CultureInfo.InvariantCulture.NumberFormat);
+                                                                cap.MaximumPool = double.Parse(newParts[2], CultureInfo.InvariantCulture.NumberFormat);
                                                                 cap.StartingExperience = int.Parse(newParts[3]);
                                                                 break;
                                                         case "agent":

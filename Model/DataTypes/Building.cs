@@ -23,6 +23,8 @@ namespace ModdingTool
         public List<string> LevelNames { get; set; } = new();
         private string _classification { get; set; } = "";
         public List<BuildingLevel> Levels { get; set; } = new();
+
+        public int LevelCount => Levels.Count;
         public List<Plugin> Plugins { get; set; } = new();
         public List<string> Factions
         {
@@ -240,6 +242,7 @@ namespace ModdingTool
                 NotifyPropertyChanged();
             }
         }
+        public int CapabilityCount => Capabilities.Count;
         public List<Capability> FactionCapabilities
         {
             get => _factionCapabilities;
@@ -249,6 +252,7 @@ namespace ModdingTool
                 NotifyPropertyChanged();
             }
         }
+        public int FactionCapabilityCount => FactionCapabilities.Count;
         public void AddCapability(Capability capability) => Capabilities.Add(capability);
         public void AddFactionCapability(Capability capability) => FactionCapabilities.Add(capability);
         public void RemoveCapability(Capability capability) => Capabilities.Remove(capability);
@@ -263,6 +267,7 @@ namespace ModdingTool
                 NotifyPropertyChanged();
             }
         }
+        public int UpgradeCount => Upgrades.Count;
         public void AddUpgrade(BuildingUpgrade upgrade) => Upgrades.Add(upgrade);
         public void RemoveUpgrade(BuildingUpgrade upgrade) => Upgrades.Remove(upgrade);
         

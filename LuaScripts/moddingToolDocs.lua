@@ -360,7 +360,7 @@ function BuildingDb:GetByIndex(index) end
 
 ---Retrieves the total count of buildings in the Buildings dictionary.
 ---@return integer num
-function BuildingDb:GetBuildingCount() end
+function BuildingDb:GetCount() end
 
 ---Imports a JSON file and deserializes it into a dictionary of buildings.
 ---@param file string
@@ -415,6 +415,9 @@ Building = {
 
     ---@type table<integer, BuildingLevel>
     Levels = nil,
+
+    ---@type integer
+    LevelCount = nil,
 
     ---@type table<integer, Plugin>
     Plugins = nil,
@@ -507,6 +510,15 @@ BuildingLevel = {
 
     ---@type table<integer, BuildingUpgrade>
     Upgrades = nil,
+
+    ---@type integer
+    CapabilityCount = nil,
+
+    ---@type integer
+    FactionCapabilityCount = nil,
+
+    ---@type integer
+    UpgradeCount = nil,
 
 }
 
