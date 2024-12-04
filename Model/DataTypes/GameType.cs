@@ -91,6 +91,15 @@ public abstract class GameType : INotifyPropertyChanged
 
         return formattedInput;
     }
+    protected static string FormatFloatPrecise(double input)
+    {
+        if (Math.Abs(input - Math.Round(input)) < 0.0000001)
+            return Math.Round(input).ToString(CultureInfo.InvariantCulture);
+
+        var formattedInput = input.ToString("0.####", CultureInfo.InvariantCulture);
+
+        return formattedInput;
+    }
     protected void AddChange(string attribute, float oldValue, float newValue)
     {
         if (Globals.IsParsing) return;

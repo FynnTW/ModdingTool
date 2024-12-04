@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace ModdingTool
 {
@@ -23,6 +24,9 @@ namespace ModdingTool
         public List<string> LevelNames { get; set; } = new();
         private string _classification { get; set; } = "";
         public List<BuildingLevel> Levels { get; set; } = new();
+        
+        public List<string> Comments { get; set; } = new();
+        public string CommentInLine { get; set; } = "";
 
         public int LevelCount => Levels.Count;
         public List<Plugin> Plugins { get; set; } = new();
@@ -110,11 +114,51 @@ namespace ModdingTool
         public bool IsTemple => Name.StartsWith(("temple_"));
         public bool IsFarms => Name.StartsWith(("hinterland_farms"));
 
+        public string WriteEntry()
+        {
+            var build = Comments.Aggregate("", (current, comment) => current + comment + "\n");
+            build += "building " + Name + " " + CommentInLine + "\n";
+            build += "{\n";
+            if (!string.IsNullOrWhiteSpace(ConvertTo))
+                build += "\tconvert_to " + ConvertTo + "\n";
+            if (!string.IsNullOrWhiteSpace(Classification) && !IsGuild && !IsConvert)
+                build += "\tclassification " + Classification + "\n";
+            if (Factions.Count == Globals.FactionDataBase.Count && Cultures.Count == Globals.CultureDataBase.Count)
+            {
+                build += "\tfactions all " + "\n";
+            }
+            else
+            {
+                if (Factions.Count > 0 || Cultures.Count > 0)
+                {
+                    var facs = "\tfactions ";
+                    facs += Factions.Aggregate( "", (current, faction) => current + faction + " ");
+                    facs += Cultures.Aggregate("", (current, culture) => current + culture + " ");
+                    build += facs.Trim() + "\n";
+                }
+            }
+            if (!string.IsNullOrWhiteSpace(Religion))
+                build += "\treligion " + Religion + "\n";
+            build += "\tlevels" + LevelNames.Aggregate("", (current, level) => current + " " + level) + "\n"; //dirty needs fixed for actual level removing/adding
+            build += "\t{\n";
+            foreach (var level in Levels)
+            {
+                build += level.WriteLevel();
+            }
+            build += "\t}\n";
+            build += "\tplugins\n";
+            build += "\t{\n";
+            build += "\t}\n";
+            build += "}\n";
+            return build;
+        }
+
     }
 
     public class BuildingLevel : GameType
     {
-
+        public List<string> Comments { get; set; } = new();
+        public string CommentInLine { get; set; } = "";
         private static readonly List<string> Materials = new()
         {
             "wooden",
@@ -270,12 +314,64 @@ namespace ModdingTool
         public int UpgradeCount => Upgrades.Count;
         public void AddUpgrade(BuildingUpgrade upgrade) => Upgrades.Add(upgrade);
         public void RemoveUpgrade(BuildingUpgrade upgrade) => Upgrades.Remove(upgrade);
+
+        public string WriteLevel()
+        {
+            var level = Comments.Aggregate("", (current, comment) => current + comment + "\n");
+            level += "\t\t" + Name + " ";
+            if (!AvailableCity)
+                level += "castle ";
+            else if (!AvailableCastle)
+                level += "city ";
+            if (!string.IsNullOrEmpty(Condition))
+                level += "requires " + Condition.Trim();
+            level += CommentInLine + "\n";
+            level += "\t\t{\n";
+            if (!string.IsNullOrWhiteSpace(ConvertTo))
+                level += "\t\t\tconvert_to " + ConvertTo + "\n";
+            if (CapabilityCount > 0)
+            {
+                level += "\t\t\tcapability\n";
+                level += "\t\t\t{\n";
+                foreach (var capability in Capabilities)
+                {
+                    level += "\t\t\t\t" + capability.WriteCapability() + "\n";
+                }
+                level += "\t\t\t}\n";
+            }
+            if (FactionCapabilityCount > 0)
+            {
+                level += "\t\t\tfaction_capability\n";
+                level += "\t\t\t{\n";
+                foreach (var capability in FactionCapabilities)
+                {
+                    level += "\t\t\t\t" + capability.WriteCapability() + "\n";
+                }
+                level += "\t\t\t}\n";
+            }
+            if (!string.IsNullOrWhiteSpace(Material))
+                level += "\t\t\tmaterial " + Material + "\n";
+            level += "\t\t\tconstruction " + ConstructionTime + "\n";
+            level += "\t\t\tcost " + ConstructionCost + "\n";
+            level += "\t\t\tsettlement_min " + SettlementMinLevel + "\n";
+            level += "\t\t\tupgrades\n";
+            level += "\t\t\t{\n";
+            foreach (var upgrade in Upgrades)
+            {
+                level += "\t\t\t\t" + upgrade.WriteUpgrade() + "\n";
+            }
+            level += "\t\t\t}\n";
+            level += "\t\t}\n";
+            return level;
+        }
         
 
     }
 
     public class BuildingUpgrade : GameType
     {
+        public List<string> Comments { get; set; } = new();
+        public string CommentInLine { get; set; } = "";
         public string Name
         {
             get => _name;
@@ -298,6 +394,14 @@ namespace ModdingTool
                 _condition = value;
                 NotifyPropertyChanged();
             }
+        }
+
+        public string WriteUpgrade()
+        {
+            var upg = Name;
+            if (!string.IsNullOrEmpty(Condition))
+                upg += " requires " + Condition;
+            return upg.Trim();
         }
     }
 
@@ -421,6 +525,42 @@ namespace ModdingTool
                 _condition = value;
                 NotifyPropertyChanged();
             }
+        }
+
+        public string WriteCapability()
+        {
+            var cap = "";
+            switch (Type)
+            {
+                case "recruit_pool":
+                    cap += "recruit_pool " + '"' + Unit + '"' + " " + FormatFloatPrecise(InitialPool) + " " + FormatFloatPrecise(ReplenishmentRate) + " " + FormatFloatPrecise(MaximumPool) + " " + StartingExperience;
+                    if (!string.IsNullOrEmpty(Condition))
+                        cap += " requires " + Condition;
+                    return cap;
+                case "agent":
+                    cap += "agent" + AgentType + " ";
+                    if (Bonus)
+                        cap += "bonus ";
+                    cap += Value;
+                    if (!string.IsNullOrEmpty(Condition))
+                        cap += " requires " + Condition;
+                    return cap;
+                case "agent_limit":
+                    cap += "agent_limit " + AgentType + " ";
+                    if (Bonus)
+                        cap += "bonus ";
+                    cap += Value;
+                    if (!string.IsNullOrEmpty(Condition))
+                        cap += " requires " + Condition;
+                    return cap;
+            }
+            cap += Type + " ";
+            if (Bonus)
+                cap += "bonus ";
+            cap += Value;
+            if (!string.IsNullOrEmpty(Condition))
+                cap += " requires " + Condition;
+            return cap.Trim();
         }
         
     }

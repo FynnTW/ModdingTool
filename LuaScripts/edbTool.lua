@@ -116,3 +116,4 @@ end
 
 getPoolData()
 makeCSV()
+edb:WriteFile()

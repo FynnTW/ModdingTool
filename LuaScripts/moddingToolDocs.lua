@@ -377,6 +377,8 @@ function BuildingDb:GetNames() end
 ---@param name string
 function BuildingDb:Remove(name) end
 
+function BuildingDb:WriteFile() end
+
 ---Parses the game files to populate the buildings dictionary.
 function BuildingDb:ParseFiles() end
 

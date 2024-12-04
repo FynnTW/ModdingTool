@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using static ModdingTool.Globals;
 
@@ -12,6 +11,12 @@ namespace ModdingTool.Databases;
 public partial class BuildingDb
 {
         private Dictionary<string, Building> Buildings { get; set; } = new();
+
+        private List<string> HiddenResources = new();
+
+        private List<string> StartComments = new();
+
+        private List<string> EndComments = new();
         
         public void Add(Building building)
         {
@@ -64,7 +69,17 @@ public partial class BuildingDb
 
         public void WriteFile()
         {
-                
+                BackupFile("\\data\\", "export_descr_buildings.txt");
+                var file = StartComments.Aggregate("", (current, comment) => current + comment + Environment.NewLine);
+                file+= "hidden_resources " + string.Join(" ", HiddenResources) + Environment.NewLine + Environment.NewLine+ Environment.NewLine;
+                foreach (var building in Buildings)
+                {
+                        file += building.Value.WriteEntry();
+                        file += "\n";
+                }
+                file += EndComments.Aggregate("", (current, comment) => current + comment + Environment.NewLine);
+                var contentWithLfFixed = file.Replace("\n", "\r\n").Replace("\r\r\n", "\r\n");
+                File.WriteAllText(ModPath + @"/data/export_descr_buildings.txt", contentWithLfFixed);
         }
         
         private enum BracketType
@@ -97,7 +112,7 @@ public partial class BuildingDb
 
                do {
                         //Console.WriteLine(line);
-                        
+                        fileStream.CommentCacheInLine = "";
                         var line = fileStream.GetNextCleanLine();
                         if (line == null)
                                 break;
@@ -106,6 +121,11 @@ public partial class BuildingDb
                                 var parts = line.Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries);
                                 switch (parts[0])
                                 {
+                                        case "hidden_resources":
+                                                StartComments = fileStream.CommentCache;
+                                                fileStream.CommentCache = new List<string>();
+                                                HiddenResources = parts[1..].ToList();
+                                                break;
                                         case "{":
                                                 if (nextBracket == BracketType.None)
                                                 {
@@ -118,6 +138,7 @@ public partial class BuildingDb
                                                 continue;
                                         case "}":
                                         {
+                                                fileStream.CommentCache = new List<string>();
                                                 BracketType bType;
                                                 try
                                                 {
@@ -250,6 +271,7 @@ public partial class BuildingDb
                                                                 break;
                                                         case "agent":
                                                                 cap.AgentType = parts[1];
+                                                                cap.Value = int.Parse(cap.Bonus ? parts[3] : parts[2]);
                                                                 break;
                                                         case "agent_limit":
                                                                 cap.AgentType = parts[1];
@@ -291,6 +313,10 @@ public partial class BuildingDb
                                         if (building.LevelNames.Contains(parts[0]))
                                         {
                                                 building.AddBuildingLevel(new BuildingLevel());
+                                                building.Levels[^1].Comments = fileStream.CommentCache;
+                                                fileStream.CommentCache = new List<string>();
+                                                building.Levels[^1].CommentInLine = fileStream.CommentCacheInLine;
+                                                fileStream.CommentCacheInLine = "";
                                                 nextBracket = BracketType.Level;
                                                 building.Levels[^1].Name = parts[0];
                                                 if (parts.Length > 1)
@@ -319,6 +345,7 @@ public partial class BuildingDb
                         }
                 } while (true);
                 fileStream.LogEnd();
+                EndComments = fileStream.CommentCache;
                 ModData.Buildings.ExportJson();
         }
 
