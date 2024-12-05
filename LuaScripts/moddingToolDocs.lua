@@ -536,6 +536,22 @@ function BuildingLevel:AddFactionCapability(cap) end
 ---@param upg BuildingUpgrade
 function BuildingLevel:AddUpgrade(upg) end
 
+---Add a capability
+---@param type string
+---@return Capability cap
+function BuildingLevel:CreateCapability(type) end
+
+---Add a faction capability
+---@param type string
+---@return Capability cap
+function BuildingLevel:CreateFactionCapability(type) end
+
+---Add an upgrade
+---@param name string
+---@param condition string
+---@return BuildingUpgrade upg
+function BuildingLevel:CreateUpgrade(name, condition) end
+
 ---Remove a capability
 ---@param cap Capability
 function BuildingLevel:RemoveCapability(cap) end
@@ -550,7 +566,7 @@ function BuildingLevel:RemoveUpgrade(upg) end
 
 ---@class Capability
 Capability = {
-    
+
     ---@type string
     Type = nil,
 
@@ -589,12 +605,12 @@ Capability = {
 
     ---@type integer
     StartingExperience = nil,
-    
+
 }
 
 ---@class BuildingUpgrade
 BuildingUpgrade = {
-    
+
     ---@type string
     Name = nil,
     ---@type string

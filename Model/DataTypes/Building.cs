@@ -299,6 +299,18 @@ namespace ModdingTool
         }
         public int FactionCapabilityCount => FactionCapabilities.Count;
         public void AddCapability(Capability capability) => Capabilities.Add(capability);
+
+        public Capability CreateCapability(string type)
+        {
+            Capabilities.Add(new Capability() {Type = type});
+            return Capabilities[^1];
+        }
+
+        public Capability CreateFactionCapability(string type)
+        {
+            FactionCapabilities.Add(new Capability() {Type = type});
+            return FactionCapabilities[^1];
+        }
         public void AddFactionCapability(Capability capability) => FactionCapabilities.Add(capability);
         public void RemoveCapability(Capability capability) => Capabilities.Remove(capability);
         public void RemoveFactionCapability(Capability capability) => FactionCapabilities.Remove(capability);
@@ -314,6 +326,12 @@ namespace ModdingTool
         }
         public int UpgradeCount => Upgrades.Count;
         public void AddUpgrade(BuildingUpgrade upgrade) => Upgrades.Add(upgrade);
+
+        public BuildingUpgrade CreateUpgrade(string name, string condition)
+        {
+            Upgrades.Add(new BuildingUpgrade() {Name = name, Condition = condition});
+            return Upgrades[^1];
+        }
         public void RemoveUpgrade(BuildingUpgrade upgrade) => Upgrades.Remove(upgrade);
 
         public string WriteLevel()

@@ -127,6 +127,7 @@ public partial class BuildingDb
                                                 HiddenResources = parts[1..].ToList();
                                                 break;
                                         case "{":
+                                                fileStream.CommentCache = new List<string>();
                                                 if (nextBracket == BracketType.None)
                                                 {
                                                         Console.WriteLine(@"bracket error at:  " + fileStream.GetCurrentLineIndex);
@@ -257,9 +258,9 @@ public partial class BuildingDb
                                                 {
                                                         cap.Bonus = true;
                                                 }
-                                                if (line.Contains(" requires "))
+                                                if (line.Contains("requires"))
                                                 {
-                                                        var condition = line.Split(" requires ")[1];
+                                                        var condition = line.Split("requires")[1];
                                                         cap.Condition = condition;
                                                 }
                                                 switch (cap.Type)
@@ -304,9 +305,9 @@ public partial class BuildingDb
                                         };
                                         if (parts.Length > 1)
                                         {
-                                             if (line.Contains(" requires "))
+                                             if (line.Contains("requires"))
                                              {
-                                                     var condition = line.Split(" requires ")[1];
+                                                     var condition = line.Split("requires")[1];
                                                      upg.Condition = condition;
                                              }
                                         }
@@ -334,9 +335,9 @@ public partial class BuildingDb
                                                                         building.Levels[^1].AvailableCity = false;
                                                                         break;
                                                         }
-                                                        if (line.Contains(" requires "))
+                                                        if (line.Contains("requires"))
                                                         {
-                                                                var condition = line.Split(" requires ")[1];
+                                                                var condition = line.Split("requires")[1];
                                                                 building.Levels[^1].Condition = condition;
                                                         }
                                                 }
