@@ -346,18 +346,15 @@ namespace ModdingTool
                 level += "requires " + Condition.Trim();
             level += CommentInLine + "\n";
             level += "\t\t{\n";
-            if (!string.IsNullOrWhiteSpace(ConvertTo))
+            if (!string.IsNullOrWhiteSpace(ConvertTo)) 
                 level += "\t\t\tconvert_to " + ConvertTo + "\n";
-            if (CapabilityCount > 0)
+            level += "\t\t\tcapability\n";
+            level += "\t\t\t{\n";
+            foreach (var capability in Capabilities)
             {
-                level += "\t\t\tcapability\n";
-                level += "\t\t\t{\n";
-                foreach (var capability in Capabilities)
-                {
-                    level += "\t\t\t\t" + capability.WriteCapability() + "\n";
-                }
-                level += "\t\t\t}\n";
+                level += "\t\t\t\t" + capability.WriteCapability() + "\n";
             }
+            level += "\t\t\t}\n";
             if (FactionCapabilityCount > 0)
             {
                 level += "\t\t\tfaction_capability\n";
