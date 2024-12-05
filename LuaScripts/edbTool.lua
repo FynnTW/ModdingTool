@@ -3,9 +3,9 @@ local buildingCount = edb:GetCount()
 
 ---@class recruitedUnit
 ---@field unit string
----@field cityPools table<integer, number> 
----@field castlePools table<integer, number> 
----@field bothPools table<integer, number>
+---@field cityPools table<integer, Capability>
+---@field castlePools table<integer, Capability>
+---@field bothPools table<integer, Capability>
 recruitedUnit = {}
 
 function recruitedUnit:new(o)
@@ -34,14 +34,14 @@ function getPoolData()
                     if capability.Type == "recruit_pool" and capability.MaximumPool >= 1 then
                         local unit = capability.Unit
                         if not RECRUIT_UNITs[unit] then
-                            RECRUIT_UNITs[unit] = recruitedUnit:new({unit = unit})
+                            RECRUIT_UNITs[unit] = recruitedUnit:new({ unit = unit })
                         end
                         if level.AvailableCastle and level.AvailableCity then
-                            table.insert(RECRUIT_UNITs[unit].bothPools, capability.ReplenishmentRate)
+                            table.insert(RECRUIT_UNITs[unit].bothPools, capability)
                         elseif level.AvailableCastle then
-                            table.insert(RECRUIT_UNITs[unit].castlePools, capability.ReplenishmentRate)
-                        else 
-                            table.insert(RECRUIT_UNITs[unit].cityPools, capability.ReplenishmentRate)
+                            table.insert(RECRUIT_UNITs[unit].castlePools, capability)
+                        else
+                            table.insert(RECRUIT_UNITs[unit].cityPools, capability)
                         end
                     end
                 end
@@ -68,34 +68,42 @@ function makeCSV()
         local castleCount = 0
         local highest = 0
         local lowest = 9999
+        local highestStr = ""
+        local lowestStr = ""
         for i = 1, #v.bothPools do
-            both = both + v.bothPools[i]
+            both = both + v.bothPools[i].ReplenishmentRate
             bothCount = bothCount + 1
-            if v.bothPools[i] > highest then
-                highest = v.bothPools[i]
+            if v.bothPools[i].ReplenishmentRate > highest then
+                highest = v.bothPools[i].ReplenishmentRate
+                highestStr = v.bothPools[i].ReplenishmentRateString
             end
-            if v.bothPools[i] < lowest then
-                lowest = v.bothPools[i]
+            if v.bothPools[i].ReplenishmentRate < lowest then
+                lowest = v.bothPools[i].ReplenishmentRate
+                lowestStr = v.bothPools[i].ReplenishmentRateString
             end
         end
         for i = 1, #v.cityPools do
-            city = city + v.cityPools[i]
+            city = city + v.cityPools[i].ReplenishmentRate
             cityCount = cityCount + 1
-            if v.cityPools[i] > highest then
-                highest = v.cityPools[i]
+            if v.cityPools[i].ReplenishmentRate > highest then
+                highest = v.cityPools[i].ReplenishmentRate
+                highestStr = v.cityPools[i].ReplenishmentRateString
             end
-            if v.cityPools[i] < lowest then
-                lowest = v.cityPools[i]
+            if v.cityPools[i].ReplenishmentRate < lowest then
+                lowest = v.cityPools[i].ReplenishmentRate
+                lowestStr = v.cityPools[i].ReplenishmentRateString
             end
         end
         for i = 1, #v.castlePools do
-            castle = castle + v.castlePools[i]
+            castle = castle + v.castlePools[i].ReplenishmentRate
             castleCount = castleCount + 1
-            if v.castlePools[i] > highest then
-                highest = v.castlePools[i]
+            if v.castlePools[i].ReplenishmentRate > highest then
+                highest = v.castlePools[i].ReplenishmentRate
+                highestStr = v.castlePools[i].ReplenishmentRateString
             end
-            if v.castlePools[i] < lowest then
-                lowest = v.castlePools[i]
+            if v.castlePools[i].ReplenishmentRate < lowest then
+                lowest = v.castlePools[i].ReplenishmentRate
+                lowestStr = v.castlePools[i].ReplenishmentRateString
             end
         end
         local average = (both + city + castle) / (bothCount + cityCount + castleCount)
@@ -107,7 +115,8 @@ function makeCSV()
         if castleCount > 0 then
             averageCastle = castle / castleCount
         end
-        csv:write(k..";"..average..";"..averageCity..";"..averageCastle..";"..highest..";"..lowest.."\n")
+        csv:write(k .. ";" .. average .. ";" .. averageCity .. ";" .. averageCastle .. ";" .. highestStr ..
+            ";" .. lowestStr .. "\n")
     end
     csv:flush()
     csv:close()

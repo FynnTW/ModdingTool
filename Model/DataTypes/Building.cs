@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace ModdingTool
@@ -415,6 +416,9 @@ namespace ModdingTool
         private double _initialPool= 0;
         private double _replenishmentRate = 0;
         private double _maximumPool  = 0;
+        private string _initialPoolString= "0";
+        private string _replenishmentRateString = "0";
+        private string _maximumPoolString = "0";
         private int _startingExperience = 0;
         
         public string Type
@@ -479,6 +483,7 @@ namespace ModdingTool
             {
                 AddChange("InitialPool", _initialPool, value);
                 _initialPool = value;
+                _initialPoolString = value.ToString(CultureInfo.InvariantCulture.NumberFormat);
                 NotifyPropertyChanged();
             }
         }
@@ -490,6 +495,7 @@ namespace ModdingTool
             {
                 AddChange("ReplenishmentRate", _replenishmentRate, value);
                 _replenishmentRate = value;
+                _replenishmentRateString = value.ToString(CultureInfo.InvariantCulture.NumberFormat);
                 NotifyPropertyChanged();
             }
         }
@@ -501,6 +507,43 @@ namespace ModdingTool
             {
                 AddChange("MaximumPool", _maximumPool, value);
                 _maximumPool = value;
+                _maximumPoolString = value.ToString(CultureInfo.InvariantCulture.NumberFormat);
+                NotifyPropertyChanged();
+            }
+        }
+        
+        public string InitialPoolString
+        {
+            get => _initialPoolString;
+            set
+            {
+                AddChange("InitialPoolString", _initialPoolString, value);
+                _initialPoolString = value;
+                _initialPool = double.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                NotifyPropertyChanged();
+            }
+        }
+        
+        public string ReplenishmentRateString
+        {
+            get => _replenishmentRateString;
+            set
+            {
+                AddChange("ReplenishmentRateString", _replenishmentRateString, value);
+                _replenishmentRateString = value;
+                _replenishmentRate = double.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                NotifyPropertyChanged();
+            }
+        }
+        
+        public string MaximumPoolString
+        {
+            get => _maximumPoolString;
+            set
+            {
+                AddChange("MaximumPoolString", _maximumPoolString, value);
+                _maximumPoolString = value;
+                _maximumPool = double.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
                 NotifyPropertyChanged();
             }
         }
@@ -533,7 +576,7 @@ namespace ModdingTool
             switch (Type)
             {
                 case "recruit_pool":
-                    cap += "recruit_pool " + '"' + Unit + '"' + " " + FormatFloatPrecise(InitialPool) + " " + FormatFloatPrecise(ReplenishmentRate) + " " + FormatFloatPrecise(MaximumPool) + " " + StartingExperience;
+                    cap += "recruit_pool " + '"' + Unit + '"' + " " + InitialPoolString + " " + ReplenishmentRateString + " " + MaximumPoolString + " " + StartingExperience;
                     if (!string.IsNullOrEmpty(Condition))
                         cap += " requires " + Condition;
                     return cap;

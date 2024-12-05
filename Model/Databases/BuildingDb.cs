@@ -164,6 +164,10 @@ public partial class BuildingDb
                                                 {
                                                         Name = parts[1]
                                                 };
+                                                building.Comments = fileStream.CommentCache;
+                                                fileStream.CommentCache = new List<string>();
+                                                building.CommentInLine = fileStream.CommentCacheInLine;
+                                                fileStream.CommentCacheInLine = "";
                                                 if (building.IsTemple)
                                                         building.Classification = "religious";
                                                 else if (building.IsHinterland)
@@ -264,9 +268,9 @@ public partial class BuildingDb
                                                                 var recSplit = line.Split('"');
                                                                 cap.Unit = recSplit[1];
                                                                 var newParts = recSplit[2].Split(delimitersWhite, StringSplitOptions.RemoveEmptyEntries);
-                                                                cap.InitialPool = double.Parse(newParts[0], CultureInfo.InvariantCulture.NumberFormat);
-                                                                cap.ReplenishmentRate = double.Parse(newParts[1], CultureInfo.InvariantCulture.NumberFormat);
-                                                                cap.MaximumPool = double.Parse(newParts[2], CultureInfo.InvariantCulture.NumberFormat);
+                                                                cap.InitialPoolString = newParts[0];
+                                                                cap.ReplenishmentRateString = newParts[1];
+                                                                cap.MaximumPoolString  = newParts[2];
                                                                 cap.StartingExperience = int.Parse(newParts[3]);
                                                                 break;
                                                         case "agent":

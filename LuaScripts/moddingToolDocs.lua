@@ -578,6 +578,15 @@ Capability = {
     ---@type number
     MaximumPool = nil,
 
+    ---@type string
+    InitialPoolString = nil,
+
+    ---@type string
+    ReplenishmentRateString = nil,
+
+    ---@type string
+    MaximumPoolString = nil,
+
     ---@type integer
     StartingExperience = nil,
     
