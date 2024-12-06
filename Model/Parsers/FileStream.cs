@@ -95,11 +95,11 @@ public partial class FileStream
         return line;
     }
 
-    public bool ReadLines()
+    public bool ReadLines(bool isRelative = true)
     {
         try
         {
-            Lines = File.ReadAllLines(ModPath + FilePath + FileName, Encoding);
+            Lines = isRelative ? File.ReadAllLines(ModPath + FilePath + FileName, Encoding) : File.ReadAllLines(FilePath + FileName, Encoding);
         }
         catch (Exception e)
         {

@@ -142,7 +142,6 @@ namespace ModdingTool
             ExpandedEntries.Clear();
             CharacterTypes.Clear();
             UsedMounts.Clear();
-            ModOptionsInstance.EopDirectories.Clear();
             ProjectileDelayStandard = 0;
             ProjectileDelayFlaming = 0;
             ProjectileDelayGunpowder = 0;
@@ -226,6 +225,7 @@ namespace ModdingTool
                 Directory.CreateDirectory("changelogs");
             if (!Directory.Exists(GlobalOptionsInstance.StartMod)) return;
             SetModPath(GlobalOptionsInstance.StartMod);
+            LoadOptions();
             LoadMod();
         }
     }

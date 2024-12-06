@@ -344,18 +344,28 @@ public class UnitDb
             
         fileStream.LogEnd();
 
-        foreach (var file in ModOptionsInstance.EopDirectories.Where(Directory.Exists).SelectMany(path => 
-                     Directory.GetFiles(path, "*.txt", SearchOption.AllDirectories)))
+        var eopDirectories = ModOptionsInstance.EopDirectories;
+
+        foreach (var directory in eopDirectories)
         {
-            var fileName = file.Split('/', '\\').Last();
-            var path = file.Split('/', '\\').Reverse().Skip(1).Reverse().Aggregate("", (current, s) => current + s + "\\");
-            fileStream = new FileStream(path, fileName);
-            valid = fileStream.ReadLines();
-            if (!valid)
+            if (!Directory.Exists(directory))
+            {
+                ErrorDb.AddError("EOP directory not found: " + directory);
                 continue;
-            fileStream.LogStart();
-            ParseEduEntry(fileStream, true, path);
-            fileStream.LogEnd();
+            }
+            var files = Directory.GetFiles(directory, "*.txt", SearchOption.AllDirectories);
+            foreach (var file in files)
+            {
+                var fileName = file.Split('/', '\\').Last();
+                var path = file.Split('/', '\\').Reverse().Skip(1).Reverse().Aggregate("", (current, s) => current + s + "\\");
+                fileStream = new FileStream(path, fileName);
+                valid = fileStream.ReadLines(false);
+                if (!valid)
+                    continue;
+                fileStream.LogStart();
+                ParseEduEntry(fileStream, true, path);
+                fileStream.LogEnd();
+            }
         }
 
     }
