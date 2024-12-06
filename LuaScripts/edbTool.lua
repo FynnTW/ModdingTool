@@ -1,4 +1,5 @@
 local edb = GetModData().Buildings
+local edu = GetModData().Units
 local buildingCount = edb:GetCount()
 
 ---@class recruitedUnit
@@ -14,6 +15,8 @@ function recruitedUnit:new(o)
     o.cityPools = o.cityPools or {}
     o.castlePools = o.castlePools or {}
     o.bothPools = o.bothPools or {}
+    o.unitValue = o.unitValue or 0
+    o.unitValuePerSoldier = o.unitValuePerSoldier or 0
     setmetatable(o, self)
     self.__index = self
     return o
@@ -36,6 +39,7 @@ function getPoolData()
                         if not RECRUIT_UNITs[unit] then
                             RECRUIT_UNITs[unit] = recruitedUnit:new({ unit = unit })
                         end
+
                         if level.AvailableCastle and level.AvailableCity then
                             table.insert(RECRUIT_UNITs[unit].bothPools, capability)
                         elseif level.AvailableCastle then
@@ -60,6 +64,9 @@ function makeCSV()
     end
     csv:write("Unit;Average;AverageCity;AverageCastle;Highest;Lowest\n")
     for k, v in pairs(RECRUIT_UNITs) do
+        local bothRates = {}
+        local cityRates = {}
+        local castleRates = {}
         local both = 0
         local city = 0
         local castle = 0
@@ -71,6 +78,7 @@ function makeCSV()
         local highestStr = ""
         local lowestStr = ""
         for i = 1, #v.bothPools do
+            table.insert(bothRates, v.bothPools[i].ReplenishmentRate)
             both = both + v.bothPools[i].ReplenishmentRate
             bothCount = bothCount + 1
             if v.bothPools[i].ReplenishmentRate > highest then
@@ -83,6 +91,8 @@ function makeCSV()
             end
         end
         for i = 1, #v.cityPools do
+            table.insert(bothRates, v.castlePools[i].ReplenishmentRate)
+            table.insert(cityRates, v.cityPools[i].ReplenishmentRate)
             city = city + v.cityPools[i].ReplenishmentRate
             cityCount = cityCount + 1
             if v.cityPools[i].ReplenishmentRate > highest then
@@ -95,6 +105,8 @@ function makeCSV()
             end
         end
         for i = 1, #v.castlePools do
+            table.insert(bothRates, v.castlePools[i].ReplenishmentRate)
+            table.insert(castleRates, v.castlePools[i].ReplenishmentRate)
             castle = castle + v.castlePools[i].ReplenishmentRate
             castleCount = castleCount + 1
             if v.castlePools[i].ReplenishmentRate > highest then
@@ -125,4 +137,3 @@ end
 
 getPoolData()
 makeCSV()
-edb:WriteFile()

@@ -117,13 +117,13 @@ BattleModel = {
     TorchBoneZ = nil,
 
     ---@type number
-    TorchSpriteX = nil,
+    TorchSTerteX = nil,
 
     ---@type number
-    TorchSpriteY = nil,
+    TorchSTerteY = nil,
 
     ---@type number
-    TorchSpriteZ = nil,
+    TorchSTerteZ = nil,
 
     ---@type ModelUsage
     ModelUsage = nil,
@@ -136,37 +136,37 @@ BattleModel = {
 ---@param name string Name of the model
 function BattleModel:AddLod(meshName, distance, index, name) end
 
----Adds a main texture to the BattleModel. If the texture already exists, updates the texture path, normal map, and sprite.
+---Adds a main texture to the BattleModel. If the texture already exists, updates the texture path, normal map, and sTerte.
 ---@param faction string
 ---@param texturePath string
 ---@param normal string
----@param sprite string
+---@param sTerte string
 ---@param name string Name of the model
 ---@return Texture newTexture
-function BattleModel:AddMainTexture(faction, texturePath, normal, sprite, name) end
+function BattleModel:AddMainTexture(faction, texturePath, normal, sTerte, name) end
 
 ---@param texture Texture
 function BattleModel:RemoveMainTexture(texture) end
 
----Adds a attach texture to the BattleModel. If the texture already exists, updates the texture path, normal map, and sprite.
+---Adds a attach texture to the BattleModel. If the texture already exists, updates the texture path, normal map, and sTerte.
 ---@param faction string
 ---@param texturePath string
 ---@param normal string
----@param sprite string
+---@param sTerte string
 ---@param name string Name of the model
 ---@return Texture newTexture
-function BattleModel:AddAttachTexture(faction, texturePath, normal, sprite, name) end
+function BattleModel:AddAttachTexture(faction, texturePath, normal, sTerte, name) end
 
 ---@param texture Texture
 function BattleModel:RemoveAttachTexture(texture) end
 
----Adds an animation to the BattleModel. If the entry for the provided mount type already exists, updates the primary and secondary skeleton.
+---Adds an animation to the BattleModel. If the entry for the provided mount type already exists, updates the Termary and secondary skeleton.
 ---@param mountType string
----@param primarySkeleton string
+---@param TermarySkeleton string
 ---@param secondarySkeleton string
 ---@param name string Name of the model
 ---@return Animation newAnimation
-function BattleModel:AddAnimation(mountType, primarySkeleton, secondarySkeleton, name) end
+function BattleModel:AddAnimation(mountType, TermarySkeleton, secondarySkeleton, name) end
 
 ---@param anim Animation
 function BattleModel:RemoveAnimation(anim) end
@@ -212,7 +212,7 @@ Texture = {
     Normal = nil,
 
     ---@type string
-    Sprite = nil,
+    STerte = nil,
 
     ---@type string
     Faction = nil,
@@ -228,22 +228,22 @@ Animation = {
     MountType = nil,
 
     ---@type string
-    PrimarySkeleton = nil,
+    TermarySkeleton = nil,
 
     ---@type string
     SecondarySkeleton = nil,
 
     ---@type integer
-    PriWeaponCount = nil,
+    TerWeaponCount = nil,
 
     ---@type table<integer, string>
-    PriWeapons = nil,
+    TerWeapons = nil,
 
     ---@type string
-    PriWeaponOne = nil,
+    TerWeaponOne = nil,
 
     ---@type string
-    PriWeaponTwo = nil,
+    TerWeaponTwo = nil,
 
     ---@type integer
     SecWeaponCount = nil,
@@ -333,6 +333,504 @@ function UnitDb:WriteFile() end
 
 ---Parses the game files to populate the Units dictionary.
 function UnitDb:ParseFile() end
+
+---@class Unit
+Unit = {
+
+    ---@type string
+    LocalizedName = nil,
+
+    ---@type string
+    Type = nil,
+
+    ---@type string
+    Dictionary = nil,
+
+    ---@type string
+    Category = nil,
+
+    ---@type string
+    ClassType = nil,
+
+    ---@type string
+    VoiceType = nil,
+
+    ---@type string
+    Accent = nil,
+
+    ---@type string
+    BannerFaction = nil,
+
+    ---@type string
+    BannerUnit = nil,
+
+    ---@type string
+    BannerMain = nil,
+
+    ---@type string
+    BannerSecondary = nil,
+
+    ---@type string
+    BannerHoly = nil,
+
+    ---@type string
+    Soldier = nil,
+
+    ---@type integer
+    SoldierCount = nil,
+
+    ---@type integer
+    ExtrasCount = nil,
+
+    ---@type number
+    Mass = nil,
+
+    ---@type number
+    Radius = nil,
+
+    ---@type number
+    Height = nil,
+
+    ---@type string
+    Officer1 = nil,
+
+    ---@type string
+    Officer2 = nil,
+
+    ---@type string
+    Officer3 = nil,
+
+    ---@type string
+    MountedEngine = nil,
+
+    ---@type string
+    Mount = nil,
+
+    ---@type string
+    Ship = nil,
+
+    ---@type string
+    Engine = nil,
+
+    ---@type string
+    Animal = nil,
+
+    ---@type table<integer, string>
+    MountEffect = nil,
+
+    ---@type table<integer, string>
+    Attributes = nil,
+
+    ---@type number
+    SpacingWidth = nil,
+
+    ---@type number
+    SpacingDepth = nil,
+
+    ---@type number
+    SpacingWidthLoose = nil,
+
+    ---@type number
+    SpacingDepthLoose = nil,
+
+    ---@type string
+    SpecialFormation = nil,
+
+    ---@type integer
+    HitPoints = nil,
+
+    ---@type integer
+    MountHitPoints = nil,
+
+    ---@type integer
+    PriAttack = nil,
+
+    ---@type integer
+    PriCharge = nil,
+
+    ---@type integer
+    PriProjectile = nil,
+
+    ---@type integer
+    PriRange = nil,
+
+    ---@type integer
+    PriAmmunition = nil,
+
+    ---@type string
+    PriWeaponType = nil,
+
+    ---@type string
+    PriTechType = nil,
+
+    ---@type string
+    PriDamageType = nil,
+
+    ---@type string
+    PriSoundType = nil,
+
+    ---@type integer
+    PriAttDelay = nil,
+
+    ---@type number
+    PriSkelFactor = nil,
+
+    ---@type table<integer, string>
+    PriAttr = nil,
+
+    ---@type integer
+    SecAttack = nil,
+
+    ---@type integer
+    SecCharge = nil,
+
+    ---@type integer
+    SecProjectile = nil,
+
+    ---@type integer
+    SecRange = nil,
+
+    ---@type integer
+    SecAmmunition = nil,
+
+    ---@type string
+    SecWeaponType = nil,
+
+    ---@type string
+    SecTechType = nil,
+
+    ---@type string
+    SecDamageType = nil,
+
+    ---@type string
+    SecSoundType = nil,
+
+    ---@type integer
+    SecAttDelay = nil,
+
+    ---@type number
+    SecSkelFactor = nil,
+
+    ---@type table<integer, string>
+    SecAttr = nil,
+
+    ---@type integer
+    TerAttack = nil,
+
+    ---@type integer
+    TerCharge = nil,
+
+    ---@type integer
+    TerProjectile = nil,
+
+    ---@type integer
+    TerRange = nil,
+
+    ---@type integer
+    TerAmmunition = nil,
+
+    ---@type string
+    TerWeaponType = nil,
+
+    ---@type string
+    TerTechType = nil,
+
+    ---@type string
+    TerDamageType = nil,
+
+    ---@type string
+    TerSoundType = nil,
+
+    ---@type integer
+    TerAttDelay = nil,
+
+    ---@type number
+    TerSkelFactor = nil,
+
+    ---@type table<integer, string>
+    TerAttr = nil,
+
+    ---@type string
+    FormationStyle = nil,
+
+    ---@type integer
+    PriArmour = nil,
+
+    ---@type integer
+    PriDefense = nil,
+
+    ---@type integer
+    PriShield = nil,
+
+    ---@type string
+    PriDefSound = nil,
+
+    ---@type integer
+    SecArmour = nil,
+
+    ---@type integer
+    SecDefense = nil,
+
+    ---@type string
+    SecDefSound = nil,
+
+    ---@type integer
+    StatHeat = nil,
+
+    ---@type integer
+    StatScrub = nil,
+
+    ---@type integer
+    StatForest = nil,
+
+    ---@type integer
+    StatSnow = nil,
+
+    ---@type integer
+    StatSand = nil,
+
+    ---@type integer
+    Morale = nil,
+
+    ---@type string
+    Discipline = nil,
+
+    ---@type string
+    Training = nil,
+
+    ---@type integer
+    StatChargeDist = nil,
+
+    ---@type integer
+    StatFireDelay = nil,
+
+    ---@type integer
+    StatFood = nil,
+
+    ---@type integer
+    StatFoodSec = nil,
+
+    ---@type integer
+    RecruitTime = nil,
+
+    ---@type integer
+    RecruitCost = nil,
+
+    ---@type integer
+    Upkeep = nil,
+
+    ---@type integer
+    WpnCost = nil,
+
+    ---@type integer
+    ArmourCost = nil,
+
+    ---@type integer
+    CustomCost = nil,
+
+    ---@type integer
+    CustomLimit = nil,
+
+    ---@type integer
+    CustomIncrease = nil,
+
+    ---@type number
+    MoveSpeed = nil,
+
+    ---@type integer
+    StatStl = nil,
+
+    ---@type string
+    ArmourlvlBase = nil,
+
+    ---@type string
+    ArmourlvlOne = nil,
+
+    ---@type string
+    ArmourlvlTwo = nil,
+
+    ---@type string
+    ArmourlvlThree = nil,
+
+    ---@type string
+    ArmourModelBase = nil,
+
+    ---@type string
+    ArmourModelOne = nil,
+
+    ---@type string
+    ArmourModelTwo = nil,
+
+    ---@type string
+    ArmourModelThree = nil,
+
+    ---@type table<integer, string>
+    Ownership = nil,
+
+    ---@type table<integer, string>
+    EraZero = nil,
+
+    ---@type table<integer, string>
+    EraOne = nil,
+
+    ---@type table<integer, string>
+    EraTwo = nil,
+
+    ---@type number
+    RecruitPriorityOffset = nil,
+
+    ---@type string
+    InfoDict = nil,
+
+    ---@type string
+    CardDict = nil,
+
+    ---@type number
+    CrusadeUpkeep = nil,
+
+    ---@type integer
+    SpacingRanks = nil,
+
+    ---@type boolean
+    LockMorale = nil,
+
+    ---@type string
+    PriFireType = nil,
+
+    ---@type string
+    SecFireType = nil,
+
+    ---@type string
+    TerFireType = nil,
+
+    ---@type string
+    Descr = nil,
+
+    ---@type string
+    DescrShort = nil,
+
+    ---@type string
+    Card = nil,
+
+    ---@type boolean
+    MercenaryUnit = nil,
+
+    ---@type boolean
+    IsEopUnit = nil,
+
+    ---@type boolean
+    FilePath = nil,
+
+    ---@type integer
+    EduIndex = nil,
+
+    ---@type number
+    AiUnitValue = nil,
+
+    ---@type number
+    ValuePerCost = nil,
+
+    ---@type number
+    ValuePerUpkeep = nil,
+
+    ---@type string
+    CardInfo = nil,
+
+    ---@type string
+    FactionSymbol = nil,
+
+}
+
+---Add a mount effect
+---@param effect string
+function Unit:AddMountEffect(effect) end
+
+---Remove a mount effect
+---@param effect string
+function Unit:RemoveMountEffect(effect) end
+
+---Add an attribute
+---@param attr string
+function Unit:AddAttribute(attr) end
+
+---Remove an attribute
+---@param attr string
+function Unit:RemoveAttribute(attr) end
+
+---Add an attribute
+---@param attr string
+function Unit:AddPriAttribute(attr) end
+
+---Remove an attribute
+---@param attr string
+function Unit:RemovePriAttribute(attr) end
+
+---Add an attribute
+---@param attr string
+function Unit:AddSecAttribute(attr) end
+
+---Remove an attribute
+---@param attr string
+function Unit:RemoveSecAttribute(attr) end
+
+---Add an attribute
+---@param attr string
+function Unit:AddTerAttribute(attr) end
+
+---Remove an attribute
+---@param attr string
+function Unit:RemoveTerAttribute(attr) end
+
+---Add an ownership faction
+---@param fac string
+function Unit:AddOwnership(fac) end
+
+---Remove an ownership faction
+---@param fac string
+function Unit:RemoveOwnership(fac) end
+
+---Add an era faction
+---@param fac string
+function Unit:AddEraZero(fac) end
+
+---Remove an era faction
+---@param fac string
+function Unit:RemoveEraZero(fac) end
+
+---Add an era faction
+---@param fac string
+function Unit:AddEraOne(fac) end
+
+---Remove an era faction
+---@param fac string
+function Unit:RemoveEraOne(fac) end
+
+---Add an era faction
+---@param fac string
+function Unit:AddEraTwo(fac) end
+
+---Remove an era faction
+---@param fac string
+function Unit:RemoveEraTwo(fac) end
+
+---Check if unit uses a model
+---@param model string
+---@return boolean contains
+function Unit:ContainsModel(model) end
+
+---@param oldModel string
+---@param newModel string
+function Unit:UpdateModelUsage(oldModel, newModel) end
+
+---Writes the entry in a format compatible with the export_descr_unit.txt and returns it.
+---@return string entry
+function Unit:WriteEntry() end
+
+---@return number value
+function Unit:CalculateUnitValue() end
+
+---@return table<integer, string> cards
+function Unit:GetCards() end
 
 ---@class BuildingDb
 BuildingDb = {

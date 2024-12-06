@@ -757,6 +757,13 @@ namespace ModdingTool
                 return;
             MountEffect.Add(effect);
         }
+        
+        public void RemoveMountEffect(string effect)
+        {
+            if (!MountEffect.Contains(effect))
+                return;
+            MountEffect.Remove(effect);
+        }
 
         /// <summary>
         /// Gets or sets the attributes for the unit. This is a list of strings representing the attributes a unit has.
@@ -1105,6 +1112,13 @@ namespace ModdingTool
             PriAttr ??= new List<string>();
             PriAttr.Add(attribute);
         }
+        
+        public void RemovePriAttr(string attribute)
+        {
+            if (PriAttr == null || !PriAttr.Contains(attribute))
+                return;
+            PriAttr.Remove(attribute);
+        }
 
         /// <summary>
         /// Gets or sets the secondary attack value of the unit. This is an integer representing the secondary attack power of a unit.
@@ -1320,6 +1334,13 @@ namespace ModdingTool
             }
             SecAttr ??= new List<string>();
             SecAttr.Add(attribute);
+        }
+        
+        public void RemoveSecAttr(string attribute)
+        {
+            if (SecAttr == null || !SecAttr.Contains(attribute))
+                return;
+            SecAttr.Remove(attribute);
         }
 
         /// <summary>
@@ -1544,6 +1565,13 @@ namespace ModdingTool
 
             // Add the attribute to the tertiary attribute list
             TerAttr.Add(attribute);
+        }
+        
+        public void RemoveTerAttr(string attribute)
+        {
+            if (TerAttr == null || !TerAttr.Contains(attribute))
+                return;
+            TerAttr.Remove(attribute);
         }
         
         /// <summary>
@@ -2209,6 +2237,12 @@ namespace ModdingTool
                 return;
             Ownership.Add(faction);
         }
+        
+        public void RemoveOwnership(string faction)
+        {
+            if (Ownership.Contains(faction))
+                Ownership.Remove(faction);
+        }
 
         /// <summary>
         /// Gets or sets the EraZero of the unit. This is a list of strings representing the factions that own the unit in EraZero.
@@ -2224,6 +2258,12 @@ namespace ModdingTool
             if (EraZero.Contains(faction))
                 return;
             EraZero.Add(faction);
+        }
+        
+        public void RemoveEraZero(string faction)
+        {
+            if (EraZero.Contains(faction))
+                EraZero.Remove(faction);
         }
 
         /// <summary>
@@ -2241,6 +2281,12 @@ namespace ModdingTool
                 return;
             EraOne.Add(faction);
         }
+        
+        public void RemoveEraOne(string faction)
+        {
+            if (EraOne.Contains(faction))
+                EraOne.Remove(faction);
+        }
 
         /// <summary>
         /// Gets or sets the EraTwo of the unit. This is a list of strings representing the factions that own the unit in EraTwo.
@@ -2256,6 +2302,12 @@ namespace ModdingTool
             if (EraTwo.Contains(faction))
                 return;
             EraTwo.Add(faction);
+        }
+        
+        public void RemoveEraTwo(string faction)
+        {
+            if (EraTwo.Contains(faction))
+                EraTwo.Remove(faction);
         }
 
         /// <summary>
