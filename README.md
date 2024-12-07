@@ -43,10 +43,10 @@ The following is a modding tool for the game Medieval II: Total War.
 
 ## Screenshots
 
-![](https://imgur.com/xhLKsC6)
-![](https://imgur.com/D5n3ppz)
-![](https://imgur.com/0f2MuPi)
-![](https://imgur.com/BGR2M9q)
+![](https://i.imgur.com/xhLKsC6)
+![](https://i.imgur.com/D5n3ppz)
+![](https://i.imgur.com/0f2MuPi)
+![](https://i.imgur.com/BGR2M9q)
 
 ## Technology
 
