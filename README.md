@@ -4,22 +4,24 @@
 
 ![](https://i.imgur.com/pS2ChZI.png)
 
------------------
+---
 
 The following is a modding tool for the game Medieval II: Total War.
 
 **NOTE: This project is currently a Work In Progress. While the tool shouldn't cause any harm to your build, if you haven't already made backups of any files you care about, do it NOW before using this tool.**
 
 ## Features
+
 - Fast and lightweight
 - GUI for easy editing of EDU and BMDB
+- CLI for import/export EDU, EDB and BMDB in json formats
+- Run custom Lua scripts on the data with documented Lua plugin
 - Filter and sorting functionality of EDU units
 - Detailed error log for common mistakes in multiple files
-- Import/Export BMDB as JSON
 
 ## Download
 
-* [Nightly Build](https://nightly.link/FynnTW/ModdingTool/workflows/build-modding-tool/master/M2TW-Modding-Tool.zip)
+- [Nightly Build](https://nightly.link/FynnTW/ModdingTool/workflows/build-modding-tool/master/M2TW-Modding-Tool.zip)
 
 ## Build
 
@@ -28,23 +30,28 @@ The following is a modding tool for the game Medieval II: Total War.
 `dotnet --version`
 
 #### Install the dependencies
+
 `dotnet restore`
 
 #### Build the executable
 
-`dotnet publish -c Release --no-restore`
+`./Build.ps1`
 
 #### Run the executable
-`.\bin\Release\net7.0-windows10.0.17763.0\win-x64\publish\ModdingTool.exe`
+
+`.\CombinedOutput\ModdingTool.exe`
 
 ## Screenshots
-![](https://i.imgur.com/dneVvyt.png)
-![](https://i.imgur.com/qK9CPyV.png)
-![](https://i.imgur.com/5M9LVTB.png)
+
+![](https://imgur.com/a/1oMX7HM)
+![](https://imgur.com/a/A2lm4EX)
+![](https://imgur.com/a/yypUhp7)
 
 ## Technology
+
 - .NET Framework
 - C#
 
 ## Credits
+
 - FynnTW
