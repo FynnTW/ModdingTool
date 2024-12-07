@@ -26,10 +26,10 @@ jobs:
 
       # Build DaC Launcher
       - name: Build
-        run: dotnet publish -c Release --no-restore
+        run: ./Build.ps1 -shouldZip "True"
 
       # Upload build artifact
       - uses: actions/upload-artifact@v3
         with:
           name: M2TW-Modding-Tool
-          path: D:\a\ModdingTool\ModdingTool\bin\Release\net7.0-windows10.0.17763.0\win-x64\publish\ModdingTool.exe
+          path: D:\a\ModdingTool\ModdingTool\ModdingTool.zip
