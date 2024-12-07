@@ -102,10 +102,11 @@ namespace ModdingTool
             if (dirInfo.Parent is { Parent: not null })
                 GamePath = dirInfo.Parent.Parent.FullName;
             GlobalOptionsInstance.StartMod = ModPath;
+            Print("Mod path set to: " + ModPath);
+            if (Application.Current == null) return;
             var window = (MainWindow)Application.Current.MainWindow!;
             var statusBar = window.FindName("StatusBarLive") as StatusBarCustom;
             statusBar?.SetStatusModPath(ModPath);
-            Print("Mod path set to: " + ModPath);
         }
         
         public static void LoadMod()
@@ -186,6 +187,8 @@ namespace ModdingTool
         /// </remarks>
         public static void LoadOptions()
         {
+            if (!Directory.Exists("config"))
+                Directory.CreateDirectory("config");
             if (!File.Exists("config/globalConfig.json"))
                 File.WriteAllText("config/globalConfig.json", JsonConvert.SerializeObject(GlobalOptionsInstance, Formatting.Indented));
             else
@@ -218,11 +221,7 @@ namespace ModdingTool
 
         public static void AppStarted()
         {
-            if (!Directory.Exists("config"))
-                Directory.CreateDirectory("config");
             LoadOptions();
-            if (!Directory.Exists("changelogs"))
-                Directory.CreateDirectory("changelogs");
             if (!Directory.Exists(GlobalOptionsInstance.StartMod)) return;
             SetModPath(GlobalOptionsInstance.StartMod);
             LoadOptions();

@@ -55,6 +55,12 @@ function getPoolData()
     print("Finish getting pool data..")
 end
 
+function sortRates(rateTable)
+    table.sort(rateTable, function(a, b)
+        return a < b
+    end)
+end
+
 function makeCSV()
     print("Start Making csv..")
     local csv = io.open("recruit_pool.csv", "w")
@@ -62,7 +68,7 @@ function makeCSV()
         print("Cant open file")
         return
     end
-    csv:write("Unit;Average;AverageCity;AverageCastle;Highest;Lowest\n")
+    csv:write("Unit;Average;Median;AverageCity;MedianCity;AverageCastle;MedianCastle;Highest;Lowest;UnitValue\n")
     for k, v in pairs(RECRUIT_UNITs) do
         local bothRates = {}
         local cityRates = {}
@@ -91,7 +97,7 @@ function makeCSV()
             end
         end
         for i = 1, #v.cityPools do
-            table.insert(bothRates, v.castlePools[i].ReplenishmentRate)
+            table.insert(bothRates, v.cityPools[i].ReplenishmentRate)
             table.insert(cityRates, v.cityPools[i].ReplenishmentRate)
             city = city + v.cityPools[i].ReplenishmentRate
             cityCount = cityCount + 1
@@ -120,15 +126,35 @@ function makeCSV()
         end
         local average = (both + city + castle) / (bothCount + cityCount + castleCount)
         local averageCity = 0
+        local median = bothRates[math.ceil(bothCount + cityCount + castleCount / 2)]
+        local medianCity = 0
+        local medianCastle = 0
+        sortRates(bothRates)
+        sortRates(cityRates)
+        sortRates(castleRates)
         if cityCount > 0 then
             averageCity = city / cityCount
+            medianCity = cityRates[math.ceil(#cityRates / 2)]
         end
         local averageCastle = 0
         if castleCount > 0 then
             averageCastle = castle / castleCount
+            medianCastle = castleRates[math.ceil(#castleRates / 2)]
         end
-        csv:write(k .. ";" .. average .. ";" .. averageCity .. ";" .. averageCastle .. ";" .. highestStr ..
-            ";" .. lowestStr .. "\n")
+
+        local un = edu:Get(k)
+        local unitValue = 0
+        if un then
+            unitValue = un.AiUnitValue
+        end
+        csv:write(k ..
+            ";" ..
+            average ..
+            ";" ..
+            median ..
+            ";" ..
+            averageCity .. ";" .. medianCity .. ";" .. averageCastle .. ";" .. medianCastle .. ";" .. highestStr ..
+            ";" .. lowestStr .. ";" .. unitValue .. "\n")
     end
     csv:flush()
     csv:close()

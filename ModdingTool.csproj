@@ -54,6 +54,10 @@
       <XamlRuntime>Wpf</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Remove="ModdingTool_CLI\**" />
+    <EmbeddedResource Remove="ModdingTool_CLI\**" />
+    <Page Remove="ModdingTool_CLI\**" />
+    <None Remove="ModdingTool_CLI\**" />
   </ItemGroup>
 
   <ItemGroup>
