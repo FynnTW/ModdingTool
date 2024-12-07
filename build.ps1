@@ -1,3 +1,7 @@
+param(
+    $shouldZip = 'False'
+)
+
 # Define project paths
 $desktopProjectPath = "ModdingTool.csproj"
 $cliProjectPath = "ModdingTool_CLI/ModdingTool_CLI.csproj"
@@ -22,4 +26,11 @@ if (-Not (Test-Path -Path $combinedOutputDir)) {
 Copy-Item -Path "$cliOutputDir\*" -Destination $combinedOutputDir -Recurse -Force
 Copy-Item -Path "$desktopOutputDir\*" -Destination $combinedOutputDir -Recurse -Force
 
+if ($shouldZip -eq 'True') {
+    Write-Host "`n`Generate Release ZIP`n" -ForegroundColor Magenta
+    Remove-item ModdingTool.zip -erroraction 'silentlycontinue'
+    Compress-Archive -Path "./$combinedOutputDir/*"  -DestinationPath "ModdingTool.zip"
+}
+
 Write-Host "Publishing and combining completed. Output is in the '$combinedOutputDir' directory."
+
