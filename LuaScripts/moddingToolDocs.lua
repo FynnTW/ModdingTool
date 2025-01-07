@@ -1,4 +1,4 @@
----@diagnostic disable: missing-return
+---@diagnostic disable: missing-return, undefined-global, undefined-doc-param
 ---Function to get the databases the API is using
 ---@return Globals.Data mod path
 function GetModData() end
@@ -216,9 +216,6 @@ Texture = {
 
     ---@type string
     Faction = nil,
-
-    ---@type string
-    Sprite = nil,
 }
 
 ---@class Animation
