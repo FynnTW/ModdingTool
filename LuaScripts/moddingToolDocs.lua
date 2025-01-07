@@ -216,6 +216,9 @@ Texture = {
 
     ---@type string
     Faction = nil,
+
+    ---@type string
+    Sprite = nil,
 }
 
 ---@class Animation
