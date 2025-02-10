@@ -29,7 +29,7 @@ jobs:
         run: ./Build.ps1 -shouldZip "True"
 
       # Upload build artifact
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
-          name: M2TW-Modding-Tool
+          name: "M2TW-Modding-Tool--${{ github.workflow_sha }}"
           path: D:\a\ModdingTool\ModdingTool\ModdingTool.zip
