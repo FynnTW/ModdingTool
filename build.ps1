@@ -9,6 +9,7 @@ $cliProjectPath = "ModdingTool_CLI/ModdingTool_CLI.csproj"
 # Define output directories
 $desktopOutputDir = "bin/Release/net7.0-windows10.0.17763.0/win-x64/publish"
 $cliOutputDir = "ModdingTool_CLI/bin/Release/net7.0-windows10.0.17763.0/win-x64/publish"
+$luaScriptsDir = "LuaScripts"
 $combinedOutputDir = "CombinedOutput"
 
 # Publish the desktop application
@@ -25,6 +26,7 @@ if (-Not (Test-Path -Path $combinedOutputDir)) {
 # Copy the published files to the combined output directory
 Copy-Item -Path "$cliOutputDir\*" -Destination $combinedOutputDir -Recurse -Force
 Copy-Item -Path "$desktopOutputDir\*" -Destination $combinedOutputDir -Recurse -Force
+Copy-Item -Path "$luaScriptsDir\*" -Destination $combinedOutputDir -Recurse -Force
 
 if ($shouldZip -eq 'True') {
     Write-Host "`n`Generate Release ZIP`n" -ForegroundColor Magenta
