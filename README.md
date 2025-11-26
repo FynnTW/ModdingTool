@@ -56,3 +56,4 @@ The following is a modding tool for the game Medieval II: Total War.
 ## Credits
 
 - FynnTW
+- Medik
