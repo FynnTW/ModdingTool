@@ -57,3 +57,4 @@ The following is a modding tool for the game Medieval II: Total War.
 
 - FynnTW
 - Medik
+- Leah Gotti
